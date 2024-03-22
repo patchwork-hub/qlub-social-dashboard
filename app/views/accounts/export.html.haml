@@ -1,0 +1,20 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          Export users
+        
+      .card-body.w-50
+        = form_tag export_accounts_url, method: :post do
+          = hidden_field_tag :q, params[:q]
+          = hidden_field_tag :selected, params[:selected]
+          = hidden_field_tag :unselected, params[:unselected]
+          
+          .mb-3
+            = label_tag :email, 'Email address', class: 'form-label'
+            = email_field_tag :email, nil, class: 'form-control', required: true, placeholder: 'john@example.com'
+
+          .mb-3
+            = submit_tag 'Export', class: 'btn btn-outline-primary'
+            = link_to 'Back', accounts_url, class: 'ml-2 text-gray'

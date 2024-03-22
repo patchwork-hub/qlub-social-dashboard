@@ -1,0 +1,155 @@
+@import "bootstrap";
+@import "dataTables.bootstrap4.min";
+@import "responsive.bootstrap4.min";
+
+.select-info {
+  padding-left: 7px;
+}
+
+#select_all {
+  margin: 0 7px;
+  width: 100%;
+}
+
+table.dataTable.table-striped > tbody > tr.odd.selected > * {    
+  box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.05) !important;
+  color: rgb(33, 37, 41) !important;
+}
+
+table.dataTable.table-striped > tbody > tr.even.selected > * {
+  box-shadow: unset !important;
+  color: rgb(33, 37, 41) !important;
+}
+
+td {
+  vertical-align: middle !important;
+}
+
+input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+}
+
+div.password {
+  position: relative;
+
+  svg {
+    position: absolute;
+    right: 1%;
+    top: 60%;
+  }
+}
+
+.community-detail {
+  .card-tools {
+    &.admin {
+      width: 15%;
+    }
+    &.hashtag {
+      width: 10%;
+    }
+    .input-group {
+      text-align: center;
+    }
+  }
+}
+
+// login box
+.sign-in {
+  .card {
+    margin: 0 auto;
+    padding-top: 25px;
+    
+    .card-title {
+      margin-left: 20px;
+      font-weight: 700;
+    }
+
+    label {
+      font-weight: normal !important;
+    }
+  }
+}
+
+// sidebar
+.sidebar-collapse {
+  #logo {
+    width: 100px;
+  }
+}
+aside {
+	background-color: #fff;
+	
+	.nav-link.active {
+	  background-color: #00afdb !important;
+	}
+
+	.nav-link:not(.active):hover {
+	  color: #E33D26 !important;
+	}
+  &:hover {
+    #logo {
+      width: 180px;
+    }
+  }
+
+}
+// sidebar
+
+// pagination
+ul.pagination {
+  li {
+    a.page-link {
+      color: #00afdb !important;
+      &:hover {
+        color: #E33D26 !important;
+      }
+    }
+  }
+  li.active {
+    a.page-link {
+      color: #fff !important;
+      background-color: #00afdb !important;
+      border-color: #00afdb !important; 
+    }
+  }
+}
+// pagination
+
+.card-body {
+  a.back {
+    padding-left: 0.5rem;
+  }
+}
+
+
+.card-tools a:not(.no-hover), td a, a.edit, a.back, a.brand-link, a.link {
+  color: #00afdb !important;
+  
+  &:hover {
+    color: #E33D26 !important;
+  }
+}
+
+// override bootstrap
+.alert-success {
+  background-color: #74b87a !important;
+  border-color: #74b87a !important;
+}
+
+.alert-danger {
+  background-color: #E33D26 !important;
+  border-color: #E33D26 !important;
+}
+
+.btn-outline-primary {
+  border-color: #00afdb !important;
+  color: #00afdb !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #00afdb !important;
+  border-color: #00afdb !important;
+  color: #fff !important;
+}
+// bootstrap

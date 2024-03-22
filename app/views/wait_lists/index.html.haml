@@ -1,0 +1,18 @@
+- content_for :title do
+  = 'Wait list'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Wait list
+      .card-body
+        %table#datatable.table.table-bordered.table-striped{data: {url: wait_lists_url, type: 'wait_list'}}
+          %thead
+            %tr
+              %th Email address
+              %th Role
+              %th Contributor role
+              %th Applied date
+              %th Actions
+          %tbody

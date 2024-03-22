@@ -1,0 +1,31 @@
+- roles = [['Contributor', 'contributor'], ['End-user', 'end-user'], ['Moderator', 'moderator']]
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          = "Export #{params.fetch(:type, 'new')} invitation codes"
+
+      .card-body.w-50
+        = form_tag export_invitation_codes_url, method: :post do
+          = hidden_field_tag :type, params[:type]
+          = hidden_field_tag :q, params[:q]
+          = hidden_field_tag :selected, params[:selected]
+          = hidden_field_tag :unselected, params[:unselected]
+
+          .mb-3
+            = label_tag :email, 'Email address', class: 'form-label'
+            = email_field_tag :email, nil, class: 'form-control', required: true, placeholder: 'john@example.com'
+
+          - if params[:type] == 'new'
+            .mb-3
+              = label_tag :role, 'Role', class: 'form-label'
+              = select_tag :role, options_for_select(roles), {prompt: 'Select role', class: 'form-control', required: true}
+
+            .mb-3
+              = label_tag :limit, 'Limit', class: 'form-label'
+              = number_field_tag :limit, nil, class: 'form-control', required: true, placeholder: '10000'
+
+          .mb-3
+            = submit_tag 'Export', class: 'btn btn-outline-primary'
+            = link_to 'Back', invitation_codes_url, class: 'ml-2 text-gray'

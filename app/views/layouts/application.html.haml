@@ -1,0 +1,43 @@
+!!!
+%html
+  %head
+    %title
+      - if content_for?(:title)
+        = yield :title
+      - else
+        = 'Dashboard'
+      |
+      = 'Newsmast'
+
+    %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}/
+    = csrf_meta_tags
+    = csp_meta_tag
+
+    %link{rel: "icon", type: "image/png", href: "/favicon.png"}
+
+    -# css
+    = stylesheet_link_tag "application", "data-turbo-track": "reload"
+    = stylesheet_link_tag "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"
+    
+    -# js
+    = javascript_include_tag "jquery"
+    = javascript_importmap_tags
+
+  %body.hold-transition.sidebar-mini.layout-fixed{"data-scrollbar-auto-hide" => "n"}
+    - if user_signed_in?
+      .wrapper
+        = render "shared/menu/header"
+        = render "shared/menu/sidebar"
+        .content-wrapper
+          .mx-2.pt-3
+            - # show flash messages
+            = render "shared/flash"
+          .content.container-fluid
+            .container-fluid
+              = yield
+
+    - else
+      .container.mt-5
+        .w-25.m-auto
+          = image_tag 'logo-with-text.svg', alt: 'Newsmast Logo', width: '100%'
+        = yield    

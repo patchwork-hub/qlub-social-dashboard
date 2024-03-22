@@ -1,0 +1,20 @@
+- flash.each do |type, msg|
+	- if type == 'notice'
+		.alert.alert-success.alert-dismissible.fade.show{role: "alert"}
+			= msg.html_safe
+			%button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
+				%span{"aria-hidden" => "true"} ×
+	
+	- if type == 'error'
+		.alert.alert-danger.alert-dismissible.fade.show{role: "alert"}
+			- if msg.class == String
+				= msg.html_safe
+			- elsif msg.count == 1
+				= msg.first
+			- else
+				%ul
+					- msg.each do |m|
+						%li
+							= m
+			%button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
+				%span{"aria-hidden" => "true"} ×

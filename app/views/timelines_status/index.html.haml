@@ -1,0 +1,16 @@
+- content_for :title do
+  = 'Timelines Status'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Timelines Status
+      .card-body
+        %table#datatable.table.table-bordered.table-striped{data: { url: timelines_status_url, type: 'timelines_status_list' }}
+          %thead
+            %tr
+              %th Endpoint Name
+              %th Status
+              %th Last Checked
+          %tbody

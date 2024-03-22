@@ -1,0 +1,33 @@
+- content_for :title do
+  = 'Invitation codes'
+
+.row.invitation-codes
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Invitation codes
+        .card-tools
+          .input-group.input-group-sm
+            %button#dropdownbtn.btn.dropdown-toggle.btn-outline-primary.mr-1{"aria-expanded": "false", "aria-haspopup": "true", "data-toggle": "dropdown", type: "button"} Generate code
+            .dropdown-menu{"aria-labelledby" => "dropdownbtn"}
+              = link_to 'Contributor', wait_lists_url(role: 'contributor'), class: 'dropdown-item', method: :post
+              .dropdown-divider
+              = link_to 'End-user', wait_lists_url(role: 'end-user'), class: 'dropdown-item', method: :post
+              .dropdown-divider
+              = link_to 'Moderator', wait_lists_url(role: 'moderator'), class: 'dropdown-item', method: :post
+
+            = link_to export_invitation_codes_url(type: 'new'), class: 'export-codes btn btn-outline-primary mr-1 no-hover', title: 'export codes' do
+              Export new codes
+            = link_to export_invitation_codes_url(type: 'existing'), class: 'export-codes btn btn-outline-primary no-hover', id: 'export-selected', title: 'export codes' do
+              Export existing codes
+      .card-body
+        %table#datatable.table.table-bordered.table-striped{data: {url: invitation_codes_url, type: 'invitation_code', selectable: 'multi'}}
+          %thead
+            %tr
+              %th
+                = check_box_tag :select_all, id: 'select_all'
+              %th Code
+              %th Role
+              %th Is used?
+              %th Used by
+          %tbody

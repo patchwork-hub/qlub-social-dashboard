@@ -1,0 +1,52 @@
+- content_for :title do
+  = 'Report'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title 
+          Detail
+
+      .card-body
+        .row.border-bottom.mb-4.mt-2
+          .col-sm-3.text-secondary.text-right
+            ID:
+          .col-sm-9.text-left
+            = @report.id
+        .row.border-bottom.mb-4
+          .col-sm-3.text-secondary.text-right
+            Owner name: 
+          .col-sm-9.text-left
+            = @report.owner.display_name.presence || '-'
+        .row.border-bottom.mb-4
+          .col-sm-3.text-secondary.text-right
+            Owner username:
+          .col-sm-9.text-left
+            = @report.owner.username
+        .row.border-bottom.mb-4
+          .col-sm-3.text-secondary.text-right
+            Reporter name: 
+          .col-sm-9.text-left
+            = @report.reporter.display_name.presence || '-'
+        .row.border-bottom.mb-4
+          .col-sm-3.text-secondary.text-right
+            Reporter username:
+          .col-sm-9.text-left
+            = @report.reporter.username
+        .row.border-bottom.mb-4
+          - @report.statuses.each do |s|
+            .col-sm-3.text-secondary.text-right
+              Status:
+            .col-sm-9.text-left
+              -# = link_to s.uri, target: '_blank', title: 'original post', class: 'link' do
+                -# %i.fa-solid.fa-arrow-up-right-from-square
+              = s.text
+
+              - cs = CommunityStatus.find_by(status_id: s.id)
+              - if cs && cs.image?
+                .my-4
+                  = image_tag cs.image.url, width: 180 
+        
+        .row
+          = link_to 'Back', reports_url, class: 'back'

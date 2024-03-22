@@ -1,0 +1,25 @@
+- content_for :title do
+  = 'New app version'
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title New app version
+
+      .card-body.w-50
+        = simple_form_for @app_version do |f|
+          
+          .mb-3
+            = f.label :version_name, class: 'form-label'
+            = f.text_field :version_name, class: 'form-control', name: 'version_name'
+
+          .mb-3
+            = label_tag :os_type, 'OS type', class: 'form-label'
+            = select_tag :os_type, options_for_select([ 'both', 'android', 'ios'], ''), class: 'form-control'
+
+          .mb-3
+            = label_tag :link_url, 'Apk download link', class: 'form-label'
+            = text_field_tag :link_url, nil, class: 'form-control'
+
+          = f.button :submit, 'Save', class: 'btn btn-outline-primary'
+          = link_to 'Back', app_versions_url, class: 'ml-2 text-gray'

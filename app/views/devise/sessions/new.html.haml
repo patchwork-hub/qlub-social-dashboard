@@ -1,0 +1,15 @@
+= content_for :title do
+  = 'Sign in'
+.sign-in.mt-4
+  .card.w-50
+    %h4.card-title Sign in
+    .card-body
+      = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+        .form-group
+          = f.label :email
+          = f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control'
+        .form-group
+          = f.label :password
+          = f.password_field :password, autofocus: true, autocomplete: "current-password", class: 'form-control'
+        .form-group
+          = f.submit 'Sign in', class: 'btn btn-primary'

@@ -1,0 +1,19 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title 
+          Detail
+
+      .card-body
+        .row.border-bottom.mb-4.mt-2
+          .col-sm-6.offset-sm-2
+            %h3 New Invitation codes
+          .col-sm-6.offset-sm-2
+            %ol{style: 'line-height: 2.5rem'}
+              - @wait_lists.each do |w|
+                %li
+                  = w.invitation_code
+          
+        .row
+          = link_to 'Back', invitation_codes_url, class: 'back'

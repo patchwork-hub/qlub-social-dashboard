@@ -1,0 +1,23 @@
+- content_for :title do
+  = 'App versions'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title App versions
+        .card-tools
+          .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Back"}
+            = link_to new_app_version_url, class: 'form-control float-right', title: 'add new app-version' do
+              %i.fa-solid.fa-circle-plus
+      .card-body
+        %table#datatable.table.table-bordered.table-striped{data: {url: app_versions_url, type: 'version_list'}}
+          %thead
+            %tr
+              %th Version name
+              %th Android
+              %th Deprecated
+              %th iOS
+              %th Deprecated
+              %th Apk download link
+          %tbody

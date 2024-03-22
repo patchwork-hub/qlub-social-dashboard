@@ -1,0 +1,26 @@
+- content_for :title do
+  = 'Registered Users'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Registered Users
+        .card-tools
+          .input-group.input-group-sm
+            = link_to export_accounts_url, class: 'export-users btn btn-outline-primary no-hover', id: 'export-selected', title: 'export users' do
+              Export users
+      .card-body
+        %table#datatable.table.table-bordered.table-striped{data: {url: accounts_url, type: 'account'}}
+          %thead
+            %tr
+              %th
+                = check_box_tag :select_all, id: 'select_all'
+              %th Email address
+              %th Username
+              %th Phone number
+              %th Registered date
+              %th Role
+              %th Primary community
+              %th Actions
+          %tbody
