@@ -43,6 +43,6 @@
             %p Timelines Status
 
         %li.nav-item
-          = link_to '/server_setting', class: "nav-link #{controller_name == 'server_setting' && action_name == 'index' ? 'active' : ''}" do
+          = link_to server_settings_path, class: "nav-link #{controller_name == 'server_settings' && action_name == 'index' ? 'active' : ''}" do
             %i.nav-icon.fa-solid.fa-server
             %p Server Setting
