@@ -41,6 +41,17 @@ class ServerSettingsController < ApplicationController
     redirect_to server_settings_url, notice: 'Server setting was successfully destroyed.'
   end
 
+  def get_child_count
+    parent_id = params[:parentId]
+    if parent_id.present?
+      parent_setting = ServerSetting.find(parent_id)
+      child_count = parent_setting.children.count
+      render json: { childCount: child_count }
+    else
+      render json: { error: 'Parent ID is missing' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def server_setting_params
@@ -62,7 +73,7 @@ class ServerSettingsController < ApplicationController
     @data = parent_settings.map do |parent_setting|
       {
         name: "<a href='#{edit_server_setting_url(parent_setting)}' title='edit keyword'>#{parent_setting.name}</a>",
-        settings: parent_setting.children.map do |child_setting|
+        settings: parent_setting.children.sort_by(&:position).map do |child_setting|
           {
             name: "<a href='#{edit_server_setting_url(child_setting)}' title='edit keyword'>#{child_setting.name}</a>",
             is_operational: child_setting.value

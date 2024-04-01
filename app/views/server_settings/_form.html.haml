@@ -21,11 +21,11 @@
 
             .mb-3
               = f.label :parent_id, class: 'form-label'
-              = f.collection_select :parent_id, ServerSetting.where(parent_id: nil), :id, :name, { include_blank: true }, { class: 'form-control' }
+              = f.collection_select :parent_id, ServerSetting.where(parent_id: nil), :id, :name, { include_blank: true }, { class: 'form-control', id: 'parentSelect' }
 
             .mb-3
               = f.label :position, class: 'form-label'
-              = f.number_field :position, class: 'form-control', min: 0, step: 1
+              = f.number_field :position, class: 'form-control', min: 0, step: 1, id: 'positionField'
 
           - if action_name == 'edit'
             .mt-3
