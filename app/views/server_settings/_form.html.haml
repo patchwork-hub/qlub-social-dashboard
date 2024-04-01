@@ -10,6 +10,9 @@
           .mb-3
             = f.label :name, class: 'form-label'
             = f.text_field :name, class: 'form-control', required: true
+            %small.form-text.text-danger
+              - if action_name == 'new'
+                &#9888; If creating a parent setting, please ensure that only the 'Name' field is filled.
           
           - unless @server_setting.parent_id.nil? && action_name == 'edit'
             .mb-3
@@ -26,10 +29,10 @@
 
           - if action_name == 'edit'
             .mt-3
-              = f.button :submit, 'Save', class: 'btn btn-primary'
-              = link_to 'Back', server_settings_url, class: 'btn btn-secondary ml-2'
-              = link_to 'Destroy', @server_setting, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger ml-2'
+              = f.button :submit, 'Save', class: 'btn btn-outline-primary'
+              = link_to 'Back', server_settings_url, class: 'btn btn-outline-secondary ml-2'
+              = link_to 'Destroy', @server_setting, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-outline-danger ml-2'
           - else
             .mt-3
-              = f.button :submit, 'Save', class: 'btn btn-primary'
-              = link_to 'Back', server_settings_url, class: 'btn btn-secondary ml-2'
+              = f.button :submit, 'Save', class: 'btn btn-outline-primary'
+              = link_to 'Back', server_settings_url, class: 'btn btn-outline-secondary ml-2'
