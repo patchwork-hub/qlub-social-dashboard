@@ -1,5 +1,5 @@
 class ServerSettingsController < ApplicationController
-  # load_and_authorize_resource class: 'EndPoint'
+  load_and_authorize_resource class: 'ServerSetting'
 
   before_action :set_server_setting, only: [:edit, :update, :destroy]
 
@@ -64,13 +64,13 @@ class ServerSettingsController < ApplicationController
   end
 
   def prepare_server_setting_for_datatable
-    parent_settings = ServerSetting.where(parent_id: nil).includes(:children).order(:id)
+    @parent_settings = ServerSetting.where(parent_id: nil).includes(:children).order(:id)
   
-    parent_settings = parent_settings.where("lower(name) LIKE ?", "%#{@q.downcase}%") if @q.present?
+    @parent_settings = @parent_settings.where("lower(name) LIKE ?", "%#{@q.downcase}%") if @q.present?
   
-    parent_settings = parent_settings.order("#{@sort}": :"#{@dir}").page(@page).per(@per)
+    @parent_settings = @parent_settings.order("#{@sort}": :"#{@dir}").page(@page).per(@per)
   
-    @data = parent_settings.map do |parent_setting|
+    @data = @parent_settings.map do |parent_setting|
       {
         name: "<a href='#{edit_server_setting_url(parent_setting)}' title='edit keyword'>#{parent_setting.name}</a>",
         settings: parent_setting.children.sort_by(&:position).map do |child_setting|
