@@ -135,6 +135,34 @@ $(document).ready(function() {
       }
     });
   });
+
+  //calculating server setting position
+  var parentSelect = document.getElementById('parentSelect');
+  var positionField = document.getElementById('positionField');
+  var originalPosition = positionField ? positionField.value : null; 
+  var originalParentId = parentSelect ? parentSelect.value : null; 
+
+  if (parentSelect && positionField) {
+    parentSelect.addEventListener('change', function() {
+      var parentId = this.value;
+      if (parentId) {
+        $.ajax({
+          url: '/get_child_count',
+          type: 'GET',
+          data: { parentId: parentId },
+          success: function(response) {
+            var childCount = response.childCount;
+            positionField.value = parentId === originalParentId ? originalPosition : childCount + 1;
+          },
+          error: function(xhr, status, error) {
+            console.error('Failed to fetch child count:', error);
+          }
+        });
+      } else {
+        positionField.value = '';
+      }
+    });
+  }
 })
 
 const addParams = (selected = null, unselected = null) => {

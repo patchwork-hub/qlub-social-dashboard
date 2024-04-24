@@ -41,3 +41,8 @@
           = link_to '/timelines_status', class: "nav-link #{controller_name == 'timelines_status' && action_name == 'index' ? 'active' : ''}" do
             %i.nav-icon.fa.fa-chart-line.monitoring-status-icon
             %p Timelines Status
+
+        %li.nav-item
+          = link_to server_settings_path, class: "nav-link #{controller_name == 'server_settings' ? 'active' : ''}" do
+            %i.nav-icon.fa-solid.fa-server
+            %p Server Setting

@@ -31,4 +31,7 @@ Rails.application.routes.draw do
   put "history/:id/deprecate", to: 'app_versions#deprecate'
   resources :global_filters
   get '/timelines_status', to: 'timelines_status#index'
+
+  resources :server_settings, only: [:index, :new, :create, :edit, :update, :destroy]
+  get '/get_child_count', to: 'server_settings#get_child_count'
 end

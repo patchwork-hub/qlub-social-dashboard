@@ -68,6 +68,10 @@ const COLUMNS = {
     { data: 'name' },
     { data: 'is_operational' },
     { data: 'created_at' },
+  ],
+  server_setting_list: [
+    { data: 'name' },
+    { data: 'settings' }
   ]
 }
 
@@ -79,6 +83,24 @@ const COLUMN_DEFS = {
   invitation_code: [
     {className: 'selectable-checkbox', orderable: false, targets: 0}
   ],
+  server_setting_list: [
+    { 
+      className: 'selectable-checkbox', 
+      orderable: false, 
+      targets: 0 
+    },
+    { 
+      className: "dt-nowrap", 
+      targets: 1,
+      render: function(data, type, row) {
+        let settingsHtml = '';
+        row.settings.forEach(function(setting) {
+          settingsHtml += `<div class="chip"> ${setting.is_operational ? '<i class="fa fa-check-circle"></i>' : ''} ${setting.name}</div>`;
+        });
+        return settingsHtml;
+      }
+    }
+  ]
 }
 
 jQuery(function() {
