@@ -1528,9 +1528,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   end
 
   create_table "user_server_settings", force: :cascade do |t|
-    t.jsonb "setting"
+    t.boolean "value"
     t.bigint "user_id", null: false
     t.bigint "server_setting_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["server_setting_id"], name: "index_user_server_settings_on_server_setting_id"
     t.index ["user_id"], name: "index_user_server_settings_on_user_id"
   end
