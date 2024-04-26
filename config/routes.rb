@@ -34,4 +34,6 @@ Rails.application.routes.draw do
 
   resources :server_settings, only: [:index, :new, :create, :edit, :update, :destroy]
   get '/get_child_count', to: 'server_settings#get_child_count'
+
+  resources :keyword_filters
 end

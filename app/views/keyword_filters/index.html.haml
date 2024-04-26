@@ -1,0 +1,20 @@
+- content_for :title do
+  = 'Keyword filters'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Keyword filters
+        .card-tools
+          .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Back"}
+            = link_to new_keyword_filter_url, class: 'form-control float-right', title: 'add new keyword' do
+              %i.fa-solid.fa-circle-plus
+      .card-body
+        %table#datatable.table.table-bordered.table-striped{data: {url: keyword_filters_url, type: 'filter_list'}}
+          %thead
+            %tr
+              %th Keyword
+              %th Is hashtag?
+              %th Actions
+          %tbody

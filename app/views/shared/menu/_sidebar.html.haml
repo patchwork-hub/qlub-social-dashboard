@@ -46,3 +46,8 @@
           = link_to server_settings_path, class: "nav-link #{controller_name == 'server_settings' ? 'active' : ''}" do
             %i.nav-icon.fa-solid.fa-server
             %p Server Setting
+
+        %li.nav-item
+          = link_to keyword_filters_url, class: "nav-link #{controller_name == 'keyword_filters' ? 'active' : ''}" do
+            %i.nav-icon.fa-solid.fa-filter-circle-xmark
+            %p Keyword filters
