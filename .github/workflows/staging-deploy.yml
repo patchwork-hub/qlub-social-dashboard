@@ -9,7 +9,7 @@ on:
 env:
   DEFINITION:
     .aws/patchwork-staging.json
-  IMAGE: ${{ secrets.DASHBOARD_STAGING_IMAGE }}
+  
 
 permissions:
   contents: read
@@ -67,6 +67,7 @@ jobs:
     name: Updated code and Deploy to server
     needs: Build
     runs-on: ubuntu-latest
+    environment: staging
     steps:
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
@@ -75,7 +76,7 @@ jobs:
           task-definition: ${{ env.DEFINITION }}
           container-name: ${{ secrets.CONTAINER_NAME }} CONTAINER_NAME
           # image: ${{ steps.build-image.outputs.image }}
-          image: ${{ env.IMAGE }}
+          image:  ${{ secrets.DASHBOARD_STAGING_IMAGE }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
