@@ -1,10 +1,15 @@
-run-name: Deploy to Patchwork Web Production by @${{ github.actor }}
+run-name: Deploy to Patchwork Dashboard by @${{ github.actor }}
 
 on:
   workflow_dispatch:
   push:
     branches:
       - staging
+
+env:
+  DEFINITION:
+    .aws/patchwork-staging.json
+  IMAGE: staging
 
 permissions:
   contents: read
@@ -57,27 +62,28 @@ jobs:
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-  # deploy:
-  #   name: Deploy Server
-  #   needs: Build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Git Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Echo Branch
-  #       run: echo running on branch ${GITHUB_REF##*/}
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
-  #     - name: Deploy to server
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.PROD_SERVER_IP }}
-  #         username: ${{ secrets.PROD_SERVER_USERNAME }}
-  #         port: ${{ secrets.PORT }}
-  #         key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
-  #         script: |
-  #           eval "$(ssh-agent -s)"
-  #           ssh-add ~/.ssh/patchwork_github-actions
-  #           cd /home/ubuntu/devops
-  #           ansible-playbook alldeploy.yml -e "@patchwork_web.json"
+      
+  deploy:
+    name: Updated code and Deploy to server
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.DEFINITION }}
+          container-name: ${{ secrets.CONTAINER_NAME }}
+          # image: ${{ steps.build-image.outputs.image }}
+          image: ${{ env.IMAGE }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ secrets.SERVICE_NAME }}
+          cluster: ${{ secrets.CLUSTER }}
+          wait-for-service-stability: false
+
+
+      
