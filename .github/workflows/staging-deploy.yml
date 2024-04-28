@@ -65,14 +65,13 @@ jobs:
     name: Updated code and Deploy to server
     needs: Build
     runs-on: ubuntu-latest
-    environment: staging
     steps:
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: .aws/patchwork-staging.json
-          container-name: ${{ secrets.CONTAINER_NAME }}
+          container-name: ${{ secrets.DASHBOARD_STAGING_CONTAINER_NAME }}
           # image: ${{ steps.build-image.outputs.image }}
           image:  ${{ secrets.DASHBOARD_STAGING_IMAGE }}
 
@@ -80,8 +79,8 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ secrets.SERVICE_NAME }}
-          cluster: ${{ secrets.CLUSTER }}
+          service: ${{ secrets.DASHBOARD_STAGING_SERVICE_NAME }}
+          cluster: ${{ secrets.CLUSTER_STAGING }}
           wait-for-service-stability: false
 
 
