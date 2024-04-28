@@ -6,9 +6,9 @@ on:
     branches:
       - staging
 
-# env:
-#   DEFINITION:
-#     .aws/patchwork-staging.json
+env:
+  DEFINITION:
+    .aws/patchwork-staging.json
 permissions:
   contents: read
 
@@ -70,7 +70,7 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: .aws/patchwork-staging.json
+          task-definition: ${{ env.DEFINITION }}
           container-name: ${{ secrets.DASHBOARD_STAGING_CONTAINER_NAME }}
           # image: ${{ steps.build-image.outputs.image }}
           image:  ${{ secrets.DASHBOARD_STAGING_IMAGE }}
