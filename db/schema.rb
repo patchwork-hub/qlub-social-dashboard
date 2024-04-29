@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_29_091840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -625,10 +625,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
 
   create_table "keyword_filters", force: :cascade do |t|
     t.string "keyword"
-    t.bigint "server_setting_id"
+    t.boolean "is_filter_hashtag", default: false
     t.boolean "is_custom_filter", default: false
     t.boolean "is_active", default: true
-    t.boolean "is_filter_hashtag", default: false
+    t.bigint "server_setting_id"
     t.index ["server_setting_id"], name: "index_keyword_filters_on_server_setting_id"
   end
 
