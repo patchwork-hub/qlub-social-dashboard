@@ -50,5 +50,11 @@ namespace :db do
         ServerSetting.create!(name: child[:name], value: child[:value], position: child_index + 1, parent_id: parent_setting.id)
       end
     end
+
+    KeywordFilter.create(keyword: 'NSFW', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
+    KeywordFilter.create(keyword: 'Hate Speech', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
+    KeywordFilter.create(keyword: 'Crypto', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
+    KeywordFilter.create(keyword: 'porn', server_setting_id: nil, is_custom_filter: true)
+    puts "Done insertion of server settings & keywords"
   end
 end

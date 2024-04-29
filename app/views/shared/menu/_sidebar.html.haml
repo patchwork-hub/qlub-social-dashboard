@@ -5,30 +5,30 @@
     %nav.mt-2
       %ul.nav.nav-pills.nav-sidebar.flex-column{"data-accordion" => "false", "data-widget" => "treeview", :role => "menu"}
 
-        %li.nav-item
-          = link_to app_versions_url, class: "nav-link #{controller_name == 'app_versions' ? 'active' : ''}" do
-            %i.nav-icon.fa-solid.fa-code-compare
-            %p App versions
+        -# %li.nav-item
+        -#   = link_to app_versions_url, class: "nav-link #{controller_name == 'app_versions' ? 'active' : ''}" do
+        -#     %i.nav-icon.fa-solid.fa-code-compare
+        -#     %p App versions
 
-        %li.nav-item
-          = link_to communities_url, class: "nav-link #{controller_name.include?('communi') ? 'active' : ''}" do
-            %i.nav-icon.fa-solid.fa-group-arrows-rotate
-            %p Communities
+        -# %li.nav-item
+        -#   = link_to communities_url, class: "nav-link #{controller_name.include?('communi') ? 'active' : ''}" do
+        -#     %i.nav-icon.fa-solid.fa-group-arrows-rotate
+        -#     %p Communities
 
-        %li.nav-item
-          = link_to global_filters_url, class: "nav-link #{controller_name == 'global_filters' ? 'active' : ''}" do
-            %i.nav-icon.fa-solid.fa-filter-circle-xmark
-            %p Global filters
+        -# %li.nav-item
+        -#   = link_to global_filters_url, class: "nav-link #{controller_name == 'global_filters' ? 'active' : ''}" do
+        -#     %i.nav-icon.fa-solid.fa-filter-circle-xmark
+        -#     %p Global filters
 
-        %li.nav-item
-          = link_to reports_url, class: "nav-link #{controller_name == 'reports' ? 'active' : ''}" do
-            %i.nav-icon.fa-solid.fa-flag
-            %p Reports
+        -# %li.nav-item
+        -#   = link_to reports_url, class: "nav-link #{controller_name == 'reports' ? 'active' : ''}" do
+        -#     %i.nav-icon.fa-solid.fa-flag
+        -#     %p Reports
 
-        %li.nav-item
-          = link_to accounts_url, class: "nav-link #{controller_name == 'accounts' ? 'active' : ''}" do
-            %i.nav-icon.fa-solid.fa-users
-            %p Users
+        -# %li.nav-item
+        -#   = link_to accounts_url, class: "nav-link #{controller_name == 'accounts' ? 'active' : ''}" do
+        -#     %i.nav-icon.fa-solid.fa-users
+        -#     %p Users
 
         %li.nav-item
           - protocol = Rails.env.development? ? 'http://' : 'https://'
@@ -37,10 +37,10 @@
             %i.nav-icon.fa-solid.fa-face-grin-wide
             %p Sidekiq
 
-        %li.nav-item
-          = link_to '/timelines_status', class: "nav-link #{controller_name == 'timelines_status' && action_name == 'index' ? 'active' : ''}" do
-            %i.nav-icon.fa.fa-chart-line.monitoring-status-icon
-            %p Timelines Status
+        -# %li.nav-item
+        -#   = link_to '/timelines_status', class: "nav-link #{controller_name == 'timelines_status' && action_name == 'index' ? 'active' : ''}" do
+        -#     %i.nav-icon.fa.fa-chart-line.monitoring-status-icon
+        -#     %p Timelines Status
 
         %li.nav-item
           = link_to server_settings_path, class: "nav-link #{controller_name == 'server_settings' ? 'active' : ''}" do

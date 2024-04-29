@@ -625,7 +625,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
 
   create_table "keyword_filters", force: :cascade do |t|
     t.string "keyword"
+    t.bigint "server_setting_id"
+    t.boolean "is_custom_filter", default: false
+    t.boolean "is_active", default: true
     t.boolean "is_filter_hashtag", default: false
+    t.index ["server_setting_id"], name: "index_keyword_filters_on_server_setting_id"
   end
 
   create_table "list_accounts", force: :cascade do |t|
@@ -1704,6 +1708,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   add_foreign_key "identities", "users", name: "fk_bea040f377", on_delete: :cascade
   add_foreign_key "imports", "accounts", name: "fk_6db1b6e408", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade
+  add_foreign_key "keyword_filters", "server_settings", on_delete: :cascade
   add_foreign_key "list_accounts", "accounts", on_delete: :cascade
   add_foreign_key "list_accounts", "follow_requests", on_delete: :cascade
   add_foreign_key "list_accounts", "follows", on_delete: :cascade
