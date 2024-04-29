@@ -3,6 +3,13 @@
 namespace :db do
   desc "Seed parent and child settings data"
   task insert_server_setting_data: :environment do
+
+    if ServerSetting.all.count > 0
+      ServerSetting.destroy_all
+    end
+    if KeywordFilter.all.count > 0
+      KeywordFilter.destroy_all
+    end
     # Sample data for parent settings
     parent_settings_data = {
       "Spam Block" => [],
@@ -54,7 +61,7 @@ namespace :db do
     KeywordFilter.create(keyword: 'NSFW', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
     KeywordFilter.create(keyword: 'Hate Speech', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
     KeywordFilter.create(keyword: 'Crypto', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
-    KeywordFilter.create(keyword: 'porn', server_setting_id: nil, is_custom_filter: true)
+    KeywordFilter.create(keyword: 'porn', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id, is_custom_filter: true)
     puts "Done insertion of server settings & keywords"
   end
 end

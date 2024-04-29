@@ -46,7 +46,7 @@ class KeywordFiltersController < ApplicationController
       
       @data = @keyword_filters.each_with_object([]) { |g, arr|
         arr << {
-          server_setting_id: g.server_setting.name,
+          server_setting_id: g.server_setting&.name,
           keyword: g.keyword,
           is_active: g.is_active? ? 'Yes' : 'No',
           is_custom_filter: g.is_custom_filter? ? 'Yes' : 'No',
