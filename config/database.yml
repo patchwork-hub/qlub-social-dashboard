@@ -24,7 +24,12 @@ default: &default
 
 development:
   <<: *default
-  database: newsmast_development2
+  database: <%= ENV['DB_NAME'] || 'mastodon_production' %>
+  username: <%= ENV['DB_USER'] || 'mastodon' %>
+  password: <%= (ENV['DB_PASS'] || '').to_json %>
+  host: <%= ENV['DB_HOST'] || 'localhost' %>
+  port: <%= ENV['DB_PORT'] || 5432 %>
+  prepared_statements: <%= ENV['PREPARED_STATEMENTS'] || 'true' %>
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
