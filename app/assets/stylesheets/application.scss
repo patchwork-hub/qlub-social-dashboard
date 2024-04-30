@@ -175,8 +175,8 @@ $switch-background-color_3: #2196F3;
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 56px;
+  height: 24px;
   margin:0;
   input {
     opacity: 0;
@@ -199,8 +199,8 @@ $switch-background-color_3: #2196F3;
   &:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 16px;
+    width: 16px;
     left: 4px;
     bottom: 4px;
     background-color: $switch-background-color_2;
@@ -216,9 +216,11 @@ input {
         background-color: $switch-background-color_3;
 
         &:before {
-          -webkit-transform: translateX(26px);
-          -ms-transform: translateX(26px);
-          transform: translateX(26px);
+          position: absolute;
+          left: 20px;
+          -webkit-transform: translateX(16px);
+          -ms-transform: translateX(16px);
+          transform: translateX(16px);
         }
       }
     }
