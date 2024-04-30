@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     mount Sidekiq::Web, at: 'sidekiq', as: :sidekiq
   end
 
-  root "app_versions#index"
+  root "server_settings#index"
 
   devise_for :users, controllers: {
     sessions: 'users/sessions'
@@ -33,4 +33,6 @@ Rails.application.routes.draw do
   get '/timelines_status', to: 'timelines_status#index'
 
   resources :server_settings, only: [:index, :update]
+
+  resources :keyword_filters
 end

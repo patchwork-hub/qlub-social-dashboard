@@ -72,6 +72,14 @@ const COLUMNS = {
   server_setting_list: [
     { data: 'name' },
     { data: 'settings' }
+  ],
+  keyword_filter_list: [
+    {data: 'server_setting_id'},
+    {data: 'keyword'},
+    {data: 'is_active'},
+    {data: 'is_custom_filter'},
+    {data: 'is_filter_hashtag'},
+    {data: 'actions', orderable: false}
   ]
 }
 
