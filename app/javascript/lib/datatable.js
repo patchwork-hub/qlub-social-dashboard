@@ -90,13 +90,13 @@ const COLUMN_DEFS = {
       targets: 0
     },
     {
-      className: "dt-nowrap",
+      className: "dt-wrap",
       targets: 1,
       render: function(data, type, row) {
         let settingsHtml = '';
         row.settings.forEach(function(setting) {
           settingsHtml += `
-          <div class="form-check chip">
+          <div class="chip">
             ${setting.name}
             <label class="form-check-label switch" for="${setting.id}">
               <input class="form-check-input switch-input" type="checkbox" id="${setting.id}" ${setting.is_operational ? 'checked' : ''} data-setting-id="${setting.id}">
