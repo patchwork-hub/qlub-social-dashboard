@@ -7,7 +7,7 @@ namespace :db do
     if ServerSetting.all.count > 0
       ServerSetting.destroy_all
     end
-    
+
     if KeywordFilter.all.count > 0
       KeywordFilter.destroy_all
     end
@@ -59,10 +59,11 @@ namespace :db do
       end
     end
 
-    KeywordFilter.create(keyword: 'NSFW', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
-    KeywordFilter.create(keyword: 'Hate Speech', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
-    KeywordFilter.create(keyword: 'Crypto', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id)
-    KeywordFilter.create(keyword: 'porn', server_setting_id: ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id, is_custom_filter: true)
+    serverSettingId = ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id 
+    KeywordFilter.create(keyword: 'NSFW', server_setting_id: serverSettingId, filter_type: 2)
+    KeywordFilter.create(keyword: 'Hate Speech', server_setting_id: serverSettingId, filter_type: 2)
+    KeywordFilter.create(keyword: 'Crypto', server_setting_id: serverSettingId, filter_type: 2)
+    KeywordFilter.create(keyword: 'porn', server_setting_id: serverSettingId, filter_type: 2)
     puts "Done insertion of server settings & keywords"
   end
 end
