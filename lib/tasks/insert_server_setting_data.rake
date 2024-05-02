@@ -7,6 +7,7 @@ namespace :db do
     if ServerSetting.all.count > 0
       ServerSetting.destroy_all
     end
+    
     if KeywordFilter.all.count > 0
       KeywordFilter.destroy_all
     end

@@ -17,15 +17,11 @@
 
           .mb-3
             = f.label :is_active, 'Is active?', class: 'form-label'
-            = f.check_box :is_active, { class: 'form-control', disabled: @keyword_filter.is_custom_filter }
+            = f.check_box :is_active, class: 'form-control'
 
           .mb-3
-            = f.label :is_custom_filter, 'Is custom filter?', class: 'form-label'
-            = f.check_box :is_custom_filter, class: 'form-control'
-          
-          .mb-3
-            = f.label :is_filter_hashtag, 'Is hashtag?', class: 'form-label'
-            = f.check_box :is_filter_hashtag, class: 'form-control'
+            = f.label :filter_type, 'Filter Type', class: 'form-label'
+            = f.select :filter_type, KeywordFilter.filter_types.keys.map { |type| [type.capitalize, type] }, {}, class: 'form-control', required: true
 
           = f.button :submit, 'Save', class: 'btn btn-outline-primary'
           = link_to 'Back', keyword_filters_url, class: 'ml-2 text-gray'

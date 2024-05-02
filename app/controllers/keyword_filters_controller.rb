@@ -34,7 +34,7 @@ class KeywordFiltersController < ApplicationController
   private
 
     def keyword_filter_params
-      params.require(:keyword_filter).permit(:account_id, :keyword, :is_filter_hashtag, :server_setting_id, :is_active, :is_custom_filter)
+      params.require(:keyword_filter).permit(:keyword, :filter_type, :server_setting_id, :is_active)
     end
 
     def prepare_filters_for_datatable
@@ -49,8 +49,7 @@ class KeywordFiltersController < ApplicationController
           server_setting_id: g.server_setting&.name,
           keyword: g.keyword,
           is_active: g.is_active? ? 'Yes' : 'No',
-          is_custom_filter: g.is_custom_filter? ? 'Yes' : 'No',
-          is_filter_hashtag: g.is_filter_hashtag? ? 'Yes' : 'No',
+          filter_type: g.filter_type,
           actions: "
                     <a href='#{edit_keyword_filter_url(g.id)}' title='edit keyword' class='mr-2'><i class='fa-solid fa-pen-to-square'></i></a>
                     <a href='#{keyword_filter_url(g.id)}' title='delete keyword' class='mr-2' data-confirm='Are you sure?' rel='nofollow' data-method='delete'><i class='fa-solid fa-trash-can'></i></a>
