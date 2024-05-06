@@ -135,6 +135,62 @@ $(document).ready(function() {
       }
     });
   });
+
+  // Listen for changes in the file input
+  $('#file').change(function() {
+    var formData = new FormData();
+    formData.append('file', $(this)[0].files[0]); // Append the selected file to FormData
+    var metaTag = document.querySelector('meta[name="csrf-token"]');
+
+    if (metaTag) { 
+      var csrfToken = metaTag.content;
+
+      // Ajax request to upload the file
+      $.ajax({
+        url: "/keyword_filters/import",
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false,
+        mimeType: 'multipart/form-data',
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader('X-CSRF-Token', csrfToken); // Set CSRF token in request headers
+        },
+        success: function(response) {
+          // Handle success response
+          var data = JSON.parse(response);
+          if (data.error) {
+            // If the response includes an error, display an alert
+            var errorAlert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"> \
+                                  <strong>Error!</strong> ' + data.error + ' \
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                                    <span aria-hidden="true">&times;</span> \
+                                  </button> \
+                                </div>');
+            $('.card-body').prepend(errorAlert); // Append the alert to the card body
+          } else {
+            // If the response includes an error, display an alert
+            var errorAlert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"> \
+                                  <strong>Success!</strong> ' + data.message + ' \
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"> \
+                                    <span aria-hidden="true">&times;</span> \
+                                  </button> \
+                                </div>');
+            $('.card-body').prepend(errorAlert); // Append the alert to the card body
+          }
+        },
+        error: function(xhr, status, error) {
+          console.log('Error:', error);
+        }
+      });  
+    }else {
+      console.error("CSRF token meta tag not found");
+    }
+    
+  });
+  // end upload CSV file 
+
 })
 
 const addParams = (selected = null, unselected = null) => {

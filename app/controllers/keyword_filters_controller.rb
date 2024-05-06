@@ -2,11 +2,6 @@ class KeywordFiltersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    # respond_to do |format|
-    #   format.html
-    #   format.json {render json: prepare_filters_for_datatable}
-    # end
-
     keyword_filters = KeywordFilter.all
     respond_to do |format|
     format.html
@@ -28,14 +23,12 @@ class KeywordFiltersController < ApplicationController
     if params[:file].present? && !params[:file].blank?
       begin
         KeywordFilter.import(params[:file])
-        redirect_to keyword_filters_path, notice: "Keywords uploaded successfully"
+        render json: { message: "Keywords uploaded successfully" }
       rescue StandardError => e
-        flash[:error] = "#{e.message}"
-        redirect_to keyword_filters_path
+        render json: { error: e.message }
       end
     else
-      flash[:error] = "Please select a file to import"
-      redirect_to keyword_filters_path
+      render json: { error: "Please select a file to import" }
     end
   end  
 
