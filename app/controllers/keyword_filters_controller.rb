@@ -2,11 +2,42 @@ class KeywordFiltersController < ApplicationController
   load_and_authorize_resource
 
   def index
+    # respond_to do |format|
+    #   format.html
+    #   format.json {render json: prepare_filters_for_datatable}
+    # end
+
+    keyword_filters = KeywordFilter.all
     respond_to do |format|
-      format.html
-      format.json {render json: prepare_filters_for_datatable}
+    format.html
+    format.json {render json: prepare_filters_for_datatable}
+    format.csv { 
+      send_data keyword_filters.to_csv(
+        [
+          'keyword',
+          'is_active',
+          'server_setting_id',
+          'filter_type'
+        ]
+      )
+    }
     end
   end
+
+  def import
+    if params[:file].present? && !params[:file].blank?
+      begin
+        KeywordFilter.import(params[:file])
+        redirect_to keyword_filters_path, notice: "Keywords uploaded successfully"
+      rescue StandardError => e
+        flash[:error] = "#{e.message}"
+        redirect_to keyword_filters_path
+      end
+    else
+      flash[:error] = "Please select a file to import"
+      redirect_to keyword_filters_path
+    end
+  end  
 
   def create
     if @keyword_filter.save
