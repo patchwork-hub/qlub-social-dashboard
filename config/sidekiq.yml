@@ -8,7 +8,7 @@ development:
   :scheduler:
     :schedule:
       FetchContentKeywordScheduler:
-        every: '1m'
+        every: '5m'
         class: FetchContentKeywordScheduler
         queue: dashboard_development_scheduler
 
@@ -18,6 +18,13 @@ staging:
   :queues:
     - dashboard_staging_default
     - dashboard_staging_ban_status
+    - dashboard_staging_scheduler
+  :scheduler:
+    :schedule:
+      FetchContentKeywordScheduler:
+        every: '5m'
+        class: FetchContentKeywordScheduler
+        queue: dashboard_staging_scheduler
 
 production:
   :verbose: true
@@ -25,3 +32,10 @@ production:
   :queues:
     - dashboard_production_default
     - dashboard_production_ban_status
+    - dashboard_production_scheduler
+  :scheduler:
+    :schedule:
+      FetchContentKeywordScheduler:
+        every: '5m'
+        class: FetchContentKeywordScheduler
+        queue: dashboard_production_scheduler
