@@ -2,12 +2,12 @@ class KeywordFiltersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    keyword_filters = KeywordFilter.all
+    KeywordFilter.new.fetch_keyword_filter_api
     respond_to do |format|
     format.html
     format.json {render json: prepare_filters_for_datatable}
     format.csv { 
-      send_data keyword_filters.to_csv(
+      send_data KeywordFilter.all.to_csv(
         [
           'keyword',
           'is_active',
