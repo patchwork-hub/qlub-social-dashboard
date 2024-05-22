@@ -2,8 +2,8 @@ class KeywordFilterApiService
   require 'httparty'
   
   def initialize  
-      @base_url = "http://localhost:3001/api/v1/keyword_filters"
-      @api_key = "af6cb5720887e08ca3c492b1f2f16f6d"
+      @base_url = "https://hub.patchwork.online/api/v1/keyword_filters"
+      @api_key = "8e225f965e51445fd5e27c5870111481"
   end
   
   def get_keywords_filters
