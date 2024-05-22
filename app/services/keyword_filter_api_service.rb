@@ -16,7 +16,7 @@ class KeywordFilterApiService
       )
       return [] if res.code != 200
       JSON.parse(res.body)
-    rescue HTTParty::Error, SocketError, Timeout::Error => e
+    rescue HTTParty::Error, SocketError, Timeout::Error,  Errno::ECONNREFUSED => e
       puts "errrrorororoor"
       Rails.logger.error("Failed to get access token: #{e}")
       []
