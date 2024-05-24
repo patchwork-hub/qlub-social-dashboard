@@ -1,9 +1,9 @@
 class KeywordFilterApiService 
   require 'httparty'
   
-  def initialize  
-      @base_url = "https://hub.patchwork.online/api/v1/keyword_filters"
-      @api_key = "8e225f965e51445fd5e27c5870111481"
+  def initialize
+      @base_url = "#{Rails.application.config.base_url}keyword_filters"
+      @api_key = Rails.env.production? ? "8e225f965e51445fd5e27c5870111481" : ENV['CENTRAL_DASHBOARD_KEY']
   end
   
   def get_keywords_filters

@@ -34,7 +34,5 @@ Rails.application.routes.draw do
 
   resources :server_settings, only: [:index, :update]
 
-  resources :keyword_filters do
-    collection { post :import }
-   end
+  resources :keyword_filters
 end

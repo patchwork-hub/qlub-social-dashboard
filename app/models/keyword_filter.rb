@@ -35,15 +35,4 @@ class KeywordFilter < ApplicationRecord
     end
   end
 
-  def self.import(file)
-    CSV.foreach(file.path, headers: true) do |row|
-      keywords_hash = row.to_hash
-      keyword = find_or_create_by!(keyword: keywords_hash['keyword'])
-      keyword.is_active = keywords_hash['is_active']
-      keyword.server_setting_id = ServerSetting.where(name:  keywords_hash['server_setting_id']).last.id
-      keyword.filter_type = keywords_hash['filter_type']
-      keyword.save!
-   end
-  end
-
 end

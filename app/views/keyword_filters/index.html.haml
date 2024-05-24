@@ -12,10 +12,6 @@
               %i.fa-solid.fa-circle-plus
             = link_to keyword_filters_path(format: 'csv'), class: 'form-control float-right', title: 'Export CSV' do
               %i.fa-solid.fa-file-arrow-down
-            = link_to 'javascript:void(0)', id: 'upload_csv_link', class: 'form-control float-right ml-2', title: 'Upload CSV' do
-              %label{for: 'file'}
-                %i.fas.fa-file-import
-                = file_field_tag :file, id: 'file', class: 'd-none', style: 'display:none;'
       .card-body
         %table#datatable.table.table-bordered.table-striped{data: {url: keyword_filters_url, type: 'keyword_filter_list'}}
           %thead

@@ -19,19 +19,6 @@ class KeywordFiltersController < ApplicationController
     end
   end
 
-  def import
-    if params[:file].present? && !params[:file].blank?
-      begin
-        KeywordFilter.import(params[:file])
-        render json: { message: "Keywords uploaded successfully" }
-      rescue StandardError => e
-        render json: { error: e.message }
-      end
-    else
-      render json: { error: "Please select a file to import" }
-    end
-  end  
-
   def create
     if @keyword_filter.save
       redirect_to keyword_filters_url, notice: 'A filter keyword was successfully created!'
