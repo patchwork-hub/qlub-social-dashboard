@@ -28,28 +28,28 @@ namespace :db do
       # Sample data for child settings with parent associations
       child_settings_data = {
         "Spam Block" => [
-          { name: "Spam filters", value: true },
+          { name: "Spam filters", value: false },
           { name: "Sign up challenge", value: false }
         ],
         "Content Moderation" => [
-          { name: "Content filters", value: true },
-          { name: "Live blocklist", value: true }
+          { name: "Content filters", value: false },
+          { name: "Live blocklist", value: false }
         ],
         "Federation" => [
           { name: "Bluesky", value: false },
-          { name: "Threads", value: true }
+          { name: "Threads", value: false }
         ],
         "Local Features" => [
-          { name: "Custom theme", value: true },
-          { name: "Search opt-out", value: true },
-          { name: "Local only posts", value: true },
-          { name: "Long posts and Markdown", value: true },
-          { name: "Local quote posts", value: true },
+          { name: "Custom theme", value: false },
+          { name: "Search opt-out", value: false },
+          { name: "Local only posts", value: false },
+          { name: "Long posts and markdown", value: false },
+          { name: "Local quote posts", value: false },
         ],
         "User Management" => [
-          { name: "Guest Accounts", value: true },
-          { name: "e-Newsletters", value: true },
-          { name: "Analytics", value: true }
+          { name: "Guest accounts", value: false },
+          { name: "e-Newsletters", value: false },
+          { name: "Analytics", value: false }
         ],
         "Plug-ins" => []
       }
@@ -58,12 +58,6 @@ namespace :db do
         ServerSetting.create!(name: child[:name], value: child[:value], position: child_index + 1, parent_id: parent_setting.id)
       end
     end
-
-    serverSettingId = ServerSetting.where(name: 'Content Moderation', parent_id: nil).last&.id 
-    KeywordFilter.create(keyword: 'NSFW', server_setting_id: serverSettingId, filter_type: 2)
-    KeywordFilter.create(keyword: 'Hate Speech', server_setting_id: serverSettingId, filter_type: 2)
-    KeywordFilter.create(keyword: 'Crypto', server_setting_id: serverSettingId, filter_type: 2)
-    KeywordFilter.create(keyword: 'porn', server_setting_id: serverSettingId, filter_type: 2)
     puts "Done insertion of server settings & keywords"
   end
 end

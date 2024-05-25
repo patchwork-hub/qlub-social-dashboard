@@ -6,12 +6,6 @@
     .card
       .card-header
         %h3.card-title Keyword filters
-        .card-tools
-          .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Actions"}
-            = link_to new_keyword_filter_url, class: 'form-control float-right mr-2', title: 'Add New Keyword' do
-              %i.fa-solid.fa-circle-plus
-            = link_to keyword_filters_path(format: 'csv'), class: 'form-control float-right', title: 'Export CSV' do
-              %i.fa-solid.fa-file-arrow-down
       .card-body
         %table#datatable.table.table-bordered.table-striped{data: {url: keyword_filters_url, type: 'keyword_filter_list'}}
           %thead
@@ -20,5 +14,4 @@
               %th Keyword
               %th Is active?
               %th Filter type
-              %th Actions
           %tbody

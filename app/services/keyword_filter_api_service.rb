@@ -2,7 +2,7 @@ class KeywordFilterApiService
   require 'httparty'
   
   def initialize
-      @base_url = "#{Rails.application.config.base_url}keyword_filters"
+      @base_url = Rails.env.production? ? "https://hub.patchwork.online/api/v1/keyword_filters" : ENV['CENTRAL_DASHBOARD_URL']
       @api_key = Rails.env.production? ? "8e225f965e51445fd5e27c5870111481" : ENV['CENTRAL_DASHBOARD_KEY']
   end
   
@@ -17,7 +17,6 @@ class KeywordFilterApiService
       return [] if res.code != 200
       JSON.parse(res.body)
     rescue HTTParty::Error, SocketError, Timeout::Error,  Errno::ECONNREFUSED => e
-      puts "errrrorororoor"
       Rails.logger.error("Failed to get access token: #{e}")
       []
     end

@@ -77,8 +77,7 @@ const COLUMNS = {
     {data: 'server_setting_id'},
     {data: 'keyword'},
     {data: 'is_active'},
-    {data: 'filter_type'},
-    {data: 'actions', orderable: false}
+    {data: 'filter_type'}
   ]
 }
 

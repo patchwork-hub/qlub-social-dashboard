@@ -6,7 +6,6 @@ class KeywordFilter < ApplicationRecord
   enum filter_type: { hashtag: 0, both: 1, content: 2 } 
 
   def fetch_keyword_filter_api
-    KeywordFilter.destroy_all if KeywordFilter.count > 0 && KeywordFilterApiService.new.get_keywords_filters.any?
     server_setting_id = ServerSetting.where(name: "Content filters").last&.id
     KeywordFilterApiService.new.get_keywords_filters.each do |keyword_filter|
       keywords = KeywordFilter.new(
@@ -19,20 +18,15 @@ class KeywordFilter < ApplicationRecord
     end
   end
 
-  # Generate a CSV File of All Keywords Records
-  def self.to_csv(fields = column_names, options={})
-    CSV.generate(headers: true) do |csv|
-      csv << fields
-      all.each do |keyword|
-        csv << fields.map do |field|
-          if field == 'server_setting_id'
-            keyword.server_setting.name
-          else
-            keyword.attributes[field]
-          end
-        end
-      end
-    end
+  def fetch_keywords_job 
+
+    content_filter = ServerSetting.find_by(name: "Content filters")
+      
+    return unless content_filter.present?
+      
+    KeywordFilter.destroy_all if KeywordFilter.exists?
+      
+    KeywordFilter.new.fetch_keyword_filter_api if content_filter.value
   end
 
 end

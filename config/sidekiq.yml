@@ -9,7 +9,7 @@ development:
     :schedule:
       FetchContentKeywordScheduler:
         every: '5m'
-        class: FetchContentKeywordScheduler
+        class: Scheduler::FetchContentKeywordScheduler
         queue: dashboard_development_scheduler
 
 staging:
@@ -23,7 +23,7 @@ staging:
     :schedule:
       FetchContentKeywordScheduler:
         every: '5m'
-        class: FetchContentKeywordScheduler
+        class: Scheduler::FetchContentKeywordScheduler
         queue: dashboard_staging_scheduler
 
 production:
@@ -37,5 +37,5 @@ production:
     :schedule:
       FetchContentKeywordScheduler:
         every: '5m'
-        class: FetchContentKeywordScheduler
+        class: Scheduler::FetchContentKeywordScheduler
         queue: dashboard_production_scheduler

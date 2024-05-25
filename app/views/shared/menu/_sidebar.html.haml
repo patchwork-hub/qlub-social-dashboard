@@ -30,12 +30,12 @@
         -#     %i.nav-icon.fa-solid.fa-users
         -#     %p Users
 
-        %li.nav-item
-          - protocol = Rails.env.development? ? 'http://' : 'https://'
-          - domain = ENV['LOCAL_DOMAIN']
-          = link_to "#{protocol}#{domain}/sidekiq", class: "nav-link", target: '_blank' do
-            %i.nav-icon.fa-solid.fa-face-grin-wide
-            %p Sidekiq
+        -# %li.nav-item
+        -#   - protocol = Rails.env.development? ? 'http://' : 'https://'
+        -#   - domain = ENV['LOCAL_DOMAIN']
+        -#   = link_to "#{protocol}#{domain}/sidekiq", class: "nav-link", target: '_blank' do
+        -#     %i.nav-icon.fa-solid.fa-face-grin-wide
+        -#     %p Sidekiq
 
         -# %li.nav-item
         -#   = link_to '/timelines_status', class: "nav-link #{controller_name == 'timelines_status' && action_name == 'index' ? 'active' : ''}" do
@@ -45,9 +45,9 @@
         %li.nav-item
           = link_to server_settings_path, class: "nav-link #{controller_name == 'server_settings' ? 'active' : ''}" do
             %i.nav-icon.fa-solid.fa-server
-            %p Server Setting
+            %p Server Settings
 
         %li.nav-item
           = link_to keyword_filters_url, class: "nav-link #{controller_name == 'keyword_filters' ? 'active' : ''}" do
             %i.nav-icon.fa-solid.fa-filter-circle-xmark
-            %p Keyword filters
+            %p Keyword Filters

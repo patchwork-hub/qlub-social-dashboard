@@ -2,7 +2,6 @@ class KeywordFiltersController < ApplicationController
   load_and_authorize_resource
 
   def index
-    KeywordFilter.new.fetch_keyword_filter_api
     respond_to do |format|
     format.html
     format.json {render json: prepare_filters_for_datatable}
@@ -60,11 +59,7 @@ class KeywordFiltersController < ApplicationController
           server_setting_id: g.server_setting&.name,
           keyword: g.keyword,
           is_active: g.is_active? ? 'Yes' : 'No',
-          filter_type: g.filter_type,
-          actions: "
-                    <a href='#{edit_keyword_filter_url(g.id)}' title='edit keyword' class='mr-2'><i class='fa-solid fa-pen-to-square'></i></a>
-                    <a href='#{keyword_filter_url(g.id)}' title='delete keyword' class='mr-2' data-confirm='Are you sure?' rel='nofollow' data-method='delete'><i class='fa-solid fa-trash-can'></i></a>
-                   "
+          filter_type: g.filter_type
         }
       }
 
