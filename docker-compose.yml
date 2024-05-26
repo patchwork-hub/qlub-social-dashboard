@@ -12,7 +12,7 @@ services:
       - ./postgres16:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=newsStgIngMastAuRoRa2023
+      - POSTGRES_PASSWORD=patchwork@staging@dashboard
       - POSTGRES_DB=patchwork_dashboard_development
   redis:
     restart: always
