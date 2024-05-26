@@ -60,7 +60,7 @@ The container is open to port **3001** and you can access the application with S
 
 To login to the dashboard, use your Mastodon instance's admin account.
 
-As next, you can move on to setting up the **content-filters** gem in your Mastodon server:
+As next, you can move on to setting up the **content_filters** gem in your Mastodon server:
 - [Install Patchwork's content_filters gem in your Mastodon instance](https://github.com/patchwork-hub/content_filters/blob/main/README.md)
 
 ## License
