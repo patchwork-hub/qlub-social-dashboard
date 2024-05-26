@@ -6,10 +6,7 @@
     .card
       .card-header
         %h3.card-title Server Setting
-        .card-tools
-          .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Back"}
-            = link_to new_server_setting_path, class: 'form-control float-right', title: 'add new keyword' do
-              %i.fa-solid.fa-circle-plus
+        
       .card-body
         %table#datatable.table.table-bordered.table-striped{data: { url: server_settings_path, type: 'server_setting_list' }}
           %thead

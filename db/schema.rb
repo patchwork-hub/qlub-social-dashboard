@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "uri", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["account_id", "uri"], name: "index_account_aliases_on_account_id_and_uri", unique: true
     t.index ["account_id"], name: "index_account_aliases_on_account_id"
   end
 
@@ -93,9 +94,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   create_table "account_relationship_severance_events", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "relationship_severance_event_id", null: false
-    t.integer "relationships_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "followers_count", default: 0, null: false
+    t.integer "following_count", default: 0, null: false
     t.index ["account_id", "relationship_severance_event_id"], name: "idx_on_account_id_relationship_severance_event_id_7bd82bf20e", unique: true
     t.index ["account_id"], name: "index_account_relationship_severance_events_on_account_id"
     t.index ["relationship_severance_event_id"], name: "idx_on_relationship_severance_event_id_403f53e707"
@@ -164,11 +166,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "url"
     t.string "avatar_file_name"
     t.string "avatar_content_type"
-    t.bigint "avatar_file_size"
+    t.integer "avatar_file_size"
     t.datetime "avatar_updated_at", precision: nil
     t.string "header_file_name"
     t.string "header_content_type"
-    t.bigint "header_file_size"
+    t.integer "header_file_size"
     t.datetime "header_updated_at", precision: nil
     t.string "avatar_remote_url"
     t.boolean "locked", default: false, null: false
@@ -192,17 +194,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.integer "avatar_storage_schema_version"
     t.integer "header_storage_schema_version"
     t.string "devices_url"
-    t.datetime "sensitized_at", precision: nil
     t.integer "suspension_origin"
+    t.datetime "sensitized_at", precision: nil
     t.boolean "trendable"
     t.datetime "reviewed_at", precision: nil
     t.datetime "requested_review_at", precision: nil
-    t.string "country"
-    t.string "dob"
-    t.integer "subtitle_id"
-    t.integer "about_me_title_option_ids", default: [], array: true
-    t.boolean "is_recommended", default: false
-    t.boolean "is_popular", default: false
     t.boolean "indexable", default: false, null: false
     t.index "(((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::\"char\") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::\"char\")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::\"char\")))", name: "search_index", using: :gin
     t.index "lower((username)::text), COALESCE(lower((domain)::text), ''::text)", name: "index_accounts_on_username_and_domain_lower", unique: true
@@ -301,7 +297,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.bigint "target_account_id", null: false
     t.string "uri"
     t.index ["account_id", "target_account_id"], name: "index_blocks_on_account_id_and_target_account_id", unique: true
-    t.index ["account_id"], name: "index_blocks_on_account_id"
     t.index ["target_account_id"], name: "index_blocks_on_target_account_id"
   end
 
@@ -373,7 +368,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "domain"
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -401,6 +396,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["custom_filter_id"], name: "index_custom_filter_statuses_on_custom_filter_id"
+    t.index ["status_id", "custom_filter_id"], name: "index_custom_filter_statuses_on_status_id_and_custom_filter_id", unique: true
     t.index ["status_id"], name: "index_custom_filter_statuses_on_status_id"
   end
 
@@ -413,28 +409,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "action", default: 0, null: false
     t.index ["account_id"], name: "index_custom_filters_on_account_id"
-  end
-
-  create_table "deprecated_preview_cards", force: :cascade do |t|
-    t.bigint "status_id"
-    t.string "url", default: "", null: false
-    t.string "title"
-    t.string "description"
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
-    t.datetime "image_updated_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "type", default: 0, null: false
-    t.text "html", default: "", null: false
-    t.string "author_name", default: "", null: false
-    t.string "author_url", default: "", null: false
-    t.string "provider_name", default: "", null: false
-    t.string "provider_url", default: "", null: false
-    t.integer "width", default: 0, null: false
-    t.integer "height", default: 0, null: false
-    t.index ["status_id"], name: "index_deprecated_preview_cards_on_status_id", unique: true
   end
 
   create_table "devices", force: :cascade do |t|
@@ -491,16 +465,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "updated_at", precision: nil, null: false
     t.index ["device_id"], name: "index_encrypted_messages_on_device_id"
     t.index ["from_account_id"], name: "index_encrypted_messages_on_from_account_id"
-  end
-
-  create_table "end_points", force: :cascade do |t|
-    t.string "name"
-    t.string "end_point_url"
-    t.string "http_method"
-    t.string "access_token"
-    t.integer "max_active"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "favourites", force: :cascade do |t|
@@ -583,6 +547,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id"
+    t.index ["uid", "provider"], name: "index_identities_on_uid_and_provider", unique: true
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
@@ -593,7 +558,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "data_file_name"
     t.string "data_content_type"
-    t.bigint "data_file_size"
+    t.integer "data_file_size"
     t.datetime "data_updated_at", precision: nil
     t.bigint "account_id", null: false
     t.boolean "overwrite", default: false, null: false
@@ -614,18 +579,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   end
 
   create_table "ip_blocks", force: :cascade do |t|
-    t.inet "ip", default: "0.0.0.0", null: false
-    t.integer "severity", default: 0, null: false
-    t.datetime "expires_at", precision: nil
-    t.text "comment", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.datetime "expires_at", precision: nil
+    t.inet "ip", default: "0.0.0.0", null: false
+    t.integer "severity", default: 0, null: false
+    t.text "comment", default: "", null: false
     t.index ["ip"], name: "index_ip_blocks_on_ip", unique: true
   end
 
   create_table "keyword_filters", force: :cascade do |t|
     t.string "keyword"
-    t.boolean "is_filter_hashtag", default: false
+    t.boolean "is_active", default: true
+    t.bigint "server_setting_id"
+    t.integer "filter_type"
+    t.index ["server_setting_id"], name: "index_keyword_filters_on_server_setting_id"
   end
 
   create_table "list_accounts", force: :cascade do |t|
@@ -646,15 +614,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "replies_policy", default: 0, null: false
     t.boolean "exclusive", default: false, null: false
-    t.string "list_avatar_file_name"
-    t.string "list_avatar_content_type"
-    t.bigint "list_avatar_file_size"
-    t.datetime "list_avatar_updated_at"
-    t.string "list_header_file_name"
-    t.string "list_header_content_type"
-    t.bigint "list_header_file_size"
-    t.datetime "list_header_updated_at"
-    t.string "description"
     t.index ["account_id"], name: "index_lists_on_account_id"
   end
 
@@ -668,266 +627,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "user_agent"
     t.datetime "created_at", precision: nil
     t.index ["user_id"], name: "index_login_activities_on_user_id"
-  end
-
-  create_table "mammoth_about_me_title_options", force: :cascade do |t|
-    t.bigint "about_me_title_id", null: false
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["about_me_title_id"], name: "index_mammoth_about_me_title_options_on_about_me_title_id"
-  end
-
-  create_table "mammoth_about_me_titles", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_app_version_historys", force: :cascade do |t|
-    t.bigint "app_version_id", null: false
-    t.string "os_type"
-    t.boolean "deprecated", default: false
-    t.string "link_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["app_version_id"], name: "index_mammoth_app_version_historys_on_app_version_id"
-  end
-
-  create_table "mammoth_app_versions", force: :cascade do |t|
-    t.string "version_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_collections", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
-    t.datetime "image_updated_at", precision: nil
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "position"
-  end
-
-  create_table "mammoth_communities", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
-    t.datetime "image_updated_at", precision: nil
-    t.string "description"
-    t.bigint "collection_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_country_filtering", default: false
-    t.jsonb "fields"
-    t.string "header_file_name"
-    t.string "header_content_type"
-    t.bigint "header_file_size"
-    t.datetime "header_updated_at", precision: nil
-    t.boolean "is_country_filter_on", default: true
-    t.integer "position"
-    t.boolean "is_recommended", default: false
-    t.integer "participants_count", default: 0
-    t.integer "admin_following_count", default: 0
-    t.string "bot_account"
-    t.string "bio"
-    t.string "bot_account_info"
-    t.jsonb "guides"
-    t.index ["collection_id"], name: "index_mammoth_communities_on_collection_id"
-  end
-
-  create_table "mammoth_communities_admins", force: :cascade do |t|
-    t.bigint "community_id", null: false
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["community_id"], name: "index_mammoth_communities_admins_on_community_id"
-    t.index ["user_id"], name: "index_mammoth_communities_admins_on_user_id"
-  end
-
-  create_table "mammoth_communities_statuses", force: :cascade do |t|
-    t.bigint "community_id"
-    t.bigint "status_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
-    t.datetime "image_updated_at", precision: nil
-    t.index ["community_id"], name: "index_mammoth_communities_statuses_on_community_id"
-    t.index ["status_id"], name: "index_mammoth_communities_statuses_on_status_id"
-  end
-
-  create_table "mammoth_communities_users", force: :cascade do |t|
-    t.bigint "community_id", null: false
-    t.bigint "user_id", null: false
-    t.boolean "is_primary", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["community_id"], name: "index_mammoth_communities_users_on_community_id"
-    t.index ["user_id"], name: "index_mammoth_communities_users_on_user_id"
-  end
-
-  create_table "mammoth_community_editorials", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.bigint "target_account_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "target_account_id"], name: "index_editorials_on_account_and_target_account", unique: true
-  end
-
-  create_table "mammoth_community_feeds", force: :cascade do |t|
-    t.bigint "community_id", null: false
-    t.string "name"
-    t.string "slug", null: false
-    t.string "custom_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "account_id"
-    t.datetime "deleted_at", precision: nil
-    t.integer "del_schedule", default: 24
-    t.index ["account_id"], name: "index_mammoth_community_feeds_on_account_id"
-    t.index ["community_id"], name: "index_mammoth_community_feeds_on_community_id"
-  end
-
-  create_table "mammoth_community_filter_keywords", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.bigint "community_id"
-    t.string "keyword"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_filter_hashtag", default: false
-    t.index ["account_id"], name: "index_mammoth_community_filter_keywords_on_account_id"
-  end
-
-  create_table "mammoth_community_filter_statuses", force: :cascade do |t|
-    t.bigint "community_filter_keyword_id", null: false
-    t.bigint "status_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["community_filter_keyword_id"], name: "index_mammoth_community_filter_keyword_id"
-    t.index ["status_id"], name: "index_mammoth_community_filter_statuses_on_status_id"
-  end
-
-  create_table "mammoth_community_hashtags", force: :cascade do |t|
-    t.bigint "community_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "hashtag"
-    t.boolean "is_incoming", default: true
-    t.string "name"
-    t.boolean "is_bio", default: false
-    t.index ["community_id"], name: "index_mammoth_community_hashtags_on_community_id"
-  end
-
-  create_table "mammoth_community_moderators", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.bigint "target_account_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id", "target_account_id"], name: "index_moderators_on_account_and_target_account", unique: true
-  end
-
-  create_table "mammoth_contributor_roles", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_medias", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_notification_tokens", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.string "notification_token"
-    t.string "platform_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_mammoth_notification_tokens_on_account_id"
-  end
-
-  create_table "mammoth_server_settings", force: :cascade do |t|
-    t.string "name"
-    t.boolean "value"
-    t.integer "postion"
-    t.bigint "parent_id"
-    t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_settings", force: :cascade do |t|
-    t.string "thing_type"
-    t.bigint "thing_type_id"
-    t.jsonb "settings"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_subtitles", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_user_community_settings", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.jsonb "selected_filters"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_user_search_settings", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.jsonb "selected_filters"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_user_server_settings", force: :cascade do |t|
-    t.jsonb "setting"
-    t.bigint "user_id", null: false
-    t.bigint "server_setting_id", null: false
-    t.index ["server_setting_id"], name: "index_mammoth_user_server_settings_on_server_setting_id"
-    t.index ["user_id"], name: "index_mammoth_user_server_settings_on_user_id"
-  end
-
-  create_table "mammoth_user_timeline_settings", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.jsonb "selected_filters"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_voices", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "slug", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "mammoth_wait_lists", force: :cascade do |t|
-    t.string "email"
-    t.string "invitation_code", null: false
-    t.string "role"
-    t.integer "contributor_role_id"
-    t.string "description"
-    t.boolean "is_invitation_code_used", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "markers", force: :cascade do |t|
@@ -944,7 +643,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.bigint "status_id"
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
+    t.integer "file_file_size"
     t.datetime "file_updated_at", precision: nil
     t.string "remote_url", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -960,11 +659,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.integer "file_storage_schema_version"
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.bigint "thumbnail_file_size"
+    t.integer "thumbnail_file_size"
     t.datetime "thumbnail_updated_at", precision: nil
     t.string "thumbnail_remote_url"
-    t.text "auto_generated_description"
-    t.boolean "sensitive", default: false
     t.index ["account_id", "status_id"], name: "index_media_attachments_on_account_id_and_status_id", order: { status_id: :desc }
     t.index ["scheduled_status_id"], name: "index_media_attachments_on_scheduled_status_id", where: "(scheduled_status_id IS NOT NULL)"
     t.index ["shortcode"], name: "index_media_attachments_on_shortcode", unique: true, opclass: :text_pattern_ops, where: "(shortcode IS NOT NULL)"
@@ -981,16 +678,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.index ["status_id"], name: "index_mentions_on_status_id"
   end
 
-  create_table "monitoring_statuses", force: :cascade do |t|
-    t.integer "end_point_id"
-    t.json "end_point_response"
-    t.boolean "is_operational", default: false
-    t.string "monitoring_batch", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["end_point_id"], name: "index_monitoring_statuses_on_end_point_id"
-  end
-
   create_table "mutes", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -1000,28 +687,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "expires_at", precision: nil
     t.index ["account_id", "target_account_id"], name: "index_mutes_on_account_id_and_target_account_id", unique: true
     t.index ["target_account_id"], name: "index_mutes_on_target_account_id"
-  end
-
-  create_table "my_pins", force: :cascade do |t|
-    t.bigint "account_id"
-    t.integer "rank"
-    t.string "pinned_obj_type"
-    t.bigint "pinned_obj_id"
-    t.integer "pin_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_my_pins_on_account_id"
-    t.index ["pinned_obj_type", "pinned_obj_id"], name: "index_my_pins_on_pinned_obj"
-  end
-
-  create_table "newsmast_menus", force: :cascade do |t|
-    t.bigint "account_id"
-    t.string "name"
-    t.string "slug"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "menu_type"
-    t.index ["account_id"], name: "index_newsmast_menus_on_account_id"
   end
 
   create_table "notification_permissions", force: :cascade do |t|
@@ -1198,7 +863,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "description", default: "", null: false
     t.string "image_file_name"
     t.string "image_content_type"
-    t.bigint "image_file_size"
+    t.integer "image_file_size"
     t.datetime "image_updated_at", precision: nil
     t.integer "type", default: 0, null: false
     t.text "html", default: "", null: false
@@ -1218,7 +883,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "max_score_at", precision: nil
     t.boolean "trendable"
     t.integer "link_type"
-    t.integer "retry_count", default: 0
     t.datetime "published_at"
     t.string "image_description", default: "", null: false
     t.index ["url"], name: "index_preview_cards_on_url", unique: true
@@ -1347,7 +1011,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "var", default: "", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.bigint "file_file_size"
+    t.integer "file_file_size"
     t.datetime "file_updated_at", precision: nil
     t.json "meta"
     t.datetime "created_at", precision: nil, null: false
@@ -1384,8 +1048,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   create_table "status_pins", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "status_id", null: false
-    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["account_id", "status_id"], name: "index_status_pins_on_account_id_and_status_id", unique: true
     t.index ["status_id"], name: "index_status_pins_on_status_id"
   end
@@ -1434,17 +1098,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "edited_at", precision: nil
     t.boolean "trendable"
     t.bigint "ordered_media_attachment_ids", array: true
-    t.boolean "is_only_for_followers", default: false
-    t.boolean "is_rss_content", default: false
-    t.string "rss_link"
-    t.bigint "community_feed_id"
-    t.boolean "is_meta_preview", default: false
-    t.bigint "group_id"
-    t.string "translated_text"
-    t.integer "text_count"
     t.index ["account_id", "id", "visibility", "updated_at"], name: "index_statuses_20190820", order: { id: :desc }, where: "(deleted_at IS NULL)"
     t.index ["account_id"], name: "index_statuses_on_account_id"
-    t.index ["community_feed_id"], name: "index_statuses_on_community_feed_id"
     t.index ["deleted_at"], name: "index_statuses_on_deleted_at", where: "(deleted_at IS NOT NULL)"
     t.index ["id", "account_id"], name: "index_statuses_local_20190824", order: { id: :desc }, where: "((local OR (uri IS NULL)) AND (deleted_at IS NULL) AND (visibility = 0) AND (reblog_of_id IS NULL) AND ((NOT reply) OR (in_reply_to_account_id = account_id)))"
     t.index ["id", "account_id"], name: "index_statuses_public_20200119", order: { id: :desc }, where: "((deleted_at IS NULL) AND (visibility = 0) AND (reblog_of_id IS NULL) AND ((NOT reply) OR (in_reply_to_account_id = account_id)))"
@@ -1458,7 +1113,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.bigint "status_id", null: false
     t.bigint "tag_id", null: false
     t.index ["status_id"], name: "index_statuses_tags_on_status_id"
-    t.index ["tag_id"], name: "index_statuses_tags_on_tag_id"
   end
 
   create_table "system_keys", force: :cascade do |t|
@@ -1547,7 +1201,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at", precision: nil
     t.datetime "last_sign_in_at", precision: nil
-    t.boolean "admin", default: false, null: false
     t.string "confirmation_token"
     t.datetime "confirmed_at", precision: nil
     t.datetime "confirmation_sent_at", precision: nil
@@ -1562,7 +1215,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.string "otp_backup_codes", array: true
     t.bigint "account_id", null: false
     t.boolean "disabled", default: false, null: false
-    t.boolean "moderator", default: false, null: false
     t.bigint "invite_id"
     t.string "chosen_languages", array: true
     t.bigint "created_by_application_id"
@@ -1573,25 +1225,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.inet "sign_up_ip"
     t.boolean "skip_sign_in_token"
     t.bigint "role_id"
-    t.string "phone"
-    t.string "otp_code"
-    t.string "confirmed_otp_code"
-    t.boolean "is_active", default: true
-    t.bigint "wait_list_id"
-    t.boolean "is_account_setup_finished", default: false
-    t.string "step"
     t.text "settings"
     t.string "time_zone"
-    t.boolean "via_newsmast_api", default: false
+    t.string "otp_secret"
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_by_application_id"], name: "index_users_on_created_by_application_id", where: "(created_by_application_id IS NOT NULL)"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["is_active"], name: "index_users_on_is_active", where: "(is_active IS FALSE)"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, opclass: :text_pattern_ops, where: "(reset_password_token IS NOT NULL)"
     t.index ["role_id"], name: "index_users_on_role_id", where: "(role_id IS NOT NULL)"
     t.index ["unconfirmed_email"], name: "index_users_on_unconfirmed_email", where: "(unconfirmed_email IS NOT NULL)"
-    t.check_constraint "email IS NOT NULL", name: "users_email_null"
   end
 
   create_table "web_push_subscriptions", force: :cascade do |t|
@@ -1624,6 +1267,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["external_id"], name: "index_webauthn_credentials_on_external_id", unique: true
+    t.index ["user_id", "nickname"], name: "index_webauthn_credentials_on_user_id_and_nickname", unique: true
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 
@@ -1683,7 +1327,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   add_foreign_key "custom_filter_statuses", "custom_filters", on_delete: :cascade
   add_foreign_key "custom_filter_statuses", "statuses", on_delete: :cascade
   add_foreign_key "custom_filters", "accounts", on_delete: :cascade
-  add_foreign_key "deprecated_preview_cards", "statuses", on_delete: :cascade
   add_foreign_key "devices", "accounts", on_delete: :cascade
   add_foreign_key "devices", "oauth_access_tokens", column: "access_token_id", on_delete: :cascade
   add_foreign_key "email_domain_blocks", "email_domain_blocks", column: "parent_id", on_delete: :cascade
@@ -1704,30 +1347,13 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   add_foreign_key "identities", "users", name: "fk_bea040f377", on_delete: :cascade
   add_foreign_key "imports", "accounts", name: "fk_6db1b6e408", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade
+  add_foreign_key "keyword_filters", "server_settings", on_delete: :cascade
   add_foreign_key "list_accounts", "accounts", on_delete: :cascade
   add_foreign_key "list_accounts", "follow_requests", on_delete: :cascade
   add_foreign_key "list_accounts", "follows", on_delete: :cascade
   add_foreign_key "list_accounts", "lists", on_delete: :cascade
   add_foreign_key "lists", "accounts", on_delete: :cascade
   add_foreign_key "login_activities", "users", on_delete: :cascade
-  add_foreign_key "mammoth_about_me_title_options", "mammoth_about_me_titles", column: "about_me_title_id"
-  add_foreign_key "mammoth_app_version_historys", "mammoth_app_versions", column: "app_version_id"
-  add_foreign_key "mammoth_communities", "mammoth_collections", column: "collection_id"
-  add_foreign_key "mammoth_communities_admins", "mammoth_communities", column: "community_id"
-  add_foreign_key "mammoth_communities_admins", "users"
-  add_foreign_key "mammoth_communities_statuses", "mammoth_communities", column: "community_id"
-  add_foreign_key "mammoth_communities_statuses", "statuses", on_delete: :cascade
-  add_foreign_key "mammoth_communities_users", "mammoth_communities", column: "community_id"
-  add_foreign_key "mammoth_communities_users", "users"
-  add_foreign_key "mammoth_community_feeds", "mammoth_communities", column: "community_id"
-  add_foreign_key "mammoth_community_filter_keywords", "accounts"
-  add_foreign_key "mammoth_community_filter_keywords", "mammoth_communities", column: "community_id"
-  add_foreign_key "mammoth_community_filter_statuses", "mammoth_community_filter_keywords", column: "community_filter_keyword_id"
-  add_foreign_key "mammoth_community_filter_statuses", "statuses", on_delete: :cascade
-  add_foreign_key "mammoth_community_hashtags", "mammoth_communities", column: "community_id"
-  add_foreign_key "mammoth_notification_tokens", "accounts"
-  add_foreign_key "mammoth_user_server_settings", "mammoth_server_settings", column: "server_setting_id", on_delete: :cascade
-  add_foreign_key "mammoth_user_server_settings", "users", on_delete: :cascade
   add_foreign_key "markers", "users", on_delete: :cascade
   add_foreign_key "media_attachments", "accounts", name: "fk_96dd81e81b", on_delete: :nullify
   add_foreign_key "media_attachments", "scheduled_statuses", on_delete: :nullify
@@ -1736,11 +1362,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_23_091840) do
   add_foreign_key "mentions", "statuses", on_delete: :cascade
   add_foreign_key "mutes", "accounts", column: "target_account_id", name: "fk_eecff219ea", on_delete: :cascade
   add_foreign_key "mutes", "accounts", name: "fk_b8d8daf315", on_delete: :cascade
-  add_foreign_key "my_pins", "accounts"
-  add_foreign_key "newsmast_menus", "accounts"
   add_foreign_key "notification_permissions", "accounts"
   add_foreign_key "notification_permissions", "accounts", column: "from_account_id"
-  add_foreign_key "notification_policies", "accounts"
+  add_foreign_key "notification_policies", "accounts", on_delete: :cascade
   add_foreign_key "notification_requests", "accounts", column: "from_account_id", on_delete: :cascade
   add_foreign_key "notification_requests", "accounts", on_delete: :cascade
   add_foreign_key "notification_requests", "statuses", column: "last_status_id", on_delete: :nullify

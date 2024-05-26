@@ -1,5 +1,6 @@
 require 'sidekiq'
 require 'sidekiq/web'
+require 'sidekiq-scheduler'
 
 redis_url = "redis://#{ENV["REDIS_HOST"]}:#{ENV['REDIS_PORT']}"
 

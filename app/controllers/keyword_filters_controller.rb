@@ -3,8 +3,18 @@ class KeywordFiltersController < ApplicationController
 
   def index
     respond_to do |format|
-      format.html
-      format.json {render json: prepare_filters_for_datatable}
+    format.html
+    format.json {render json: prepare_filters_for_datatable}
+    format.csv { 
+      send_data KeywordFilter.all.to_csv(
+        [
+          'keyword',
+          'is_active',
+          'server_setting_id',
+          'filter_type'
+        ]
+      )
+    }
     end
   end
 
@@ -34,7 +44,7 @@ class KeywordFiltersController < ApplicationController
   private
 
     def keyword_filter_params
-      params.require(:keyword_filter).permit(:account_id, :keyword, :is_filter_hashtag)
+      params.require(:keyword_filter).permit(:keyword, :filter_type, :server_setting_id, :is_active)
     end
 
     def prepare_filters_for_datatable
@@ -46,12 +56,10 @@ class KeywordFiltersController < ApplicationController
       
       @data = @keyword_filters.each_with_object([]) { |g, arr|
         arr << {
+          server_setting_id: g.server_setting&.name,
           keyword: g.keyword,
-          is_filter_hashtag: g.is_filter_hashtag? ? 'Yes' : 'No',
-          actions: "
-                    <a href='#{edit_keyword_filter_url(g.id)}' title='edit keyword' class='mr-2'><i class='fa-solid fa-pen-to-square'></i></a>
-                    <a href='#{keyword_filter_url(g.id)}' title='delete keyword' class='mr-2' data-confirm='Are you sure?' rel='nofollow' data-method='delete'><i class='fa-solid fa-trash-can'></i></a>
-                   "
+          is_active: g.is_active? ? 'Yes' : 'No',
+          filter_type: g.filter_type
         }
       }
 

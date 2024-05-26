@@ -72,6 +72,12 @@ const COLUMNS = {
   server_setting_list: [
     { data: 'name' },
     { data: 'settings' }
+  ],
+  keyword_filter_list: [
+    {data: 'server_setting_id'},
+    {data: 'keyword'},
+    {data: 'is_active'},
+    {data: 'filter_type'}
   ]
 }
 
@@ -84,23 +90,30 @@ const COLUMN_DEFS = {
     {className: 'selectable-checkbox', orderable: false, targets: 0}
   ],
   server_setting_list: [
-    { 
-      className: 'selectable-checkbox', 
-      orderable: false, 
-      targets: 0 
+    {
+      className: 'selectable-checkbox',
+      orderable: false,
+      targets: 0
     },
-    { 
-      className: "dt-nowrap", 
+    {
+      className: "dt-wrap",
       targets: 1,
       render: function(data, type, row) {
         let settingsHtml = '';
         row.settings.forEach(function(setting) {
-          settingsHtml += `<div class="chip"> ${setting.is_operational ? '<i class="fa fa-check-circle"></i>' : ''} ${setting.name}</div>`;
+          settingsHtml += `
+          <div class="chip">
+            ${setting.name}
+            <label class="form-check-label switch" for="${setting.id}">
+              <input class="form-check-input switch-input" type="checkbox" id="${setting.id}" ${setting.is_operational ? 'checked' : ''} data-setting-id="${setting.id}">
+              <span class="switch-slider round"></span>
+            </label>
+          </div>`;
         });
         return settingsHtml;
       }
     }
-  ]
+  ]  
 }
 
 jQuery(function() {
@@ -154,6 +167,28 @@ jQuery(function() {
       selector: 'td:first-child'
     }
   }
-
+  
   var table = $('#datatable').DataTable(options);
+  
+  $('#datatable').on('change', '.switch-input', function(event) {
+    updateSetting(event.target);
+  });
 });
+
+function updateSetting(checkbox) {
+  const settingId = checkbox.getAttribute('data-setting-id');
+  const isChecked = checkbox.checked;
+
+  $.ajax({
+    type: 'PATCH',
+    url: '/server_settings/' + settingId,
+    beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+    data: { server_setting: { value: isChecked } }, 
+    success: function(response) {
+      console.log('Setting updated successfully');
+    },
+    error: function(xhr, status, error) {
+      console.error('Failed to update setting:', error);
+    }
+  });
+}

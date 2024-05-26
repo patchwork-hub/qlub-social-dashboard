@@ -61,6 +61,8 @@ Rails.application.configure do
 
   config.assets.debug = false
 
+  config.base_url= 'http://localhost:3001/api/v1/'
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

@@ -4,6 +4,13 @@ development:
   :queues:
     - dashboard_development_default
     - dashboard_development_ban_status
+    - dashboard_development_scheduler
+  :scheduler:
+    :schedule:
+      FetchContentKeywordScheduler:
+        every: '5m'
+        class: Scheduler::FetchContentKeywordScheduler
+        queue: dashboard_development_scheduler
 
 staging:
   :verbose: true
@@ -11,6 +18,13 @@ staging:
   :queues:
     - dashboard_staging_default
     - dashboard_staging_ban_status
+    - dashboard_staging_scheduler
+  :scheduler:
+    :schedule:
+      FetchContentKeywordScheduler:
+        every: '5m'
+        class: Scheduler::FetchContentKeywordScheduler
+        queue: dashboard_staging_scheduler
 
 production:
   :verbose: true
@@ -18,3 +32,10 @@ production:
   :queues:
     - dashboard_production_default
     - dashboard_production_ban_status
+    - dashboard_production_scheduler
+  :scheduler:
+    :schedule:
+      FetchContentKeywordScheduler:
+        every: '5m'
+        class: Scheduler::FetchContentKeywordScheduler
+        queue: dashboard_production_scheduler
