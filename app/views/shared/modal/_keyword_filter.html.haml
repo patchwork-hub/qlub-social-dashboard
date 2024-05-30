@@ -1,0 +1,27 @@
+.modal.fade#keyFilterModal{ tabindex: '-1', role: 'dialog' }
+  .modal-dialog{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5.modal-title
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 16, height: 16, 'aria-hidden': 'true'
+      .modal-body
+        = simple_form_for @keyword_filter, url: keyword_filters_path, html: { class: 'needs-validation', novalidate: true } do |f|
+          .mb-3
+            = f.hidden_field :server_setting_id, id: 'serverSettingId'
+          .mb-3
+            = f.label :keyword, class: 'form-label'
+            = f.text_field :keyword, class: 'form-control'
+            %span.form-text.small You can only add one spam filter at a time.
+            %span.form-text.text-danger#keyword-error
+            - if @keyword_filter.errors.has_key?(:keyword)
+              = @keyword_filter.errors[:keyword].first
+          .mb-3
+            = f.label :is_active, 'Is active?', class: 'form-label'
+            = f.check_box :is_active, class: 'form-control'
+          .mb-3
+            = f.label :filter_type, 'Filter Type', class: 'form-label'
+            = f.select :filter_type, KeywordFilter.filter_types.keys.map { |type| [type.capitalize, type] }, {}, class: 'form-control'
+          .modal-footer
+            %button.btn.btn-outline-secondary{ type: 'button', 'data-dismiss': 'modal' } Cancel
+            = f.button :submit, 'Save changes', class: 'btn btn-danger'

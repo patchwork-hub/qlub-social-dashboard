@@ -1,7 +1,13 @@
-import $ from 'jquery'
+import JQuery from 'jquery';
+window.$ = window.JQuery = JQuery;
 import 'bootstrap'
 import 'admin-lte'
 import 'lib/datatable'
+import './modal_handler';
+import './api_util';
+import './settings';
+import './keyword_filters';
+import './header';
 
 import DataTable from 'datatables.net-bs4'
 import 'datatables.net-select-bs4'
@@ -20,6 +26,12 @@ localStorage.setItem('selected', null);
 localStorage.setItem('unselected', null);
 
 $(document).ready(function() {
+
+  $('[data-toggle="tooltip"]').tooltip();
+
+  $('#keyFilterModal').on('hidden.bs.modal', function () {
+    $(this).find('.alert.alert-danger').remove();
+  });
 
   // multiple selection
   var table = $('#datatable').DataTable();
@@ -83,7 +95,7 @@ $(document).ready(function() {
         $('#select_all').prop('checked', true);
         $('#select_all').prop('indeterminate', false);
       }
-    } 
+    }
 
     addParams(selected, unselected);
 
@@ -167,7 +179,7 @@ const addParams = (selected = null, unselected = null) => {
 
 const togglePassword = (e) => {
 	let input = document.querySelector('input#password');
-	
+
 	if (input.type == 'password') {
 		e.setAttribute('class', 'svg-inline--fa fa-eye');
 		input.type = 'text';

@@ -7,9 +7,9 @@
       - else
         = 'Dashboard'
       |
-      = 'Newsmast'
+      = 'Patchwork'
 
-    %meta{:content => "width=device-width,initial-scale=1", :name => "viewport"}/
+    %meta{content: "width=device-width,initial-scale=1", name: "viewport"}/
     = csrf_meta_tags
     = csp_meta_tag
 
@@ -18,7 +18,7 @@
     -# css
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = stylesheet_link_tag "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"
-    
+
     -# js
     = javascript_include_tag "jquery"
     = javascript_importmap_tags
@@ -28,16 +28,20 @@
       .wrapper
         = render "shared/menu/header"
         = render "shared/menu/sidebar"
-        .content-wrapper
-          .mx-2.pt-3
-            - # show flash messages
-            = render "shared/flash"
-          .content.container-fluid
-            .container-fluid
-              = yield
+        .container-fluid
+          .row
+            .col-md-9
+              .content-wrapper
+                .mx-2.pt-3
+                  - # show flash messages
+                  = render "shared/flash"
+                .content.container-fluid
+                  = yield
+            .col-md-3
+              = render "shared/menu/right_sidebar"
 
     - else
       .container.mt-5
         .w-25.m-auto
-          = image_tag 'logo-with-text.svg', alt: 'Newsmast Logo', width: '100%'
-        = yield    
+          = image_tag 'patchwork-with-text.svg', alt: 'Patchwork Logo', width: '100%'
+        = yield

@@ -2,8 +2,18 @@
   %ul.navbar-nav
     %li.nav-item
       %a.nav-link{'data-widget' => 'pushmenu', :href => '#', :role => 'button'}
-        %i.fas.fa-bars
-    
+        %h5#header-title Server settings
   %ul.navbar-nav.ml-auto
-    %li.nav-item
-      = link_to 'Sign out', destroy_user_session_url, data: {method: :delete}, class: 'nav-link hover-effect'
+    %li.nav-item.mx-4
+      %form.form-inline
+        %div.input-group
+          %div.input-group-prepend
+            %span.input-group-text
+              %i.fas.fa-search
+          %input.form-control.form-control-navbar{type: "search", placeholder: "Search", 'aria-label' => "Search"}
+    %li.nav-item.mx-2
+      %a.btn.btn-danger{ href: '#' } Go to server
+    %li.nav-item.mx-2
+      %a.nav-link{'data-method' => 'delete', :href => destroy_user_session_url, :class => 'nav-link hover-effect'}
+        = image_tag("icons/arrow-right-from-bracket.svg", class: "mr-2", width: "16", height: "16")
+        Sign out

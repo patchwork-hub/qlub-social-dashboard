@@ -12,6 +12,7 @@ pin "@fortawesome/fontawesome-svg-core", to: "https://ga.jspm.io/npm:@fortawesom
 pin "@fortawesome/free-brands-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-brands-svg-icons@6.2.1/index.mjs"
 pin "@fortawesome/free-regular-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-regular-svg-icons@6.2.1/index.mjs"
 pin "@fortawesome/free-solid-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-solid-svg-icons@6.2.1/index.mjs"
+pin "source-sans-pro", to: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/lib", under: "lib"
