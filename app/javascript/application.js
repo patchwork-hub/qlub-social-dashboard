@@ -2,11 +2,12 @@ import JQuery from 'jquery';
 window.$ = window.JQuery = JQuery;
 import 'bootstrap'
 import 'admin-lte'
+import "@nathanvda/cocoon"
 import 'lib/datatable'
 import './modal_handler';
 import './api_util';
 import './settings';
-import './keyword_filters';
+import './keyword_groups';
 import './header';
 
 import DataTable from 'datatables.net-bs4'
@@ -148,6 +149,16 @@ $(document).ready(function() {
     });
   });
 
+  document.addEventListener('DOMContentLoaded', function() {
+    const nestedAttributeContainer = document.querySelector('.nested-fields');
+
+    if (nestedAttributeContainer && nestedAttributeContainer.children.length === 0) {
+      const addNewLink = nestedAttributeContainer.querySelector('.add_fields');
+      if (addNewLink) {
+        addNewLink.click();
+      }
+    }
+  });
 })
 
 const addParams = (selected = null, unselected = null) => {

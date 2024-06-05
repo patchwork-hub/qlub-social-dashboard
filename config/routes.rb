@@ -36,5 +36,6 @@ Rails.application.routes.draw do
 
   # resources :keyword_filters
   resources :keyword_filters, only: [:index, :create, :update, :destroy]
+  resources :keyword_filter_groups, only: [:index, :create, :update, :destroy]
 
 end

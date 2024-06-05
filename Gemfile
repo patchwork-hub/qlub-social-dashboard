@@ -73,7 +73,7 @@ group :test do
   gem "webdrivers"
 end
 
-# controller response 
+# controller response
 gem 'responders'
 
 # Use Bootstrap gem to pickup CSS
@@ -85,11 +85,11 @@ gem 'jquery-rails', '~> 4.6'
 gem 'haml'
 gem 'simple_form'
 
-# aws 
+# aws
 gem 'health_check'
 gem 'aws-sdk-s3', '~> 1.117', require: false
 
-# pagination 
+# pagination
 gem "kaminari"
 
 # authentication & authorization
@@ -101,7 +101,7 @@ gem 'kt-paperclip', '~> 7.1'
 
 gem 'dotenv-rails', groups: [:development, :test]
 
-# excel 
+# excel
 gem 'spreadsheet'
 
 # background jobs
@@ -110,3 +110,6 @@ gem 'hiredis', '~> 0.6'
 gem 'redis', '~> 4.5', require: ['redis', 'redis/connection/hiredis']
 gem 'httparty'
 gem 'sidekiq-scheduler', '~> 5.0'
+
+# to handle nested forms
+gem "cocoon"

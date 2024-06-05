@@ -46,28 +46,28 @@
                     - when 'Live blocklist'
                       %a{ href: '#', style: 'color: red;', title: 'Set-up denylist' }
                         Set-up denylist
-                - unless option[:keyword_filters].blank?
+                - unless option[:keyword_filter_groups].blank?
                   %hr
                   .nested-options.ml-4
-                    - option[:keyword_filters].each_with_index do |sub_option, sub_option_index|
+                    - option[:keyword_filter_groups].each_with_index do |sub_option, sub_option_index|
                       .d-flex.align-items-center.mb-2
                         = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
                         %label.form-check-label.switch{ for: sub_option[:id] }
-                          %input.form-check-input.switch-input.keyword-input{ type: 'checkbox', id: sub_option[:id], checked: sub_option[:is_active], 'data-keyword-id' => sub_option[:id], 'data-filter-type' => sub_option[:filter_type], 'data-server-setting-id' => option[:id] }
+                          %input.form-check-input.switch-input.keyword-input{ type: 'checkbox', id: sub_option[:id], checked: sub_option[:is_active], 'data-group-id' => sub_option[:id], 'data-is-custom' => sub_option[:is_custom], 'data-server-setting-id' => option[:id] }
                           %span.switch-slider.round
                             %span.slider-tick
                               %i.fa-solid.fa-check
                             %span.slider-cross
                               %i.fa-solid.fa-xmark
                         %span.ml-2
-                          = sub_option[:keyword]
+                          = sub_option[:name]
                           %a{ href: '#', 'data-toggle': 'tooltip', title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.', class: 'ml-1' }
                             = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
-                      - unless sub_option_index == option[:keyword_filters].size - 1
+                      - unless sub_option_index == option[:keyword_filter_groups].size - 1
                         %hr
                 - unless option_index == setting[:settings].size - 1
                   %hr
           - unless setting == @server_settings.last
             %hr
 
-= render 'shared/modal/keyword_filter'
+= render 'keyword_filter'

@@ -1,9 +1,8 @@
 class KeywordFilter < ApplicationRecord
   self.table_name = 'keyword_filters'
-  belongs_to :server_setting, class_name: "ServerSetting", optional: true
   validates :keyword, presence: true, uniqueness: true
 
-  enum filter_type: { hashtag: 0, both: 1, content: 2 } 
+  enum filter_type: { hashtag: 0, both: 1, content: 2 }
 
   def fetch_keyword_filter_api
     server_setting_id = ServerSetting.where(name: "Content filters").last&.id
@@ -18,14 +17,14 @@ class KeywordFilter < ApplicationRecord
     end
   end
 
-  def fetch_keywords_job 
+  def fetch_keywords_job
 
     content_filter = ServerSetting.find_by(name: "Content filters")
-      
+
     return unless content_filter.present?
-      
+
     KeywordFilter.destroy_all if KeywordFilter.exists?
-      
+
     KeywordFilter.new.fetch_keyword_filter_api if content_filter.value
   end
 

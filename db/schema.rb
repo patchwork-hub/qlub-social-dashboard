@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_04_064122) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +20,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.string "uri", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["account_id", "uri"], name: "index_account_aliases_on_account_id_and_uri", unique: true
     t.index ["account_id"], name: "index_account_aliases_on_account_id"
   end
 
@@ -94,10 +93,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   create_table "account_relationship_severance_events", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "relationship_severance_event_id", null: false
+    t.integer "relationships_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "followers_count", default: 0, null: false
-    t.integer "following_count", default: 0, null: false
     t.index ["account_id", "relationship_severance_event_id"], name: "idx_on_account_id_relationship_severance_event_id_7bd82bf20e", unique: true
     t.index ["account_id"], name: "index_account_relationship_severance_events_on_account_id"
     t.index ["relationship_severance_event_id"], name: "idx_on_relationship_severance_event_id_403f53e707"
@@ -166,11 +164,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.string "url"
     t.string "avatar_file_name"
     t.string "avatar_content_type"
-    t.integer "avatar_file_size"
+    t.bigint "avatar_file_size"
     t.datetime "avatar_updated_at", precision: nil
     t.string "header_file_name"
     t.string "header_content_type"
-    t.integer "header_file_size"
+    t.bigint "header_file_size"
     t.datetime "header_updated_at", precision: nil
     t.string "avatar_remote_url"
     t.boolean "locked", default: false, null: false
@@ -194,8 +192,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.integer "avatar_storage_schema_version"
     t.integer "header_storage_schema_version"
     t.string "devices_url"
-    t.integer "suspension_origin"
     t.datetime "sensitized_at", precision: nil
+    t.integer "suspension_origin"
     t.boolean "trendable"
     t.datetime "reviewed_at", precision: nil
     t.datetime "requested_review_at", precision: nil
@@ -368,7 +366,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.string "domain"
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
@@ -396,7 +394,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["custom_filter_id"], name: "index_custom_filter_statuses_on_custom_filter_id"
-    t.index ["status_id", "custom_filter_id"], name: "index_custom_filter_statuses_on_status_id_and_custom_filter_id", unique: true
     t.index ["status_id"], name: "index_custom_filter_statuses_on_status_id"
   end
 
@@ -409,6 +406,28 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "action", default: 0, null: false
     t.index ["account_id"], name: "index_custom_filters_on_account_id"
+  end
+
+  create_table "deprecated_preview_cards", force: :cascade do |t|
+    t.bigint "status_id"
+    t.string "url", default: "", null: false
+    t.string "title"
+    t.string "description"
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.bigint "image_file_size"
+    t.datetime "image_updated_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.integer "type", default: 0, null: false
+    t.text "html", default: "", null: false
+    t.string "author_name", default: "", null: false
+    t.string "author_url", default: "", null: false
+    t.string "provider_name", default: "", null: false
+    t.string "provider_url", default: "", null: false
+    t.integer "width", default: 0, null: false
+    t.integer "height", default: 0, null: false
+    t.index ["status_id"], name: "index_deprecated_preview_cards_on_status_id", unique: true
   end
 
   create_table "devices", force: :cascade do |t|
@@ -547,7 +566,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_id"
-    t.index ["uid", "provider"], name: "index_identities_on_uid_and_provider", unique: true
     t.index ["user_id"], name: "index_identities_on_user_id"
   end
 
@@ -558,7 +576,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "data_file_name"
     t.string "data_content_type"
-    t.integer "data_file_size"
+    t.bigint "data_file_size"
     t.datetime "data_updated_at", precision: nil
     t.bigint "account_id", null: false
     t.boolean "overwrite", default: false, null: false
@@ -579,21 +597,31 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   end
 
   create_table "ip_blocks", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.datetime "expires_at", precision: nil
     t.inet "ip", default: "0.0.0.0", null: false
     t.integer "severity", default: 0, null: false
+    t.datetime "expires_at", precision: nil
     t.text "comment", default: "", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["ip"], name: "index_ip_blocks_on_ip", unique: true
+  end
+
+  create_table "keyword_filter_groups", force: :cascade do |t|
+    t.string "name"
+    t.boolean "is_custom", default: true
+    t.boolean "is_active", default: true
+    t.bigint "server_setting_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["server_setting_id"], name: "index_keyword_filter_groups_on_server_setting_id"
   end
 
   create_table "keyword_filters", force: :cascade do |t|
     t.string "keyword"
     t.boolean "is_active", default: true
-    t.bigint "server_setting_id"
     t.integer "filter_type"
-    t.index ["server_setting_id"], name: "index_keyword_filters_on_server_setting_id"
+    t.bigint "keyword_filter_group_id"
+    t.index ["keyword_filter_group_id"], name: "index_keyword_filters_on_keyword_filter_group_id"
   end
 
   create_table "list_accounts", force: :cascade do |t|
@@ -643,7 +671,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.bigint "status_id"
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at", precision: nil
     t.string "remote_url", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -659,7 +687,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.integer "file_storage_schema_version"
     t.string "thumbnail_file_name"
     t.string "thumbnail_content_type"
-    t.integer "thumbnail_file_size"
+    t.bigint "thumbnail_file_size"
     t.datetime "thumbnail_updated_at", precision: nil
     t.string "thumbnail_remote_url"
     t.index ["account_id", "status_id"], name: "index_media_attachments_on_account_id_and_status_id", order: { status_id: :desc }
@@ -863,7 +891,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.string "description", default: "", null: false
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at", precision: nil
     t.integer "type", default: 0, null: false
     t.text "html", default: "", null: false
@@ -1011,7 +1039,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.string "var", default: "", null: false
     t.string "file_file_name"
     t.string "file_content_type"
-    t.integer "file_file_size"
+    t.bigint "file_file_size"
     t.datetime "file_updated_at", precision: nil
     t.json "meta"
     t.datetime "created_at", precision: nil, null: false
@@ -1048,8 +1076,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   create_table "status_pins", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.bigint "status_id", null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["account_id", "status_id"], name: "index_status_pins_on_account_id_and_status_id", unique: true
     t.index ["status_id"], name: "index_status_pins_on_status_id"
   end
@@ -1201,6 +1229,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at", precision: nil
     t.datetime "last_sign_in_at", precision: nil
+    t.boolean "admin", default: false, null: false
     t.string "confirmation_token"
     t.datetime "confirmed_at", precision: nil
     t.datetime "confirmation_sent_at", precision: nil
@@ -1215,6 +1244,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.string "otp_backup_codes", array: true
     t.bigint "account_id", null: false
     t.boolean "disabled", default: false, null: false
+    t.boolean "moderator", default: false, null: false
     t.bigint "invite_id"
     t.string "chosen_languages", array: true
     t.bigint "created_by_application_id"
@@ -1227,7 +1257,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.bigint "role_id"
     t.text "settings"
     t.string "time_zone"
-    t.string "otp_secret"
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["created_by_application_id"], name: "index_users_on_created_by_application_id", where: "(created_by_application_id IS NOT NULL)"
@@ -1267,7 +1296,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["external_id"], name: "index_webauthn_credentials_on_external_id", unique: true
-    t.index ["user_id", "nickname"], name: "index_webauthn_credentials_on_user_id_and_nickname", unique: true
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
   end
 
@@ -1327,6 +1355,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   add_foreign_key "custom_filter_statuses", "custom_filters", on_delete: :cascade
   add_foreign_key "custom_filter_statuses", "statuses", on_delete: :cascade
   add_foreign_key "custom_filters", "accounts", on_delete: :cascade
+  add_foreign_key "deprecated_preview_cards", "statuses", on_delete: :cascade
   add_foreign_key "devices", "accounts", on_delete: :cascade
   add_foreign_key "devices", "oauth_access_tokens", column: "access_token_id", on_delete: :cascade
   add_foreign_key "email_domain_blocks", "email_domain_blocks", column: "parent_id", on_delete: :cascade
@@ -1347,7 +1376,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   add_foreign_key "identities", "users", name: "fk_bea040f377", on_delete: :cascade
   add_foreign_key "imports", "accounts", name: "fk_6db1b6e408", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade
-  add_foreign_key "keyword_filters", "server_settings", on_delete: :cascade
+  add_foreign_key "keyword_filter_groups", "server_settings"
+  add_foreign_key "keyword_filters", "keyword_filter_groups"
   add_foreign_key "list_accounts", "accounts", on_delete: :cascade
   add_foreign_key "list_accounts", "follow_requests", on_delete: :cascade
   add_foreign_key "list_accounts", "follows", on_delete: :cascade
@@ -1364,7 +1394,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_10_192043) do
   add_foreign_key "mutes", "accounts", name: "fk_b8d8daf315", on_delete: :cascade
   add_foreign_key "notification_permissions", "accounts"
   add_foreign_key "notification_permissions", "accounts", column: "from_account_id"
-  add_foreign_key "notification_policies", "accounts", on_delete: :cascade
+  add_foreign_key "notification_policies", "accounts"
   add_foreign_key "notification_requests", "accounts", column: "from_account_id", on_delete: :cascade
   add_foreign_key "notification_requests", "accounts", on_delete: :cascade
   add_foreign_key "notification_requests", "statuses", column: "last_status_id", on_delete: :nullify

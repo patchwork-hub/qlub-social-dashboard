@@ -1,0 +1,29 @@
+.modal.fade#keyFilterModal{ tabindex: '-1', role: 'dialog' }
+  .modal-dialog{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5.modal-title
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
+      .modal-body
+        = simple_form_for @keyword_filter_group, url: keyword_filter_groups_path, html: { class: 'needs-validation', novalidate: true } do |f|
+          .mb-3
+            = f.hidden_field :server_setting_id, id: 'serverSettingId'
+          .mb-3
+            = f.label :name, class: 'form-label'
+            %input.form-control{ list: 'data-options', name: 'keyword_filter_group[name]' }
+              %datalist#data-options
+                - @existing_data.each do |data|
+                  %option{ value: data }
+          .mb-3.keyword_filters
+            %div.d-flex
+              %div.col-8.mt-3
+                = f.label :keyword, class: 'form-label'
+              %div.col-4.mt-3
+                = f.label :filter_type, 'Filter Type', class: 'form-label'
+            = f.fields_for :keyword_filters do |keyword_filter|
+              = render 'server_settings/keyword_filter_fields', f: keyword_filter
+          = link_to_add_association "Add another keyword", f, :keyword_filters, data: {association_insertion_node: '.keyword_filters', association_insertion_method: :append}
+          .modal-footer
+            %button.btn.btn-outline-secondary{ type: 'button', 'data-dismiss': 'modal' } Cancel
+            = f.button :submit, 'Save changes', class: 'btn btn-danger'

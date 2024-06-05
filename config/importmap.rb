@@ -12,7 +12,6 @@ pin "@fortawesome/fontawesome-svg-core", to: "https://ga.jspm.io/npm:@fortawesom
 pin "@fortawesome/free-brands-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-brands-svg-icons@6.2.1/index.mjs"
 pin "@fortawesome/free-regular-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-regular-svg-icons@6.2.1/index.mjs"
 pin "@fortawesome/free-solid-svg-icons", to: "https://ga.jspm.io/npm:@fortawesome/free-solid-svg-icons@6.2.1/index.mjs"
-pin "source-sans-pro", to: "https://fonts.googleapis.com/css2?family=Source+Sans+Pro"
 
 pin_all_from "app/javascript/controllers", under: "controllers"
 pin_all_from "app/javascript/lib", under: "lib"
@@ -31,3 +30,5 @@ pin "datatables.net-buttons-html5", to: "https://cdn.datatables.net/buttons/2.3.
 pin "datatables.net-select-bs4", to: "https://ga.jspm.io/npm:datatables.net-select-bs4@1.5.0/js/select.bootstrap4.mjs"
 pin "datatables.net-select", to: "https://ga.jspm.io/npm:datatables.net-select@1.5.0/js/dataTables.select.mjs"
 pin "datatables.net-select-dt", to: "https://cdnjs.cloudflare.com/ajax/libs/datatables.net-select-dt/1.5.0/select.dataTables.min.js"
+pin "@nathanvda/cocoon", to: "https://ga.jspm.io/npm:@nathanvda/cocoon@1.2.14/cocoon.js"
+pin "@fontsource/source-sans-pro", to: "https://ga.jspm.io/npm:@fontsource/source-sans-pro@5.0.8/index.css"
