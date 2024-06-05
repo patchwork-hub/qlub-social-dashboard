@@ -8,7 +8,7 @@ class ServerSetting < ApplicationRecord
   belongs_to :parent, class_name: "ServerSetting", optional: true
   has_many :children, class_name: "ServerSetting", foreign_key: "parent_id", dependent: :destroy
 
-  # after_update :invoke_keyword_schedule, if: :saved_change_to_value?, if: :content_filters?
+  after_update :invoke_keyword_schedule, if: :saved_change_to_value?, if: :content_filters?
 
   private
   def invoke_keyword_schedule

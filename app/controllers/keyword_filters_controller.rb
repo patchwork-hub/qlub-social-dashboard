@@ -59,7 +59,7 @@ class KeywordFiltersController < ApplicationController
   end
 
   def keyword_filter_params
-    params.require(:keyword_filter).permit(:keyword, :filter_type, :server_setting_id, :is_active)
+    params.require(:keyword_filter).permit(:keyword, :filter_type, :server_setting_id, :is_active, :keyword_filter_group_id)
   end
 
   def prepare_filters
