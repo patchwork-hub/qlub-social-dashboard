@@ -1,12 +1,12 @@
-class KeywordFilterApiService 
+class KeywordFilterGroupApiService 
   require 'httparty'
   
-  def initialize
-      @base_url = "https://hub.patchwork.online/api/v1/keyword_filters"
+  def initialize(action_name)
+      @base_url = "https://hub.patchwork.online/api/v1/#{action_name}"
       @api_key = "8e225f965e51445fd5e27c5870111481"
   end
   
-  def get_keywords_filters
+  def get_keywords
     begin
       res = HTTParty.get(@base_url, 
         :body => {}.to_json,
