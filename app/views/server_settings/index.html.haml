@@ -27,7 +27,7 @@
                           %i.fa-solid.fa-xmark
                     %span.ml-2
                       = option[:name]
-                      %a{'data-toggle': 'tooltip', title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.', class: 'ml-1' }
+                      %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
                         = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
                   %div
                     - case option[:name]
@@ -61,7 +61,7 @@
                               %i.fa-solid.fa-xmark
                         %span.ml-2
                           = sub_option[:name]
-                          %a{ href: '#', 'data-toggle': 'tooltip', title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.', class: 'ml-1' }
+                          %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
                             = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
                       - unless sub_option_index == option[:keyword_filter_groups].size - 1
                         %hr

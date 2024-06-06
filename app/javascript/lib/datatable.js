@@ -94,25 +94,20 @@ jQuery(function() {
 
   var table = $('#datatable').DataTable(options);
 
-  $('#datatable').on('change', '.switch-input', function(event) {
-    updateSetting(event.target);
+  // multiple selection
+  var table_without_option = $('#datatable').DataTable();
+
+  table_without_option.on('draw', function() {
+    $('tr').each(function() {
+      var row = $(this);
+      var checkbox = row.find('.checkbox');
+
+      if (checkbox.is(':checked')) {
+        row.addClass('selected');
+      } else {
+        row.removeClass('selected');
+      }
+    });
   });
 });
 
-function updateSetting(checkbox) {
-  const settingId = checkbox.getAttribute('data-setting-id');
-  const isChecked = checkbox.checked;
-
-  $.ajax({
-    type: 'PATCH',
-    url: '/server_settings/' + settingId,
-    beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-    data: { server_setting: { value: isChecked } },
-    success: function(response) {
-      console.log('Setting updated successfully');
-    },
-    error: function(xhr, status, error) {
-      console.error('Failed to update setting:', error);
-    }
-  });
-}

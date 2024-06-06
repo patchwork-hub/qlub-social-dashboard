@@ -1,17 +1,12 @@
-import JQuery from 'jquery';
-window.$ = window.JQuery = JQuery;
-import 'bootstrap'
-import 'admin-lte'
-import "@nathanvda/cocoon"
-import 'lib/datatable'
+import 'bootstrap';
+import 'admin-lte';
+import "@nathanvda/cocoon";
+import 'lib/datatable';
 import './modal_handler';
 import './api_util';
 import './settings';
 import './keyword_groups';
 import './header';
-
-import DataTable from 'datatables.net-bs4'
-import 'datatables.net-select-bs4'
 
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fas} from '@fortawesome/free-solid-svg-icons'
@@ -28,26 +23,12 @@ localStorage.setItem('unselected', null);
 
 $(document).ready(function() {
 
-  $('[data-toggle="tooltip"]').tooltip();
-
-  $('#keyFilterModal').on('hidden.bs.modal', function () {
-    $(this).find('.alert.alert-danger').remove();
-  });
-
-  // multiple selection
-  var table = $('#datatable').DataTable();
-
-  table.on('draw', function() {
-    $('tr').each(function() {
-      var row = $(this);
-      var checkbox = row.find('.checkbox');
-
-      if (checkbox.is(':checked')) {
-        row.addClass('selected');
-      } else {
-        row.removeClass('selected');
-      }
-    });
+  $('.select2').select2({
+    dropdownParent: $('#keyFilterModal'),
+    tags: true,
+    placeholder: 'Select an option',
+    allowClear: true,
+    theme: 'bootstrap'
   });
 
   $('#datatable tbody').on('click', '.selectable-checkbox', function(e) {

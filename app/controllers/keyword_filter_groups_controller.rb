@@ -1,8 +1,11 @@
 class KeywordFilterGroupsController < ApplicationController
-  before_action :set_keyword_filter_group, only: [:edit, :update, :destroy]
+  before_action :set_keyword_filter_group, only: [:show, :edit, :update, :destroy]
 
   def index
-    @keyword_filter_groups = KeywordFilterGroup.all
+    @keyword_filter_group = KeywordFilterGroup.all
+  end
+
+  def show
   end
 
   def new
@@ -11,17 +14,11 @@ class KeywordFilterGroupsController < ApplicationController
   end
 
   def create
-    existing_group = KeywordFilterGroup.find_by(name: params[:keyword_filter_group][:name])
-
-    if existing_group.present?
-      @keyword_filter_group = existing_group
-      @keyword_filter_group.assign_attributes(keyword_filter_group_params)
-    else
-      @keyword_filter_group = KeywordFilterGroup.new(keyword_filter_group_params)
-    end
+    @keyword_filter_group = KeywordFilterGroup.find_or_initialize_by(name: params[:keyword_filter_group][:name])
+    @keyword_filter_group.assign_attributes(keyword_filter_group_params)
 
     if @keyword_filter_group.save
-      redirect_back(fallback_location: root_path, flash: { success: 'Keyword Filter Group created successfully' })
+      render json: { success: true }
     else
       render json: { success: false, error: @keyword_filter_group.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
@@ -32,9 +29,9 @@ class KeywordFilterGroupsController < ApplicationController
 
   def update
     if @keyword_filter_group.update(is_active: params[:keyword_filter_group][:is_active])
-      render json: { success: true, message: 'Keyword Filter Group updated successfully' }
+      render json: { success: true }
     else
-      render json: { success: false, error: @keyword_filter_group.errors.full_messages.join(', ') }, status: :unprocessable_entity
+      render json: { success: false, error: @keyword_filter_group.errors.full_messages.join(', ') }
     end
   end
 

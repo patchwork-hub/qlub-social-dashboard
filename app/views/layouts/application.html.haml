@@ -18,9 +18,12 @@
     -# css
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = stylesheet_link_tag "https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"
+    = stylesheet_link_tag "select2"
+    = stylesheet_link_tag "select2-bootstrap"
 
     -# js
     = javascript_include_tag "jquery"
+    = javascript_include_tag "select2"
     = javascript_importmap_tags
 
   %body.hold-transition.sidebar-mini.layout-fixed{"data-scrollbar-auto-hide" => "n"}

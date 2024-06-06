@@ -79,8 +79,7 @@
   display: none;
 }
 
-.tooltip-inner {
-  max-width: 65% !important;
-  text-align: center;
-  margin: auto;
+// modal
+.is-invalid {
+  border-color: red !important;
 }

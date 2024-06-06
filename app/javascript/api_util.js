@@ -1,5 +1,5 @@
 export function sendPatchRequest(url, data) {
-  fetch(url, {
+  return fetch(url, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -7,11 +7,12 @@ export function sendPatchRequest(url, data) {
     },
     body: JSON.stringify(data)
   })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Update successful', data);
-  })
-  .catch(error => {
-    console.error('Failed to update:', error);
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(error => {
+        throw new Error(error.message || 'Failed to update');
+      });
+    }
+    return response.json();
   });
 }

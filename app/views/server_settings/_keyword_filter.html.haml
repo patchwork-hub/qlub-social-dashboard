@@ -1,4 +1,4 @@
-.modal.fade#keyFilterModal{ tabindex: '-1', role: 'dialog' }
+.modal.fade#keyFilterModal{ role: 'dialog' }
   .modal-dialog{ role: 'document' }
     .modal-content
       .modal-header
@@ -9,12 +9,11 @@
         = simple_form_for @keyword_filter_group, url: keyword_filter_groups_path, html: { class: 'needs-validation', novalidate: true } do |f|
           .mb-3
             = f.hidden_field :server_setting_id, id: 'serverSettingId'
-          .mb-3
+          .mb-3.mx-2
             = f.label :name, class: 'form-label'
-            %input.form-control{ list: 'data-options', name: 'keyword_filter_group[name]' }
-              %datalist#data-options
-                - @existing_data.each do |data|
-                  %option{ value: data }
+            %select.select2.form-control.mx-3{ name: 'keyword_filter_group[name]', id: 'keyword_filter_group_name', style: 'width: 100%' }
+              - @existing_data.each do |data|
+                %option{ value: data }= data
           .mb-3.keyword_filters
             %div.d-flex
               %div.col-8.mt-3
@@ -26,4 +25,4 @@
           = link_to_add_association "Add another keyword", f, :keyword_filters, data: {association_insertion_node: '.keyword_filters', association_insertion_method: :append}
           .modal-footer
             %button.btn.btn-outline-secondary{ type: 'button', 'data-dismiss': 'modal' } Cancel
-            = f.button :submit, 'Save changes', class: 'btn btn-danger'
+            = f.button :submit, 'Save changes', class: 'btn btn-danger submit-btn'
