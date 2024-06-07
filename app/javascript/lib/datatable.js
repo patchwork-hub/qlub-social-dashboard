@@ -4,41 +4,26 @@ import DataTable from 'datatables.net-bs4'
 import 'datatables.net-select-bs4'
 
 const COLUMNS = {
-  server_setting_list: [
-    { data: 'name' }
-  ],
-  keyword_filter_list: [
-    {data: 'keyword'},
-    {data: 'keyword_filter_group_id'},
-    {data: 'is_active'},
-    {data: 'filter_type'}
+  keyword_filter_group_list: [
+    { data: 'name' },
+    { data: 'server_setting' },
+    { data: 'is_active' },
+    {
+      data: 'keyword_filters',
+      render: function(data, type, row) {
+        if (data && Array.isArray(data)) {
+          return '<ol>' + data.map(function(filter) {
+            return `<li>${filter.keyword}</li>`;
+          }).join('') + '</ol>';
+        } else {
+          return '';
+        }
+      }
+    }
   ]
 }
 
 const COLUMN_DEFS = {
-  server_setting_list: [
-    {
-      targets: 0,
-      render: function(data, type, row) {
-        let settingsHtml = `<div class="d-flex justify-content-between">
-                              <div>${row.name}</div>`;
-        if (row.settings && row.settings.length) {
-          row.settings.forEach(setting => {
-            settingsHtml += `
-            <div style="padding-left: 20px;">
-              <label class="form-check-label switch" for="${setting.id}">
-                <input class="form-check-input switch-input" type="checkbox" id="${setting.id}" ${setting.is_operational ? 'checked' : ''} data-setting-id="${setting.id}">
-                <span class="switch-slider round"></span>
-              </label>
-              ${setting.name}
-            </div>
-            </div>`;
-          });
-        }
-        return settingsHtml;
-      }
-    }
-  ]
 }
 
 jQuery(function() {
@@ -55,17 +40,13 @@ jQuery(function() {
     searching:  false,
     serverSide: true,
     processing: true,
-    lengthChange: false,
+    lengthMenu: false,
     info: false,
     ajax: {
       type: "GET",
       url: url,
       dataType: "json",
       data: (d) => {
-        let community_id = $('#community_id').val();
-        if (community_id) {
-          d.community_id = community_id;
-        }
 
         let selected = localStorage.getItem('selected');
         if (selected == 'all'){
@@ -93,7 +74,6 @@ jQuery(function() {
   }
 
   var table = $('#datatable').DataTable(options);
-
   // multiple selection
   var table_without_option = $('#datatable').DataTable();
 
@@ -109,5 +89,4 @@ jQuery(function() {
       }
     });
   });
-});
-
+})

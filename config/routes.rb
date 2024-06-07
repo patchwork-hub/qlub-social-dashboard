@@ -34,8 +34,8 @@ Rails.application.routes.draw do
 
   resources :server_settings, only: [:index, :update]
 
-  # resources :keyword_filters
-  resources :keyword_filters, only: [:index, :create, :update, :destroy]
-  resources :keyword_filter_groups, only: [:index, :create, :update, :destroy]
+  resources :keyword_filter_groups do
+    resources :keyword_filters
+  end
 
 end

@@ -6,7 +6,14 @@ class KeywordFilterGroupsController < ApplicationController
   end
 
   def show
+    respond_to do |format|
+      format.html
+      format.json {
+        render json: prepare_filter_group_data
+      }
+    end
   end
+
 
   def new
     @keyword_filter_group = KeywordFilterGroup.new
@@ -48,5 +55,24 @@ class KeywordFilterGroupsController < ApplicationController
 
   def keyword_filter_group_params
     params.require(:keyword_filter_group).permit(:name, :server_setting_id, keyword_filters_attributes: [:id, :keyword, :filter_type, :_destroy])
+  end
+
+  def prepare_filter_group_data
+    data = [
+      name: @keyword_filter_group.name,
+      server_setting: ServerSetting.find_by_id(@keyword_filter_group.server_setting_id)&.name,
+      is_active: @keyword_filter_group.is_active ? '<i class="fa-solid fa-check" style="color: green;"></i>' : '<i class="fa-solid fa-xmark" style="color: red;"></i>',
+      keyword_filters: @keyword_filter_group.keyword_filters.map do |kf|
+        {
+          id: kf.id,
+          keyword: kf.keyword,
+        }
+      end
+    ]
+
+    total_records = 1
+    total_filtered = total_records
+
+    { draw: params[:draw].to_i, recordsTotal: total_records, recordsFiltered: total_filtered, data: data }
   end
 end

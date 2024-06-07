@@ -32,7 +32,7 @@
                   %div
                     - case option[:name]
                     - when 'Spam filters'
-                      %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal' }
+                      %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#' }
                         Add spam filter
                     - when 'Sign up challenge'
                       %a{ href: '#', style: 'color: red;', title: 'Add challenge' }
@@ -60,7 +60,7 @@
                             %span.slider-cross
                               %i.fa-solid.fa-xmark
                         %span.ml-2
-                          = link_to sub_option[:name], keyword_filters_path
+                          = link_to sub_option[:name], keyword_filter_group_path(sub_option[:id])
                           %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
                             = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
                       - unless sub_option_index == option[:keyword_filter_groups].size - 1

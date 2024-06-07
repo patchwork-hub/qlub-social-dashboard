@@ -20,7 +20,7 @@ class ServerSettingsController < ApplicationController
   def set_keyword_filter_group
     @keyword_filter_group = KeywordFilterGroup.new
     @keyword_filter_group.keyword_filters.build
-    @existing_data = KeywordFilterGroup.where(is_custom: true).pluck(:name)
+    @existing_data = KeywordFilterGroup.where(is_custom: true).order(:id).pluck(:name)
   end
 
   def server_setting_params
