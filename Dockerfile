@@ -34,6 +34,7 @@ RUN apt-get install -y --no-install-recommends \
     imagemagick \
     iproute2 \
     nodejs \
+    libpq-dev\
     yarn \
     ffmpeg \
     supervisor \
