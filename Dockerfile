@@ -41,6 +41,7 @@ RUN apt-get install -y --no-install-recommends \
     libvips42 \
     libxrender1 \
     fonts-wqy-zenhei \
+    libjemalloc2 \
     vim \
     && rm -rf /var/lib/apt/lists/*
 
@@ -64,6 +65,7 @@ ADD . $app_path
 
 RUN bundle exec rake assets:clean
 RUN bundle exec rake assets:precompile
+
 
 RUN ["chmod", "+x", "/usr/app/docker-entrypoint.sh"]
 ENTRYPOINT ["/usr/app/docker-entrypoint.sh"]
