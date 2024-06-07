@@ -8,7 +8,6 @@ const COLUMNS = {
     { data: 'name' }
   ],
   keyword_filter_list: [
-    {data: 'server_setting_id'},
     {data: 'keyword'},
     {data: 'is_active'},
     {data: 'filter_type'}

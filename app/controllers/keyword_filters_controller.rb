@@ -59,24 +59,23 @@ class KeywordFiltersController < ApplicationController
   end
 
   def keyword_filter_params
-    params.require(:keyword_filter).permit(:keyword, :filter_type, :server_setting_id, :is_active, :keyword_filter_group_id)
+    params.require(:keyword_filter).permit(:keyword, :filter_type, :is_active, :keyword_filter_group_id)
   end
 
   def prepare_filters
     @keyword_filters = @all = KeywordFilter.all
 
-    @keyword_filters = @keyword_filters.where("keyword like :q", q: "%#{@q}%") if @q.present?
+      @keyword_filters = @keyword_filters.order("#{@sort}": :"#{@dir}").page(@page).per(@per)
 
-    @keyword_filters = @keyword_filters.order("#{@sort}": :"#{@dir}").page(@page).per(@per)
+      @data = @keyword_filters.each_with_object([]) { |g, arr|
+        arr << {
+          keyword: g.keyword,
+          is_active: g.is_active? ? 'Yes' : 'No',
+          filter_type: g.filter_type,
+          name: g.keyword_filter_group&.name || 'None',
 
-    @data = @keyword_filters.each_with_object([]) { |g, arr|
-      arr << {
-        server_setting_id: g.server_setting&.name,
-        keyword: g.keyword,
-        is_active: g.is_active? ? 'Yes' : 'No',
-        filter_type: g.filter_type
+        }
       }
-    }
 
     total_records  = @all.size
     total_filtered = @q.present? ? @keyword_filters.total_count : total_records
