@@ -1,7 +1,7 @@
 FROM ruby:3.1.2-slim
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+	&& apt-get install -y --no-install-recommends \
     libjemalloc-dev \
     curl \
     gnupg \
@@ -9,8 +9,8 @@ RUN apt-get update \
     software-properties-common
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-    && curl -sL https://deb.nodesource.com/setup_14.x | bash -
+  && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+  && curl -sL https://deb.nodesource.com/setup_14.x | bash -
 
 RUN apt-get install -y --no-install-recommends \
     bzip2 \
@@ -34,7 +34,7 @@ RUN apt-get install -y --no-install-recommends \
     imagemagick \
     iproute2 \
     nodejs \
-    libpq-dev \
+    libpq-dev\
     yarn \
     ffmpeg \
     supervisor \
@@ -46,6 +46,8 @@ RUN apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV RAILS_SERVE_STATIC_FILES=true
+ENV RAILS_LOG_TO_STDOUT=true
 ENV app_path /usr/app
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
@@ -55,28 +57,20 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 WORKDIR $app_path
 
 RUN echo "install: --no-document" > $HOME/.gemrc && echo "update: --no-document" >> $HOME/.gemrc
-
-# Copy Gemfile and install gems
 COPY Gemfile* ./
 RUN gem install bundler
 RUN bundle config set --local deployment 'true'
 RUN bundle config set --local without 'development test'
 RUN bundle install --jobs 4
 
-# Copy application code
 ADD . $app_path
 
-# Install JavaScript dependencies
-RUN yarn install --check-files
-
-# Precompile assets
 RUN bundle exec rake assets:clean
 RUN bundle exec rake assets:precompile
 
-# Set entrypoint and command
+
 RUN ["chmod", "+x", "/usr/app/docker-entrypoint.sh"]
 ENTRYPOINT ["/usr/app/docker-entrypoint.sh"]
 
-# Copy supervisord configuration
 COPY ./supervisord.conf /etc/supervisord.conf
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
