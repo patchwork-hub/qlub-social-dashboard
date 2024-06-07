@@ -6,14 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isChecked = checkbox.checked;
     const data = { server_setting: { value: isChecked } };
 
-    sendPatchRequest(`/server_settings/${settingId}`, data)
-      .then(response => {
-        console.log('Setting updated successfully:', response);
-      })
-      .catch(error => {
-        console.error('Error updating setting:', error);
-        $('#keyFilterModal').modal('show');
-      });
+    sendPatchRequest(`/server_settings/${settingId}`, data);
   }
 
   const settingSwitches = document.querySelectorAll('.setting-input');
@@ -90,3 +83,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+

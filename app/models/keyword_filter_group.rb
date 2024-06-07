@@ -5,7 +5,7 @@ class KeywordFilterGroup < ApplicationRecord
                                 allow_destroy: true,
                                 reject_if: proc { |att| att['keyword'].blank? }
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   def fetch_keyword_filter_group_api
     server_setting_id = ServerSetting.where(name: "Content filters").last&.id

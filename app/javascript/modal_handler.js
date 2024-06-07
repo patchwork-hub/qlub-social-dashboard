@@ -13,15 +13,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setModalDetails(title, id);
   });
-
-  $(document).on('ajax:complete', function () {
-    $('a[data-toggle="modal"]').off('click').on('click', function (event) {
-      event.preventDefault();
-
-      const title = $(this).attr('title');
-      const id = $(this).data('id');
-
-      setModalDetails(title, id);
-    });
-  });
 });

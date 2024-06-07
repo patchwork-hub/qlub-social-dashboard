@@ -26,3 +26,27 @@
           .modal-footer
             %button.btn.btn-outline-secondary{ type: 'button', 'data-dismiss': 'modal' } Cancel
             = f.button :submit, 'Save changes', class: 'btn btn-danger submit-btn'
+
+:javascript
+  $(document).ready(function(){
+    console.log("Ready!!")
+    $(document).on('show.bs.modal', '#keyFilterModal', function (e) {
+      console.log('Modal is opened');
+    });
+
+    $(document).on('hide.bs.modal', '#keyFilterModal', function (e) {
+      console.log('Modal is hide');
+      var form = $(this).find('form')[0];
+      if (form) {
+        form.reset();
+      }
+
+      $(this).find('.error-message').remove();
+      $(this).find('.is-invalid').removeClass('is-invalid');
+
+      $(this).find('.select2').val(null).trigger('change');
+
+      console.log("BUTTON_CLOSE");
+    });
+  });
+
