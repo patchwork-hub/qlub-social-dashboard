@@ -9,6 +9,7 @@ const COLUMNS = {
   ],
   keyword_filter_list: [
     {data: 'keyword'},
+    {data: 'keyword_filter_group_id'},
     {data: 'is_active'},
     {data: 'filter_type'}
   ]

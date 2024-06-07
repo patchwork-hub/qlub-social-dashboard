@@ -24,20 +24,4 @@ document.addEventListener('DOMContentLoaded', function() {
       setModalDetails(title, id);
     });
   });
-
-  // Modal reset on close
-//   var keyFilterModal = document.getElementById('keyFilterModal');
-//   keyFilterModal.addEventListener('hidden.bs.modal', function() {
-//     var form = $(this).find('form')[0];
-//     if (form) {
-//       form.reset();
-//     }
-//     $(this).find('.error-message').remove();
-//     $(this).find('.is-invalid').removeClass('is-invalid');
-
-//     $(this).find('.nested-fields').remove_nested_fields();
-//     $(this).find('.select2').val(null).trigger('change');
-
-//     console.log("BUTTON_CLOSE");
-//   });
 });

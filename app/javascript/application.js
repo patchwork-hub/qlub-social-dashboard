@@ -183,3 +183,29 @@ const togglePassword = (e) => {
 }
 
 window.togglePassword = togglePassword;
+
+$('#keyFilterModal').on('hidden.bs.modal', function () {
+  window.alert('hidden event fired!');
+});
+// Modal reset on close
+// $('#keyFilterModal').on('hidden.bs.modal', function () {
+//   var form = $(this).find('form')[0];
+//   if (form) {
+//     form.reset();
+//   }
+
+//   $(this).find('.error-message').remove();
+//   $(this).find('.is-invalid').removeClass('is-invalid');
+
+//   // Assuming you have a function to handle removing nested fields
+//   removeNestedFields($(this).find('.nested-fields'));
+
+//   $(this).find('.select2').val(null).trigger('change');
+
+//   console.log("BUTTON_CLOSE");
+// });
+
+// function removeNestedFields(nestedFieldsContainer) {
+//   // Your logic to remove nested fields
+//   nestedFieldsContainer.remove(); // Example logic, adjust as needed
+// }
