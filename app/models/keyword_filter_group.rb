@@ -28,18 +28,18 @@ class KeywordFilterGroup < ApplicationRecord
         )
         keyword.save
       end
-      
+
     end
   end
 
-  def fetch_keywords_job 
+  def fetch_keywords_job
 
     content_filter = ServerSetting.find_by(name: "Content filters")
-      
+
     return unless content_filter.present?
-      
-    KeywordFilterGroup.destroy_all if KeywordFilterGroup.exists?
-      
+
+    KeywordFilterGroup.where(is_custom: false).destroy_all if KeywordFilterGroup.where(is_custom: false).exists?
+
     KeywordFilterGroup.new.fetch_keyword_filter_group_api if content_filter.value
   end
 
