@@ -34,7 +34,7 @@ RUN apt-get install -y --no-install-recommends \
     imagemagick \
     iproute2 \
     nodejs \
-    libpq-dev\
+    libpq-dev \
     yarn \
     ffmpeg \
     supervisor \
@@ -55,20 +55,28 @@ ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 WORKDIR $app_path
 
 RUN echo "install: --no-document" > $HOME/.gemrc && echo "update: --no-document" >> $HOME/.gemrc
+
+# Copy Gemfile and install gems
 COPY Gemfile* ./
 RUN gem install bundler
 RUN bundle config set --local deployment 'true'
 RUN bundle config set --local without 'development test'
 RUN bundle install --jobs 4
 
+# Copy application code
 ADD . $app_path
 
+# Install JavaScript dependencies
+RUN yarn install --check-files
+
+# Precompile assets
 RUN bundle exec rake assets:clean
 RUN bundle exec rake assets:precompile
 
-
+# Set entrypoint and command
 RUN ["chmod", "+x", "/usr/app/docker-entrypoint.sh"]
 ENTRYPOINT ["/usr/app/docker-entrypoint.sh"]
 
+# Copy supervisord configuration
 COPY ./supervisord.conf /etc/supervisord.conf
 CMD ["supervisord", "-c", "/etc/supervisord.conf"]
