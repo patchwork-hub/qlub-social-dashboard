@@ -51,7 +51,9 @@ namespace :db do
           { name: "e-Newsletters", value: false },
           { name: "Analytics", value: false }
         ],
-        "Plug-ins" => []
+        "Plug-ins" => [
+          { name: "Live blocklist", value: false }
+        ]
       }
 
       child_settings_data[parent_name].each_with_index do |child, child_index|

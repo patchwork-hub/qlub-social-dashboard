@@ -1,0 +1,52 @@
+.modal.fade#keyFilterModal{ role: 'dialog' }
+  .modal-dialog{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5.modal-title
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
+      .modal-body
+        = simple_form_for @keyword_filter_group, url: keyword_filter_groups_path, html: { class: 'needs-validation', novalidate: true } do |f|
+          .mb-3
+            = f.hidden_field :server_setting_id, id: 'serverSettingId'
+          .mb-3.mx-2
+            = f.label :name, class: 'form-label'
+            %select.select2.form-control.mx-3{ name: 'keyword_filter_group[name]', id: 'keyword_filter_group_name', style: 'width: 100%' }
+              - @existing_data.each do |data|
+                %option{ value: data }= data
+          .mb-3.keyword_filters
+            %div.d-flex
+              %div.col-8.mt-3
+                = f.label :keyword, class: 'form-label'
+              %div.col-4.mt-3
+                = f.label :filter_type, 'Filter Type', class: 'form-label'
+            = f.fields_for :keyword_filters do |keyword_filter|
+              = render 'server_settings/keyword_filter_fields', f: keyword_filter
+          = link_to_add_association "Add another keyword", f, :keyword_filters, data: {association_insertion_node: '.keyword_filters', association_insertion_method: :append}
+          .modal-footer
+            %button.btn.btn-outline-secondary{ type: 'button', 'data-dismiss': 'modal' } Cancel
+            = f.button :submit, 'Save changes', class: 'btn btn-danger submit-btn'
+
+:javascript
+  $(document).ready(function(){
+    console.log("Ready!!")
+    $(document).on('show.bs.modal', '#keyFilterModal', function (e) {
+      console.log('Modal is opened');
+    });
+
+    $(document).on('hide.bs.modal', '#keyFilterModal', function (e) {
+      console.log('Modal is hide');
+      var form = $(this).find('form')[0];
+      if (form) {
+        form.reset();
+      }
+
+      $(this).find('.error-message').remove();
+      $(this).find('.is-invalid').removeClass('is-invalid');
+
+      $(this).find('.select2').val(null).trigger('change');
+
+      console.log("BUTTON_CLOSE");
+    });
+  });
+

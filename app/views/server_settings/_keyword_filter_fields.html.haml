@@ -1,0 +1,8 @@
+%div.d-flex.nested-fields
+  %div.col-7.mb-3
+    = f.text_field :keyword, class: 'form-control'
+  %div.col-4.mb-3
+    = f.select :filter_type, KeywordFilter.filter_types.keys.map { |type| [type.capitalize, type] }, {}, class: 'form-control'
+  %div.col-1.mb-3
+    = link_to_remove_association f do
+      %i.fa-solid.fa-circle-xmark.mt-2{ style: "color: red;" }

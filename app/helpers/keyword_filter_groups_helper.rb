@@ -1,0 +1,2 @@
+module KeywordFilterGroupsHelper
+end

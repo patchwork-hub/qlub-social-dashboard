@@ -1,10 +1,12 @@
-import $ from 'jquery'
-import 'bootstrap'
-import 'admin-lte'
-import 'lib/datatable'
-
-import DataTable from 'datatables.net-bs4'
-import 'datatables.net-select-bs4'
+import 'bootstrap';
+import 'admin-lte';
+import "@nathanvda/cocoon";
+import 'lib/datatable';
+import './modal_handler';
+import './api_util';
+import './settings';
+import './keyword_groups';
+import './header';
 
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fas} from '@fortawesome/free-solid-svg-icons'
@@ -21,20 +23,12 @@ localStorage.setItem('unselected', null);
 
 $(document).ready(function() {
 
-  // multiple selection
-  var table = $('#datatable').DataTable();
-
-  table.on('draw', function() {
-    $('tr').each(function() {
-      var row = $(this);
-      var checkbox = row.find('.checkbox');
-
-      if (checkbox.is(':checked')) {
-        row.addClass('selected');
-      } else {
-        row.removeClass('selected');
-      }
-    });
+  $('.select2').select2({
+    dropdownParent: $('#keyFilterModal'),
+    tags: true,
+    placeholder: 'Select an option',
+    allowClear: true,
+    theme: 'bootstrap'
   });
 
   $('#datatable tbody').on('click', '.selectable-checkbox', function(e) {
@@ -83,7 +77,7 @@ $(document).ready(function() {
         $('#select_all').prop('checked', true);
         $('#select_all').prop('indeterminate', false);
       }
-    } 
+    }
 
     addParams(selected, unselected);
 
@@ -136,6 +130,16 @@ $(document).ready(function() {
     });
   });
 
+  document.addEventListener('DOMContentLoaded', function() {
+    const nestedAttributeContainer = document.querySelector('.nested-fields');
+
+    if (nestedAttributeContainer && nestedAttributeContainer.children.length === 0) {
+      const addNewLink = nestedAttributeContainer.querySelector('.add_fields');
+      if (addNewLink) {
+        addNewLink.click();
+      }
+    }
+  });
 })
 
 const addParams = (selected = null, unselected = null) => {
@@ -167,7 +171,7 @@ const addParams = (selected = null, unselected = null) => {
 
 const togglePassword = (e) => {
 	let input = document.querySelector('input#password');
-	
+
 	if (input.type == 'password') {
 		e.setAttribute('class', 'svg-inline--fa fa-eye');
 		input.type = 'text';

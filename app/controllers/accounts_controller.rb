@@ -29,7 +29,7 @@ class AccountsController < ApplicationController
     def prepare_users_for_datatable
       @all   = Account.get_accounts
       @users = @all
-      
+
       if @q.present?
         @users = @users.where("   lower(accounts.display_name) like :q
                                   OR lower(accounts.username) like :q
@@ -42,7 +42,7 @@ class AccountsController < ApplicationController
       end
       @users = @users.order("#{@sort}": :"#{@dir}").uniq
       @all   = @all.uniq
-      
+
       @users = Kaminari.paginate_array(@users).page(@page).per(@per)
 
       @data = @users.each_with_object([]) { |u, arr|
