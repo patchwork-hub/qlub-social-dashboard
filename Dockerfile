@@ -46,8 +46,8 @@ RUN apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV RAILS_SERVE_STATIC_FILES=true
-ENV RAILS_LOG_TO_STDOUT=true
+# ENV RAILS_SERVE_STATIC_FILES=true
+# ENV RAILS_LOG_TO_STDOUT=true
 ENV app_path /usr/app
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
@@ -63,10 +63,11 @@ RUN bundle config set --local deployment 'true'
 RUN bundle config set --local without 'development test'
 RUN bundle install --jobs 4
 
+
 ADD . $app_path
 
 RUN bundle exec rake assets:clean
-RUN bundle exec rake assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rake assets:precompile
 
 
 RUN ["chmod", "+x", "/usr/app/docker-entrypoint.sh"]
