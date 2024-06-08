@@ -34,4 +34,14 @@ pin "@fontsource/source-sans-pro", to: "https://ga.jspm.io/npm:@fontsource/sourc
 
 pin_all_from "app/javascript/lib", under: "lib"
 
+#precompile javascript files 
+
+pin "application", preload: true
+pin "api_utils", preload: true
+pin "header", preload: true
+pin "keyword_groups", preload: true
+pin "modal_handler", preload: true
+pin "settings", preload: true
+
+
 pin "select2", to: "https://ga.jspm.io/npm:select2@4.1.0-rc.0/dist/js/select2.js"
