@@ -2,11 +2,11 @@ import 'bootstrap';
 import 'admin-lte';
 import "@nathanvda/cocoon";
 import 'lib/datatable';
-import './modal_handler';
-import './api_util';
-import './settings';
-import './keyword_groups';
-import './header';
+// import './modal_handler';
+// import './api_util';
+// import './settings';
+// import './keyword_groups';
+// import './header';
 
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fas} from '@fortawesome/free-solid-svg-icons'
