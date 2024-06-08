@@ -1,4 +1,4 @@
-import { sendPatchRequest } from './api_util';
+import { sendPatchRequest } from 'custom_js/api_util';
 
 document.addEventListener('DOMContentLoaded', function() {
   function updateSetting(checkbox) {
