@@ -23,7 +23,6 @@ class KeywordFilterGroup < ApplicationRecord
       keyword_filter_group['keyword_filters'].each do |keyword_filter|
         keyword = KeywordFilter.new(
           keyword: keyword_filter['keyword'],
-          is_active: keyword_filter['is_active'],
           filter_type: keyword_filter['filter_type'],
           keyword_filter_group_id: filter_group.id
         )
