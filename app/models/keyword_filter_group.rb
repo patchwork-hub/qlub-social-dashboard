@@ -16,6 +16,7 @@ class KeywordFilterGroup < ApplicationRecord
           name: keyword_filter_group['name'],
           is_custom: keyword_filter_group['is_custom'],
           server_setting_id: server_setting_id,
+          is_active: keyword_filter_group['is_active'],
       )
       filter_group.save
 
