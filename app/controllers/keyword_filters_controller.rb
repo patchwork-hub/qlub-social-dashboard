@@ -10,7 +10,6 @@ class KeywordFiltersController < ApplicationController
         send_data KeywordFilter.all.to_csv(
           [
             'keyword',
-            'is_active',
             'keyword_filter_group_id',
             'filter_type'
           ]
@@ -59,7 +58,7 @@ class KeywordFiltersController < ApplicationController
   end
 
   def keyword_filter_params
-    params.require(:keyword_filter).permit(:keyword, :filter_type, :is_active, :keyword_filter_group_id)
+    params.require(:keyword_filter).permit(:keyword, :filter_type, :keyword_filter_group_id)
   end
 
   def prepare_filters
@@ -71,7 +70,6 @@ class KeywordFiltersController < ApplicationController
         arr << {
           keyword: g.keyword,
           keyword_filter_group_id: KeywordFilterGroup.find_by_id(g.keyword_filter_group_id)&.name,
-          is_active: g.is_active? ? 'Yes' : 'No',
           filter_type: g.filter_type
         }
       }
