@@ -1,11 +1,10 @@
 class KeywordFilterGroup < ApplicationRecord
   belongs_to :server_setting, class_name: "ServerSetting", optional: true
   has_many :keyword_filters, dependent: :destroy
+  validates :name, presence: true, uniqueness: true
   accepts_nested_attributes_for :keyword_filters,
                                 allow_destroy: true,
                                 reject_if: proc { |att| att['keyword'].blank? }
-
-  validates :name, presence: true, uniqueness: true
 
   def fetch_keyword_filter_group_api
     server_setting_id = ServerSetting.where(name: "Content filters").last&.id

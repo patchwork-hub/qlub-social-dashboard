@@ -6,7 +6,7 @@
         %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
           = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
-        = simple_form_for @keyword_filter_group, url: keyword_filter_groups_path, html: { class: 'needs-validation', novalidate: true } do |f|
+        = simple_form_for @keyword_filter_group, html: { class: 'needs-validation', novalidate: true } do |f|
           .mb-3
             = f.hidden_field :server_setting_id, id: 'serverSettingId'
           .mb-3.mx-2

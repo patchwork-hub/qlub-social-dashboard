@@ -1,7 +1,6 @@
-import $ from 'jquery'
-
-import DataTable from 'datatables.net-bs4'
-import 'datatables.net-select-bs4'
+import $ from 'jquery';
+import DataTable from 'datatables.net-bs4';
+import 'datatables.net-select-bs4';
 
 const COLUMNS = {
   keyword_filter_group_list: [
@@ -12,32 +11,31 @@ const COLUMNS = {
       data: 'keyword_filters',
       render: function(data, type, row) {
         if (data && Array.isArray(data)) {
-          return '<ol>' + data.map(function(filter) {
-            return `<li>${filter.keyword}</li>`;
-          }).join('') + '</ol>';
+          return '<ul>' + data.map(function(filter) {
+            const url = filter.is_custom_group ? `/keyword_filter_groups/${filter.group_id}/keyword_filters/${filter.id}/edit` : '#';
+            return `<li><a href="${url}">${filter.keyword}</a></li>`;
+          }).join('') + '</ul>';
         } else {
           return '';
         }
       }
     }
   ]
-}
+};
 
-const COLUMN_DEFS = {
-}
+const COLUMN_DEFS = {};
 
 jQuery(function() {
-
   $('#datatable').css('width', '100%');
 
- 	let url        = $('#datatable').data('url')
-  let type       = $('#datatable').data('type')
-  let selectable = $('#datatable').data('selectable')
+  let url = $('#datatable').data('url');
+  let type = $('#datatable').data('type');
+  let selectable = $('#datatable').data('selectable');
 
   let options = {
-    destroy:    false,
-    paging:     false,
-    searching:  false,
+    destroy: false,
+    paging: false,
+    searching: false,
     serverSide: true,
     processing: true,
     lengthMenu: false,
@@ -47,7 +45,6 @@ jQuery(function() {
       url: url,
       dataType: "json",
       data: (d) => {
-
         let selected = localStorage.getItem('selected');
         if (selected == 'all'){
           d.selected = selected;
@@ -61,16 +58,15 @@ jQuery(function() {
         }
       },
     },
-
     columns: COLUMNS[type],
     columnDefs: COLUMN_DEFS[type],
-  }
+  };
 
   if (selectable == 'multi') {
     options['select'] = {
       style: 'multi',
       selector: 'td:first-child'
-    }
+    };
   }
 
   var table = $('#datatable').DataTable(options);
@@ -89,4 +85,4 @@ jQuery(function() {
       }
     });
   });
-})
+});

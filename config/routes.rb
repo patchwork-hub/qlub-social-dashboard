@@ -35,6 +35,9 @@ Rails.application.routes.draw do
   resources :server_settings, only: [:index, :update]
 
   resources :keyword_filter_groups do
+    member do
+      patch :update_is_active
+    end
     resources :keyword_filters
   end
 

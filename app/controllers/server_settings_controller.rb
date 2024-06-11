@@ -40,7 +40,7 @@ class ServerSettingsController < ApplicationController
             id: child_setting.id,
             name: child_setting.name,
             is_operational: child_setting.value,
-            keyword_filter_groups: child_setting.keyword_filter_groups.map do |group|
+            keyword_filter_groups: child_setting.keyword_filter_groups.order(name: :asc).map do |group|
               {
                 id: group.id,
                 name: group.name,

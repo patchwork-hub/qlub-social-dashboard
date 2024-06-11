@@ -5,7 +5,7 @@
     %nav.mt-2
       %ul.nav.nav-pills.nav-sidebar.flex-column{"data-accordion" => "false", "data-widget" => "treeview", :role => "menu"}
         %li.nav-item
-          = link_to server_settings_path, id: "server-settings-link", data: { header: "Server settings" }, class: "nav-link #{controller_name == 'server_settings' ? 'active' : ''}" do
+          = link_to server_settings_path, id: "server-settings-link", data: { header: "Server settings" }, class: "nav-link #{controller_name == 'server_settings' || (controller_name == 'keyword_filter_groups' && action_name == 'show') || (controller_name == 'keyword_filters' && action_name == 'edit') ? 'active' : ''}" do
             = image_tag("icons/sliders.svg", class: "mr-2", width: "16", height: "16")
             %p Server settings
         %li.nav-item

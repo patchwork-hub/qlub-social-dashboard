@@ -53,7 +53,7 @@
                       .d-flex.align-items-center.mb-2
                         = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
                         %label.form-check-label.switch{ for: sub_option[:id] }
-                          %input.form-check-input.switch-input.keyword-input{ type: 'checkbox', id: sub_option[:id], checked: sub_option[:is_active], 'data-group-id' => sub_option[:id], 'data-is-custom' => sub_option[:is_custom], 'data-server-setting-id' => option[:id] }
+                          %input.form-check-input.switch-input.keyword-group-input{ type: 'checkbox', id: sub_option[:id], checked: sub_option[:is_active], 'data-group-id' => sub_option[:id], 'data-is-custom' => sub_option[:is_custom], 'data-server-setting-id' => option[:id] }
                           %span.switch-slider.round
                             %span.slider-tick
                               %i.fa-solid.fa-check
