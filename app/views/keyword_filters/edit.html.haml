@@ -28,7 +28,7 @@
 
           .form-group
             = f.label :filter_type, class: 'form-label'
-            = f.text_field :filter_type, class: 'form-control'
+            = f.collection_select :filter_type, KeywordFilter.filter_types.keys, :to_s, :humanize, { selected: @keyword_filter.filter_type }, class: 'form-control'
 
           .form-group.d-flex
             = f.submit 'Save', class: 'btn btn-primary mx-2 btn-custom'
