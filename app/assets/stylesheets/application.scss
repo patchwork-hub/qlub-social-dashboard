@@ -28,10 +28,6 @@ table.dataTable.table-striped > tbody > tr.even.selected > * {
   color: rgb(33, 37, 41) !important;
 }
 
-td {
-  vertical-align: middle !important;
-}
-
 input[type='checkbox'] {
   width: 16px;
   height: 16px;
@@ -50,10 +46,6 @@ div.password {
 #datatable thead th {
   background-color: #f8f9fa;
   text-align: left;
-}
-
-#datatable tbody tr:hover {
-  background-color: #f1f1f1;
 }
 
 #datatable ul {
