@@ -85,4 +85,27 @@ jQuery(function() {
       }
     });
   });
+
+  $('#keyFilterModal').on('hidden.bs.modal', function () {
+    var form = $(this).find('form')[0];
+    if (form) {
+      form.reset();
+    }
+
+    $(this).find('.error-message').remove();
+    $(this).find('.is-invalid').removeClass('is-invalid');
+
+    handleNestedFields($(this).find('.nested-fields'));
+    $('#keyword_filter_group_name').val(null).trigger('change');
+  });
+
+  function handleNestedFields(nestedFieldsContainer) {
+    var nestedFields = nestedFieldsContainer.parent().children('.nested-fields');
+
+    if (nestedFields.length > 1) {
+      nestedFields.slice(1).remove();
+    }
+
+    nestedFields.find('input[type="text"]').val('');
+  }
 });
