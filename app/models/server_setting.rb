@@ -8,14 +8,16 @@ class ServerSetting < ApplicationRecord
   belongs_to :parent, class_name: "ServerSetting", optional: true
   has_many :children, class_name: "ServerSetting", foreign_key: "parent_id", dependent: :destroy
 
-  after_update :invoke_keyword_schedule, if: :saved_change_to_value?, if: :content_filters?
+  after_update :invoke_keyword_schedule, if: :saved_change_to_value?, if: :content_or_spam_filters?
 
   private
+
   def invoke_keyword_schedule
-    return KeywordFiltersJob.perform_now
+    KeywordFiltersJob.perform_now(name)
   end
 
-  def content_filters?
+  def content_or_spam_filters?
     name == "Content filters"
+    # || name == "Spam filters"
   end
 end

@@ -18,7 +18,7 @@ class KeywordFilterGroupsController < ApplicationController
   end
 
   def create
-    @keyword_filter_group = KeywordFilterGroup.find_or_initialize_by(name: params[:keyword_filter_group][:name])
+    @keyword_filter_group = KeywordFilterGroup.find_or_initialize_by(name: params[:keyword_filter_group][:name], server_setting_id: params[:keyword_filter_group][:server_setting_id])
     @keyword_filter_group.assign_attributes(keyword_filter_group_params)
 
     if @keyword_filter_group.save
@@ -41,7 +41,10 @@ class KeywordFilterGroupsController < ApplicationController
 
   def destroy
     @keyword_filter_group.destroy
-    render json: { success: true, message: 'Keyword Filter Group deleted successfully' }
+    respond_to do |format|
+      format.html { redirect_back fallback_location: keyword_filter_groups_url, notice: 'Keyword Filter Group deleted successfully' }
+      format.json { render json: { success: true, message: 'Keyword Filter Group deleted successfully' } }
+    end
   end
 
   def update_is_active
@@ -71,8 +74,9 @@ class KeywordFilterGroupsController < ApplicationController
         {
           id: kf.id,
           keyword: kf.keyword,
-          group_id: @keyword_filter_group.id,
-          is_custom_group: @keyword_filter_group.is_custom
+          is_custom_group: @keyword_filter_group.is_custom,
+          edit_url: keyword_filter_group_keyword_filter_path(@keyword_filter_group, kf) + '/edit',
+          delete_url: keyword_filter_group_keyword_filter_path(@keyword_filter_group, kf)
         }
       end
     }

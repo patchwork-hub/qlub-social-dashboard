@@ -12,8 +12,27 @@ const COLUMNS = {
       render: function(data, type, row) {
         if (data && Array.isArray(data)) {
           return '<ul>' + data.map(function(filter) {
-            const url = filter.is_custom_group ? `/keyword_filter_groups/${filter.group_id}/keyword_filters/${filter.id}/edit` : '#';
-            return `<li><a href="${url}">${filter.keyword}</a></li>`;
+            return `<li>${filter.keyword}</li>`;
+          }).join('') + '</ul>';
+        } else {
+          return '';
+        }
+      }
+    },
+    {
+      data: 'keyword_filters',
+      render: function(data, type, row) {
+        if (data && Array.isArray(data)) {
+          return '<ul>' + data.map(function(filter) {
+            const editUrl = filter.edit_url;
+            const deleteUrl = filter.delete_url;
+            const editClass = filter.is_custom_group ? '' : 'disabled';
+            const deleteClass = filter.is_custom_group ? '' : 'disabled';
+
+            return `<li>
+                      <a href="${editUrl}" class="edit-icon ${editClass}" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="${deleteUrl}" class="delete-icon ${deleteClass}" title="Delete" data-confirm="Are you sure?" data-method="delete"><i class="fas fa-trash"></i></a>
+                    </li>`;
           }).join('') + '</ul>';
         } else {
           return '';
@@ -46,7 +65,7 @@ jQuery(function() {
       dataType: "json",
       data: (d) => {
         let selected = localStorage.getItem('selected');
-        if (selected == 'all'){
+        if (selected == 'all') {
           d.selected = selected;
         } else {
           d.selected = JSON.parse(selected) || [];
@@ -54,7 +73,7 @@ jQuery(function() {
 
         let unselected = localStorage.getItem('unselected');
         if (unselected) {
-         d.unselected = JSON.parse(unselected) || [];
+          d.unselected = JSON.parse(unselected) || [];
         }
       },
     },
@@ -70,7 +89,8 @@ jQuery(function() {
   }
 
   var table = $('#datatable').DataTable(options);
-  // multiple selection
+
+  // Handling multiple selection
   var table_without_option = $('#datatable').DataTable();
 
   table_without_option.on('draw', function() {
@@ -86,6 +106,7 @@ jQuery(function() {
     });
   });
 
+  // Handling modal close event
   $('#keyFilterModal').on('hidden.bs.modal', function () {
     var form = $(this).find('form')[0];
     if (form) {

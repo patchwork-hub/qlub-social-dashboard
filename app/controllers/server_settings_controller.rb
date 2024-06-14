@@ -15,12 +15,17 @@ class ServerSettingsController < ApplicationController
     end
   end
 
+  def group_data
+    server_setting_id = params[:server_setting_id]
+    @existing_data = KeywordFilterGroup.where(server_setting_id: server_setting_id).where(is_custom: true).order(:id).pluck(:name)
+    render json: @existing_data
+  end
+
   private
 
   def set_keyword_filter_group
     @keyword_filter_group = KeywordFilterGroup.new
     @keyword_filter_group.keyword_filters.build
-    @existing_data = KeywordFilterGroup.where(is_custom: true).order(:id).pluck(:name)
   end
 
   def server_setting_params

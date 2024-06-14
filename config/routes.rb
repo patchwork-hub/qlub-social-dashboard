@@ -32,7 +32,11 @@ Rails.application.routes.draw do
   resources :global_filters
   get '/timelines_status', to: 'timelines_status#index'
 
-  resources :server_settings, only: [:index, :update]
+  resources :server_settings do
+    collection do
+      get :group_data
+    end
+  end
 
   resources :keyword_filter_groups do
     member do

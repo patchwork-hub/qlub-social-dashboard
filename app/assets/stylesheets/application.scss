@@ -306,6 +306,11 @@ ul.pagination {
 
 /* keywrod filter edit buttons */
 .btn-custom {
-  width: 150px !important;
+  width: 250px !important;
+}
+
+.disabled {
+  pointer-events: none;
+  color: gray !important;
 }
 /* keywrod filter edit buttons */

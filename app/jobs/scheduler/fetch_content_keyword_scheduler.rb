@@ -4,7 +4,7 @@ module Scheduler
     sidekiq_options retry: 0, queue: :scheduler
 
     def perform
-      KeywordFilterGroup.new.fetch_keywords_job
+      KeywordFiltersJob.perform_now
     end
   end
 end

@@ -30,7 +30,6 @@
             = f.label :filter_type, class: 'form-label'
             = f.collection_select :filter_type, KeywordFilter.filter_types.keys, :to_s, :humanize, { selected: @keyword_filter.filter_type }, class: 'form-control'
 
-          .form-group.d-flex
+          .form-group.d-flex.align-items-center
             = f.submit 'Save', class: 'btn btn-primary mx-2 btn-custom'
             = link_to 'Back', keyword_filter_group_path(@keyword_filter_group), class: 'btn btn-secondary mx-2 btn-custom'
-            = link_to 'Destroy', keyword_filter_group_keyword_filter_path(@keyword_filter_group, @keyword_filter), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger mx-2 btn-custom'

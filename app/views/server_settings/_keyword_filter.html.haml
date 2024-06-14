@@ -12,8 +12,6 @@
           .mb-3.mx-2
             = f.label :name, class: 'form-label'
             %select.select2.form-control.mx-3{ name: 'keyword_filter_group[name]', id: 'keyword_filter_group_name', style: 'width: 100%' }
-              - @existing_data.each do |data|
-                %option{ value: data }= data
           .mb-3.keyword_filters
             %div.d-flex
               %div.col-8.mt-3
