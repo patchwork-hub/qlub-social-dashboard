@@ -204,6 +204,23 @@ $(document).ready(function() {
       }
     }
   });
+
+  const collapseToggles = document.querySelectorAll(".collapse-toggle");
+
+  collapseToggles.forEach(function(toggle) {
+    toggle.addEventListener("click", function() {
+      const arrowDown = toggle.querySelector(".icon-arrow-down");
+      const arrowUp = toggle.querySelector(".icon-arrow-up");
+
+      if (toggle.getAttribute("aria-expanded") === "true") {
+        arrowDown.style.display = "inline-block";
+        arrowUp.style.display = "none";
+      } else {
+        arrowDown.style.display = "none";
+        arrowUp.style.display = "inline-block";
+      }
+    });
+  });
 })
 
 const addParams = (selected = null, unselected = null) => {

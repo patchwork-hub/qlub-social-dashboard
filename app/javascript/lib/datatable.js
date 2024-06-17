@@ -18,26 +18,6 @@ const COLUMNS = {
           return '';
         }
       }
-    },
-    {
-      data: 'keyword_filters',
-      render: function(data, type, row) {
-        if (data && Array.isArray(data)) {
-          return '<ul>' + data.map(function(filter) {
-            const editUrl = filter.edit_url;
-            const deleteUrl = filter.delete_url;
-            const editClass = filter.is_custom_group ? '' : 'disabled';
-            const deleteClass = filter.is_custom_group ? '' : 'disabled';
-
-            return `<li>
-                      <a href="${editUrl}" class="edit-icon ${editClass}" title="Edit"><i class="fas fa-edit"></i></a>
-                      <a href="${deleteUrl}" class="delete-icon ${deleteClass}" title="Delete" data-confirm="Are you sure?" data-method="delete"><i class="fas fa-trash"></i></a>
-                    </li>`;
-          }).join('') + '</ul>';
-        } else {
-          return '';
-        }
-      }
     }
   ]
 };
@@ -50,6 +30,30 @@ jQuery(function() {
   let url = $('#datatable').data('url');
   let type = $('#datatable').data('type');
   let selectable = $('#datatable').data('selectable');
+  let isCustom = $('#datatable').data('is-custom');
+
+  if (isCustom) {
+    COLUMNS.keyword_filter_group_list.push({
+      data: 'keyword_filters',
+      render: function(data, type, row) {
+        if (data && Array.isArray(data)) {
+          return '<ul>' + data.map(function(filter) {
+            const editUrl = filter.edit_url;
+            const deleteUrl = filter.delete_url;
+            const editClass = filter.is_custom_group ? '' : 'disabled';
+            const deleteClass = filter.is_custom_group ? '' : 'disabled';
+            const actions = filter.is_custom_group ? `<li>
+                      <a href="${editUrl}" class="edit-icon ${editClass}" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="${deleteUrl}" class="delete-icon ${deleteClass}" title="Delete" data-confirm="Are you sure?" data-method="delete"><i class="fas fa-trash"></i></a>
+                    </li>` : '';
+            return actions;
+          }).join('') + '</ul>';
+        } else {
+          return '';
+        }
+      }
+    });
+  }
 
   let options = {
     destroy: false,

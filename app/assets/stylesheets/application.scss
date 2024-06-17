@@ -308,9 +308,23 @@ ul.pagination {
 .btn-custom {
   width: 250px !important;
 }
-
-.disabled {
-  pointer-events: none;
-  color: gray !important;
-}
 /* keywrod filter edit buttons */
+
+/* handle collapse arrow */
+.arrow-toggle .icon-arrow-down {
+  display: inline-block;
+}
+
+.arrow-toggle .icon-arrow-up {
+  display: none;
+}
+
+.arrow-toggle.collapsed .icon-arrow-down {
+  display: none;
+}
+
+.arrow-toggle.collapsed .icon-arrow-up {
+  display: inline-block;
+}
+
+/* handle collapse arrow */

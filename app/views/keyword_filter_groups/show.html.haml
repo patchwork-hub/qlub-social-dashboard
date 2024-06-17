@@ -1,5 +1,5 @@
 - content_for :title do
-  = 'Keyword Filter Group Deatils'
+  = 'Keyword Filter Group Details'
 
 .row
   .col-12
@@ -8,13 +8,13 @@
         %h3.card-title= @keyword_filter_group.name
 
       .card-body
-        %table#datatable.table.table-striped.table-bordered{data: {url: keyword_filter_group_url(@keyword_filter_group), type: 'keyword_filter_group_list'}}
+        %table#datatable.table.table-striped.table-bordered{data: {url: keyword_filter_group_url(@keyword_filter_group), type: 'keyword_filter_group_list', 'is-custom': @keyword_filter_group.is_custom?.to_s}}
           %thead
             %tr
               %th Name
               %th Server Setting
               %th Is Active
               %th Keyword Filters
-              %th Actions
+              - if @keyword_filter_group.is_custom?
+                %th Actions
           %tbody
-

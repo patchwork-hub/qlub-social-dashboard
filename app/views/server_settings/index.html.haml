@@ -16,63 +16,83 @@
               %p Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.
             .col-md-7
               - setting[:settings].each_with_index do |option, option_index|
-                %div.d-flex.justify-content-between
-                  %div
-                    %label.form-check-label.switch{ for: option[:id] }
-                      %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name] }
-                      %span.switch-slider.round
-                        %span.slider-tick
-                          %i.fa-solid.fa-check
-                        %span.slider-cross
-                          %i.fa-solid.fa-xmark
-                    %span.ml-2
-                      = option[:name]
-                      %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
-                        = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
-                  %div
-                    - case option[:name]
-                    - when 'Spam filters'
-                      %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal' }
-                        Add spam filter
-                    - when 'Sign up challenge'
-                      %a{ href: '#', style: 'color: red;', title: 'Add challenge' }
-                        Add challenge
-                    - when 'Content filters'
-                      %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal' }
-                        Add custom filter
-                    - when 'Custom theme'
-                      %a{ href: '#', style: 'color: red;', title: 'Choose theme' }
-                        Choose theme
-                    - when 'Live blocklist'
-                      %a{ href: '#', style: 'color: red;', title: 'Set-up denylist' }
-                        Set-up denylist
-                - unless option[:keyword_filter_groups].blank?
-                  %hr
-                  .nested-options.ml-4
-                    - option[:keyword_filter_groups].each_with_index do |sub_option, sub_option_index|
-                      .d-flex.align-items-center.justify-content-between.mb-2
-                        %div
-                          = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
-                          %label.form-check-label.switch{ for: sub_option[:id] }
-                            %input.form-check-input.switch-input.keyword-group-input{ type: 'checkbox', id: sub_option[:id], checked: sub_option[:is_active], 'data-group-id' => sub_option[:id], 'data-is-custom' => sub_option[:is_custom], 'data-server-setting-id' => option[:id] }
-                            %span.switch-slider.round
-                              %span.slider-tick
-                                %i.fa-solid.fa-check
-                              %span.slider-cross
-                                %i.fa-solid.fa-xmark
-                          %span.ml-2
-                            = sub_option[:name]
-                        %div
-                          %a{ href: keyword_filter_group_path(sub_option[:id]), title: 'Edit' }
-                            %i.fa-solid.fa-edit.ml-2{ style: "color: red;" }
-                          - if sub_option[:is_custom]
-                            %a{ href: keyword_filter_group_path(sub_option[:id]), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
-                              %i.fa-solid.fa-trash.ml-2{ style: "color: red;" }
-                          - else
-                            %a{ href: '#', class: 'disabled', title: 'Delete' }
-                              %i.fa-solid.fa-trash.ml-2{ style: "color: gray;" }
-                      - unless sub_option_index == option[:keyword_filter_groups].size - 1
-                        %hr
+                - is_collapse = ['Content filters', 'Spam filters'].include?(option[:name])
+                - collapse_id = "collapse_#{option[:id]}"
+                - if is_collapse
+                  %div.d-flex.justify-content-between
+                    %div
+                      %label.form-check-label.switch{ for: option[:id] }
+                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name] }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2
+                        = option[:name]
+                        %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
+                          = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
+                      %br
+                      - if option[:name] == 'Spam filters'
+                        %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal' }
+                          Add spam filter
+                      - if option[:name] == 'Content filters'
+                        %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal' }
+                          Add custom filter
+                    %div
+                      %a{ href: "##{collapse_id}", role: "button", class: "collapse-toggle arrow-toggle", 'data-toggle': "collapse", 'aria-expanded': "false", 'aria-controls': collapse_id }
+                        %i.fa-solid.fa-caret-down.icon-arrow-down
+                        %i.fa-solid.fa-caret-up.icon-arrow-up
+                  .collapse.mt-2{ id: collapse_id }
+                    - unless option[:keyword_filter_groups].blank?
+                      %hr
+                      .nested-options.ml-4
+                        - option[:keyword_filter_groups].each_with_index do |sub_option, sub_option_index|
+                          .d-flex.align-items-center.justify-content-between.mb-2
+                            %div
+                              = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
+                              %label.form-check-label.switch{ for: sub_option[:id] }
+                                %input.form-check-input.switch-input.keyword-group-input{ type: 'checkbox', id: sub_option[:id], checked: sub_option[:is_active], 'data-group-id' => sub_option[:id], 'data-is-custom' => sub_option[:is_custom], 'data-server-setting-id' => option[:id] }
+                                %span.switch-slider.round
+                                  %span.slider-tick
+                                    %i.fa-solid.fa-check
+                                  %span.slider-cross
+                                    %i.fa-solid.fa-xmark
+                              %span.ml-2
+                                = sub_option[:name]
+                            %div
+                              %a{ href: keyword_filter_group_path(sub_option[:id]), title: 'Edit' }
+                                %i.fa-solid.fa-edit.ml-2{ style: "color: red;" }
+                              - if sub_option[:is_custom]
+                                %a{ href: keyword_filter_group_path(sub_option[:id]), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
+                                  %i.fa-solid.fa-trash.ml-2{ style: "color: red;" }
+                          - unless sub_option_index == option[:keyword_filter_groups].size - 1
+                            %hr
+                - else
+                  %div.d-flex
+                    %div
+                      %label.form-check-label.switch{ for: option[:id] }
+                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name] }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2
+                        = option[:name]
+                        %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
+                          = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
+                      %br
+                      - case option[:name]
+                      - when 'Sign up challenge'
+                        %a{ href: '#', style: 'color: red;', title: 'Add challenge' }
+                          Add challenge
+                      - when 'Custom theme'
+                        %a{ href: '#', style: 'color: red;', title: 'Choose theme' }
+                          Choose theme
+                      - when 'Live blocklist'
+                        %a{ href: '#', style: 'color: red;', title: 'Set-up denylist' }
+                          Set-up denylist
                 - unless option_index == setting[:settings].size - 1
                   %hr
           - unless setting == @server_settings.last
