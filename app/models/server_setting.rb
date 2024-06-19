@@ -17,7 +17,6 @@ class ServerSetting < ApplicationRecord
   end
 
   def content_or_spam_filters?
-    name == "Content filters"
-    # || name == "Spam filters"
+    name == "Content filters" || name == "Spam filters"
   end
 end

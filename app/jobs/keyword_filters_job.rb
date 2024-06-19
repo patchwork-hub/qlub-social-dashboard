@@ -5,9 +5,9 @@ class KeywordFiltersJob < ApplicationJob
     setting = ServerSetting.where(name: server_setting_name)&.last
 
     if setting.value == true
-      KeywordFilterGroup.fetch_keyword_filter_group_api(server_setting_name)
+      KeywordFilterGroup.fetch_keyword_filter_group_api(server_setting_name, setting.id)
     else
-      KeywordFilterGroup.delete_all_when_inactive(server_setting_name) if KeywordFilterGroup.where(is_custom: false).exists?
+      KeywordFilterGroup.delete_all_when_inactive(setting) if KeywordFilterGroup.where(is_custom: false).exists?
     end
   end
 end

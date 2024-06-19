@@ -8,46 +8,59 @@ class KeywordFilterGroup < ApplicationRecord
                                 allow_destroy: true,
                                 reject_if: proc { |attributes| attributes['keyword'].blank? }
 
-  def self.fetch_keyword_filter_group_api(server_setting_name)
-    server_setting_id = ServerSetting.where(name: server_setting_name).last&.id
-    api_service = KeywordFilterGroupApiService.new('keyword_filter_groups')
-    new_data = api_service.get_keywords
+  def self.fetch_keyword_filter_group_api(setting_name, server_setting_id)
+    new_data = fetch_data_from_api(setting_name)
+    filter_type = filter_type_for(setting_name)
 
-    new_data.each do |keyword_filter_group_data|
-      filter_group = KeywordFilterGroup.find_or_initialize_by(
-        name: keyword_filter_group_data['name'],
-        is_custom: false
-      )
-      filter_group.assign_attributes(
-        server_setting_id: server_setting_id,
-        is_active: keyword_filter_group_data['is_active']
-      )
-      filter_group.save
+    new_data.each do |group_data|
+      filter_group = find_or_initialize_filter_group(group_data, server_setting_id)
+      filter_group.update(is_active: group_data['is_active'])
 
-      new_keywords = keyword_filter_group_data['keyword_filters'].map do |keyword_filter_data|
-        keyword_filter = KeywordFilter.find_or_initialize_by(
-          keyword: keyword_filter_data['keyword'],
-          keyword_filter_group_id: filter_group.id
-        )
-        keyword_filter.assign_attributes(
-          filter_type: keyword_filter_data['filter_type']
-        )
-        keyword_filter.save
-        keyword_filter.keyword
-      end
-
+      new_keywords = update_or_create_keywords(group_data[filter_type], filter_group)
       filter_group.keyword_filters.where.not(keyword: new_keywords).destroy_all
     end
 
-    new_group_names = new_data.map { |group| group['name'] }
-    KeywordFilterGroup.where(is_custom: false).where.not(name: new_group_names).destroy_all
+    cleanup_old_groups(new_data, server_setting_id)
   end
 
-  def self.delete_all_when_inactive(server_setting_id)
-    content_filter = ServerSetting.find_by_id(server_setting_id)
+  def self.delete_all_when_inactive(server_setting)
+    KeywordFilterGroup.where(server_setting_id: server_setting.id, is_custom: false).destroy_all
+  end
 
-    return unless content_filter.present? && content_filter.value == false
+  private
 
-    KeywordFilterGroup.where(server_setting_id: server_setting_id).where(is_custom: false).destroy_all
+  def self.fetch_data_from_api(setting_name)
+    api_service = KeywordFilterGroupApiService.new(setting_name)
+    api_service.get_keywords
+  end
+
+  def self.filter_type_for(setting_name)
+    setting_name == 'Spam filters' ? 'spam_filters' : 'keyword_filters'
+  end
+
+  def self.find_or_initialize_filter_group(group_data, server_setting_id)
+    KeywordFilterGroup.find_or_initialize_by(
+      name: group_data['name'],
+      server_setting_id: server_setting_id,
+      is_custom: false
+    )
+  end
+
+  def self.update_or_create_keywords(keywords_data, filter_group)
+    keywords_data.map do |keyword_data|
+      keyword_filter = KeywordFilter.find_or_initialize_by(
+        keyword: keyword_data['keyword'],
+        keyword_filter_group_id: filter_group.id
+      )
+      keyword_filter.update(filter_type: keyword_data['filter_type'])
+      keyword_filter.keyword
+    end
+  end
+
+  def self.cleanup_old_groups(new_data, server_setting_id)
+    new_group_names = new_data.map { |group| group['name'] }
+    KeywordFilterGroup.where(server_setting_id: server_setting_id, is_custom: false)
+                      .where.not(name: new_group_names)
+                      .destroy_all
   end
 end
