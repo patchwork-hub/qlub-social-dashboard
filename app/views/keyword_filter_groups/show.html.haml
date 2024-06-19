@@ -6,6 +6,11 @@
     .card
       .card-header
         %h3.card-title= @keyword_filter_group.name
+        - if @keyword_filter_group.is_custom?
+          .card-tools
+            .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Actions"}
+              = link_to new_keyword_filter_group_keyword_filter_path(@keyword_filter_group), class: 'form-control float-right mr-2', title: 'Add New Keyword' do
+                %i.fa-solid.fa-circle-plus
 
       .card-body
         %table#datatable.table.table-striped.table-bordered{data: {url: keyword_filter_group_url(@keyword_filter_group), type: 'keyword_filter_group_list', 'is-custom': @keyword_filter_group.is_custom?.to_s}}

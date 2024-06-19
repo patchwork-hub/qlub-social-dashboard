@@ -1,8 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-  function setModalDetails(title, id) {
+  function setModalDetails(title, id, label) {
+    // Set the modal title
     $('.modal-title').text(title);
+    // Set the hidden input for server setting ID
     const serverSettingIdInput = $('#serverSettingId');
     serverSettingIdInput.val(id);
+    // Set the name label text
+    $('label[for="keyword_filter_group_name"]').text(label);
+    // Fetch and populate existing data for the select element
     fetchExistingData(id);
   }
 
@@ -25,10 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   $('a[data-toggle="modal"]').click(function (event) {
     event.preventDefault();
-
     const title = $(this).attr('title');
     const id = $(this).data('id');
-
-    setModalDetails(title, id);
+    const label = $(this).data('label');
+    setModalDetails(title, id, label);
   });
 });

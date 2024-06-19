@@ -4,31 +4,20 @@ class KeywordFiltersController < ApplicationController
   before_action :set_keyword_filter, only: [:edit, :update, :destroy]
 
   def index
-    respond_to do |format|
-      format.html
-      format.json { render json: prepare_filters }
-      format.csv {
-        send_data KeywordFilter.all.to_csv(
-          [
-            'keyword',
-            'keyword_filter_group_id',
-            'filter_type'
-          ]
-        )
-      }
-    end
+  end
+
+  def new
+    @keyword_filter = KeywordFilter.new
+    @keyword_filter_groups = KeywordFilterGroup.all
   end
 
   def create
-    @keyword_filter = KeywordFilter.new(keyword_filter_params)
-    respond_to do |format|
-      if @keyword_filter.save
-        format.html { redirect_back(fallback_location: root_path, flash: { success: 'A filter keyword was successfully created!' }) }
-        format.json { render json: @keyword_filter, status: :created }
-      else
-        format.html { redirect_back(fallback_location: root_path, flash: { error: @keyword_filter.errors.full_messages }) }
-        format.json { render json: { errors: @keyword_filter.errors.full_messages }, status: :unprocessable_entity }
-      end
+    @keyword_filter = @keyword_filter_group.keyword_filters.build(keyword_filter_params)
+    if @keyword_filter.save
+      redirect_to @keyword_filter_group, notice: 'A filter keyword was successfully created!'
+    else
+      flash[:error] = @keyword_filter.errors.full_messages
+      render :new
     end
   end
 
@@ -75,22 +64,4 @@ class KeywordFiltersController < ApplicationController
     params.require(:keyword_filter_group).permit(:name)
   end
 
-  def prepare_filters
-    @keyword_filters = @all = KeywordFilter.all
-
-      @keyword_filters = @keyword_filters.order("#{@sort}": :"#{@dir}").page(@page).per(@per)
-
-      @data = @keyword_filters.each_with_object([]) { |g, arr|
-        arr << {
-          keyword: g.keyword,
-          keyword_filter_group_id: KeywordFilterGroup.find_by_id(g.keyword_filter_group_id)&.name,
-          filter_type: g.filter_type
-        }
-      }
-
-    total_records  = @all.size
-    total_filtered = @q.present? ? @keyword_filters.total_count : total_records
-
-    { draw: params[:draw], recordsTotal: total_records, recordsFiltered: total_filtered, data: @data }
-  end
 end

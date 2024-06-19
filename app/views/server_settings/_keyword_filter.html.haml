@@ -10,12 +10,14 @@
           .mb-3
             = f.hidden_field :server_setting_id, id: 'serverSettingId'
           .mb-3.mx-2
-            = f.label :name, class: 'form-label'
+            = f.label :name, class: 'form-label', for: 'keyword_filter_group_name'
+            %span.text-danger *
             %select.select2.form-control.mx-3{ name: 'keyword_filter_group[name]', id: 'keyword_filter_group_name', style: 'width: 100%' }
           .mb-3.keyword_filters
             %div.d-flex
               %div.col-8.mt-3
                 = f.label :keyword, class: 'form-label'
+                %span.text-danger *
               %div.col-4.mt-3
                 = f.label :filter_type, 'Filter Type', class: 'form-label'
             = f.fields_for :keyword_filters do |keyword_filter|
