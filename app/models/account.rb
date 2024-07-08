@@ -4,6 +4,7 @@ class Account < ApplicationRecord
   has_one :user, inverse_of: :account
   has_many :statuses, inverse_of: :account
   has_many :global_filters, inverse_of: :account, dependent: :nullify
+  has_many :communities
 
   validates :username, uniqueness: true, presence: true
 

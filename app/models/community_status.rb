@@ -1,5 +1,3 @@
 class CommunityStatus < ApplicationRecord
-  self.table_name = 'mammoth_communities_statuses'
-  
-  has_attached_file :image
+  self.table_name = 'patchwork_communities_statuses'
 end

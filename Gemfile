@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.1.2"
+ruby '>= 3.0.0'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.0.4", ">= 7.0.4.2"
+gem "rails", "~> 7.1.0", ">= 7.0.4.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -115,3 +115,5 @@ gem 'sidekiq-scheduler', '~> 5.0'
 gem "cocoon"
 
 gem "select2-rails"
+gem "strong_migrations"
+gem 'patch_commu', git: "https://github.com/newsmast22/patch_commu", branch: 'main'
