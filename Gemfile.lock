@@ -1,5 +1,7 @@
-PATH
-  remote: /Users/minmaunghein/workspace/patch_commu
+GIT
+  remote: https://github.com/newsmast22/patch_commu
+  revision: ee1442f841fdf4d6a7d66368abf9e94998155cf0
+  branch: main
   specs:
     patch_commu (0.1.0)
       byebug
