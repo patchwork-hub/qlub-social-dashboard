@@ -22,7 +22,7 @@
                   %div.d-flex.justify-content-between
                     %div
                       %label.form-check-label.switch{ for: option[:id] }
-                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name] }
+                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name], 'data-optional-value' => option[:optional_value] }
                         %span.switch-slider.round
                           %span.slider-tick
                             %i.fa-solid.fa-check
@@ -39,7 +39,6 @@
                       - if option[:name] == 'Content filters'
                         %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Custom filter name' }
                           Add custom filter
-
                     %div
                       %a{ href: "##{collapse_id}", role: "button", class: "collapse-toggle arrow-toggle", 'data-toggle': "collapse", 'aria-expanded': "false", 'aria-controls': collapse_id }
                         %i.fa-solid.fa-caret-down.icon-arrow-down
@@ -73,7 +72,7 @@
                   %div.d-flex
                     %div
                       %label.form-check-label.switch{ for: option[:id] }
-                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name] }
+                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: option[:id], checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name], 'data-optional-value' => option[:optional_value] }
                         %span.switch-slider.round
                           %span.slider-tick
                             %i.fa-solid.fa-check
@@ -83,6 +82,11 @@
                         = option[:name]
                         %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
                           = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
+                        - if option[:name] == 'Long posts and markdown' and option[:optional_value].present?
+                          %br
+                          %span.ml-5.small{ style: 'color: grey;' }
+                            Maximum Characters:
+                            = option[:optional_value]
                       %br
                       - case option[:name]
                       - when 'Sign up challenge'
@@ -100,3 +104,5 @@
             %hr
 
 = render 'keyword_filter'
+
+= render 'max_chars_modal'

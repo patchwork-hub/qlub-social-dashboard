@@ -8,7 +8,8 @@ class ServerSettingsController < ApplicationController
 
   def update
     @server_setting = ServerSetting.find(params[:id])
-    if @server_setting.update(value: params[:server_setting][:value])
+
+    if @server_setting.update(server_setting_params)
       render json: { success: true, message: 'Server setting updated successfully' }
     else
       render json: { success: false, error: 'Failed to update server setting' }, status: :unprocessable_entity
@@ -29,7 +30,7 @@ class ServerSettingsController < ApplicationController
   end
 
   def server_setting_params
-    params.require(:server_setting).permit(:value)
+    params.require(:server_setting).permit(:value, :optional_value)
   end
 
   def prepare_server_setting
@@ -39,12 +40,13 @@ class ServerSettingsController < ApplicationController
 
     @data = @parent_settings.map do |parent_setting|
       {
-        name: "#{parent_setting.name}",
+        name: parent_setting.name,
         settings: parent_setting.children.sort_by(&:position).map do |child_setting|
           {
             id: child_setting.id,
             name: child_setting.name,
             is_operational: child_setting.value,
+            optional_value: child_setting.optional_value,
             keyword_filter_groups: child_setting.keyword_filter_groups.order(name: :asc).map do |group|
               {
                 id: group.id,

@@ -1,0 +1,15 @@
+.modal.fade#maxCharsModal
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %h5.modal-title Long posts and Markdown
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          %span{ 'aria-hidden': 'true' } &times;
+      .modal-body
+        %form#maxCharsForm
+          %div.form-group
+            %label{ for: 'max_chars_value' } Maximum Characters
+            %input.form-control#max_chars_value{ type: 'number', name: 'max_chars_value', required: true }
+      .modal-footer
+        %button.btn.btn-secondary{ type: 'button', 'data-dismiss': 'modal' } Close
+        %button.btn.btn-primary{ type: 'button', id: 'saveMaxChars' } Save changes

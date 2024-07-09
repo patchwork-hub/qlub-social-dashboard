@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_11_103303) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_09_152202) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -993,6 +993,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_103303) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "optional_value"
   end
 
   create_table "session_activations", force: :cascade do |t|
@@ -1206,16 +1207,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_103303) do
     t.boolean "highlighted", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "user_server_settings", force: :cascade do |t|
-    t.boolean "value"
-    t.bigint "user_id", null: false
-    t.bigint "server_setting_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["server_setting_id"], name: "index_user_server_settings_on_server_setting_id"
-    t.index ["user_id"], name: "index_user_server_settings_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -1439,8 +1430,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_11_103303) do
   add_foreign_key "tag_follows", "tags", on_delete: :cascade
   add_foreign_key "tombstones", "accounts", on_delete: :cascade
   add_foreign_key "user_invite_requests", "users", on_delete: :cascade
-  add_foreign_key "user_server_settings", "server_settings", on_delete: :cascade
-  add_foreign_key "user_server_settings", "users", on_delete: :cascade
   add_foreign_key "users", "accounts", name: "fk_50500f500d", on_delete: :cascade
   add_foreign_key "users", "invites", on_delete: :nullify
   add_foreign_key "users", "oauth_applications", column: "created_by_application_id", on_delete: :nullify

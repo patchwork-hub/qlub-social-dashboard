@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import DataTable from 'datatables.net-bs4';
 import 'datatables.net-select-bs4';
+import { sendPatchRequest } from 'custom_js/api_util';
 
 const COLUMNS = {
   keyword_filter_group_list: [
@@ -133,4 +134,51 @@ jQuery(function() {
 
     nestedFields.find('input[type="text"]').val('');
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    function updateSetting(checkbox) {
+      const settingId = checkbox.getAttribute('data-setting-id');
+      const isChecked = checkbox.checked;
+      const data = { server_setting: { value: isChecked } };
+
+      sendPatchRequest(`/server_settings/${settingId}`, data);
+    }
+
+    function showModalIfNeeded(checkbox) {
+      const settingName = checkbox.getAttribute('data-setting-name');
+      console.log('SHOWMODAL')
+      console.log(settingName)
+      console.log(checkbox.checked)
+      if (settingName === 'Long posts and markdown' && checkbox.checked) {
+        const optionalValue = checkbox.getAttribute('data-optional-value');
+        const maxCharsInput = document.getElementById('max_chars_value');
+        maxCharsInput.value = optionalValue || '';
+
+        $('#maxCharsModal').modal('show');
+      }
+    }
+
+    const settingSwitches = document.querySelectorAll('.setting-input');
+    settingSwitches.forEach(function(switchElement) {
+      switchElement.addEventListener('change', function(event) {
+        const checkbox = event.target;
+        updateSetting(checkbox);
+        console.log(checkbox)
+        showModalIfNeeded(checkbox);
+      });
+    });
+
+    document.getElementById('saveMaxChars').addEventListener('click', function() {
+      const maxCharsInput = document.getElementById('max_chars_value');
+      const newValue = maxCharsInput.value;
+      const settingId = document.querySelector('.setting-input[data-setting-name="Long posts and markdown"]').getAttribute('data-setting-id');
+
+      const data = { server_setting: { optional_value: newValue } };
+      sendPatchRequest(`/server_settings/${settingId}`, data)
+        .then(() => {
+          location.reload();
+        });
+    });
+  });
+
 });
