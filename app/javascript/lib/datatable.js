@@ -145,11 +145,9 @@ jQuery(function() {
     }
 
     function showModalIfNeeded(checkbox) {
-      const settingName = checkbox.getAttribute('data-setting-name');
-      console.log('SHOWMODAL')
-      console.log(settingName)
-      console.log(checkbox.checked)
-      if (settingName === 'Long posts and markdown' && checkbox.checked) {
+      const settingName = checkbox.getAttribute('data-setting-name').toLowerCase();
+
+      if (settingName === 'long posts and markdown' && checkbox.checked) {
         const optionalValue = checkbox.getAttribute('data-optional-value');
         const maxCharsInput = document.getElementById('max_chars_value');
         maxCharsInput.value = optionalValue || '';
@@ -171,13 +169,18 @@ jQuery(function() {
     document.getElementById('saveMaxChars').addEventListener('click', function() {
       const maxCharsInput = document.getElementById('max_chars_value');
       const newValue = maxCharsInput.value;
-      const settingId = document.querySelector('.setting-input[data-setting-name="Long posts and markdown"]').getAttribute('data-setting-id');
 
-      const data = { server_setting: { optional_value: newValue } };
-      sendPatchRequest(`/server_settings/${settingId}`, data)
-        .then(() => {
-          location.reload();
-        });
+      const settingElement = Array.from(document.querySelectorAll('.setting-input'))
+        .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
+
+      if (settingElement) {
+        const settingId = settingElement.getAttribute('data-setting-id');
+        const data = { server_setting: { optional_value: newValue } };
+        sendPatchRequest(`/server_settings/${settingId}`, data)
+          .then(() => {
+            location.reload();
+          });
+      }
     });
   });
 
