@@ -33,10 +33,10 @@
                         %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
                           = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
                       %br
-                      - if option[:name] == 'Spam filters'
+                      - if option[:name].casecmp?('Spam filters')
                         %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Spam filter name' }
                           Add spam filter
-                      - if option[:name] == 'Content filters'
+                      - if option[:name].casecmp?('Content filters')
                         %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Custom filter name' }
                           Add custom filter
                     %div
@@ -82,11 +82,11 @@
                         = option[:name]
                         %span.small.tooltip-custom{ 'data-tooltip-text': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.' }
                           = image_tag("icons/circle-info.svg", alt: "Circle Info Icon", class: "mr-2", width: "16", height: "16")
-                        - if option[:name] == 'Long posts and markdown' and option[:optional_value].present?
+                        - if option[:name].casecmp?('Long posts and markdown')
                           %br
                           %span.ml-5.small{ style: 'color: grey;' }
                             Maximum Characters:
-                            = option[:optional_value]
+                            = option[:optional_value].presence || "Not Set"
                       %br
                       - case option[:name]
                       - when 'Sign up challenge'
