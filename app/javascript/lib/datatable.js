@@ -167,7 +167,6 @@ jQuery(function() {
       switchElement.addEventListener('change', function(event) {
         const checkbox = event.target;
         updateSetting(checkbox);
-        console.log(checkbox)
         showModalIfNeeded(checkbox);
       });
     });
