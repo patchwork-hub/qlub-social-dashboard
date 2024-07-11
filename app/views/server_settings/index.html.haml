@@ -87,6 +87,8 @@
                           %span.ml-5.small{ style: 'color: grey;' }
                             Maximum Characters:
                             = option[:optional_value].presence || "Not Set"
+                            %a{ href: '#', title: 'Long posts and Markdown', 'data-toggle': 'modal', 'data-setting-id': option[:id], 'data-optional-value': option[:optional_value], 'data-target': '#maxCharsModal', onclick: "handleEditClick(this)" }
+                              %i.fa-solid.fa-edit.ml-2{ style: "color: grey;" }
                       %br
                       - case option[:name]
                       - when 'Sign up challenge'

@@ -135,6 +135,12 @@ jQuery(function() {
     nestedFields.find('input[type="text"]').val('');
   }
 
+  window.handleEditClick = function(element) {
+    var maxCharsValue = element.getAttribute('data-optional-value');
+    var maxCharsInput = document.getElementById('max_chars_value');
+    maxCharsInput.value = maxCharsValue || '';
+  };
+
   document.addEventListener('DOMContentLoaded', function() {
     function updateSetting(checkbox) {
       const settingId = checkbox.getAttribute('data-setting-id');
