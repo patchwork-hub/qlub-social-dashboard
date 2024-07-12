@@ -1,0 +1,69 @@
+.container-fluid
+  .row-md-12.my-4
+    .col
+      %ol.carousel-indicators
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+  .row
+    .col-md-12
+      .card
+        .card-header
+          %h3.card-title Step 6 - Additional information
+        .card-body
+          .row
+            .col
+              %label Community rules
+              %p This section is useful for adding any community guidelines you may want to put in place. Ensure to clearly state the rules and guidelines to help maintain a respectful and organised environment. Include any important information members need to know before participating.
+          .row.mb-2
+            .col-auto
+              No.
+            .col-auto
+              Rule
+          .row.mb-2
+            .col-auto
+              %i.fas.fa-circle.fa-2x.text-blue
+            .col
+              %input#exampleInputEmail1.form-control{placeholder: "This is some text for a community rule.", type: "email"}/
+          .row.mb-2
+            .col-auto
+              %i.fas.fa-circle.fa-2x.text-blue
+            .col
+              %input#exampleInputEmail1.form-control{placeholder: "This is some text for a community rule.", type: "email"}/
+          .row
+            .col.text-right
+              %a.text-danger{ href: step2_communities_path } Add another rule
+  .row
+    .col-md-12
+      .card
+        .card-header
+          %h3.card-title Additional Information
+        .card-body
+          .row.mb-2
+            .col-md-3
+              Heading
+            .col-md-8
+              text
+            .col-md-1
+          .row.mb-2
+            .col-md-3
+              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+            .col-md-8
+              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+            .col-md-1.text-center
+              %i.far.fa-trash-alt.text-danger
+          .row.mb-2
+            .col-md-3
+              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+            .col-md-8
+              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+            .col-md-1.text-center
+              %i.far.fa-trash-alt.text-danger
+
+
+
+        
+            

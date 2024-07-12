@@ -1,0 +1,73 @@
+.container-fluid
+  .row-md-12.my-4
+    .col
+      %ol.carousel-indicators
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+  .row
+    .col-md-12
+      .card
+        .card-header
+          %h3.card-title Step 4 - Filter Content
+        .card-body
+          .row
+            .col
+              %label Type of posts
+              %p.text-muted This selection will determine the type of content displayed within this community.
+          .row
+            .col.card.list-group-item
+              .icheck-primary
+                %input.mr-2#check1{type: "checkbox", value: ""}/
+                Posts
+          .row
+            .col.card.list-group-item
+              .icheck-primary
+                %input.mr-2#check1{type: "checkbox", value: ""}/
+                Reposts
+          .row
+            .col.card.list-group-item
+              .icheck-primary
+                %input.mr-2#check1{type: "checkbox", value: ""}/
+                Replies
+      .card
+        .card-body
+          .row
+            .col
+              %label Mute accounts
+              %p.text-muted Choose accounts to Mute from the Community.
+          .row.d-flex.justify-content-between
+            .col-auto
+              %label Your muted contributors (0)
+            .col-auto
+              %a.btn.btn-outline-secondary{ href: '#' } Add New
+          .table-responsive
+            %table.table.mt-3.table-striped
+              %tbody
+                %tr
+                  %td.text-center
+                    %p.text-muted You haven’t muted any contributors from this community yet
+                    %a.text-danger{ href: step2_communities_path } Click here to search
+      .card
+        .card-body
+          .row.d-flex.justify-content-between
+            .col-md-6
+              %label Keyword filtering
+              %p.text-muted Lorem ipsum dolor sit amet consectetur. Fermentum ac proin sed elementum erat aliquam quis sem libero. Sit morbi mi magna adipiscing tellus hac.
+            .col-md-6-auto
+              %a.btn.btn-outline-secondary{ href: '#' } Add New
+          .table-responsive
+            %table.table.mt-3.table-striped
+              %tbody
+                %tr
+                  %td.text-center
+                    %p.text-muted You haven’t muted any contributors from this community yet
+                    %a.text-danger{ href: step2_communities_path } Click here to add one
+      .row.d-flex.justify-content-between
+        .col
+          %a.btn.btn-outline-secondary{ href: '#' } Back
+        .col-auto
+          %a.btn.btn-danger{ href: step5_communities_path } Continue
