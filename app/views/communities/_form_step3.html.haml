@@ -1,0 +1,83 @@
+.container-fluid
+  .row-md-12.my-4
+    .col
+      %ol.carousel-indicators
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+  .row
+    .col-md-12
+      .card
+        .card-header
+          %h3.card-title Step 3 - Add content
+        .card-body
+          .row.d-flex.justify-content-between
+            .col-auto
+              .row
+                %label Hashtags
+              .row
+                .mt-auto
+                  %p.text-muted Add the hashtags used to bring posts into your community.
+            .col-auto.d-flex.flex-column.justify-content-end
+              .mt-auto
+                %button.btn.btn-block.btn-outline-dark{type: "button"} Add New
+          .table-responsive
+            %table.table.mt-3.table-striped
+              %thead
+                %tr
+                  %th
+                    %i.far.fa-square.mr-4
+                    %label.text-muted{ style: "font-size: 13px;" } Hashtags
+              %tbody
+                %tr
+                  %td.text-center
+                    %p.text-muted You haven’t added any hashtags to this community yet
+                    %a.text-danger{ href: step2_communities_path } Click here to add one
+      .card
+        .card-body
+          .row.d-flex.justify-content-between
+            .col
+              .row
+                %label Community contributors
+              .row
+                .mt-auto
+                  %p.text-muted Add key contributors by searching for them below These contributors' posts will be prominently featured to your community members.
+          .row
+            .col
+              %label Your community contributors (0)
+            .col-auto.d-flex.flex-column.justify-content-end
+              .mt-auto
+                %button.btn.btn-block.btn-outline-dark{type: "button"} Add New
+          .table-responsive
+            %table.table.mt-3.table-striped
+              %thead
+                %tr
+                  %th
+                    %i.far.fa-square.mr-4
+                    %label.text-muted{ style: "font-size: 13px;" } Hashtags
+              %tbody
+                %tr
+                  %td.text-center
+                    %p.text-muted You haven’t added any hashtags to this community yet
+                    %a.text-danger{ href: step2_communities_path } Click here to add one
+      .row.d-flex.justify-content-between
+        .col
+          %a.btn.btn-outline-secondary{ href: '#' } Back
+        .col-auto
+          %a.btn.btn-danger{ href: step4_communities_path } Continue
+      
+            
+
+          
+
+
+
+
+        
+          
+             
+
+

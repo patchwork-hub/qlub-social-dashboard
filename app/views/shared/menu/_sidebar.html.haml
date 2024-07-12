@@ -17,9 +17,13 @@
             = image_tag("icons/boxes.svg", class: "mr-2", width: "16", height: "16")
             %p Patch Packs
         %li.nav-item
-          = link_to '#', id: "communities-link", data: { header: "Communities" }, class: "nav-link #{controller_name == 'communities' ? 'active' : ''}" do
+          = link_to step1_communities_path, id: "communities-link", data: { header: "Communities" }, class: "nav-link #{controller_name == 'communities' ? 'active' : ''}" do
             = image_tag("icons/speech.svg", class: "mr-2", width: "16", height: "16")
             %p Communities
+        %li.nav-item
+          = link_to accounts_path, id: "resources-link", data: { header: "Users" }, class: "nav-link #{controller_name == 'users' ? 'active' : ''}" do
+            %i.nav-icon.fa-solid.fa-users
+            %p Users
         %li.nav-item
           = link_to '#', id: "resources-link", data: { header: "Resources" }, class: "nav-link #{controller_name == 'resources' ? 'active' : ''}" do
             = image_tag("icons/folder.svg", class: "mr-2", width: "16", height: "16")

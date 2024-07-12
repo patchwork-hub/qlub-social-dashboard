@@ -1,0 +1,89 @@
+.container-fluid
+  .row-md-12.my-4
+    .col
+      %ol.carousel-indicators
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+  .row
+    .col-md-12
+      .card
+        .card-header
+          %h3.card-title Step 5 - Share content
+        .card-body
+          .row.d-flex.justify-content-between
+            .col-md-8
+              %label Hashtags
+              %p Choose a few default hashtags that will be automatically attached to posts made by community members. These hashtags help in organising and discovering content within your community.
+            .col-md-4-auto
+              %a.btn.btn-outline-secondary{ href: '#' } Add New
+          .row
+            .col.d-flex
+              %p.mr-2 Show
+              .form-group.mr-2
+                %select.form-control
+                  %option 10
+                  %option 20
+                  %option 30
+                  %option 40
+                  %option 50
+              %p entries
+            .col-auto
+              .card-tools
+                .input-group.input-group-sm{style: "width: 150px;"}
+                  %input.form-control.float-right{name: "table_search", placeholder: "Search", type: "text"}/
+                  .input-group-append
+                    %button.btn.btn-default{type: "submit"}
+                      %i.fas.fa-search
+          .table-responsive
+            %table.table.mt-3.table-striped
+              %thead
+                %tr
+                  %th{style: "width: 10px"}
+                    %i.far.fa-square.mr-4
+                  %th
+                    %label.text-muted Hashtags
+                  %th{style: "width: 200px"}
+              %tbody
+                %tr
+                  %td
+                    %i.far.fa-square.mr-4
+                  %td
+                    %p #posthashtag
+                  %td
+                    %a.text-danger{ href: step2_communities_path } Edit
+                    %a.text-danger{ href: step2_communities_path } Remove
+                %tr
+                  %td
+                    %i.far.fa-square.mr-4
+                  %td
+                    %p #posthashtag
+                  %td
+                    %a.text-danger{ href: step2_communities_path } Edit
+                    %a.text-danger{ href: step2_communities_path } Remove
+                %tr
+                  %td
+                    %i.far.fa-square.mr-4
+                  %td
+                    %p #posthashtag
+                  %td
+                    %a.text-danger{ href: step2_communities_path } Edit
+                    %a.text-danger{ href: step2_communities_path } Remove
+          .btn-group
+            %button.btn.btn-default{type: "button"} Action
+            %button.btn.btn-default.dropdown-toggle.dropdown-icon{"data-toggle" => "dropdown", type: "button"}
+              %span.sr-only Toggle Dropdown
+            .dropdown-menu{role: "menu"}
+              %a.dropdown-item{href: "#"} Action
+              %a.dropdown-item{href: "#"} Another action
+              %a.dropdown-item{href: "#"} Something else here
+              .dropdown-divider
+              %a.dropdown-item{href: "#"} Separated link
+      .row.d-flex.justify-content-between
+        .col
+          %a.btn.btn-outline-secondary{ href: '#' } Back
+        .col-auto
+          %a.btn.btn-danger{ href: step6_communities_path } Continue

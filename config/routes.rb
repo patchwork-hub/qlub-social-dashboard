@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   match '/invitation_codes/export/new', to: 'wait_lists#export', as: :export_invitation_codes, via: [:get, :post]
 
   resources :communities do
-    member do
+    collection do
       get 'step1', to: 'communities#step1'
       post 'step1', to: 'communities#step1_save'
       get 'step2', to: 'communities#step2'

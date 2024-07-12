@@ -1,0 +1,48 @@
+%section.content
+  .container-fluid
+    .row-md-12.my-4
+      .col
+        %ol.carousel-indicators
+          %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+          %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+          %li.bg-secondary{style: "width: 65px; height: 5px;"}
+          %li.bg-secondary{style: "width: 65px; height: 5px;"}
+          %li.bg-secondary{style: "width: 65px; height: 5px;"}
+          %li.bg-secondary{style: "width: 65px; height: 5px;"}
+    .row
+      .col-md-12
+        .card
+          .card-header
+            %h3.card-title Step 2 - Admin Details
+          .card-body.table.table-bordered
+            .row.d-flex.justify-content-between
+              .col-auto
+                .row
+                  %label Administrators
+                .row
+                  .mt-auto
+                    %p.text-muted Assign administrators to your community by providing their details below.
+              .col-auto.d-flex.flex-column.justify-content-end
+                .mt-auto
+                  %button.btn.btn-block.btn-outline-dark{type: "button"} Add New
+              %table.table.mt-3
+                %thead
+                  %tr
+                    %th Display name
+                    %th Username
+                    %th Email address
+                    %th Role
+                    %th
+                %tbody
+                  %tr
+                    %td AdminName
+                    %td admin_name
+                    %td adminname@newsmast.org
+                    %td Admin
+                    %td
+                      %a.text-danger{ href: step2_communities_path } Edit
+        .row.d-flex.justify-content-between
+          .col-auto
+            %a.btn.btn-outline-secondary{ href: '#' } Back
+          .col-auto
+            %a.btn.btn-danger{ href: step3_communities_path } Continue

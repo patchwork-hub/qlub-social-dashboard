@@ -1,4 +1,13 @@
-.col-md-12.pt-4
+.row-md-12.my-4
+  .col
+    %ol.carousel-indicators
+      %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+      %li.bg-secondary{style: "width: 65px; height: 5px;"}
+      %li.bg-secondary{style: "width: 65px; height: 5px;"}
+      %li.bg-secondary{style: "width: 65px; height: 5px;"}
+      %li.bg-secondary{style: "width: 65px; height: 5px;"}
+      %li.bg-secondary{style: "width: 65px; height: 5px;"}
+.col-md-12
   %div.card.mt-4
     .card-header
       %div.d-flex.justify-content-between
@@ -50,4 +59,4 @@
     .col-auto
       %a.btn.btn-outline-secondary{ href: '#' } Back
     .col-auto
-      %a.btn.btn-danger{ href: '#' } Continue
+      %a.btn.btn-danger{ href: step2_communities_path } Continue

@@ -2,7 +2,78 @@ class CommunitiesController < ApplicationController
   before_action :set_community, only: %i[ show ]
 
   def index
-    
+  end
+
+  def step1 
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step1_save
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step2
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step2_save
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step3
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step3_save
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step4
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step4_save
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step5
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step5_save
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step6
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def step6_save
+    respond_to do |format|
+      format.html
+    end
   end
 
   def new

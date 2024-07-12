@@ -3,10 +3,7 @@ class AccountsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    respond_to do |format|
-      format.html
-      format.json {render json: prepare_users_for_datatable}
-    end
+    @accounts = Account.order(created_at: :desc).page(params[:page])
   end
 
   def show; end
@@ -29,22 +26,8 @@ class AccountsController < ApplicationController
     def prepare_users_for_datatable
       @all   = Account.get_accounts
       @users = @all
-
-      if @q.present?
-        @users = @users.where("   lower(accounts.display_name) like :q
-                                  OR lower(accounts.username) like :q
-                                  OR lower(users.email) like :q
-                                  OR lower(users.phone) like :q
-                                  OR lower(mammoth_wait_lists.role) like :q
-                                  OR lower(mammoth_communities.name) like :q",
-                                  q: "%#{@q.downcase}%"
-                                )
-      end
-      @users = @users.order("#{@sort}": :"#{@dir}").uniq
-      @all   = @all.uniq
-
       @users = Kaminari.paginate_array(@users).page(@page).per(@per)
-
+      
       @data = @users.each_with_object([]) { |u, arr|
         if @selected == 'all'
           checked = !@unselected.map(&:to_i).include?(u.id)
@@ -54,11 +37,10 @@ class AccountsController < ApplicationController
         arr << {
           id: "<input type='checkbox' class='mx-auto mt-1 form-check checkbox' value='#{u.id}' id='user-#{u.id}' #{checked ? 'checked' : ''}>",
           username: u.username,
+          display_name: u.display_name,
           email: u.phone.present? ? '-' : u.email,
           phone: u.phone || '-',
-          registered_at: u.registered_at.strftime('%b %d, %Y - %H:%M %p'),
-          user_role: u.user_role,
-          community_name: u.community_name.presence || '-',
+          opened_at: u.registered_at.strftime('%b %d, %Y - %H:%M %p'),
           actions: "
                     <a href='#{account_url(u.account_id)}' title='view report' class='mr-2'><i class='fa-solid fa-eye'></i></a>
                   "

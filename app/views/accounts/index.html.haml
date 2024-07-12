@@ -1,26 +1,32 @@
 - content_for :title do
   = 'Registered Users'
-
 .row
   .col-12
     .card
       .card-header
         %h3.card-title Registered Users
-        .card-tools
-          .input-group.input-group-sm
-            = link_to export_accounts_url, class: 'export-users btn btn-outline-primary no-hover', id: 'export-selected', title: 'export users' do
-              Export users
       .card-body
         %table#datatable.table.table-bordered.table-striped{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
               %th
-                = check_box_tag :select_all, id: 'select_all'
+                = check_box_tag :select_all, '', false, id: 'select_all'
+              %th User name
+              %th Display name
               %th Email address
-              %th Username
-              %th Phone number
-              %th Registered date
-              %th Role
-              %th Primary community
-              %th Actions
+              %th Time and date account opened
+              %th Server domain
           %tbody
+            - @accounts.each do |account|
+              %tr
+                %td
+                  = check_box_tag "selected_accounts[]", account.id, false, class: 'select_account'
+                %td= account.username
+                %td= account.display_name
+                %td= account.user ? account.user.email : "-"
+                %td= account.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                %td= account.domain
+
+        %div{style: "font-size: 2rem;"}
+          = paginate @accounts
+     

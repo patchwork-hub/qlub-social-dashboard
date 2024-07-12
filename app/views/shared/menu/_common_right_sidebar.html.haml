@@ -1,0 +1,27 @@
+.col-md-12.pt-4
+  %div.card.mt-4
+    .card-header
+      %div.d-flex.justify-content-between
+        %div
+          %h5.card-title Patch Packs
+        %div
+          = image_tag("icons/boxes.svg", class: "mr-2", width: "16", height: "16")
+    .card-body
+      %p Choose one of our popular packs of patches for one-click Server Settings installation:
+      %a.btn.btn-outline-dark{ href: '#' } Get started
+  %div.card.mt-4
+    .card-header
+      %div.d-flex.justify-content-between
+        %div
+          %h5.card-title Most popular communities
+        %div
+          = image_tag("icons/chart-line-up.svg", class: "mr-2", width: "16", height: "16")
+    .card-body
+      %ul
+        %li Oil Painting
+        %li Art
+        %li Movies
+        %li TV & Radio
+        %li Music
+      %a.btn.btn-outline-secondary.mt-3{ href: '#' } Make your own community
+      %a.btn.btn-danger.mt-3{ href: '#' } Upgrade to Patchwork Community
