@@ -3,7 +3,10 @@ class AccountsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @accounts = Account.order(created_at: :desc).page(params[:page])
+    page = params[:page].to_i > 0 ? params[:page].to_i : 1
+    per_page = 25
+    @custom_paginator = Form::AccountPaginator.new(page, per_page)
+    @accounts = @custom_paginator.paginated_scope
   end
 
   def show; end
