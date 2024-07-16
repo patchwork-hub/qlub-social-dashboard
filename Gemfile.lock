@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/newsmast22/patch_commu
-  revision: ee1442f841fdf4d6a7d66368abf9e94998155cf0
+  revision: d1aac2e0ebb7fb6c7c4b0dd079ad6c29d194bbb0
   branch: main
   specs:
     patch_commu (0.1.0)

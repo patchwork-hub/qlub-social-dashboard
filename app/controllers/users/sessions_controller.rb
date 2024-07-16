@@ -23,9 +23,8 @@ class Users::SessionsController < Devise::SessionsController
 
   protected
 
-    def on_authentication_success(user, security_measure)
-      @on_authentication_success_called = true
-      sign_in(user)
-    end
-
+  def on_authentication_success(user, security_measure)
+    @on_authentication_success_called = true
+    sign_in(user)
+  end
 end
