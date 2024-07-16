@@ -22,5 +22,4 @@ class GlobalFilter < ApplicationRecord
         errors.add(:keyword, "has already been taken")
       end
     end
-
 end
