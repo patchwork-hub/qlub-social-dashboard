@@ -88,6 +88,14 @@ class Account < ApplicationRecord
     @all
   end
 
+  def self.ransackable_attributes(auth_object = nil)
+    [ "dob", "domain", "uri", "url", "username"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
+
   private
 
   def generate_keys
@@ -97,7 +105,6 @@ class Account < ApplicationRecord
     self.private_key = keypair.to_pem
     self.public_key  = keypair.public_key.to_pem
   end
-
 end
 
 
