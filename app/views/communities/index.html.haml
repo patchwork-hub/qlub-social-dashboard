@@ -4,11 +4,36 @@
   .col-12
     .card
       .card-header
-        %h3.card-title Communities
+        %h3.card-title Your communities
+        .card-tools
+          = search_form_for @search do |f|
+            .input-group.input-group-sm{style: "width: 150px;"}
+              = f.search_field :name_cont, class: "form-control float-right", placeholder: "Search"
+              .input-group-append
+                %button.btn.btn-default{type: "submit"}
+                  %i.fas.fa-search
       .card-body
-        %table#datatable.table.table-bordered.table-striped{data: {url: communities_url, type: 'community'}}
+        %p{ style: "font-size: 12px;" "color: #BEBEBE;" } Here you can see a list of all the communities on your server. From this dashboard, you can easily import communities, manage your existing communities or create new ones.
+        %table#datatable.table.table-bordered.table-striped{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
-              %th Name
-              %th Actions
+              %th
+                = check_box_tag :select_all, '', false, id: 'select_all'
+              %th Community
+              %th Username
+              %th No.of admins
+              %th 
+             
           %tbody
+            - @records.each do |community|
+              %tr
+                %td
+                  = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
+                %td= community.name
+                %td= community.slug
+                %th= community.community_admins.size
+                %th
+      .card-footer.clearfix
+        %ul.pagination.pagination-sm.m-0.float-right
+          = render "/kaminari/paginator"
+     

@@ -24,7 +24,7 @@
               %th Time and date account opened
               %th Server domain
           %tbody
-            - @accounts.each do |account|
+            - @records.each do |account|
               %tr
                 %td
                   = check_box_tag "selected_accounts[]", account.id, false, class: 'select_account'

@@ -1,10 +1,7 @@
-class CommunitiesController < ApplicationController
+class CommunitiesController < BaseController
   before_action :set_community, only: %i[ show ]
 
-  def index
-  end
-
-  def step1 
+  def step1
     respond_to do |format|
       format.html
     end
@@ -117,6 +114,10 @@ class CommunitiesController < ApplicationController
   end
 
   private
+
+  def records_filter
+    @filter = Filter::Community.new(params)
+  end
 
   def set_community
     @community = Patchwork::Community::find_by(slug: params[:id])
