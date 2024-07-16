@@ -1,1 +1,6 @@
-= render "shared/menu/#{controller_name == 'communities' ? 'community_right_sidebar' : 'common_right_sidebar'}"
+- if controller_name == 'communities'
+  = render 'shared/menu/community_right_sidebar'
+- elsif controller_name == 'accounts'
+  = render 'shared/menu/user_right_sidebar'
+- else
+  = render 'shared/menu/common_right_sidebar'
