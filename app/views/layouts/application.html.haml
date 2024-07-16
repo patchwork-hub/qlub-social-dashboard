@@ -32,17 +32,23 @@
         = render "shared/menu/header"
         = render "shared/menu/sidebar"
         .container-fluid
-          .row
+        .row
+          - if controller_name == "accounts"
+            .col-md-12
+              .content-wrapper
+                .mx-2.pt-3
+                  = render "shared/flash"
+                .content.container-fluid
+                  = yield
+          - else
             .col-md-9
               .content-wrapper
                 .mx-2.pt-3
-                  - # show flash messages
                   = render "shared/flash"
                 .content.container-fluid
                   = yield
             .col-md-3
               = render "shared/menu/right_sidebar"
-
     - else
       .container.mt-5
         .w-25.m-auto
