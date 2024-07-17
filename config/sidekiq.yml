@@ -11,7 +11,7 @@ development:
         every: '5m'
         class: Scheduler::FetchContentKeywordScheduler
         queue: dashboard_development_scheduler
-      FetchSapmKeywordScheduler:
+      FetchSpamKeywordScheduler:
         every: '5m'
         class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_development_scheduler
@@ -29,9 +29,9 @@ staging:
         every: '5m'
         class: Scheduler::FetchContentKeywordScheduler
         queue: dashboard_staging_scheduler
-      FetchSapmKeywordScheduler:
+      FetchSpamKeywordScheduler:
         every: '5m'
-        class: Scheduler::FetchSapmKeywordScheduler
+        class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_staging_scheduler
 
 production:
@@ -47,7 +47,7 @@ production:
         every: '5m'
         class: Scheduler::FetchContentKeywordScheduler
         queue: dashboard_production_scheduler
-      FetchSapmKeywordScheduler:
+      FetchSpamKeywordScheduler:
         every: '5m'
-        class: Scheduler::FetchSapmKeywordScheduler
+        class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_production_scheduler
