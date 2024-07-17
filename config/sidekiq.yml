@@ -32,7 +32,7 @@ staging:
       FetchSapmKeywordScheduler:
         every: '5m'
         class: Scheduler::FetchSapmKeywordScheduler
-        queue: dashboard_development_scheduler
+        queue: dashboard_staging_scheduler
 
 production:
   :verbose: true
@@ -50,4 +50,4 @@ production:
       FetchSapmKeywordScheduler:
         every: '5m'
         class: Scheduler::FetchSapmKeywordScheduler
-        queue: dashboard_development_scheduler
+        queue: dashboard_production_scheduler
