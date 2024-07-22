@@ -30,11 +30,10 @@ pin "datatables.net-select-bs4", to: "https://ga.jspm.io/npm:datatables.net-sele
 pin "datatables.net-select", to: "https://ga.jspm.io/npm:datatables.net-select@1.5.0/js/dataTables.select.mjs"
 pin "datatables.net-select-dt", to: "https://cdnjs.cloudflare.com/ajax/libs/datatables.net-select-dt/1.5.0/select.dataTables.min.js"
 pin "@nathanvda/cocoon", to: "https://ga.jspm.io/npm:@nathanvda/cocoon@1.2.14/cocoon.js"
-pin "@fontsource/source-sans-pro", to: "https://ga.jspm.io/npm:@fontsource/source-sans-pro@5.0.8/index.css"
 
 pin_all_from "app/javascript/lib", under: "lib"
 
-#precompile javascript files 
+#precompile javascript files
 
 pin_all_from "app/javascript/custom_js", under: "custom_js"
 
