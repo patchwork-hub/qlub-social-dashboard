@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/newsmast22/patch_commu
+  revision: f23c6dea07e586117e1ca05a457a916f98555a50
+  branch: main
+  specs:
+    patch_commu (0.1.0)
+      byebug
+      rails (~> 7.0)
+      strong_migrations
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -396,6 +406,7 @@ DEPENDENCIES
   jquery-rails (~> 4.6)
   kaminari
   kt-paperclip (~> 7.1)
+  patch_commu!
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.1.0, >= 7.0.4.2)
