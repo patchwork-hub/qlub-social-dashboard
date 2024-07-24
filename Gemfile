@@ -118,4 +118,3 @@ gem "select2-rails"
 gem "strong_migrations"
 gem 'patch_commu', git: "https://github.com/newsmast22/patch_commu", branch: 'main'
 gem 'ransack'
-gem 'summernote-rails'

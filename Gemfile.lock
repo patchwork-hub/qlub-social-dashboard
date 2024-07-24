@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/newsmast22/patch_commu
-  revision: f23c6dea07e586117e1ca05a457a916f98555a50
+  revision: ee1442f841fdf4d6a7d66368abf9e94998155cf0
   branch: main
   specs:
     patch_commu (0.1.0)
@@ -152,9 +152,7 @@ GEM
     et-orbi (1.2.11)
       tzinfo
     execjs (2.9.1)
-    ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
-    ffi (1.17.0-x86_64-linux-gnu)
+    ffi (1.17.0)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -237,8 +235,6 @@ GEM
       net-protocol
     nio4r (2.7.3)
     nokogiri (1.16.6-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.6-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.6-x86_64-linux)
       racc (~> 1.4)
@@ -349,8 +345,6 @@ GEM
     strong_migrations (2.0.0)
       activerecord (>= 6.1)
     strscan (3.1.0)
-    summernote-rails (0.8.12.0)
-      railties (>= 3.1)
     temple (0.10.3)
     terrapin (1.0.1)
       climate_control
@@ -385,7 +379,6 @@ GEM
 
 PLATFORMS
   arm64-darwin-23
-  x86_64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
@@ -425,7 +418,6 @@ DEPENDENCIES
   sprockets-rails
   stimulus-rails
   strong_migrations
-  summernote-rails
   turbo-rails
   tzinfo-data
   web-console
