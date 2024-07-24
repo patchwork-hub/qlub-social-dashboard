@@ -25,6 +25,11 @@
               %th 
              
           %tbody
+            - if @records.size == 0
+              %tr
+                %td.text-center.info-box-content{colspan: "100%"}
+                  %p.text-muted You haven’t added any hashtags to this community yet
+                  %a.text-danger{ href: step2_communities_path } Click here to add one
             - @records.each do |community|
               %tr
                 %td
@@ -33,7 +38,23 @@
                 %td= community.slug
                 %th= community.community_admins.size
                 %th
-      .card-footer.clearfix
         %ul.pagination.pagination-sm.m-0.float-right
           = render "/kaminari/paginator"
+        .row
+          .col
+            .div.btn-group
+              %button.btn.btn-default{type: "button"} Action
+              %button.btn.btn-default.dropdown-toggle.dropdown-hover.dropdown-icon{type: "button", "data-toggle" => "dropdown"}
+                %span.sr-only Toggle Dropdown
+              .dropdown-menu{role: "menu"}
+                %a.dropdown-item{href: "#"} Action
+                %a.dropdown-item{href: "#"} Another action
+                %a.dropdown-item{href: "#"} Something else here
+                .dropdown-divider
+                %a.dropdown-item{href: "#"} Separated link  
+          .col
+            %a.btn.btn-outline-secondary{ href: communities_path } Import a community
+          .col
+            %a.btn.btn-danger{ href: step1_communities_path } Create a community
+      
      

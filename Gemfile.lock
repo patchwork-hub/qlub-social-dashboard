@@ -345,6 +345,8 @@ GEM
     strong_migrations (2.0.0)
       activerecord (>= 6.1)
     strscan (3.1.0)
+    summernote-rails (0.8.12.0)
+      railties (>= 3.1)
     temple (0.10.3)
     terrapin (1.0.1)
       climate_control
@@ -418,6 +420,7 @@ DEPENDENCIES
   sprockets-rails
   stimulus-rails
   strong_migrations
+  summernote-rails
   turbo-rails
   tzinfo-data
   web-console

@@ -1,5 +1,6 @@
 class CommunitiesController < BaseController
-  before_action :set_community, only: %i[ show ]
+  before_action :set_community, only: %i[show]
+  before_action :initialize_form
 
   def step1
     respond_to do |format|
@@ -8,8 +9,11 @@ class CommunitiesController < BaseController
   end
 
   def step1_save
-    respond_to do |format|
-      format.html
+    if @community_form.validate(form_params)
+      session[:form_data] = form_params
+      redirect_to step2_communities_path
+    else
+      render 'communities/step2'
     end
   end
 
@@ -86,34 +90,15 @@ class CommunitiesController < BaseController
     end
   end
 
-  def create
-    # @community = CommunityService.new.call(@account, 
-    #                               name: @options[:name], 
-    #                               slug: @options[:slug],
-    #                               description: @options[:description],
-    #                               is_recommended: @options[:is_recommended],
-    #                               bio:  @options[:bio],
-    #                               guides: @options[:guides],
-    #                               patchwork_collection_id: @collection.id,
-    #                               position: @options[:position],
-    #                               admin_following_count: @options[:admin_following_count],
-    #                               image: @options[:image])
-  end
-
-  def community_params
-    # params.require(:community).permit(
-    #   :name,
-    #   :slug,
-    #   :description,
-    #   :collection_id,
-    #   :position,
-    #   :is_recommended,
-    #   :bio,
-    #   :image,
-    #   guides:[:position,:title,:description])
-  end
-
   private
+
+  def initialize_form
+    @community_form = Form::Community.new(session[:form_data] || {})
+  end
+
+  def form_params
+    params.require(:form_community).permit(:name, :username, :collection_id, :bio, :banner_image, :avatar)
+  end
 
   def records_filter
     @filter = Filter::Community.new(params)
