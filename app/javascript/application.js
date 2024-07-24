@@ -30,80 +30,114 @@ $(document).ready(function() {
     theme: 'bootstrap'
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const keywordFilterForm = document.querySelector('#keyFilterModal form');
-    if (keywordFilterForm) {
-      keywordFilterForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(keywordFilterForm);
-        const url = keywordFilterForm.action;
-        const submitButton = document.querySelector('.submit-btn');
+  const keywordFilterForm = document.querySelector('#keyFilterModal form');
 
-        document.querySelectorAll('.error-message').forEach(el => el.remove());
-        document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+  if (keywordFilterForm) {
+    keywordFilterForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const formData = new FormData(keywordFilterForm);
+      const url = keywordFilterForm.action;
+      const submitButton = document.querySelector('.submit-btn');
 
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          },
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            location.reload();
-          } else {
-            if (submitButton) {
-              submitButton.disabled = false;
-            }
+      clearPreviousErrors();
 
-            // Handle errors
-            const errors = data.error.split(', ');
-            errors.forEach(error => {
-              const errorMessage = document.createElement('small');
-              errorMessage.className = 'error-message text-danger';
-              errorMessage.textContent = error;
+      if (!validateKeywords()) {
+        displayErrorMessage('Keyword cannot be blank.');
+        enableSubmitButton(submitButton);
+        console.log('Submit button after enableSubmitButton call:', submitButton);
+        return;
+      }
 
-              if (error.includes('Name')) {
-                const nameInput = document.querySelector('input[name="keyword_filter_group[name]"]');
-                if (nameInput) {
-                  nameInput.classList.add('is-invalid');
-                  nameInput.after(errorMessage);
-                }
-              } else if (error.includes('Keyword')) {
-                document.querySelectorAll('input[name^="keyword_filter_group[keyword_filters_attributes]"][name$="[keyword]"]').forEach(input => {
-                  if (input) {
-                    input.classList.add('is-invalid');
-                    input.after(errorMessage);
-                  }
-                });
-              }
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error submitting form:', error);
-          const errorMessage = document.createElement('small');
-          errorMessage.className = 'error-message text-danger';
-          errorMessage.textContent = 'An unexpected error occurred. Please try again.';
-          const modalBody = document.querySelector('#keyFilterModal .modal-body');
-          if (modalBody) {
-            modalBody.prepend(errorMessage);
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          enableSubmitButton(submitButton);
+          handleKeywordFilterGroupErrors(data.error);
+        }
+      })
+      .catch(error => {
+        console.error('Error submitting form:', error);
+        displayErrorMessage('An unexpected error occurred. Please try again.');
+        enableSubmitButton(submitButton);
+      });
+    });
+  }
+
+  function clearPreviousErrors() {
+    document.querySelectorAll('.error-message').forEach(el => el.remove());
+    document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+  }
+
+  function validateKeywords() {
+    let isValid = true;
+    document.querySelectorAll('input[name^="keyword_filter_group[keyword_filters_attributes]"][name$="[keyword]"]').forEach(input => {
+      if (!input.value.trim()) {
+        input.classList.add('is-invalid');
+        isValid = false;
+      }
+    });
+    return isValid;
+  }
+
+  function displayErrorMessage(message) {
+    const errorMessage = document.createElement('small');
+    errorMessage.className = 'error-message text-danger';
+    errorMessage.textContent = message;
+    document.querySelectorAll('input[name^="keyword_filter_group[keyword_filters_attributes]"][name$="[keyword]"]').forEach(input => {
+      if (input.classList.contains('is-invalid')) {
+        input.after(errorMessage.cloneNode(true));
+      }
+    });
+  }
+
+  function enableSubmitButton(button) {
+    if (button) {
+      button.disabled = false;
+      button.removeAttribute('data-disable-with');
+    }
+  }
+
+  function handleKeywordFilterGroupErrors(errorMessage) {
+    const errors = errorMessage.split(', ');
+    errors.forEach(error => {
+      const errorElement = document.createElement('small');
+      errorElement.className = 'error-message text-danger';
+      errorElement.textContent = error;
+
+      if (error.includes('Name')) {
+        const nameInput = document.querySelector('input[name="keyword_filter_group[name]"]');
+        if (nameInput) {
+          nameInput.classList.add('is-invalid');
+          nameInput.after(errorElement);
+        }
+      } else if (error.includes('Keyword')) {
+        document.querySelectorAll('input[name^="keyword_filter_group[keyword_filters_attributes]"][name$="[keyword]"]').forEach(input => {
+          if (input) {
+            input.classList.add('is-invalid');
+            input.after(errorElement);
           }
         });
-      });
-    }
-
-    const nestedAttributeContainer = document.querySelector('.nested-fields');
-
-    if (nestedAttributeContainer && nestedAttributeContainer.children.length === 0) {
-      const addNewLink = nestedAttributeContainer.querySelector('.add_fields');
-      if (addNewLink) {
-        addNewLink.click();
       }
+    });
+  }
+
+  const nestedAttributeContainer = document.querySelector('.nested-fields');
+
+  if (nestedAttributeContainer && nestedAttributeContainer.children.length === 0) {
+    const addNewLink = nestedAttributeContainer.querySelector('.add_fields');
+    if (addNewLink) {
+      addNewLink.click();
     }
-  });
+  }
 
   const collapseToggles = document.querySelectorAll(".collapse-toggle");
 
