@@ -154,7 +154,6 @@ GEM
     execjs (2.9.1)
     ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
-    ffi (1.17.0-x86_64-darwin)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -237,8 +236,6 @@ GEM
       net-protocol
     nio4r (2.7.3)
     nokogiri (1.16.6-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.6-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.6-x86_64-linux)
     orm_adapter (0.5.0)
@@ -382,7 +379,6 @@ GEM
 
 PLATFORMS
   arm64-darwin-23
-  x86_64-darwin-23
   x86_64-linux
 
 DEPENDENCIES
