@@ -141,51 +141,53 @@ jQuery(function() {
     maxCharsInput.value = maxCharsValue || '';
   };
 
-  function updateSetting(checkbox) {
-    const settingId = checkbox.getAttribute('data-setting-id');
-    const isChecked = checkbox.checked;
-    const data = { server_setting: { value: isChecked } };
+  document.addEventListener('DOMContentLoaded', function() {
+    function updateSetting(checkbox) {
+      const settingId = checkbox.getAttribute('data-setting-id');
+      const isChecked = checkbox.checked;
+      const data = { server_setting: { value: isChecked } };
 
-    sendPatchRequest(`/server_settings/${settingId}`, data);
-  }
-
-  function showModalIfNeeded(checkbox) {
-    const settingName = checkbox.getAttribute('data-setting-name').toLowerCase();
-
-    if (settingName === 'long posts and markdown' && checkbox.checked) {
-      const optionalValue = checkbox.getAttribute('data-optional-value');
-      const maxCharsInput = document.getElementById('max_chars_value');
-      maxCharsInput.value = optionalValue || '';
-
-      $('#maxCharsModal').modal('show');
+      sendPatchRequest(`/server_settings/${settingId}`, data);
     }
-  }
 
-  const settingSwitches = document.querySelectorAll('.setting-input');
-  settingSwitches.
-  forEach(function(switchElement) {
-    switchElement.addEventListener('change', function(event) {
-      const checkbox = event.target;
-      updateSetting(checkbox);
-      showModalIfNeeded(checkbox);
+    function showModalIfNeeded(checkbox) {
+      const settingName = checkbox.getAttribute('data-setting-name').toLowerCase();
+
+      if (settingName === 'long posts and markdown' && checkbox.checked) {
+        const optionalValue = checkbox.getAttribute('data-optional-value');
+        const maxCharsInput = document.getElementById('max_chars_value');
+        maxCharsInput.value = optionalValue || '';
+
+        $('#maxCharsModal').modal('show');
+      }
+    }
+
+    const settingSwitches = document.querySelectorAll('.setting-input');
+    settingSwitches.
+    forEach(function(switchElement) {
+      switchElement.addEventListener('change', function(event) {
+        const checkbox = event.target;
+        updateSetting(checkbox);
+        showModalIfNeeded(checkbox);
+      });
     });
-  });
 
-  document.getElementById('saveMaxChars').addEventListener('click', function() {
-    const maxCharsInput = document.getElementById('max_chars_value');
-    const newValue = maxCharsInput.value;
+    document.getElementById('saveMaxChars').addEventListener('click', function() {
+      const maxCharsInput = document.getElementById('max_chars_value');
+      const newValue = maxCharsInput.value;
 
-    const settingElement = Array.from(document.querySelectorAll('.setting-input'))
-      .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
+      const settingElement = Array.from(document.querySelectorAll('.setting-input'))
+        .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
 
-    if (settingElement) {
-      const settingId = settingElement.getAttribute('data-setting-id');
-      const data = { server_setting: { optional_value: newValue } };
-      sendPatchRequest(`/server_settings/${settingId}`, data)
-        .then(() => {
-          location.reload();
-        });
-    }
+      if (settingElement) {
+        const settingId = settingElement.getAttribute('data-setting-id');
+        const data = { server_setting: { optional_value: newValue } };
+        sendPatchRequest(`/server_settings/${settingId}`, data)
+          .then(() => {
+            location.reload();
+          });
+      }
+    });
   });
 
 });

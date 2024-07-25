@@ -44,7 +44,6 @@ $(document).ready(function() {
       if (!validateKeywords()) {
         displayErrorMessage('Keyword cannot be blank.');
         enableSubmitButton(submitButton);
-        console.log('Submit button after enableSubmitButton call:', submitButton);
         return;
       }
 
