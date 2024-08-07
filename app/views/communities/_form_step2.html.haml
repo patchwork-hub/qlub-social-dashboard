@@ -1,3 +1,43 @@
+#myModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Add New admin
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        = form_with model: @new_admin_form, local: true do |form|
+          .row
+            .col
+              .form-group
+                = form.label :community
+                = form.text_field :community, class: 'form-control'
+            .col
+              .form-group
+                = form.label :role
+                = form.text_field :role, class: 'form-control'
+          .row
+            .col
+              .form-group
+                = form.label :display_name
+                = form.text_field :display_name, class: 'form-control'
+            .col
+              .form-group
+                = form.label :user_name
+                = form.text_field :username, class: 'form-control'
+          .row
+            .col
+              .form-group
+                = form.label :email_address
+                = form.text_field :email, class: 'form-control'
+          .row
+            .col
+              .form-group
+                = form.label :password
+                = form.text_field :password, class: 'form-control'
+          = form.submit 'Save', class: 'btn btn-primary'
+      .modal-footer
+        %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
 %section.content
   .container-fluid
     .row-md-12.my-4
@@ -24,23 +64,44 @@
                     %p.text-muted Assign administrators to your community by providing their details below.
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button"} Add New
-              %table.table.mt-3
-                %thead
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#myModal", "data-toggle" => "modal"} Add New
+            .row
+              .col
+                .card-tools
+                  = search_form_for @search, url: step2_communities_path do |f|
+                    .input-group.input-group-sm{style: "width: 150px;"}
+                      = f.search_field :account_username_cont, class: "form-control float-right", placeholder: "Search"
+                      .input-group-append
+                        %button.btn.btn-default{type: "submit"}
+                          %i.fas.fa-search
+            %table.table.mt-3
+              %thead
+                %tr
+                  %th
+                    = check_box_tag :select_all, '', false, id: 'select_all'
+                  %th Display name
+                  %th Username
+                  %th Email address
+                  %th Role
+                  %th
+              %tbody
+                - if @records.size == 0
                   %tr
-                    %th Display name
-                    %th Username
-                    %th Email address
-                    %th Role
-                    %th
-                %tbody
+                    %td.text-center.info-box-content{colspan: "100%"}
+                      %p.text-muted You haven’t added any hashtags to this community yet
+                      %a.text-danger{ href: step2_communities_path } Click here to add one
+                - @records.each do |community_admin|
                   %tr
-                    %td AdminName
-                    %td admin_name
-                    %td adminname@newsmast.org
-                    %td Admin
+                    %td
+                      = check_box_tag "selected_accounts[]", community_admin.account.id, false, class: 'select_account'
+                    %td= community_admin.account.display_name
+                    %td= community_admin.account.username
+                    %td= community_admin.account&.user&.email
+                    %td= community_admin.account&.user&.role&.name
                     %td
                       %a.text-danger{ href: step2_communities_path } Edit
+              %ul.pagination.pagination-sm.m-0.float-right
+          = render "/kaminari/paginator"
         .row.d-flex.justify-content-between
           .col-auto
             %a.btn.btn-outline-secondary{ href: step1_communities_path } Back

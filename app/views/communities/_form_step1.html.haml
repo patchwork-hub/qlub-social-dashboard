@@ -8,14 +8,14 @@
       %li.bg-secondary{style: "width: 65px; height: 5px;"}
       %li.bg-secondary{style: "width: 65px; height: 5px;"}
 .col-md-12
-  %div.card.mt-4
-    .card-header
-      %div.d-flex.justify-content-between
-        %div
-          %h5.card-title Step 1 - Community Information
-    .card-body
-      %p{ style: "font-size: 12px;" "color: #BEBEBE;" } Fill out the basic details for your community. Provide a unique name, choose the collection it belongs to, and upload a banner and avatar image. Write a short bio to describe the communitys purpose and theme. Inline tooltips will help guide you through each field.
-      = simple_form_for @community_form, url: step1_communities_path do |f|
+  = simple_form_for @community_form, url: step1_communities_path do |f|
+    %div.card.mt-4
+      .card-header
+        %div.d-flex.justify-content-between
+          %div
+            %h5.card-title Step 1 - Community Information
+      .card-body
+        %p{ style: "font-size: 12px;" "color: #BEBEBE;" } Fill out the basic details for your community. Provide a unique name, choose the collection it belongs to, and upload a banner and avatar image. Write a short bio to describe the communitys purpose and theme. Inline tooltips will help guide you through each field
         .row
           .col
             = f.input :username, input_html: { type: "text", class: "form-control", id: "basic-url", aria: { describedby: "basic-addon3" } }
@@ -51,8 +51,9 @@
             -# .text-center
             -#   %i.bi.bi-file-earmark-arrow-up.fs-1.mb-3
             -#   %p.mb-1 SVG,PNG,JPG(max:800x800px)
-  .row.d-flex.justify-content-between
-    .col-auto
-      %a.btn.btn-outline-secondary{ href: step1_communities_path } Back
-    .col-auto
-      %a.btn.btn-danger{ href: step2_communities_path } Continue
+    .row.d-flex.justify-content-between
+      .col-auto
+        %a.btn.btn-outline-secondary{ href: communities_path } Back
+      .col-auto
+        = f.button :submit, "Continue", class: 'btn btn-danger'
+        

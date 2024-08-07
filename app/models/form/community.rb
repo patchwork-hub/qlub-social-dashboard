@@ -9,6 +9,7 @@ class Form::Community
   attr_accessor :username, :collection_id, :bio, :banner_image, :avatar
 
   def initialize(options = {})
+    options = options.symbolize_keys
     @username = options.fetch(:username) if options[:username]
     @collection_id = options.fetch(:collection_id) if options[:collection_id]
     @bio = options.fetch(:bio, nil) if options[:bio]
