@@ -1,6 +1,6 @@
 class CommunitiesController < BaseController
   before_action :set_community, only: %i[show]
-  before_action :initialize_form
+  before_action :initialize_form, expect: %i[show]
 
   def step1
     respond_to do |format|
@@ -9,15 +9,13 @@ class CommunitiesController < BaseController
   end
 
   def step1_save
-    if @community_form.validate(form_params)
-      session[:form_data] = form_params
-      redirect_to step2_communities_path
-    else
-      render 'communities/step2'
-    end
+    session[:form_data] = form_params
+    redirect_to step2_communities_path
   end
 
   def step2
+    @records = load_commu_admin_records
+    @search = commu_admin_records_filter.bulid_search
     respond_to do |format|
       format.html
     end
@@ -102,6 +100,14 @@ class CommunitiesController < BaseController
 
   def records_filter
     @filter = Filter::Community.new(params)
+  end
+
+  def load_commu_admin_records
+    commu_admin_records_filter.get
+  end
+
+  def commu_admin_records_filter
+    @filter = Filter::CommunityAdmin.new(params)
   end
 
   def set_community
