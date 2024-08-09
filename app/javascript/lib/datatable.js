@@ -141,35 +141,32 @@ jQuery(function() {
     maxCharsInput.value = maxCharsValue || '';
   };
 
-  document.addEventListener('DOMContentLoaded', function() {
-    function updateSetting(checkbox) {
-      const settingId = checkbox.getAttribute('data-setting-id');
-      const isChecked = checkbox.checked;
-      const data = { server_setting: { value: isChecked } };
+  function updateSetting(checkbox) {
+    const settingId = checkbox.getAttribute('data-setting-id');
+    const isChecked = checkbox.checked;
+    const data = { server_setting: { value: isChecked } };
 
-      sendPatchRequest(`/server_settings/${settingId}`, data);
+    sendPatchRequest(`/server_settings/${settingId}`, data);
+  }
+
+  function showModalIfNeeded(checkbox) {
+    const settingName = checkbox.getAttribute('data-setting-name').toLowerCase();
+
+    if (settingName === 'long posts and markdown' && checkbox.checked) {
+      const optionalValue = checkbox.getAttribute('data-optional-value');
+      const maxCharsInput = document.getElementById('max_chars_value');
+      maxCharsInput.value = optionalValue || '';
+
+      $('#maxCharsModal').modal('show');
     }
+  }
 
-    function showModalIfNeeded(checkbox) {
-      const settingName = checkbox.getAttribute('data-setting-name').toLowerCase();
-
-      if (settingName === 'long posts and markdown' && checkbox.checked) {
-        const optionalValue = checkbox.getAttribute('data-optional-value');
-        const maxCharsInput = document.getElementById('max_chars_value');
-        maxCharsInput.value = optionalValue || '';
-
-        $('#maxCharsModal').modal('show');
-      }
-    }
-
-    const settingSwitches = document.querySelectorAll('.setting-input');
-    settingSwitches.
-    forEach(function(switchElement) {
-      switchElement.addEventListener('change', function(event) {
-        const checkbox = event.target;
-        updateSetting(checkbox);
-        showModalIfNeeded(checkbox);
-      });
+  const settingSwitches = document.querySelectorAll('.setting-input');
+  settingSwitches.forEach(function(switchElement) {
+    switchElement.addEventListener('change', function(event) {
+      const checkbox = event.target;
+      updateSetting(checkbox);
+      showModalIfNeeded(checkbox);
     });
   });
 
