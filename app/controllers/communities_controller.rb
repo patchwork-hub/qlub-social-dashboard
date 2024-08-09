@@ -9,6 +9,12 @@ class CommunitiesController < BaseController
   end
 
   def step1_save
+    @community = CommunityPostService.new.call(@current_user.account,
+                        username: form_params[:username],
+                        bio: form_params[:bio],
+                        collection_id: form_params[:collection_id],
+                        banner_image: form_params[:banner_image],
+                        avatar_image: form_params[:avatar_image])
     session[:form_data] = form_params
     redirect_to step2_communities_path
   end
@@ -95,7 +101,7 @@ class CommunitiesController < BaseController
   end
 
   def form_params
-    params.require(:form_community).permit(:name, :username, :collection_id, :bio, :banner_image, :avatar)
+    params.require(:form_community).permit(:name, :username, :collection_id, :bio, :banner_image, :avatar_image)
   end
 
   def records_filter
