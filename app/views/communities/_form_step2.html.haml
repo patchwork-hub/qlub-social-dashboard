@@ -3,8 +3,8 @@
     .modal-content
       .modal-header
         %h5#exampleModalLabel.modal-title Add New admin
-        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-          %span{"aria-hidden" => "true"} ×
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
         = form_with model: @new_admin_form, local: true do |form|
           .row
@@ -32,12 +32,18 @@
                 = form.text_field :email, class: 'form-control'
           .row
             .col
-              .form-group
+              .form-group.position-relative
                 = form.label :password
-                = form.text_field :password, class: 'form-control'
-          = form.submit 'Save', class: 'btn btn-primary'
-      .modal-footer
-        %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
+                = form.password_field :password, class: 'form-control', id: 'passwordInput'
+                %span.position-absolute{ style: "top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;", onclick: "togglePasswordVisibility()" }
+                  %i.fa.fa-eye.mt-3.pt-3{ id: "togglePasswordIcon" }
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
+              .col
+                = form.submit 'Save changes', class: 'btn btn-danger'
+
 %section.content
   .container-fluid
     .row-md-12.my-4
@@ -107,3 +113,19 @@
             %a.btn.btn-outline-secondary{ href: step1_communities_path } Back
           .col-auto
             %a.btn.btn-danger{ href: step3_communities_path } Continue
+
+
+:javascript
+  function togglePasswordVisibility() {
+    var passwordInput = document.getElementById('passwordInput');
+    var togglePasswordIcon = document.getElementById('togglePasswordIcon');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      togglePasswordIcon.classList.remove('fa-eye');
+      togglePasswordIcon.classList.add('fa-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      togglePasswordIcon.classList.remove('fa-eye-slash');
+      togglePasswordIcon.classList.add('fa-eye');
+    }
+  }

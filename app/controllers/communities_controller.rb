@@ -1,6 +1,7 @@
 class CommunitiesController < BaseController
   before_action :set_community, only: %i[show]
   before_action :initialize_form, expect: %i[show]
+  before_action :set_current_step, except: %i[show]
 
   def step1
     respond_to do |format|
@@ -10,12 +11,13 @@ class CommunitiesController < BaseController
 
   def step1_save
     session[:form_data] = form_params
+
     redirect_to step2_communities_path
   end
 
   def step2
     @records = load_commu_admin_records
-    @search = commu_admin_records_filter.bulid_search
+    @search = commu_admin_records_filter.build_search
     respond_to do |format|
       format.html
     end
@@ -84,7 +86,7 @@ class CommunitiesController < BaseController
   def show
     respond_to do |format|
       format.html
-      format.json {render json: @community, serializer: REST::CommunitySerializer }
+      format.json { render json: @community, serializer: REST::CommunitySerializer }
     end
   end
 
@@ -111,7 +113,27 @@ class CommunitiesController < BaseController
   end
 
   def set_community
-    @community = Patchwork::Community::find_by(slug: params[:id])
+    @community = Patchwork::Community.find_by(slug: params[:id])
     raise ActiveRecord::RecordNotFound unless @community
   end
+
+  def set_current_step
+    case action_name
+    when 'step1', 'step1_save'
+      @current_step = 1
+    when 'step2', 'step2_save'
+      @current_step = 2
+    when 'step3', 'step3_save'
+      @current_step = 3
+    when 'step4', 'step4_save'
+      @current_step = 4
+    when 'step5', 'step5_save'
+      @current_step = 5
+    when 'step6', 'step6_save'
+      @current_step = 6
+    else
+      @current_step = 1
+    end
+  end
+
 end

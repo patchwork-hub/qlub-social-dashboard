@@ -3,7 +3,7 @@ class BaseController < ApplicationController
 
   def index
     @records = load_records
-    @search = records_filter.bulid_search
+    @search = records_filter.build_search
   end
 
   def load_records
