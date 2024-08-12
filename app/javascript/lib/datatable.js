@@ -162,8 +162,7 @@ jQuery(function() {
   }
 
   const settingSwitches = document.querySelectorAll('.setting-input');
-  settingSwitches.
-  forEach(function(switchElement) {
+  settingSwitches.forEach(function(switchElement) {
     switchElement.addEventListener('change', function(event) {
       const checkbox = event.target;
       updateSetting(checkbox);
@@ -187,5 +186,4 @@ jQuery(function() {
         });
     }
   });
-
 });
