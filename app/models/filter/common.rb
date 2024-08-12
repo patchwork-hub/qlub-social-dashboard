@@ -11,7 +11,7 @@ class Filter::Common
 
   def get
     scope = public_scope
-    scope.merge!(paginated_scope) 
+    scope.merge!(paginated_scope)
   end
 
   def paginated_scope
@@ -26,12 +26,12 @@ class Filter::Common
     @current_page < @total_pages ? @current_page + 1 : nil
   end
 
-  def bulid_search
+  def build_search
     raise NotImplementedError, "Subclasses must implement the `build_search`."
   end
 
   def public_scope
-    bulid_search.result
+    build_search.result
   end
 
   def display_page
@@ -48,4 +48,3 @@ class Filter::Common
     end
   end
 end
-  

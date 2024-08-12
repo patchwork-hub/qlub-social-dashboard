@@ -1,5 +1,5 @@
 class Filter::Community < Filter::Common
- 
+
   def initialize(params)
     super(params)
   end
@@ -8,7 +8,7 @@ class Filter::Community < Filter::Common
     Community.offset((@current_page - 1) * @per_page).limit(@per_page)
   end
 
-  def bulid_search
+  def build_search
     Community.ransack(@q)
   end
 end

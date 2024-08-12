@@ -1,4 +1,4 @@
-- if controller_name == 'communities'
+- if controller_name == 'communities' && action_name != 'index'
   = render 'shared/menu/community_right_sidebar'
 - else
   = render 'shared/menu/common_right_sidebar'

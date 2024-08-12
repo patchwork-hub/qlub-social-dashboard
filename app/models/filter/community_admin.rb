@@ -7,7 +7,7 @@ class Filter::CommunityAdmin < Filter::Common
     CommunityAdmin.offset((@current_page - 1) * @per_page).limit(@per_page)
   end
 
-  def bulid_search
+  def build_search
     CommunityAdmin.ransack(@q)
   end
 end

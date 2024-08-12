@@ -238,8 +238,6 @@ ul.pagination {
 }
 // right sidebar
 
-
-
 /* select 2 */
 .select2-container--bootstrap .select2-selection--single {
   height: calc(2.25rem + 2px) !important;
@@ -322,5 +320,85 @@ ul.pagination {
 .arrow-toggle.collapsed .icon-arrow-up {
   display: inline-block;
 }
-
 /* handle collapse arrow */
+
+/* stepper */
+.stepper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding-left: 10px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 20px;
+  padding-left: 50px;
+}
+
+.circle {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  background-color: white;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.label {
+  margin-top: 4px;
+  color: #666;
+  font-weight: bold;
+}
+
+.desc {
+  margin-top: 4px;
+  color: #999;
+  text-align: left;
+}
+
+.step.active .circle {
+  border-color: #ff0000;
+  color: #ff0000;
+}
+
+.step.active .label {
+  color: #000;
+}
+
+.step.active .desc {
+  color: #000;
+}
+
+.step.done .circle {
+  border-color: #ff0000;
+  background: url('check.svg') no-repeat;
+  background-size: 36px 36px;
+  background-position: center;
+}
+
+.step.done .step-no {
+  display: none;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 41%;
+  left: 18px;
+  width: 2px;
+  height: calc(100% + 20px);
+  background-color: #ccc;
+  z-index: -1;
+}
+/* stepper */
