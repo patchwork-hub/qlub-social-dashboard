@@ -153,6 +153,7 @@ GEM
       tzinfo
     execjs (2.9.1)
     ffi (1.17.0)
+    ffi (1.17.0-arm64-darwin)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -347,8 +348,6 @@ GEM
     strong_migrations (2.0.0)
       activerecord (>= 6.1)
     strscan (3.1.0)
-    summernote-rails (0.8.12.0)
-      railties (>= 3.1)
     temple (0.10.3)
     terrapin (1.0.1)
       climate_control
@@ -388,6 +387,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk-s3 (~> 1.117)
+  bcrypt
   bootsnap
   bootstrap (~> 4.6.1)
   byebug
@@ -423,7 +423,6 @@ DEPENDENCIES
   sprockets-rails
   stimulus-rails
   strong_migrations
-  summernote-rails
   turbo-rails
   tzinfo-data
   web-console

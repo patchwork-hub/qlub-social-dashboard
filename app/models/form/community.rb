@@ -6,7 +6,7 @@
 class Form::Community
   include ActiveModel::Model
 
-  attr_accessor :username, :collection_id, :bio, :banner_image, :avatar
+  attr_accessor :id, :username, :collection_id, :bio, :banner_image, :avatar
 
   def initialize(options = {})
     options = options.symbolize_keys

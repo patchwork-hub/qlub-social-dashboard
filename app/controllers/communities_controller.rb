@@ -15,25 +15,37 @@ class CommunitiesController < BaseController
                         collection_id: form_params[:collection_id],
                         banner_image: form_params[:banner_image],
                         avatar_image: form_params[:avatar_image])
-    session[:form_data] = form_params
+
+    session[:form_data][:id] = @community&.id
     redirect_to step2_communities_path
   end
 
   def step2
+    @community = Community.find(session[:form_data]["id"])
     @records = load_commu_admin_records
+    @new_admin_form = Form::CommunityAdmin.new
     @search = commu_admin_records_filter.bulid_search
+
     respond_to do |format|
       format.html
     end
   end
 
   def step2_save
-    respond_to do |format|
-      format.html
-    end
+    @community_admin = CommunityAdminPostService.new.call(
+      @current_user.account,
+      community_id: new_admin_form_params[:community_id],
+      display_name: new_admin_form_params[:display_name],
+      username: new_admin_form_params[:username],
+      email: new_admin_form_params[:email],
+      password: new_admin_form_params[:password])
+
+    redirect_to step2_communities_path
   end
 
   def step3
+    @community_hashtag_form = Form::CommunityHashtag.new
+    @community = Community.find(session[:form_data]["id"])
     respond_to do |format|
       format.html
     end
@@ -101,7 +113,11 @@ class CommunitiesController < BaseController
   end
 
   def form_params
-    params.require(:form_community).permit(:name, :username, :collection_id, :bio, :banner_image, :avatar_image)
+    params.require(:form_community).permit(:id, :name, :username, :collection_id, :bio, :banner_image, :avatar_image)
+  end
+
+  def new_admin_form_params
+    params.require(:form_community_admin).permit(:community_id, :display_name, :username, :email, :password)
   end
 
   def records_filter

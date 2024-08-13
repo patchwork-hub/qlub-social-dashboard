@@ -4,6 +4,10 @@ class CommunityPostService < BaseService
   def call(account, options = {})
     @account = account
     @options = options
+    prepare_slug
+    community = unique_slug?
+    return community if community.present?
+
     validate_collection
     create_community
   end
@@ -26,12 +30,22 @@ class CommunityPostService < BaseService
     last_id = Community.order(:id).pluck(:id).last
     (last_id || 0) + 1
   end
+
+  def unique_slug?
+    slug = @options[:username].to_s.parameterize.underscore
+    community = Community.find_by(slug: slug)
+    community
+  end
+
+  def prepare_slug
+    @slug = @options[:username].parameterize.underscore
+  end
   
 
   def community_attributes
     { id: get_id,
       name: @options[:username],
-      slug: @options[:username].parameterize.underscore,
+      slug: @slug,
       description: @options[:bio],
       is_recommended: false,
       guides: nil,

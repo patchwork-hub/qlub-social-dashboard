@@ -6,16 +6,17 @@
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
-        = form_with model: @new_admin_form, local: true do |form|
+        = simple_form_for @new_admin_form, url: step2_communities_path do |form|
+          = form.hidden_field :community_id, value: @community.id
           .row
             .col
               .form-group
                 = form.label :community
-                = form.text_field :community, class: 'form-control'
+                = form.text_field :community, class: 'form-control', value: @community.name, disabled: true
             .col
               .form-group
                 = form.label :role
-                = form.text_field :role, class: 'form-control'
+                = form.text_field :role, class: 'form-control', value: 'Admin', disabled: true
           .row
             .col
               .form-group

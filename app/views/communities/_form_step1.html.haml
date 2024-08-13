@@ -9,6 +9,7 @@
       %li.bg-secondary{style: "width: 65px; height: 5px;"}
 .col-md-12
   = simple_form_for @community_form, url: step1_communities_path do |f|
+    = f.hidden_field :id
     %div.card.mt-4
       .card-header
         %div.d-flex.justify-content-between
