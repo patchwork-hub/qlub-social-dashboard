@@ -2,12 +2,7 @@
   .modal-dialog{:role => "document"}
     .modal-content
       .modal-header
-        .row
-          .col
-            %h5#exampleModalLabel.modal-title Add new community hashtag
-        .row
-          .col
-            %p.text-muted Fill out the form below to add a new hashtag for this community.
+        %h5#exampleModalLabel.modal-title Add new community hashtag
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
@@ -17,7 +12,7 @@
             .col
               .form-group
                 = form.label :hashtag
-                = form.text_field :hashtag, class: 'form-control'
+                = form.text_field :hashtag, class: 'form-control', value: '#'
           = form.submit 'Save', class: 'btn btn-primary'
   .modal-footer
     %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
@@ -51,14 +46,26 @@
             %table.table.mt-3.table-striped
               %thead
                 %tr
-                  %th
+                  %th{style: "width: 30px;"}
                     %i.far.fa-square.mr-4
+                  %th
                     %label.text-muted{ style: "font-size: 13px;" } Hashtags
+                  %th
               %tbody
-                %tr
-                  %td.text-center
-                    %p.text-muted You haven’t added any hashtags to this community yet
-                    %a.text-danger{ href: step2_communities_path } Click here to add one
+                - if @records.size == 0
+                  %tr
+                    %td.text-center
+                      %p.text-muted You haven’t added any hashtags to this community yet
+                      %a.text-danger{ href: step3_communities_path } Click here to add one
+                - @records.each do |community_hashtag|
+                  %tr
+                    %td
+                      = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
+                    %td= "##{community_hashtag.hashtag}"
+                    %td
+                      %a.text-danger{ href: step3_communities_path } Edit
+          %ul.pagination.pagination-sm.m-0.float-right
+            = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }    
       .card
         .card-body
           .row.d-flex.justify-content-between

@@ -38,7 +38,7 @@
                 %th= community.community_admins.size
                 %th
         %ul.pagination.pagination-sm.m-0.float-right
-          = render "/kaminari/paginator"
+          = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }    
         .row
           .col
             .div.btn-group

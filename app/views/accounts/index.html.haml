@@ -35,4 +35,4 @@
                 %td= account.domain ? account.domain : "patchwork.online"
       .card-footer.clearfix
         %ul.pagination.pagination-sm.m-0.float-right
-          = render "/kaminari/paginator"
+          = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }   

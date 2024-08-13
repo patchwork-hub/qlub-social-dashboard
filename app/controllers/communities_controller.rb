@@ -25,7 +25,7 @@ class CommunitiesController < BaseController
     @community = Community.find(session[:form_data]["id"])
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
-    @search = commu_admin_records_filter.bulid_search
+    @search = commu_admin_records_filter.build_search
 
     respond_to do |format|
       format.html
@@ -45,6 +45,9 @@ class CommunitiesController < BaseController
   end
 
   def step3
+    @records = load_commu_hashtag_records
+    @search = commu_hashtag_records_filter.build_search
+
     @community_hashtag_form = Form::CommunityHashtag.new
     @community = Community.find(session[:form_data]["id"])
     respond_to do |format|
@@ -53,9 +56,10 @@ class CommunitiesController < BaseController
   end
 
   def step3_save
-    respond_to do |format|
-      format.html
-    end
+    CommunityHashtagPostService.new.call(@current_user.account,
+                hashtag:  community_hashtag_params[:hashtag],
+                community_id: community_hashtag_params[:community_id])
+    redirect_to step3_communities_path
   end
 
   def step4
@@ -113,6 +117,10 @@ class CommunitiesController < BaseController
     @community_form = Form::Community.new(session[:form_data] || {})
   end
 
+  def community_hashtag_params
+    params.require(:form_community_hashtag).permit(:community_id, :hashtag)
+  end
+
   def form_params
     params.require(:form_community).permit(:id, :name, :username, :collection_id, :bio, :banner_image, :avatar_image)
   end
@@ -129,8 +137,16 @@ class CommunitiesController < BaseController
     commu_admin_records_filter.get
   end
 
+  def load_commu_hashtag_records
+    commu_hashtag_records_filter.get
+  end
+
   def commu_admin_records_filter
     @filter = Filter::CommunityAdmin.new(params)
+  end
+
+  def commu_hashtag_records_filter
+    @filter = Filter::CommunityHashtag.new(params)
   end
 
   def set_community
@@ -156,5 +172,4 @@ class CommunitiesController < BaseController
       @current_step = 1
     end
   end
-
 end
