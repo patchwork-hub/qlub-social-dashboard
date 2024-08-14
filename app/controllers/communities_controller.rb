@@ -48,6 +48,9 @@ class CommunitiesController < BaseController
     @records = load_commu_hashtag_records
     @search = commu_hashtag_records_filter.build_search
 
+    @contributor_records = load_contributors_records
+    @contributor_search = commu_contributors_filter.build_search
+
     @community_hashtag_form = Form::CommunityHashtag.new
     @community = Community.find(session[:form_data]["id"])
     respond_to do |format|
@@ -139,6 +142,14 @@ class CommunitiesController < BaseController
 
   def load_commu_hashtag_records
     commu_hashtag_records_filter.get
+  end
+
+  def load_contributors_records
+    commu_contributors_filter.get
+  end
+
+  def commu_contributors_filter
+    @contributor_filter = Filter::Follow.new(params)
   end
 
   def commu_admin_records_filter

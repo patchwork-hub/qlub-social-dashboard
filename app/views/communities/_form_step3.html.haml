@@ -13,9 +13,41 @@
               .form-group
                 = form.label :hashtag
                 = form.text_field :hashtag, class: 'form-control', value: '#'
-          = form.submit 'Save', class: 'btn btn-primary'
-  .modal-footer
-    %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
+              .col
+                = form.submit 'Save', class: 'btn btn-primary'
+
+#contributorModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Add a new contributor
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        .card-tools
+          = search_form_for @contributor_search, url: step3_communities_path do |f|
+            .input-group.input-group-sm{style: "width: 150px;"}
+              = f.search_field :account_username_cont, class: "form-control float-right", placeholder: "Search"
+              .input-group-append
+                %button.btn.btn-default{type: "submit"}
+                  %i.fas.fa-search
+        .table-responsive
+          %table.table.mt-3.table-striped
+            %thead
+              %tr
+                %th
+                  Search results for “Tom Bombadil”
+            %tbody
+              - @contributor_records.each do |followed_contributor|
+                %tr
+                  %td= followed_contributor.account.username
+                  
+
+
 .container-fluid
   .row-md-12.my-4
     .col
@@ -41,7 +73,7 @@
                   %p.text-muted Add the hashtags used to bring posts into your community.
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
-              %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
+                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
           .table-responsive
             %table.table.mt-3.table-striped
               %thead
@@ -80,7 +112,7 @@
               %label Your community contributors (0)
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
-                %button.btn.btn-block.btn-outline-dark{type: "button"} Add New
+                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#contributorModal", "data-toggle" => "modal"} Add New
           .table-responsive
             %table.table.mt-3.table-striped
               %thead
