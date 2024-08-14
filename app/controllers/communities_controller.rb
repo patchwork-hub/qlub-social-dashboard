@@ -16,13 +16,12 @@ class CommunitiesController < BaseController
                         collection_id: form_params[:collection_id],
                         banner_image: form_params[:banner_image],
                         avatar_image: form_params[:avatar_image])
-
-    session[:form_data][:id] = @community&.id
+    session[:form_data]['id'] = @community&.id
     redirect_to step2_communities_path
   end
 
   def step2
-    @community = Community.find(session[:form_data]["id"])
+    @community = Community.find(session[:form_data]['id'])
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
     @search = commu_admin_records_filter.build_search
@@ -52,7 +51,7 @@ class CommunitiesController < BaseController
     @contributor_search = commu_contributors_filter.build_search
 
     @community_hashtag_form = Form::CommunityHashtag.new
-    @community = Community.find(session[:form_data]["id"])
+    @community = Community.find(session[:form_data]['id'])
     respond_to do |format|
       format.html
     end
