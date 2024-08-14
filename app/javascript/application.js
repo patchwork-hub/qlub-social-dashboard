@@ -20,7 +20,17 @@ Rails.start()
 localStorage.setItem('selected', null);
 localStorage.setItem('unselected', null);
 
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 $(document).ready(function() {
+
+  document.querySelectorAll('.ckeditor').forEach((element) => {
+    ClassicEditor
+      .create(element)
+      .catch(error => {
+        console.error(error);
+      });
+  });
 
   $('.select2').select2({
     dropdownParent: $('#keyFilterModal'),
