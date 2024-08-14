@@ -30,10 +30,6 @@ $(document).ready(function() {
       .catch(error => {
         console.error(error);
       });
-    CKEDITOR.replace(element.id, {
-      height: 1000,
-      width: 'auto'
-    });
   });
 
   $('.select2').select2({
