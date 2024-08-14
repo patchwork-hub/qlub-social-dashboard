@@ -1,9 +1,9 @@
-class AccountsController < BaseController
+class FollowsController < BaseController
 
   def show
-    respond_to do |format|
-      format.html.haml { render partial: 'follows/search_result', locals: { records: @records } }
-    end
+    # respond_to do |format|
+    #   format.html.haml { render partial: 'follows/search_result', locals: { records: @records } }
+    # end
   end
 
   protected
