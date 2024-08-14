@@ -1,5 +1,6 @@
 - content_for :title do
   = 'Communities'
+
 .row
   .col-12
     .card
@@ -22,7 +23,7 @@
               %th Community
               %th Username
               %th No.of admins
-              %th 
+              %th
           %tbody
             - if @records.size == 0
               %tr
@@ -37,11 +38,9 @@
                 %td= community.slug
                 %th= community.community_admins.size
                 %th
-        %ul.pagination.pagination-sm.m-0.float-right
-          = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }    
-        .row
+        .row.mt-2
           .col
-            .div.btn-group
+            %div.btn-group
               %button.btn.btn-default{type: "button"} Action
               %button.btn.btn-default.dropdown-toggle.dropdown-hover.dropdown-icon{type: "button", "data-toggle" => "dropdown"}
                 %span.sr-only Toggle Dropdown
@@ -52,8 +51,14 @@
                 .dropdown-divider
                 %a.dropdown-item{href: "#"} Separated link
           .col
-            %a.btn.btn-outline-secondary{ href: communities_path } Import a community
-          .col
-            %a.btn.btn-danger{ href: step1_communities_path } Create a community
-
-
+            %ul.pagination.pagination-sm.m-0.float-right
+              = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
+        .row.mt-4
+          .col-12.d-flex.justify-content-center
+            %div.btn-group
+              %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
+                Import a community
+                = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
+              %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_communities_path}'" }
+                Create a community
+                = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
