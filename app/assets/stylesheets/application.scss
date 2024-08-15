@@ -410,3 +410,13 @@ ul.pagination {
 .red {
   color: red;
 }
+
+.custom-modal-width {
+  max-width: 70% !important;
+}
+
+@media (min-width: 992px) {
+  .custom-modal-width {
+    max-width: 50% !important;
+  }
+}

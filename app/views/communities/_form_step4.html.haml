@@ -43,14 +43,15 @@
             .col-auto
               %label Your muted contributors (0)
             .col-auto
-              %a.btn.btn-outline-secondary{ href: '#' } Add New
+              %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#muteContributorModal"} Search
           .table-responsive
             %table.table.mt-3.table-striped
               %tbody
                 %tr
                   %td.text-center
                     %p.text-muted You haven’t muted any contributors from this community yet
-                    %a.text-danger{ href: step2_communities_path } Click here to search
+                    %a.text-danger{ href: '#', title: 'search', 'data-toggle': 'modal', 'data-target': '#muteContributorModal' }
+                      Click here to search
       .card
         .card-body
           .row.d-flex.justify-content-between
@@ -71,3 +72,5 @@
           %a.btn.btn-outline-secondary{ href: step3_communities_path } Back
         .col-auto
           %a.btn.btn-danger{ href: step5_communities_path } Continue
+
+= render 'mute_contributor'
