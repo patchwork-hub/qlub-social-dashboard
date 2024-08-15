@@ -170,10 +170,10 @@ const togglePassword = (e) => {
 	let input = document.querySelector('input#password');
 
 	if (input.type == 'password') {
-		e.setAttribute('class', 'svg-inline--fa fa-eye');
+		e.setAttribute('class', 'svg-inline--fa fa-eye red');
 		input.type = 'text';
 	} else {
-		e.setAttribute('class', 'svg-inline--fa fa-eye-slash');
+		e.setAttribute('class', 'svg-inline--fa fa-eye-slash red');
 		input.type = 'password';
 	}
 
