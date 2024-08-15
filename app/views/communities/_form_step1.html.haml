@@ -18,24 +18,24 @@
       .card-body
         %p{ style: "font-size: 12px; color: #BEBEBE;" } Fill out the basic details for your community. Provide a unique name, choose the collection it belongs to, and upload a banner and avatar image. Write a short bio to describe the community's purpose and theme. Inline tooltips will help guide you through each field.
         .row
-          .col
+          .col-md-6.col-sm-12
             = f.input :username, input_html: { type: "text", class: "form-control", id: "basic-url", aria: { describedby: "basic-addon3" } }
             %p{ style: "font-size: 12px; color: #BEBEBE;" } This will be the community's public display name. Once your community is created, you will not be able to change this.
-          .col
+          .col-md-6.col-sm-12
             = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
             %p{ style: "font-size: 12px; color: #BEBEBE;" } Use this field to select the group or category that this community will belong to.
         .row
-          .col
+          .col-md-12
             .alert.alert-light{ role: "alert", style: "background-color: #F6F8FA;" }
               .d-flex.align-items-center
                 %p.mb-0{ style: "font-size: 13px; width: 22px; height: 22px; font-weight: 700;" } Tip
                 = image_tag("icons/circle_info.svg", class: "m-2", width: "30px", height: "30px", style: "color: #3FA7E8;")
                 %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this community as collections help users find related communities easily.
         .row
-          .col
-            = f.input :bio, as: :text, label: 'Bio', input_html: { class: "form-control summernote", id: "community_bio", rows: 3 }
+          .col-md-12
+            = f.input :bio, as: :text, label: 'Bio', input_html: { class: "form-control ckeditor", id: "community_bio" }
         .row.mt-3
-          .col-8
+          .col-md-8
             %label{ for: "customFile", class: "form-label" } Banner Image
             .dropzone.p-5.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;" }
               = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file", style: "display: none;" }
@@ -56,16 +56,16 @@
                   reader.readAsDataURL(file);
                 }
               });
-          .col-4
+          .col-md-4
             %label{ for: "customFileAvatar", class: "form-label" } Avatar
             .row
-              .col-4
+              .col-md-4.col-sm-6.col-xs-12
                 .avatar-upload-container
                   .rounded-circle.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
                     %img{ id: "currentAvatar", src: "", alt: "Avatar Preview", style: "display: none; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
                     %i.fa-solid.fa-image
                     = f.input :avatar, as: :file, label: false, input_html: { id: "customFileAvatar", class: "form-control-file", style: "display: none;" }
-              .col-8
+              .col-md-8.col-sm-6.col-xs-12
                 %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFileAvatar').click();" } Upload image
                 %p.mt-4{ style: "font-size: 12px; color: #BEBEBE;" } SVG, PNG, JPG (max: 800x800px)
               :javascript

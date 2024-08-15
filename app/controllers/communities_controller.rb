@@ -16,6 +16,7 @@ class CommunitiesController < BaseController
                         collection_id: form_params[:collection_id],
                         banner_image: form_params[:banner_image],
                         avatar_image: form_params[:avatar_image])
+    session[:form_data] = form_params
     session[:form_data]['id'] = @community&.id
     redirect_to step2_communities_path
   end
