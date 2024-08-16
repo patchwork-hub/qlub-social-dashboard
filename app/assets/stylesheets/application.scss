@@ -420,3 +420,14 @@ ul.pagination {
     max-width: 50% !important;
   }
 }
+
+.filter-modal-width {
+  max-width: 50% !important;
+}
+
+@media (min-width: 992px) {
+  .filter-modal-width {
+    max-width: 40% !important;
+  }
+}
+
