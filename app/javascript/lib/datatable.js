@@ -170,20 +170,23 @@ jQuery(function() {
     });
   });
 
-  document.getElementById('saveMaxChars').addEventListener('click', function() {
-    const maxCharsInput = document.getElementById('max_chars_value');
-    const newValue = maxCharsInput.value;
+  const saveMaxCharsButton = document.getElementById('saveMaxChars');
+  if (saveMaxCharsButton) {
+    saveMaxCharsButton.addEventListener('click', function() {
+      const maxCharsInput = document.getElementById('max_chars_value');
+      const newValue = maxCharsInput ? maxCharsInput.value : '';
 
-    const settingElement = Array.from(document.querySelectorAll('.setting-input'))
-      .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
+      const settingElement = Array.from(document.querySelectorAll('.setting-input'))
+        .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
 
-    if (settingElement) {
-      const settingId = settingElement.getAttribute('data-setting-id');
-      const data = { server_setting: { optional_value: newValue } };
-      sendPatchRequest(`/server_settings/${settingId}`, data)
-        .then(() => {
-          location.reload();
-        });
-    }
-  });
+      if (settingElement) {
+        const settingId = settingElement.getAttribute('data-setting-id');
+        const data = { server_setting: { optional_value: newValue } };
+        sendPatchRequest(`/server_settings/${settingId}`, data)
+          .then(() => {
+            location.reload();
+          });
+      }
+    });
+  }
 });
