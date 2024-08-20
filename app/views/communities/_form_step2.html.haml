@@ -33,13 +33,12 @@
                 = form.text_field :email, class: 'form-control'
           .row
             .col
-              .form-group.position-relative
-                = form.label :password
-                = form.password_field :password, class: 'form-control', id: 'passwordInput'
-                %span.position-absolute{ style: "top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;", onclick: "togglePasswordVisibility()" }
-                  %i.fa.fa-eye.mt-3.pt-3{ id: "togglePasswordIcon" }
+              .form-group.position-relative.password
+                = form.label :password, 'Password', class: 'form-label'
+                = password_field_tag :password, nil, class: 'form-control'
+                %i.fa-solid.fa-eye-slash.red{onclick: 'window.togglePassword(this)'}
           .modal-footer
-            %div.d-flex.justify-content-between
+            %div.d-flex.justify-content-end
               .col
                 %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
               .col
@@ -72,15 +71,6 @@
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#myModal", "data-toggle" => "modal"} Add New
-            .row
-              .col
-                .card-tools
-                  = search_form_for @search, url: step2_communities_path do |f|
-                    .input-group.input-group-sm{style: "width: 150px;"}
-                      = f.search_field :account_username_cont, class: "form-control float-right", placeholder: "Search"
-                      .input-group-append
-                        %button.btn.btn-default{type: "submit"}
-                          %i.fas.fa-search
             %table.table.mt-3
               %thead
                 %tr
@@ -107,26 +97,8 @@
                     %td= community_admin.account&.user&.role&.name
                     %td
                       %a.text-danger{ href: step2_communities_path } Edit
-              %ul.pagination.pagination-sm.m-0.float-right
-                = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }  
         .row.d-flex.justify-content-between
           .col-auto
             %a.btn.btn-outline-secondary{ href: step1_communities_path } Back
           .col-auto
             %a.btn.btn-danger{ href: step3_communities_path } Continue
-
-
-:javascript
-  function togglePasswordVisibility() {
-    var passwordInput = document.getElementById('passwordInput');
-    var togglePasswordIcon = document.getElementById('togglePasswordIcon');
-    if (passwordInput.type === 'password') {
-      passwordInput.type = 'text';
-      togglePasswordIcon.classList.remove('fa-eye');
-      togglePasswordIcon.classList.add('fa-eye-slash');
-    } else {
-      passwordInput.type = 'password';
-      togglePasswordIcon.classList.remove('fa-eye-slash');
-      togglePasswordIcon.classList.add('fa-eye');
-    }
-  }

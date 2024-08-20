@@ -5,6 +5,8 @@ import 'lib/datatable';
 import 'custom_js/api_util';
 import 'custom_js/modal_handler';
 import 'custom_js/keyword_groups';
+import 'custom_js/community_contributor_data_table';
+import 'custom_js/follow_unfollow';
 import 'custom_js/header';
 
 import {far} from '@fortawesome/free-regular-svg-icons'
@@ -23,7 +25,6 @@ localStorage.setItem('unselected', null);
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 $(document).ready(function() {
-
   document.querySelectorAll('.ckeditor').forEach((element) => {
     ClassicEditor
       .create(element)
@@ -170,10 +171,10 @@ const togglePassword = (e) => {
 	let input = document.querySelector('input#password');
 
 	if (input.type == 'password') {
-		e.setAttribute('class', 'svg-inline--fa fa-eye');
+		e.setAttribute('class', 'svg-inline--fa fa-eye red');
 		input.type = 'text';
 	} else {
-		e.setAttribute('class', 'svg-inline--fa fa-eye-slash');
+		e.setAttribute('class', 'svg-inline--fa fa-eye-slash red');
 		input.type = 'password';
 	}
 

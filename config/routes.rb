@@ -43,7 +43,11 @@ Rails.application.routes.draw do
     resources :hashtag
   end
   resources :reports, only: %i[ index show ]
-  resources :accounts, only: %i[ index show ] do
+  resources :accounts do
+    member do
+      post 'follow'
+      post 'unfollow'
+    end
     collection do
       match :export, via: [:get, :post]
     end
@@ -66,5 +70,4 @@ Rails.application.routes.draw do
     end
     resources :keyword_filters
   end
-
 end
