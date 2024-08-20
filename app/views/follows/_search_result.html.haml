@@ -1,0 +1,13 @@
+
+%table.table.mt-3.table-striped
+  %thead
+    %tr
+      %th
+        Search results for “Tom Bombadil”
+  %tbody
+    - @records.each do |followed_contributor|
+      %tr
+        %td= followed_contributor.account.username
+        %td= followed_contributor.account.id
+        %td
+          %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{followed_contributor.account.id}", onclick: "followContributor(#{followed_contributor.account.id})"} Follow

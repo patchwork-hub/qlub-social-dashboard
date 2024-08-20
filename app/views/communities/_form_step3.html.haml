@@ -29,22 +29,12 @@
           %span{"aria-hidden" => "true"} ×
       .modal-body
         .card-tools
-          = search_form_for @contributor_search, url: step3_communities_path do |f|
-            .input-group.input-group-sm{style: "width: 150px;"}
-              = f.search_field :account_username_cont, class: "form-control float-right", placeholder: "Search"
-              .input-group-append
-                %button.btn.btn-default{type: "submit"}
-                  %i.fas.fa-search
-        .table-responsive
-          %table.table.mt-3.table-striped
-            %thead
-              %tr
-                %th
-                  Search results for “Tom Bombadil”
-            %tbody
-              - @contributor_records.each do |followed_contributor|
-                %tr
-                  %td= followed_contributor.account.username
+          .input-group.input-group-sm{style: "width: 150px;"}
+            %input.form-control.float-right{id: "search-input", type: "text", name: "account_username_cont", placeholder: "Search"}
+            .input-group-append
+              %button.btn.btn-default{type: "button", onclick: "reloadFollowers(document.getElementById('search-input').value)"}
+                %i.fas.fa-search
+        .table-responsive#contributors_table
                   
 
 
@@ -112,7 +102,7 @@
               %label Your community contributors (0)
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
-                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#contributorModal", "data-toggle" => "modal"} Add New
+                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#contributorModal", "data-toggle" => "modal", onclick: "reloadFollowers(document.getElementById('search-input').value)"} Add New
           .table-responsive
             %table.table.mt-3.table-striped
               %thead
