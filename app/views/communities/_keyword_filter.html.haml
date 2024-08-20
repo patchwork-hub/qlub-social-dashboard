@@ -1,0 +1,28 @@
+#filterModal.modal.fade{ role: 'dialog', tabindex: "-1", aria: { labelledby: 'filterModalLabel', hidden: 'true' } }
+  .modal-dialog.filter-modal-width{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5#filterModal.modal-title Add keyword filtering
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
+      .modal-body
+        %p.small Use the form below to add a new keyword filter.
+
+        .form-group.row
+          .col-12
+            = label_tag :keyword, "Keyword", class: 'form-label'
+            %span.text-danger *
+
+        .form-group.row
+          .col-12
+            = text_field_tag :keyword, nil, class: 'form-control', placeholder: "Enter keyword here"
+
+        .form-group.row.mt-3
+          .col-12
+            .form-check
+              = check_box_tag :is_hashtag, '1', false, class: 'form-check-input'
+              = label_tag :is_hashtag, "This keyword is a hashtag", class: 'form-check-label'
+
+      .modal-footer
+        %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
+        %button.btn.btn-danger Save changes

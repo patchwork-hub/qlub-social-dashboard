@@ -1,14 +1,15 @@
 class FollowsController < BaseController
-
-  def show
-    # respond_to do |format|
-    #   format.html.haml { render partial: 'follows/search_result', locals: { records: @records } }
-    # end
-  end
+  def index
+    @records = load_records
+    @search = records_filter.build_search
+    respond_to do |format|
+      format.html { render partial: 'follows/search_result', locals: { records: @records } }
+    end
+  end  
 
   protected
 
   def records_filter
-    @filter = Filter::Follows.new(params)
+    @filter = Filter::Follow.new(params)
   end
 end
