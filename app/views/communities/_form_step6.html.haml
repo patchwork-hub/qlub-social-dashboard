@@ -1,3 +1,5 @@
+- @selected_option = "public"
+
 .container-fluid
   .row-md-12.my-4
     .col
@@ -62,8 +64,10 @@
               %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
             .col-md-1.text-center
               %i.far.fa-trash-alt.text-danger
+      .row.d-flex.justify-content-between
+        .col
+          %a.btn.btn-outline-secondary{ href: step5_communities_path } Back
+        .col-auto
+          %button.btn.btn-danger{"data-toggle" => "modal", "data-target" => "#previewCommunityModal"} Preview Community
 
-
-
-        
-            
+= render "preview_community"

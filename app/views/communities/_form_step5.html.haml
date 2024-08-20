@@ -19,7 +19,7 @@
               %label Hashtags
               %p Choose a few default hashtags that will be automatically attached to posts made by community members. These hashtags help in organising and discovering content within your community.
             .col-md-4-auto
-              %a.btn.btn-outline-secondary{ href: '#' } Add New
+              %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#postHashtagModel"} Add New
           .row
             .col.d-flex
               %p.mr-2 Show
@@ -87,3 +87,5 @@
           %a.btn.btn-outline-secondary{ href: step4_communities_path } Back
         .col-auto
           %a.btn.btn-danger{ href: step6_communities_path } Continue
+
+= render 'post_hashtag'

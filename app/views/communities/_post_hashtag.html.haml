@@ -1,0 +1,30 @@
+#postHashtagModel.modal.fade{ role: 'dialog', tabindex: "-1", aria: { labelledby: 'postHashtagModelLabel', hidden: 'true' } }
+  .modal-dialog.filter-modal-width{ role: 'document' }
+    .modal-content
+      .modal-header
+        %h5#postHashtagModel.modal-title Add post hashtags
+        %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
+          = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
+      .modal-body
+        %p.small Add up to three hashtags which will be added to posts made from this community.
+
+        .form-group.row
+          .col-12
+            = label_tag :hashtag, "Hashtags", class: 'form-label'
+            %span.text-danger *
+
+        .form-group.row
+          .col-12
+            = text_field_tag :hashtag, '#', class: 'form-control'
+
+        .form-group.row
+          .col-12
+            = text_field_tag :hashtag, '#', class: 'form-control'
+
+        .form-group.row
+          .col-12
+            = text_field_tag :hashtag, '#', class: 'form-control'
+
+      .modal-footer
+        %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
+        %button.btn.btn-danger Save changes
