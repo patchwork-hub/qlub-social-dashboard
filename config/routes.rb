@@ -64,6 +64,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/installation', to: 'installation#index'
+
   resources :keyword_filter_groups do
     member do
       patch :update_is_active

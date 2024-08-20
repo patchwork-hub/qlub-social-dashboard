@@ -9,7 +9,7 @@
             = image_tag("icons/sliders.svg", class: "mr-2", width: "16", height: "16")
             %p Server settings
         %li.nav-item
-          = link_to '#', id: "installation-link", data: { header: "Installation" }, class: "nav-link #{controller_name == 'installation' ? 'active' : ''}" do
+          = link_to '/installation', id: "installation-link", data: { header: "Installation" }, class: "nav-link #{controller_name == 'installation' ? 'active' : ''}" do
             = image_tag("icons/screwdriver-wrench.svg", class: "mr-2", width: "16", height: "16")
             %p Installation
         %li.nav-item
