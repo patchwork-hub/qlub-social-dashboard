@@ -1115,6 +1115,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_042808) do
 
   create_table "server_settings", force: :cascade do |t|
     t.string "name"
+    t.string "optional_value"
     t.boolean "value"
     t.integer "position"
     t.bigint "parent_id"
