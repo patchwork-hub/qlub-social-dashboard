@@ -15,17 +15,17 @@
                 %strong= setting[:name]
                 - case setting[:name]
                   - when 'Spam Block'
-                    %p Filter out spam posts and bots from the wider network at a server level to keep your server clean.
+                    %p.text-muted.small.mt-2 Filter out spam posts and bots from the wider network at a server level to keep your server clean.
                   - when 'Content Moderation'
-                    %p Control content entering your server from the wider network using keyword filters and controlling which servers your connected to in the wider network.
+                    %p.text-muted.small.mt-2 Control content entering your server from the wider network using keyword filters and controlling which servers your connected to in the wider network.
                   - when 'Federation'
-                    %p Decide which parts of the social web you want to be connected to, casting a broad net or staying focused.
+                    %p.text-muted.small.mt-2 Decide which parts of the social web you want to be connected to, casting a broad net or staying focused.
                   - when 'Local Features'
-                    %p Customise and design your server’s experience, giving your community features to enhance their experience.
+                    %p.text-muted.small.mt-2 Customise and design your server’s experience, giving your community features to enhance their experience.
                   - when 'User Management'
-                    %p Foster community through engagement tools and control who has access.
+                    %p.text-muted.small.mt-2 Foster community through engagement tools and control who has access.
                   - when 'Plug-ins'
-                    %p Enable more plug-ins created for Patchwork for more tools and functionality.
+                    %p.text-muted.small.mt-2 Enable more plug-ins created for Patchwork for more tools and functionality.
             .col-md-7
               - setting[:settings].each_with_index do |option, option_index|
                 - is_collapse = ['Content filters', 'Spam filters'].include?(option[:name])

@@ -455,7 +455,6 @@ ul.pagination {
   bottom: 0;
   left: 0;
   right: 0;
-  font-size: 15px;
   text-align: center;
 }
 
@@ -482,5 +481,9 @@ ul.pagination {
 
 #create-channel {
   accent-color: red;
+}
+
+.text-smaller {
+  font-size: 0.8rem;
 }
 /* community preview */
