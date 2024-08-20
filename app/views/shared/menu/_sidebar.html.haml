@@ -17,7 +17,7 @@
             = image_tag("icons/boxes.svg", class: "mr-2", width: "16", height: "16")
             %p Patch Packs
         %li.nav-item
-          = link_to step1_communities_path, id: "communities-link", data: { header: "Communities" }, class: "nav-link #{controller_name == 'communities' ? 'active' : ''}" do
+          = link_to communities_path, id: "communities-link", data: { header: "Communities" }, class: "nav-link #{controller_name == 'communities' ? 'active' : ''}" do
             = image_tag("icons/speech.svg", class: "mr-2", width: "16", height: "16")
             %p Communities
         %li.nav-item

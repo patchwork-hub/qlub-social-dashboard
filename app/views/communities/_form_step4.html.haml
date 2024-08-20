@@ -43,14 +43,15 @@
             .col-auto
               %label Your muted contributors (0)
             .col-auto
-              %a.btn.btn-outline-secondary{ href: '#' } Add New
+              %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#muteContributorModal"} Search
           .table-responsive
             %table.table.mt-3.table-striped
               %tbody
                 %tr
                   %td.text-center
                     %p.text-muted You haven’t muted any contributors from this community yet
-                    %a.text-danger{ href: step2_communities_path } Click here to search
+                    %a.text-danger{ href: '#', title: 'Click here to search', 'data-toggle': 'modal', 'data-target': '#muteContributorModal' }
+                      Click here to search
       .card
         .card-body
           .row.d-flex.justify-content-between
@@ -58,16 +59,20 @@
               %label Keyword filtering
               %p.text-muted Lorem ipsum dolor sit amet consectetur. Fermentum ac proin sed elementum erat aliquam quis sem libero. Sit morbi mi magna adipiscing tellus hac.
             .col-md-6-auto
-              %a.btn.btn-outline-secondary{ href: '#' } Add New
+              %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#filterModal"} Add New
           .table-responsive
             %table.table.mt-3.table-striped
               %tbody
                 %tr
                   %td.text-center
                     %p.text-muted You haven’t muted any contributors from this community yet
-                    %a.text-danger{ href: step2_communities_path } Click here to add one
+                    %a.text-danger{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#filterModal' }
+                      Click here to add one
       .row.d-flex.justify-content-between
         .col
-          %a.btn.btn-outline-secondary{ href: '#' } Back
+          %a.btn.btn-outline-secondary{ href: step3_communities_path } Back
         .col-auto
           %a.btn.btn-danger{ href: step5_communities_path } Continue
+
+= render 'mute_contributor'
+= render 'keyword_filter'

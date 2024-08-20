@@ -5,6 +5,7 @@ class Account < ApplicationRecord
   has_many :statuses, inverse_of: :account
   has_many :global_filters, inverse_of: :account, dependent: :nullify
   has_many :communities
+  has_many :community_admins
 
   validates :username, uniqueness: true, presence: true
 
@@ -81,11 +82,18 @@ class Account < ApplicationRecord
                         OR lower(users.phone) like :q
                         OR lower(mammoth_wait_lists.role) like :q
                         OR lower(mammoth_communities.name) like :q",
-                        q: "%#{params[:q].downcase}%"
-                      )
+                        q: "%#{params[:q].downcase}%")
     end
 
     @all
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["dob", "domain", "uri", "url", "username"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["community_admins"]
   end
 
   private
@@ -97,7 +105,6 @@ class Account < ApplicationRecord
     self.private_key = keypair.to_pem
     self.public_key  = keypair.public_key.to_pem
   end
-
 end
 
 

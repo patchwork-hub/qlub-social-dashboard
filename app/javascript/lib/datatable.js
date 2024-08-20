@@ -162,8 +162,7 @@ jQuery(function() {
   }
 
   const settingSwitches = document.querySelectorAll('.setting-input');
-  settingSwitches.
-  forEach(function(switchElement) {
+  settingSwitches.forEach(function(switchElement) {
     switchElement.addEventListener('change', function(event) {
       const checkbox = event.target;
       updateSetting(checkbox);
@@ -171,21 +170,22 @@ jQuery(function() {
     });
   });
 
-  document.getElementById('saveMaxChars').addEventListener('click', function() {
-    const maxCharsInput = document.getElementById('max_chars_value');
-    const newValue = maxCharsInput.value;
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('saveMaxChars').addEventListener('click', function() {
+      const maxCharsInput = document.getElementById('max_chars_value');
+      const newValue = maxCharsInput.value;
 
-    const settingElement = Array.from(document.querySelectorAll('.setting-input'))
-      .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
+      const settingElement = Array.from(document.querySelectorAll('.setting-input'))
+        .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
 
-    if (settingElement) {
-      const settingId = settingElement.getAttribute('data-setting-id');
-      const data = { server_setting: { optional_value: newValue } };
-      sendPatchRequest(`/server_settings/${settingId}`, data)
-        .then(() => {
-          location.reload();
-        });
-    }
+      if (settingElement) {
+        const settingId = settingElement.getAttribute('data-setting-id');
+        const data = { server_setting: { optional_value: newValue } };
+        sendPatchRequest(`/server_settings/${settingId}`, data)
+          .then(() => {
+            location.reload();
+          });
+      }
+    });
   });
-
 });

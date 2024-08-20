@@ -18,6 +18,8 @@ Rails.application.routes.draw do
   get '/invitation_codes/:id', to: 'wait_lists#invitation_code', as: :invitation_code
   match '/invitation_codes/export/new', to: 'wait_lists#export', as: :export_invitation_codes, via: [:get, :post]
 
+  resources :follows
+
   resources :communities do
     collection do
       get 'step1', to: 'communities#step1'
@@ -41,7 +43,11 @@ Rails.application.routes.draw do
     resources :hashtag
   end
   resources :reports, only: %i[ index show ]
-  resources :accounts, only: %i[ index show ] do
+  resources :accounts do
+    member do
+      post 'follow'
+      post 'unfollow'
+    end
     collection do
       match :export, via: [:get, :post]
     end
@@ -64,5 +70,4 @@ Rails.application.routes.draw do
     end
     resources :keyword_filters
   end
-
 end

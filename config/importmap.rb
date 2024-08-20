@@ -45,3 +45,4 @@ pin_all_from "app/javascript/custom_js", under: "custom_js"
 
 
 pin "select2", to: "https://ga.jspm.io/npm:select2@4.1.0-rc.0/dist/js/select2.js"
+pin "ckeditor", to: "ckeditor/ckeditor.js"

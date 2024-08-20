@@ -1,14 +1,64 @@
 - content_for :title do
   = 'Communities'
+
 .row
   .col-12
     .card
       .card-header
-        %h3.card-title Communities
+        %h3.card-title Your communities
+        .card-tools
+          = search_form_for @search do |f|
+            .input-group.input-group-sm{style: "width: 150px;"}
+              = f.search_field :name_cont, class: "form-control float-right", placeholder: "Search"
+              .input-group-append
+                %button.btn.btn-default{type: "submit"}
+                  %i.fas.fa-search
       .card-body
-        %table#datatable.table.table-bordered.table-striped{data: {url: communities_url, type: 'community'}}
+        %p{ style: "font-size: 12px;" "color: #BEBEBE;" } Here you can see a list of all the communities on your server. From this dashboard, you can easily import communities, manage your existing communities or create new ones.
+        %table.table.table-bordered.table-striped{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
-              %th Name
-              %th Actions
+              %th
+                = check_box_tag :select_all, '', false, id: 'select_all'
+              %th Community
+              %th Username
+              %th No.of admins
+              %th
           %tbody
+            - if @records.size == 0
+              %tr
+                %td.text-center.info-box-content{colspan: "100%"}
+                  %p.text-muted You haven’t added any hashtags to this community yet
+                  %a.text-danger{ href: step2_communities_path } Click here to add one
+            - @records.each do |community|
+              %tr
+                %td
+                  = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
+                %td= community.name
+                %td= community.slug
+                %th= community.community_admins.size
+                %th
+        .row.mt-2
+          .col
+            %div.btn-group
+              %button.btn.btn-default{type: "button"} Action
+              %button.btn.btn-default.dropdown-toggle.dropdown-hover.dropdown-icon{type: "button", "data-toggle" => "dropdown"}
+                %span.sr-only Toggle Dropdown
+              .dropdown-menu{role: "menu"}
+                %a.dropdown-item{href: "#"} Action
+                %a.dropdown-item{href: "#"} Another action
+                %a.dropdown-item{href: "#"} Something else here
+                .dropdown-divider
+                %a.dropdown-item{href: "#"} Separated link
+          .col
+            %ul.pagination.pagination-sm.m-0.float-right
+              = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
+        .row.mt-4
+          .col-12.d-flex.justify-content-center
+            %div.btn-group
+              %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
+                Import a community
+                = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
+              %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_communities_path}'" }
+                Create a community
+                = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
