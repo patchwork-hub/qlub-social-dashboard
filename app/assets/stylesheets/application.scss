@@ -431,3 +431,56 @@ ul.pagination {
   }
 }
 
+/* community preview */
+.btn-group-toggle .btn {
+  position: relative;
+  padding: 15px;
+  text-align: left;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  transition: border-color 0.3s ease;
+}
+
+.btn-group-toggle .btn.selected {
+  border-color: red;
+}
+
+.btn-group-toggle .btn.selected .selected-indicator {
+  display: block;
+  background-color: red;
+  color: white;
+  border-radius: 0 0 5px 5px;
+  padding: 5px 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 15px;
+  text-align: center;
+}
+
+.btn-group-toggle .btn .selected-indicator {
+  display: none;
+}
+
+.btn-group-toggle .btn input[type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+
+.btn-group-toggle .btn.selected input[type="radio"] {
+  border-color: red;
+}
+
+.bordered-checkbox {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  display: inline-block;
+}
+
+#create-channel {
+  accent-color: red;
+}
+/* community preview */
