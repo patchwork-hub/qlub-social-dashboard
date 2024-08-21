@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_13_042808) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_21_144438) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -288,6 +288,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_13_042808) do
     t.datetime "updated_at", precision: nil, null: false
     t.datetime "published_at", precision: nil
     t.bigint "status_ids", array: true
+  end
+
+  create_table "api_keys", force: :cascade do |t|
+    t.string "key"
+    t.string "secret"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "appeals", force: :cascade do |t|
