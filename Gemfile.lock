@@ -159,6 +159,11 @@ GEM
     et-orbi (1.2.11)
       tzinfo
     execjs (2.9.1)
+    faraday (2.10.1)
+      faraday-net_http (>= 2.0, < 3.2)
+      logger
+    faraday-net_http (3.1.1)
+      net-http
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
     ffi (1.17.0-x86_64-linux-gnu)
@@ -214,6 +219,7 @@ GEM
       marcel (~> 1.0.1)
       mime-types
       terrapin (>= 0.6.0, < 2.0)
+    logger (1.6.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -233,6 +239,8 @@ GEM
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     mutex_m (0.2.0)
+    net-http (0.4.1)
+      uri
     net-imap (0.4.14)
       date
       net-protocol
@@ -369,6 +377,7 @@ GEM
       railties (>= 6.0.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uri (0.13.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -408,6 +417,7 @@ DEPENDENCIES
   debug
   devise
   dotenv-rails
+  faraday (~> 2.10, >= 2.10.1)
   haml
   health_check
   hiredis (~> 0.6)
