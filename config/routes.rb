@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     mount Sidekiq::Web, at: 'sidekiq', as: :sidekiq
   end
 
-  root "server_settings#index"
+  root 'homepage#index'
 
   devise_for :users, controllers: {
     sessions: 'users/sessions'
