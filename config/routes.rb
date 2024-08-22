@@ -75,4 +75,6 @@ Rails.application.routes.draw do
     end
     resources :keyword_filters
   end
+
+  resources :api_keys, path: 'api-key'
 end
