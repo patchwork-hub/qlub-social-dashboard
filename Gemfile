@@ -59,3 +59,4 @@ gem 'patch_commu', git: "https://github.com/newsmast22/patch_commu", branch: 'ma
 gem 'ransack'
 gem 'bcrypt'
 gem 'faraday', '~> 2.10', '>= 2.10.1'
+gem 'jsonapi-serializer', '~> 2.2'

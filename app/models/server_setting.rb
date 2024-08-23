@@ -29,7 +29,7 @@ class ServerSetting < ApplicationRecord
   end
 
   def sync_setting
-    if (endpoint = ENV['HUB_URL']) && (saved_change_to_value? && has_parent?)
+    if (endpoint = ENV['PATCHWORK_HUB_URL']) && (saved_change_to_value? && has_parent?)
       @api_key = ApiKey.first
 
       params = {

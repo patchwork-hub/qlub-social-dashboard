@@ -77,4 +77,6 @@ Rails.application.routes.draw do
   end
 
   resources :api_keys, path: 'api-key'
+
+  draw :api_v1
 end
