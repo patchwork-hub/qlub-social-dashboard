@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get 'step2', to: 'communities#step2'
       post 'step2', to: 'communities#step2_save'
       get 'step3', to: 'communities#step3'
+      get 'contributors_table', to: 'communities#contributors_table'
       post 'step3', to: 'communities#step3_save'
       get 'step4', to: 'communities#step4'
       post 'step4', to: 'communities#step4_save'

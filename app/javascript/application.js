@@ -8,6 +8,7 @@ import 'custom_js/keyword_groups';
 import 'custom_js/community_contributor_data_table';
 import 'custom_js/follow_unfollow';
 import 'custom_js/header';
+import 'custom_js/followed_contributors_table';
 
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fas} from '@fortawesome/free-solid-svg-icons'

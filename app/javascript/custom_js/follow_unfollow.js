@@ -7,13 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
       success: function(response) {
         var followBtn = $(`#follow_btn_${account_id}`);
         
-        // Change the button text to "Unfollow"
         followBtn.text('Unfollow');
         followBtn.removeClass('btn-outline-dark');
         followBtn.addClass('btn-outline-danger');
 
-        // Optionally, you can change the onclick function to unfollow
-        followBtn.attr('onclick', `unfollowContributor(${account_id})`);
+        followBtn.attr('onclick', `unfollowContributor('${account_id}')`);
       },
       error: function() {
         console.log('Error occurred while following contributor');
@@ -28,13 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
       success: function(response) {
         var followBtn = $(`#follow_btn_${account_id}`);
         
-        // Change the button text to "Follow"
         followBtn.text('Follow');
         followBtn.removeClass('btn-outline-danger');
         followBtn.addClass('btn-outline-dark');
 
-        // Optionally, change the onclick function back to follow
-        followBtn.attr('onclick', `followContributor(${account_id})`);
+        followBtn.attr('onclick', `followContributor('${account_id}')`);
       },
       error: function() {
         console.log('Error occurred while unfollowing contributor');

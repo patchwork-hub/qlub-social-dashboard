@@ -1,13 +1,14 @@
-
 %table.table.mt-3.table-striped
   %thead
     %tr
       %th
         Search results for “Tom Bombadil”
   %tbody
-    - @records.each do |followed_contributor|
+    - @records.each do |account|
       %tr
-        %td= followed_contributor.account.username
-        %td= followed_contributor.account.id
+        %td= account.username
         %td
-          %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{followed_contributor.account.id}", onclick: "followContributor(#{followed_contributor.account.id})"} Follow
+          - if @current_acc.followed?(account.id)
+            %button.btn.btn-block.btn-outline-danger{ id: "follow_btn_#{account.id}", onclick: "unfollowContributor('#{account.id}')" } Unfollow
+          - else
+            %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{account.id}", onclick: "followContributor('#{account.id}')" } Follow
