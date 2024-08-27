@@ -29,37 +29,6 @@ class ServerSetting < ApplicationRecord
   end
 
   def sync_setting
-    if (endpoint = ENV['PATCHWORK_HUB_URL']) && (saved_change_to_value? && has_parent?)
-      @api_key = ApiKey.first
-
-      params = {
-        server_setting: {
-          settings: [
-            {
-              name: parent.name,
-              options: [
-                {
-                  name: name,
-                  value: value,
-                  position: position
-                }
-              ]
-            }
-          ]
-        }
-      }
-      conn = Faraday.new(
-        url: endpoint,
-        params: params,
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': @api_key.key,
-          'x-api-secret': @api_key.secret
-        }
-      )
-
-      response = conn.post('/api/v1/server_settings/upsert')
-      Rails.logger.info "✅ Settings synced!"
-    end
+    SyncSettingService.new(self).call if saved_change_to_value? && has_parent?
   end
 end
