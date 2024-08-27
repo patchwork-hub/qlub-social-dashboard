@@ -14,7 +14,9 @@ class ApiController < ApplicationController
 
     return render json: { error: 'API Key is missing' }, status: :unauthorized unless key || secret
 
-    return render json: { error: 'API Key is invalid' }, status: :unauthorized unless ApiKey.exists?(key: key, secret: secret)
+    @api_key = ApiKey.find_by(key: key, secret: secret)
+
+    return render json: { error: 'API Key is invalid' }, status: :unauthorized unless @api_key.present?
 
     Rails.logger.info "API Key is valid"
   end

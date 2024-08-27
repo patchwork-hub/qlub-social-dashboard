@@ -1,4 +1,4 @@
-class AccountSerializer
+class Api::V1::AccountSerializer
   include JSONAPI::Serializer
 
   set_type :account
