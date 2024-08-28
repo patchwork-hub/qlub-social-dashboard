@@ -96,6 +96,16 @@ class Account < ApplicationRecord
     ["community_admins"]
   end
 
+  def followed?(target_account_id)
+    Follow.exists?(account_id: id, target_account_id: target_account_id)
+  end
+
+  def self.filter_unfollowed_users(account_id)
+    Account.left_joins(:follows)
+           .where.not(follows: { account_id: account_id })
+           .distinct
+  end
+  
   private
 
   def generate_keys

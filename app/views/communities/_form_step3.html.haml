@@ -31,13 +31,11 @@
       .modal-body
         .card-tools
           .input-group.input-group-sm{style: "width: 150px;"}
-            %input.form-control.float-right{id: "search-input", type: "text", name: "account_username_cont", placeholder: "Search"}
+            %input.form-control.float-right{id: "search-input", type: "text", name: "username_cont", placeholder: "Search"}
             .input-group-append
               %button.btn.btn-default{type: "button", onclick: "reloadFollowers(document.getElementById('search-input').value)"}
                 %i.fas.fa-search
         .table-responsive#contributors_table
-
-
 
 .container-fluid
   .row-md-12.my-4
@@ -73,20 +71,19 @@
                     %i.far.fa-square.mr-4
                   %th
                     %label.text-muted{ style: "font-size: 13px;" } Hashtags
-                  %th
               %tbody
                 - if @records.size == 0
                   %tr
-                    %td.text-center
+                    %td.text-center{ colspan: 2 }
                       %p.text-muted You haven’t added any hashtags to this community yet
                       %a.text-danger{ href: step3_communities_path } Click here to add one
                 - @records.each do |community_hashtag|
                   %tr
-                    %td
+                    %td{style: "width: 30px;"}
                       = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
                     %td= "##{community_hashtag.hashtag}"
                     %td
-                      %a.text-danger{ href: step3_communities_path } Edit
+                      %a.text-danger{ href: step2_communities_path } Edit
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
       .card
@@ -104,18 +101,7 @@
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
                 %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#contributorModal", "data-toggle" => "modal", onclick: "reloadFollowers(document.getElementById('search-input').value)"} Add New
-          .table-responsive
-            %table.table.mt-3.table-striped
-              %thead
-                %tr
-                  %th
-                    %i.far.fa-square.mr-4
-                    %label.text-muted{ style: "font-size: 13px;" } Hashtags
-              %tbody
-                %tr
-                  %td.text-center
-                    %p.text-muted.small You have not added any hashtags to this community yet
-                    %a.text-danger.small{ href: step2_communities_path } Click here to add one
+          .table-responsive#followed_contributors
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_communities_path } Back

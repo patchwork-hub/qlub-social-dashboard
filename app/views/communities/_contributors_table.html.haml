@@ -1,0 +1,16 @@
+%table.table.mt-3.table-striped
+  %tbody
+    - if @records.size == 0
+      %tr
+        %td.text-center
+          %p.text-muted.small You have not added any hashtags to this community yet
+          %a.text-danger.small{ href: step2_communities_path } Click here to add one
+    - @records.each do |record|
+      %tr
+        %td
+          %p= record.target_account.username
+        %td{style: "width: 60px;"}
+          %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{record.target_account.id}", onclick: "unfollowContributor('#{record.target_account.id}')" } Unfollow
+          
+%ul.pagination.pagination-sm.m-0.float-right
+  = render partial: 'kaminari/paginator', locals: { custom_paginator: @contributor_filter }

@@ -44,12 +44,19 @@ class CommunitiesController < BaseController
     redirect_to step2_communities_path
   end
 
+  def contributors_table
+    @community = Community.find(session[:form_data]['id'])
+    @contributor_records = load_contributors_records
+    @contributor_search = commu_contributors_filter.build_search
+
+    respond_to do |format|
+      format.html { render partial: 'communities/contributors_table', locals: { records: @contributor_records } }
+    end
+  end
+
   def step3
     @records = load_commu_hashtag_records
     @search = commu_hashtag_records_filter.build_search
-
-    @contributor_records = load_contributors_records
-    @contributor_search = commu_contributors_filter.build_search
 
     @community_hashtag_form = Form::CommunityHashtag.new
     @community = Community.find(session[:form_data]['id'])
@@ -149,6 +156,7 @@ class CommunitiesController < BaseController
   end
 
   def commu_contributors_filter
+    params[:q] = { account_id_eq: @current_user.account.id }
     @contributor_filter = Filter::Follow.new(params)
   end
 
