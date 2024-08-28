@@ -523,3 +523,23 @@ ul.pagination {
 .small-card {
   width: 100%;
 }
+
+.no-side-borders th,
+.no-side-borders td {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.top-bottom-border {
+  border-top: 2px solid rgb(220, 220, 220);
+  border-bottom: 1px solid rgb(220, 220, 220);
+}
+
+.align-left {
+  text-align: left !important;
+}
+
+#select_all {
+  margin: 0;
+  text-align: left;
+}

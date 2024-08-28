@@ -80,4 +80,6 @@ Rails.application.routes.draw do
   resources :api_keys, path: 'api-key'
 
   draw :api_v1
+
+  resources :collections
 end
