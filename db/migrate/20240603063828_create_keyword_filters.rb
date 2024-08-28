@@ -3,8 +3,7 @@ class CreateKeywordFilters < ActiveRecord::Migration[7.0]
     create_table :keyword_filters do |t|
       t.string :keyword
       t.integer :filter_type
-      t.references :keyword_filter_group, null: false
+      t.references :keyword_filter_group, null: false, foreign_key: { on_delete: :cascade }
     end
   end
-
 end
