@@ -10,6 +10,7 @@ module ApplicationHelper
       { path: '/installation', id: 'installation-link', header: 'Installation', icon: 'screwdriver-wrench.svg', text: 'Installation', active_if: 'installation' },
       { path: '/patch_packs', id: 'patch-packs-link', header: 'Patch Packs', icon: 'boxes.svg', text: 'Patch Packs', active_if: 'patch_packs' },
       { path: communities_path, id: 'communities-link', header: 'Communities', icon: 'speech.svg', text: 'Communities', active_if: 'communities' },
+      { path: collections_path, id: 'collections-link', header: 'Collections', icon: 'speech.svg', text: 'Collections', active_if: 'collections' },
       { path: accounts_path, id: 'accounts-link', header: 'Users', icon: 'users.svg', text: 'Users', active_if: 'accounts' },
       { path: resources_path, id: 'resources-link', header: 'Resources', icon: 'folder.svg', text: 'Resources', active_if: 'resources' },
       { path: api_keys_path, id: 'resources-link', header: 'API Key', icon: 'key.svg', text: 'API Key', active_if: 'api_keys' },

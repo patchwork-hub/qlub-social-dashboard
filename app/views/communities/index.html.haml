@@ -15,10 +15,10 @@
                   %i.fas.fa-search
       .card-body
         %p.text-muted.small Here you can see a list of all the communities on your server. From this dashboard, you can easily import communities hosted on other servers, create new communities on this server or manage existing ones.
-        %table.table.table-bordered.table-striped{data: {url: accounts_url, type: 'account'}}
+        %table.table.no-side-borders.top-bottom-border{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
-              %th
+              %th.align-left
                 = check_box_tag :select_all, '', false, id: 'select_all'
               %th Community
               %th Username
@@ -28,11 +28,11 @@
             - if @records.size == 0
               %tr
                 %td.text-center.info-box-content{colspan: "100%"}
-                  %p.text-muted You haven’t added any hashtags to this community yet
-                  %a.text-danger{ href: step2_communities_path } Click here to add one
+                  %p.text-muted.small You haven’t added any hashtags to this community yet
+                  %a.text-danger.small{ href: step1_communities_path } Click here to add one
             - @records.each do |community|
               %tr
-                %td
+                %td.text-center
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
                 %td= community.slug

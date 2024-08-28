@@ -1,0 +1,26 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          = "#{action_name.capitalize} collection"
+
+      .card-body.w-250
+        = simple_form_for @collection, local: true do |f|
+          .row
+            .col-md-6
+              = f.input :name, label: "Name", input_html: { class: "form-control" }
+
+          .row
+            .col-md-6
+              = f.input :slug, label: "Slug", input_html: { class: "form-control" }
+
+          .row
+            .col-md-6
+              = f.input :sorting_index, label: "Sorting Index", input_html: { class: "form-control" }
+
+          .row
+            .col-md-6.d-flex.justify-content-center
+              = f.submit 'Save', class: 'btn btn-primary mx-2 btn-custom'
+              = link_to 'Cancel', collections_path, class: 'btn btn-secondary mx-2 btn-custom'
+

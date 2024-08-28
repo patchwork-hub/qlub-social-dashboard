@@ -64,7 +64,7 @@
               .mt-auto
                 %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
           .table-responsive
-            %table.table.mt-3.table-striped
+            %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
               %thead
                 %tr
                   %th{style: "width: 30px;"}
@@ -81,9 +81,11 @@
                   %tr
                     %td{style: "width: 30px;"}
                       = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
-                    %td= "##{community_hashtag.hashtag}"
                     %td
-                      %a.text-danger{ href: step2_communities_path } Edit
+                      = "##{community_hashtag.hashtag}"
+                    %td{style: "width: 200px;"}
+                      %a.text-danger.mr-2{ href: step3_communities_path } Edit
+                      %a.text-danger{ href: step3_communities_path } Remove
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
       .card
