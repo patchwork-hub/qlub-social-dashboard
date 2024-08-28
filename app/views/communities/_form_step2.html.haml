@@ -60,7 +60,7 @@
         .card
           .card-header
             %h3.card-title Step 2 - Admin Details
-          .card-body.table.table-bordered
+          .card-body
             .row.d-flex.justify-content-between
               .col-auto
                 .row
@@ -71,10 +71,10 @@
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#myModal", "data-toggle" => "modal"} Add New
-            %table.table.mt-3
+            %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
               %thead
                 %tr
-                  %th
+                  %th.align-left
                     = check_box_tag :select_all, '', false, id: 'select_all'
                   %th Display name
                   %th Username
@@ -89,7 +89,7 @@
                       %a.text-danger.small{ href: step2_communities_path } Click here to add one
                 - @records.each do |community_admin|
                   %tr
-                    %td
+                    %td.text-center
                       = check_box_tag "selected_accounts[]", community_admin.account.id, false, class: 'select_account'
                     %td= community_admin.account.display_name
                     %td= community_admin.account.username
