@@ -5,10 +5,12 @@ class AccountsController < BaseController
 
   def follow
     follow = FollowService.new.call(current_user.account, @account)
-    render json: 'successfully_joined'
+    render json: { message: 'successfully_followed' }, status: :ok
   end
 
   def unfollow
+    follow = UnfollowService.new.call(current_user.account, @account)
+    render json: { message: 'successfully_unfollowed' }, status: :ok
   end
 
   def find_account

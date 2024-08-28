@@ -767,13 +767,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_144438) do
 
   create_table "notification_policies", force: :cascade do |t|
     t.bigint "account_id", null: false
+    t.boolean "filter_not_following", default: false, null: false
+    t.boolean "filter_not_followers", default: false, null: false
+    t.boolean "filter_new_accounts", default: false, null: false
+    t.boolean "filter_private_mentions", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "for_not_following", default: 0, null: false
-    t.integer "for_not_followers", default: 0, null: false
-    t.integer "for_new_accounts", default: 0, null: false
-    t.integer "for_private_mentions", default: 1, null: false
-    t.integer "for_limited_accounts", default: 1, null: false
     t.index ["account_id"], name: "index_notification_policies_on_account_id", unique: true
   end
 
@@ -1504,6 +1503,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_21_144438) do
   add_foreign_key "identities", "users", name: "fk_bea040f377", on_delete: :cascade
   add_foreign_key "imports", "accounts", name: "fk_6db1b6e408", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade
+  add_foreign_key "keyword_filter_groups", "server_settings", on_delete: :cascade
+  add_foreign_key "keyword_filters", "keyword_filter_groups", on_delete: :cascade
   add_foreign_key "list_accounts", "accounts", on_delete: :cascade
   add_foreign_key "list_accounts", "follow_requests", on_delete: :cascade
   add_foreign_key "list_accounts", "follows", on_delete: :cascade
