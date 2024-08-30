@@ -73,6 +73,12 @@ class CommunitiesController < BaseController
   end
 
   def step4
+    @filter_keywords = get_community_filter_keyword
+    @community_filter_keyword = CommunityFilterKeyword.new(
+      patchwork_community_id: session[:form_data]['id'],
+      account_id: Account.last.id # to change after comunnity admin save process
+    )
+
     respond_to do |format|
       format.html
     end
@@ -166,6 +172,10 @@ class CommunitiesController < BaseController
 
   def commu_hashtag_records_filter
     @filter = Filter::CommunityHashtag.new(params)
+  end
+
+  def get_community_filter_keyword
+    CommunityFilterKeyword.where(patchwork_community_id: session[:form_data]['id'])
   end
 
   def set_community
