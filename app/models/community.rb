@@ -4,6 +4,8 @@ class Community < ApplicationRecord
   has_one_attached :avatar_image
   has_many :community_admins, foreign_key: 'patchwork_community_id'
 
+  validates :name, presence: true, uniqueness: true
+
   def self.ransackable_attributes(auth_object = nil)
     [ "name" ]
   end

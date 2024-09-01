@@ -16,16 +16,25 @@ class CommunitiesController < BaseController
                         collection_id: form_params[:collection_id],
                         banner_image: form_params[:banner_image],
                         avatar_image: form_params[:avatar_image])
-    session[:form_data] = form_params
-    session[:form_data]['id'] = @community&.id
-    redirect_to step2_communities_path
+    
+    if @community.errors.any?
+      @community_form = Form::Community.new(form_params)
+      flash.now[:error] = @community.errors.full_messages.join(', ')
+      render :step1
+    else
+      session[:form_data] = form_params
+      session[:form_data]['id'] = @community.id
+      session[:form_data]['banner_image_url'] = rails_blob_url(@community.banner_image, only_path: false) if @community.banner_image.attached?
+      session[:form_data]['avatar_image_url'] = rails_blob_url(@community.avatar_image, only_path: false) if @community.avatar_image.attached?
+      redirect_to step2_communities_path
+    end
   end
 
   def step2
     @community = Community.find(session[:form_data]['id'])
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
-    @search = commu_admin_records_filter.build_search
+    # @search = commu_admin_records_filter.build_search
 
     respond_to do |format|
       format.html
@@ -73,6 +82,12 @@ class CommunitiesController < BaseController
   end
 
   def step4
+    @filter_keywords = get_community_filter_keyword
+    @community_filter_keyword = CommunityFilterKeyword.new(
+      patchwork_community_id: session[:form_data]['id'],
+      account_id: Account.last.id # to change after comunnity admin save process
+    )
+
     respond_to do |format|
       format.html
     end
@@ -124,6 +139,7 @@ class CommunitiesController < BaseController
   private
 
   def initialize_form
+    session[:form_data] = nil if params[:new_community] == 'true'
     @community_form = Form::Community.new(session[:form_data] || {})
   end
 
@@ -161,11 +177,16 @@ class CommunitiesController < BaseController
   end
 
   def commu_admin_records_filter
+    params[:q] = { patchwork_community_id_eq: @community.id }
     @filter = Filter::CommunityAdmin.new(params)
   end
 
   def commu_hashtag_records_filter
     @filter = Filter::CommunityHashtag.new(params)
+  end
+
+  def get_community_filter_keyword
+    CommunityFilterKeyword.where(patchwork_community_id: session[:form_data]['id'])
   end
 
   def set_community

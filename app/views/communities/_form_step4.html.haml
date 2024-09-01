@@ -59,15 +59,26 @@
               %label Keyword filtering
               %p.text-muted.small Add keyword filters to prevent posts from the wider network using this keyword from appearing in the community.
             .col-md-3-auto.mt-auto
-              %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#filterModal"} Add New
+              %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add New
           .table-responsive
             %table.table.mt-3.table-striped
               %tbody
-                %tr
-                  %td.text-center
-                    %p.text-muted.small You haven’t muted any contributors from this community yet
-                    %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#filterModal' }
-                      Click here to add one
+                - if @filter_keywords.size == 0
+                  %tr
+                    %td.text-center
+                      %p.text-muted.small You haven’t muted any contributors from this community yet
+                      %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal' }
+                        Click here to add one
+                - @filter_keywords.each do |keyword|
+                  %tr
+                    %td{ style: 'width: 80%;' }= keyword.keyword
+                    %td
+                      %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
+                        Edit
+                    %td
+                      %a.text-danger{ href: community_filter_keyword_path(keyword), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
+                        Remove
+
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step3_communities_path } Back

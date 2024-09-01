@@ -189,4 +189,35 @@ jQuery(function() {
       }
     });
   }
+
+  $('#CommunityFilterModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    var keywordId = button.data('id');
+    var keyword = button.data('keyword');
+    var isFilterHashtag = button.data('isFilterHashtag');
+
+    var modal = $(this);
+    var form = modal.find('form');
+    var modalTitle = modal.find('.modal-title');
+    var keywordInput = $('#keyword-input');
+    var isFilterHashtagInput = $('#is_filter_hashtag-input');
+
+    if (keywordId) {
+      // Editing keyword filter
+      modalTitle.text('Edit keyword filtering');
+      form.find('input[name="_method"]').val('patch');
+      form.attr('action', `/community_filter_keywords/${keywordId}`);
+      keywordInput.val(keyword);
+      isFilterHashtagInput.prop('checked', isFilterHashtag == true);
+    } else {
+      // Adding new keyword filter
+      modalTitle.text('Add keyword filtering');
+      form.attr('action', '/community_filter_keywords');
+      form.find('input[name="_method"]').val('post');
+      keywordInput.val('');
+      isFilterHashtagInput.prop('checked', false);
+    }
+    console.log('Form action:', form.attr('action'));
+    console.log('Form method:', form.attr('method'));
+  });
 });

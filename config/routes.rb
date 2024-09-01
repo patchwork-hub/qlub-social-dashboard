@@ -40,6 +40,8 @@ Rails.application.routes.draw do
 
   resources :community_admins
 
+  resources :community_filter_keywords, only: [:create, :update, :destroy]
+
   resources :community do
     resources :hashtag
   end

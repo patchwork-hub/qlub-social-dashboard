@@ -1,28 +1,24 @@
-#filterModal.modal.fade{ role: 'dialog', tabindex: "-1", aria: { labelledby: 'filterModalLabel', hidden: 'true' } }
+#CommunityFilterModal.modal.fade{ role: 'dialog', tabindex: "-1", aria: { labelledby: 'CommunityFilterModalLabel', hidden: 'true' } }
   .modal-dialog.filter-modal-width{ role: 'document' }
     .modal-content
       .modal-header
-        %h5#filterModal.modal-title Add keyword filtering
+        %h5#CommunityFilterModal.modal-title Add keyword filtering
         %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
           = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
-        %p.text-muted.small Add a new keyword filter for this community using the form below. This will prevent posts in from the wider network using this keyword as a hashtag or plain text from appearing in the community.
+        %p.text-muted.small Add a new keyword filter for this community using the form below. This will prevent posts from the wider network using this keyword as a hashtag or plain text from appearing in the community.
 
-        .form-group.row
-          .col-12
-            = label_tag :keyword, "Keyword", class: 'form-label'
-            %span.text-danger *
+        = simple_form_for @community_filter_keyword, url: '#', html: { method: '#', id: 'filter-form' } do |f|
+          = f.hidden_field :patchwork_community_id
+          = f.hidden_field :account_id
+          .form-group.row
+            .col-12
+              = f.input :keyword, label: "Keyword", input_html: { placeholder: "Enter keyword here", id: 'keyword-input' }
+          .form-group.row
+            .col-12
+              .form-check.filter-hashtag
+                = f.input :is_filter_hashtag, as: :boolean, label: "This keyword is a hashtag", input_html: { id: 'is_filter_hashtag-input', class: 'form-check-input' }
 
-        .form-group.row
-          .col-12
-            = text_field_tag :keyword, nil, class: 'form-control', placeholder: "Enter keyword here"
-
-        .form-group.row.mt-3
-          .col-12
-            .form-check
-              = check_box_tag :is_hashtag, '1', false, class: 'form-check-input'
-              = label_tag :is_hashtag, "This keyword is a hashtag", class: 'form-check-label'
-
-      .modal-footer
-        %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
-        %button.btn.btn-danger Save changes
+          .modal-footer
+            %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
+            = f.button :submit, 'Save changes', class: 'btn btn-danger'

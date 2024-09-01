@@ -34,6 +34,17 @@ $(document).ready(function() {
       });
   });
 
+  const element = document.getElementById('community_bio');
+  if (element) {
+    ClassicEditor
+      .create(element, {
+        toolbar: ['bold', 'italic', 'link']
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
   $('.select2').select2({
     dropdownParent: $('#keyFilterModal'),
     tags: true,

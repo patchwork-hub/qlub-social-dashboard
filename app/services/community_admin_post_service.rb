@@ -3,31 +3,32 @@
 class CommunityAdminPostService < BaseService
   def call(account, options = {})
     @optons = options
-    admin_by_display_name
+    create_account
+    create_user
     process_community_admin!
   end
 
   private
 
-  def get_id
-    last_id = CommunityAdmin.order(:id).pluck(:id).last
-    (last_id || 0) + 1
+  def create_account
+    @admin_acc = Account.where(username: @optons[:username]).first_or_initialize(username: @optons[:username], display_name: @optons[:display_name])
+    @admin_acc.save(validate: false)
   end
 
-  def admin_by_display_name
-    @admin_acc = Account.find_by(display_name: @optons[:display_name], username: @optons[:username])
+  def create_user
+    @user = User.where(email: @optons[:email]).first_or_initialize(email: @optons[:email], password: @optons[:password], password_confirmation: @optons[:password], confirmed_at: Time.now.utc, account: @admin_acc, approved: true)
+    @user.save(validate: false)
   end
 
   def community_admin_attribute
     {
-      id: get_id,
-      account_id: admin_by_display_name.id,
-      patchwork_community_id: @optons[:community_id]
+      account_id: @admin_acc.id,
+      patchwork_community_id: @optons[:community_id].to_i
     }.compact
   end
 
   def process_community_admin!
-    @community_admin = @admin_acc&.community_admins&.find_or_create_by(community_admin_attribute)
-    @community_admin&.save!
+    @community_admin = CommunityAdmin.where(account_id: @admin_acc.id, patchwork_community_id: @optons[:community_id].to_i).first_or_initialize(community_admin_attribute)
+    @community_admin.save!
   end
 end
