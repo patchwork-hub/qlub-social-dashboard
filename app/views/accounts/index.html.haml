@@ -32,7 +32,7 @@
                 %td= account.display_name
                 %td= account.user ? account.user.email : "-"
                 %td= account.created_at.strftime('%Y-%m-%d %H:%M:%S')
-                %td= account.domain ? account.domain : "patchwork.online"
+                %td= account.domain ? account.domain : ENV['MASTODON_INSTANCE_URL']
       .card-footer.clearfix
         %ul.pagination.pagination-sm.m-0.float-right
           = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }   

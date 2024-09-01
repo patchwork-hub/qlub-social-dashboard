@@ -20,6 +20,6 @@ class Api::V1::AccountSerializer
   end
 
   attribute :domain_name do |object|
-    object.domain.presence || ENV['PATCHWORK_DASHBOARD_URL']
+    object.domain.presence || ENV['MASTODON_INSTANCE_URL']
   end
 end
