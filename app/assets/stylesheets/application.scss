@@ -543,3 +543,21 @@ ul.pagination {
   margin: 0;
   text-align: left;
 }
+
+/* community filter keyword */
+.filter-hashtag {
+  padding-left: 0.5rem !important;
+  accent-color: red;
+}
+/* community filter keyword */
+
+// d flex gap spacing
+
+.gap-1{
+  gap: 10px;
+}
+
+.avatar-image-upload-container{
+  display: flex;
+  flex-direction: row;
+}

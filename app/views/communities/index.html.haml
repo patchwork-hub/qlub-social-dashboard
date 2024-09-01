@@ -59,6 +59,6 @@
               %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
                 Import a community
                 = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
-              %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_communities_path}'" }
+              %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_communities_path(new_community: 'true')}'" }
                 Create a community
                 = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")

@@ -21,21 +21,21 @@
             .col
               .form-group
                 = form.label :display_name
-                = form.text_field :display_name, class: 'form-control'
+                = form.text_field :display_name, class: 'form-control', required: true
             .col
               .form-group
                 = form.label :user_name
-                = form.text_field :username, class: 'form-control'
+                = form.text_field :username, class: 'form-control', required: true
           .row
             .col
               .form-group
                 = form.label :email_address
-                = form.text_field :email, class: 'form-control'
+                = form.text_field :email, class: 'form-control', required: true
           .row
             .col
               .form-group.position-relative.password
                 = form.label :password, 'Password', class: 'form-label'
-                = password_field_tag :password, nil, class: 'form-control'
+                = form.password_field :password, class: 'form-control', required: true
                 %i.fa-solid.fa-eye-slash.red{onclick: 'window.togglePassword(this)'}
           .modal-footer
             %div.d-flex.justify-content-end
@@ -85,8 +85,9 @@
                 - if @records.size == 0
                   %tr
                     %td.text-center.info-box-content{colspan: "100%"}
-                      %p.text-muted.small You haven’t added any hashtags to this community yet
-                      %a.text-danger.small{ href: step2_communities_path } Click here to add one
+                      %p.text-muted.small You haven’t added any administrators to this community yet.
+                      %a.text-danger.small{href: "#", "data-toggle" => "modal", "data-target" => "#myModal"}
+                        Click here to add one
                 - @records.each do |community_admin|
                   %tr
                     %td.text-center
