@@ -550,3 +550,14 @@ ul.pagination {
   accent-color: red;
 }
 /* community filter keyword */
+
+// d flex gap spacing
+
+.gap-1{
+  gap: 10px;
+}
+
+.avatar-image-upload-container{
+  display: flex;
+  flex-direction: row;
+}
