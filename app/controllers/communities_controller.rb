@@ -136,6 +136,24 @@ class CommunitiesController < BaseController
     end
   end
 
+  def search_contributor
+    query = params[:query]
+    
+    api_base_url = ENV['LOCAL_DOMAIN']
+    token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token
+    response = HTTParty.get("#{api_base_url}/api/v2/search",
+      query: {
+        q: query,
+        resolve: true,
+        limit: 5
+      },
+      headers: {
+        'Authorization' => "Bearer #{token}"
+      }
+    )
+    render json: response.parsed_response
+  end
+
   private
 
   def initialize_form

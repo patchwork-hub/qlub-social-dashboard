@@ -27,6 +27,9 @@
     = javascript_importmap_tags
 
   %body.hold-transition.sidebar-mini.layout-fixed{"data-scrollbar-auto-hide" => "n"}
+    #disabled-overlay{ style: "display: none;" }
+      #loading-spinner
+        %img{ src: image_path("loading.gif"), alt: "Loading..." }
     - if user_signed_in?
       .wrapper
         = render "shared/menu/header"

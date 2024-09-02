@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       post 'step5', to: 'communities#step5_save'
       get 'step6', to: 'communities#step6'
       post 'step6', to: 'communities#step6_save'
+      get 'search_contributor', to: 'communities#search_contributor'
     end
   end
 
