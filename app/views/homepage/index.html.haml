@@ -9,12 +9,14 @@
           .col-9
             %h2
               Welcome to the Patchwork dashboard
-            %p.text-muted
-              Here, you can oversee all your communities in one place, allowing you to edit existing
+            %p.text-light
+              Here, you can oversee your server settings enhanced by Patchwork
               %br
-              ones, manage admins, curate content, and create new communities effortlessly.
+              patches, all in one place. Install patches, curate content, manage 
               %br
-              Enjoy seamless control and organisation of your communities.
+              users, create new channels and more with minimal effort. Enjoy 
+              %br
+              seamless control and organisation of your server.
           .col-3.position-relative
             .logo
               = image_tag("patchwork-logo.svg", class: "large-logo")
@@ -31,12 +33,12 @@
               = image_tag("icons/users.svg", class: "mr-2", width: "16", height: "16")
         .card-body.mb-1
           .row
-            .col-6
+            .col-6.px-0
               %h3 18,928
             .col-1
               = image_tag("icons/circle-up.svg", class: "mr-2", width: "16", height: "16")
             .col-5
-              %p 31.24%
+              %h3 31.24%
           .row
             %p Since 23 July, 2024
     .row
@@ -49,22 +51,28 @@
               = image_tag("icons/eye.svg", class: "mr-2", width: "16", height: "16")
         .card-body.mb-1
           .row
-            %h3 201
+            .col-6.px-0
+              %h3 201
+            .col-1
+              = image_tag("icons/circle-up.svg", class: "mr-2", width: "16", height: "16")
+            .col-5
+              %h3 31.24%
           .row
             %p Every 24 hours
   .col-4
     .card.small-card
       .card-header
         %div.d-flex.justify-content-between
-          %h5.card-title Most popular communities
+          %h5.card-title Most popular channels on this server
           = image_tag("icons/chart-line-up.svg", class: "mr-2", width: "16", height: "16")
       .card-body.mb-3
-        - ["Oil Painting", "Art", "Movies", "TV & Radio", "Music"].each do |community|
+        - channels = [["Local channel 1", "10K"], ["Local channel 2", "1.2K"], ["Local channel 3", "1.3K"], ["Local channel 4", "1.4K"], ["Local channel 5", "1.5K"]]
+        - channels.each do |community, followers|
           .d-flex.align-items-center.mb-1
             %img{ alt: "profile picture", src: asset_path('patchwork-logo.svg'), class: "rounded-circle", style: "width: 35px; height: 35px; border: 2px solid white;" }
             %div.ml-3
               %div= community
-              %div.text-muted 709,3K Followers
+              %div.text-muted= "#{followers} Followers"
             %div.ml-auto
               = image_tag("icons/chevron-right.svg", width: "16", height: "16")
 
@@ -120,11 +128,11 @@
         %div.d-flex.justify-content-center.my-2
           = image_tag("icons/chat.svg", width: "20", height: "20")
         %div.d-flex.justify-content-center.my-2
-          %h5 Communities
+          %h5 Local channels
         %p.text-muted.small.my-2
-          See a list of all the communities on your server and easily import, manage or create new communities all in one place.
+          See a list of all your local channels and easily import, manage or create new channels in one place.
         %div.d-grid.gap-2.mt-auto.my-2
-          %button.installed-button.btn.btn-danger.btn-block{type: "button"} View all communities
+          %button.installed-button.btn.btn-danger.btn-block{type: "button"} View all local channels
   .col-4
     .card.small-card
       .card-body
@@ -133,6 +141,6 @@
         %div.d-flex.justify-content-center.my-2
           %h5 Installation
         %p.text-muted.small.my-2
-          Update the settings for your server to ensure content is being moderated correctly and spam filters are in place.
-        %div.d-grid.gap-2.mt-auto.my-2
-          %button.installed-button.btn.btn-danger.btn-block{type: "button"} View website
+          Install Patchwork patches to enable new features and controls.
+        %div.d-grid.gap-2.mt-auto.my-2{style: 'padding-top: 18px;'}
+          %button.installed-button.btn.btn-danger.btn-block{type: "button"} View installation panel

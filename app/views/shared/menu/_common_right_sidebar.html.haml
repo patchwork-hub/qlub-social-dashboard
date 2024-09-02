@@ -1,13 +1,16 @@
 .card
   .card-body.top-card
     %h5.text-light Welcome to the Patchwork Dashboard
-    %p.text-light From here you can update the settings which show on your server. To view the server, use the button below.
+    %p.text-light From here you can update the settings which show on your server.
     %i.fa-solid.fa-check.text-red
     %span.text-light Customise your server
     %br/
     %i.fa-solid.fa-check.text-red
-    %span.text-light Add new communities
-    %a.btn.btn-danger.mt-3{ href: '#' } Go to server
+    %span.text-light Add new channels
+    %br/
+    %i.fa-solid.fa-check.text-red
+    %span.text-light Install plug-in patches
+    %a.btn.btn-danger.mt-3{ href: '#' } Go to your server
 .card.mt-3
   .card-header
     %div.d-flex.justify-content-between
@@ -16,12 +19,12 @@
       %div
         = image_tag("icons/boxes.svg", class: "mr-2", width: "16", height: "16")
   .card-body
-    %p.text-muted.small Choose one of our popular packs of patches for one-click Server Settings installation:
+    %p.text-muted.small Patch Packs install popular configurations of settings in just one click.
     %a.btn.btn-outline-dark{ href: '#' } Get started
 .card.mt-3
   .card-header
     %div.d-flex.justify-content-between
-      %h5.card-title Most popular communities
+      %h5.card-title Most popular channels
       = image_tag("icons/chart-line-up.svg", class: "mr-2", width: "16", height: "16")
   .card-body.mb-3
     - ["Oil Painting", "Art", "Movies", "TV & Radio", "Music"].each do |community|
@@ -32,5 +35,5 @@
           %div.text-muted 709,3K Followers
         %div.ml-auto
           = image_tag("icons/chevron-right.svg", width: "16", height: "16")
-    %a.btn.btn-outline-secondary.mt-3{ href: '#' } Make your own community
+    %a.btn.btn-outline-secondary.mt-3{ href: '#' } Make your own local channel
     %a.btn.btn-danger.mt-3{ href: '#' } Upgrade to Patchwork Community

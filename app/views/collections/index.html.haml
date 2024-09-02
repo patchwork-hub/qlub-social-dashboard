@@ -5,7 +5,10 @@
   .col-12
     .card
       .card-header
-        %h3.card-title Your Collections
+        %h3.card-title 
+          Your Collections
+          %br
+          %small.text-muted Collections organise channels on your server by grouping several together related to similar topics or themes.
         .card-tools
           %button.btn.btn-sm.btn-danger.ml-3{ onclick: "window.location='#{new_collection_path}'" }
             Create a Collection

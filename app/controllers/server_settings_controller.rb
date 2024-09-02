@@ -38,6 +38,8 @@ class ServerSettingsController < ApplicationController
 
     @parent_settings = @parent_settings.where("lower(name) LIKE ?", "%#{@q.downcase}%") if @q.present?
 
+    desired_order = ['Local Features', 'User Management', 'Content filters', 'Spam filters', 'Federation', 'Plug-ins']
+
     @data = @parent_settings.map do |parent_setting|
       {
         name: parent_setting.name,
@@ -58,6 +60,11 @@ class ServerSettingsController < ApplicationController
           }
         end
       }
+    end
+
+    @data.sort_by! do |item|
+      desired_index = desired_order.index(item[:name])
+      desired_index.nil? ? (desired_order.length + 1) : desired_index
     end
 
     @data
