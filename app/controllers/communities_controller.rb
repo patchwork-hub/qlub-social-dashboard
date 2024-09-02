@@ -100,15 +100,19 @@ class CommunitiesController < BaseController
   end
 
   def step5
+    @form_post_hashtag = Form::PostHashtag.new
+    @community = Community.find(session[:form_data]['id'])
     respond_to do |format|
       format.html
     end
   end
 
   def step5_save
+    PostHashtagService.new.call(@current_user.account, post_hashtag_params)
     respond_to do |format|
       format.html
     end
+    redirect_to step5_communities_path
   end
 
   def step6
@@ -159,6 +163,10 @@ class CommunitiesController < BaseController
   def initialize_form
     session[:form_data] = nil if params[:new_community] == 'true'
     @community_form = Form::Community.new(session[:form_data] || {})
+  end
+
+  def post_hashtag_params
+    params.require(:form_post_hashtag).permit(:hashtag1, :hashtag2, :hashtag3, :community_id)
   end
 
   def community_hashtag_params
