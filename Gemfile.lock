@@ -150,6 +150,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    doorkeeper (5.7.1)
+      railties (>= 5)
     dotenv (3.1.2)
     dotenv-rails (3.1.2)
       dotenv (= 3.1.2)
@@ -164,7 +166,9 @@ GEM
       logger
     faraday-net_http (3.1.1)
       net-http
-    ffi (1.17.0)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -416,6 +420,7 @@ DEPENDENCIES
   cocoon
   debug
   devise
+  doorkeeper
   dotenv-rails
   faraday (~> 2.10, >= 2.10.1)
   haml

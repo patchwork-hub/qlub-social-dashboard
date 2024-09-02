@@ -44,7 +44,7 @@ gem 'devise'
 gem 'cancancan'
 gem 'kt-paperclip', '~> 7.1'
 
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails'
 gem 'spreadsheet'
 gem 'sidekiq', '~> 6.5'
 gem 'hiredis', '~> 0.6'
@@ -60,3 +60,4 @@ gem 'ransack'
 gem 'bcrypt'
 gem 'faraday', '~> 2.10', '>= 2.10.1'
 gem 'jsonapi-serializer', '~> 2.2'
+gem 'doorkeeper'
