@@ -60,11 +60,12 @@
               %p entries
             .col-auto
               .card-tools
-                .input-group.input-group-sm{style: "width: 150px;"}
-                  %input.form-control.float-right{name: "table_search", placeholder: "Search", type: "text"}/
-                  .input-group-append
-                    %button.btn.btn-default{type: "submit"}
-                      %i.fas.fa-search
+                = search_form_for @search, url: step5_communities_path do |f|
+                  .input-group.input-group-sm{ style: "width: 150px;" }
+                    = f.search_field :hashtag_cont, class: "form-control float-right", placeholder: "Search", type: "text"
+                    .input-group-append
+                      %button.btn.btn-default{ type: "submit" }
+                        %i.fas.fa-search
           .table-responsive
             %table.table.mt-3.table-striped
               %thead

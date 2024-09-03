@@ -103,6 +103,7 @@ class CommunitiesController < BaseController
     @form_post_hashtag = Form::PostHashtag.new
     @community = Community.find(session[:form_data]['id'])
     @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
     respond_to do |format|
       format.html
     end
@@ -112,6 +113,7 @@ class CommunitiesController < BaseController
     PostHashtagService.new.call(@current_user.account, post_hashtag_params)
     @community = Community.find(session[:form_data]['id'])
     @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
     redirect_to step5_communities_path
   end
 
