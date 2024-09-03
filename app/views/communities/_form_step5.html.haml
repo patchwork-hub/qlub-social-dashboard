@@ -1,3 +1,30 @@
+#postHashtagModel.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Add new community hashtag
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        %p.text-muted.small Add up to three hashtags which will be added to posts made from this community.
+        = simple_form_for @form_post_hashtag, url: step5_communities_path do |form|
+          = form.hidden_field :community_id, value: @community.id
+          .row
+            .col
+              .form-group
+                = form.label :hashtags
+                = form.text_field :hashtag1, class: 'form-control', value: '#', required: true
+              .form-group
+                = form.text_field :hashtag2, class: 'form-control', value: '#', required: true
+              .form-group
+                = form.text_field :hashtag3, class: 'form-control', value: '#', required: true
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
+              .col
+                = form.submit 'Save changes', class: 'btn btn-danger'
+
 .container-fluid
   .row-md-12.my-4
     .col
@@ -33,11 +60,12 @@
               %p entries
             .col-auto
               .card-tools
-                .input-group.input-group-sm{style: "width: 150px;"}
-                  %input.form-control.float-right{name: "table_search", placeholder: "Search", type: "text"}/
-                  .input-group-append
-                    %button.btn.btn-default{type: "submit"}
-                      %i.fas.fa-search
+                = search_form_for @search, url: step5_communities_path do |f|
+                  .input-group.input-group-sm{ style: "width: 150px;" }
+                    = f.search_field :hashtag_cont, class: "form-control float-right", placeholder: "Search", type: "text"
+                    .input-group-append
+                      %button.btn.btn-default{ type: "submit" }
+                        %i.fas.fa-search
           .table-responsive
             %table.table.mt-3.table-striped
               %thead
@@ -48,30 +76,17 @@
                     %label Hashtags
                   %th{style: "width: 200px"}
               %tbody
-                %tr
-                  %td
-                    %i.far.fa-square.mr-4
-                  %td
-                    %p #posthashtag
-                  %td
-                    %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                    %a.text-danger{ href: step2_communities_path } Remove
-                %tr
-                  %td
-                    %i.far.fa-square.mr-4
-                  %td
-                    %p #posthashtag
-                  %td
-                    %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                    %a.text-danger{ href: step2_communities_path } Remove
-                %tr
-                  %td
-                    %i.far.fa-square.mr-4
-                  %td
-                    %p #posthashtag
-                  %td
-                    %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                    %a.text-danger{ href: step2_communities_path } Remove
+                - @records.each do |record|
+                  %tr
+                    %td
+                      %i.far.fa-square.mr-4
+                    %td
+                      %p "#{record.hashtag}"
+                    %td
+                      %a.text-danger.mr-2{ href: step2_communities_path } Edit
+                      %a.text-danger{ href: step2_communities_path } Remove
+          %ul.pagination.pagination-sm.m-0.float-right
+            = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
           .btn-group
             %button.btn.btn-default{type: "button"} Action
             %button.btn.btn-default.dropdown-toggle.dropdown-icon{"data-toggle" => "dropdown", type: "button"}

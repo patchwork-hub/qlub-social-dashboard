@@ -9,13 +9,13 @@
         %p.small Use the search functionality below to mute contributors from your community.
         %button.btn.btn-outline-secondary{ type: "button" }
           Mute from shared list
-          %i.fa-solid.fa-list.ml-2
+          = image_tag("icons/pen-line.svg", class: "mb-1", width: "16", height: "16")
         .input-group.my-3
           %div.input-group-prepend
             %span.input-group-text
-              %i.fa-solid.fa-search
-          %input.form-control#search-input{ "aria-label": "Search contributor", placeholder: "Search by name or username", type: "text" }
-        %div#search-results.list-group
+              = image_tag("icons/search.svg", width: "16", height: "16")
+          %input.form-control#mute-search-input{ "aria-label": "Search contributor", placeholder: "Search by name or username", type: "text" }
+        %div#mute-search-results.list-group
           %p No results yet...
       .modal-footer
         %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel

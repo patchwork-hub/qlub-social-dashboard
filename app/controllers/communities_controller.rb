@@ -83,9 +83,10 @@ class CommunitiesController < BaseController
 
   def step4
     @filter_keywords = get_community_filter_keyword
+    admin_id = get_community_admin_id
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: session[:form_data]['id'],
-      account_id: Account.last.id # to change after comunnity admin save process
+      account_id: admin_id
     )
 
     respond_to do |format|
@@ -100,15 +101,21 @@ class CommunitiesController < BaseController
   end
 
   def step5
+    @form_post_hashtag = Form::PostHashtag.new
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
     respond_to do |format|
       format.html
     end
   end
 
   def step5_save
-    respond_to do |format|
-      format.html
-    end
+    PostHashtagService.new.call(@current_user.account, post_hashtag_params)
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
+    redirect_to step5_communities_path
   end
 
   def step6
@@ -161,6 +168,10 @@ class CommunitiesController < BaseController
     @community_form = Form::Community.new(session[:form_data] || {})
   end
 
+  def post_hashtag_params
+    params.require(:form_post_hashtag).permit(:hashtag1, :hashtag2, :hashtag3, :community_id)
+  end
+
   def community_hashtag_params
     params.require(:form_community_hashtag).permit(:community_id, :hashtag)
   end
@@ -189,6 +200,10 @@ class CommunitiesController < BaseController
     commu_contributors_filter.get
   end
 
+  def load_post_hashtag_records
+    post_hashtag_records_filter.get
+  end
+
   def commu_contributors_filter
     params[:q] = { account_id_eq: @current_user.account.id }
     @contributor_filter = Filter::Follow.new(params)
@@ -199,12 +214,21 @@ class CommunitiesController < BaseController
     @filter = Filter::CommunityAdmin.new(params)
   end
 
+  def post_hashtag_records_filter
+    params[:q] = { patchwork_community_id_eq: @community.id }
+    @filter = Filter::PostHashtag.new(params)
+  end
+
   def commu_hashtag_records_filter
     @filter = Filter::CommunityHashtag.new(params)
   end
 
   def get_community_filter_keyword
     CommunityFilterKeyword.where(patchwork_community_id: session[:form_data]['id'])
+  end
+
+  def get_community_admin_id
+    CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
   end
 
   def set_community
