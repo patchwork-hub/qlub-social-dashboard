@@ -102,6 +102,7 @@ class CommunitiesController < BaseController
   def step5
     @form_post_hashtag = Form::PostHashtag.new
     @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
     respond_to do |format|
       format.html
     end
@@ -109,9 +110,8 @@ class CommunitiesController < BaseController
 
   def step5_save
     PostHashtagService.new.call(@current_user.account, post_hashtag_params)
-    respond_to do |format|
-      format.html
-    end
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
     redirect_to step5_communities_path
   end
 
@@ -197,6 +197,10 @@ class CommunitiesController < BaseController
     commu_contributors_filter.get
   end
 
+  def load_post_hashtag_records
+    post_hashtag_records_filter.get
+  end
+
   def commu_contributors_filter
     params[:q] = { account_id_eq: @current_user.account.id }
     @contributor_filter = Filter::Follow.new(params)
@@ -205,6 +209,11 @@ class CommunitiesController < BaseController
   def commu_admin_records_filter
     params[:q] = { patchwork_community_id_eq: @community.id }
     @filter = Filter::CommunityAdmin.new(params)
+  end
+
+  def post_hashtag_records_filter
+    params[:q] = { patchwork_community_id_eq: @community.id }
+    @filter = Filter::PostHashtag.new(params)
   end
 
   def commu_hashtag_records_filter

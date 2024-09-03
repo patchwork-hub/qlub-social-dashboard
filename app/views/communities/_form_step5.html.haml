@@ -75,30 +75,17 @@
                     %label Hashtags
                   %th{style: "width: 200px"}
               %tbody
-                %tr
-                  %td
-                    %i.far.fa-square.mr-4
-                  %td
-                    %p #posthashtag
-                  %td
-                    %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                    %a.text-danger{ href: step2_communities_path } Remove
-                %tr
-                  %td
-                    %i.far.fa-square.mr-4
-                  %td
-                    %p #posthashtag
-                  %td
-                    %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                    %a.text-danger{ href: step2_communities_path } Remove
-                %tr
-                  %td
-                    %i.far.fa-square.mr-4
-                  %td
-                    %p #posthashtag
-                  %td
-                    %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                    %a.text-danger{ href: step2_communities_path } Remove
+                - @records.each do |record|
+                  %tr
+                    %td
+                      %i.far.fa-square.mr-4
+                    %td
+                      %p "#{record.hashtag}"
+                    %td
+                      %a.text-danger.mr-2{ href: step2_communities_path } Edit
+                      %a.text-danger{ href: step2_communities_path } Remove
+          %ul.pagination.pagination-sm.m-0.float-right
+            = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
           .btn-group
             %button.btn.btn-default{type: "button"} Action
             %button.btn.btn-default.dropdown-toggle.dropdown-icon{"data-toggle" => "dropdown", type: "button"}
