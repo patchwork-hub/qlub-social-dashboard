@@ -83,9 +83,10 @@ class CommunitiesController < BaseController
 
   def step4
     @filter_keywords = get_community_filter_keyword
+    admin_id = get_community_admin_id
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: session[:form_data]['id'],
-      account_id: Account.last.id # to change after comunnity admin save process
+      account_id: admin_id
     )
 
     respond_to do |format|
@@ -224,6 +225,10 @@ class CommunitiesController < BaseController
 
   def get_community_filter_keyword
     CommunityFilterKeyword.where(patchwork_community_id: session[:form_data]['id'])
+  end
+
+  def get_community_admin_id
+    CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
   end
 
   def set_community
