@@ -20,7 +20,7 @@
         = image_tag("icons/boxes.svg", class: "mr-2", width: "16", height: "16")
   .card-body
     %p.text-muted.small Patch Packs install popular configurations of settings in just one click.
-    %a.btn.btn-outline-dark{ href: '#' } Get started
+    = link_to 'Get started', '/installation', class: 'btn btn-outline-dark'
 .card.mt-3
   .card-header
     %div.d-flex.justify-content-between
@@ -36,4 +36,4 @@
         %div.ml-auto
           = image_tag("icons/chevron-right.svg", width: "16", height: "16")
     %a.btn.btn-outline-secondary.mt-3{ href: '#' } Make your own local channel
-    %a.btn.btn-danger.mt-3{ href: '#' } Upgrade to Patchwork Community
+    = link_to 'Upgrade to Patchwork Community', '/installation', class: 'btn btn-danger mt-3'

@@ -6,7 +6,7 @@
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
-        %p.text-muted.small Add up to three hashtags which will be added to posts made from this community.
+        %p.text-muted.small Add up to three hashtags which will be automatically added to posts made by users on your server when they post to this channel.
         = simple_form_for @form_post_hashtag, url: step5_communities_path do |form|
           = form.hidden_field :community_id, value: @community.id
           .row
@@ -44,7 +44,7 @@
           .row.d-flex.justify-content-between
             .col-md-10
               %label Hashtags
-              %p.text-muted.small Choose a few default hashtags that will be automatically added to posts made by community members when they post to this community. The user can add more hashtags or remove them. These hashtags help in organising and discovering content within your community.
+              %p.text-muted.small Choose a few hashtags that will be automatically added to posts made by users on your server when they post to this channel. The user can add more hashtags or remove them. These hashtags help in organising content on your server and boost visibility in the wider federated network.
             .col-md-2.mt-5
               %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#postHashtagModel"} Add New
           .row

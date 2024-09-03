@@ -70,7 +70,6 @@ Rails.application.routes.draw do
 
   get '/homepage', to: 'homepage#index'
   get '/installation', to: 'installation#index'
-  get '/patch_packs', to: 'patch_packs#index'
   get '/resources', to: 'resources#index'
 
   resources :keyword_filter_groups do

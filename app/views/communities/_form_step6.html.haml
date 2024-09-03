@@ -18,23 +18,23 @@
         .card-body
           .row
             .col
-              %label Community guidelines
-              %p.text-muted.small This section lets you add any guidelines specific to this community. You can include any important information members need to know before participating. Please ensure guidelines are clearly stated, and help maintain a respectful and organised environment. Please note these guidelines only apply to this community, not the server as a whole.
+              %label Channel guidelines
+              %p.text-muted.small This section lets you add any guidelines specific to this channel. You can include any important information users need to know before participating. Please ensure guidelines are clearly stated, and help maintain a respectful and organised environment. Please note these guidelines only apply to this channel, not the server as a whole.
           .row.mb-2
-            .col-auto
+            .col-auto.d-flex.align-items-center.justify-content-center{ style: "width: 50px;" }
               No.
             .col-auto
               Rule
           .row.mb-2
-            .col-auto
-              %i.fas.fa-circle.fa-2x.text-blue
+            .col-auto.d-flex.align-items-center.justify-content-center{ style: "width: 50px;" }
+              1
             .col
-              %input#exampleInputEmail1.form-control{placeholder: "This is some text for a community rule.", type: "email"}/
+              %input#exampleInputEmail1.form-control{ type: "email" }
           .row.mb-2
-            .col-auto
-              %i.fas.fa-circle.fa-2x.text-blue
+            .col-auto.d-flex.align-items-center.justify-content-center{ style: "width: 50px;" }
+              2
             .col
-              %input#exampleInputEmail1.form-control{placeholder: "This is some text for a community rule.", type: "email"}/
+              %input#exampleInputEmail1.form-control{ type: "email" }
           .row
             .col.text-right
               %a.text-danger{ href: step2_communities_path } Add another rule
@@ -52,16 +52,16 @@
             .col-md-1
           .row.mb-2
             .col-md-3
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+              %input#exampleInputEmail1.form-control{type: "email"}/
             .col-md-8
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+              %input#exampleInputEmail1.form-control{type: "email"}/
             .col-md-1.text-center
               %i.far.fa-trash-alt.text-danger
           .row.mb-2
             .col-md-3
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+              %input#exampleInputEmail1.form-control{type: "email"}/
             .col-md-8
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
+              %input#exampleInputEmail1.form-control{type: "email"}/
             .col-md-1.text-center
               %i.far.fa-trash-alt.text-danger
       .row.d-flex.justify-content-between
