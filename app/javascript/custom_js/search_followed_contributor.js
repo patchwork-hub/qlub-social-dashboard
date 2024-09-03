@@ -1,47 +1,4 @@
-// Function to follow a contributor and update the button
-window.followContributor = function(account_id) {
-  $.ajax({
-    url: `/accounts/${account_id}/follow`,
-    method: 'POST',
-    success: function(response) {
-      var followBtn = $(`#follow_btn_${account_id}`);
-      
-      followBtn.text('Unfollow');
-      followBtn.removeClass('btn-outline-dark');
-      followBtn.addClass('btn-outline-danger');
-
-      // Update the button's onclick to call unfollowContributor
-      followBtn.attr('onclick', `unfollowContributor('${account_id}')`);
-    },
-    error: function() {
-      console.log('Error occurred while following contributor');
-    }
-  });
-};
-
-// Function to unfollow a contributor and update the button
-window.unfollowContributor = function(account_id) {
-  $.ajax({
-    url: `/accounts/${account_id}/unfollow`,
-    method: 'POST',
-    success: function(response) {
-      var followBtn = $(`#follow_btn_${account_id}`);
-      
-      followBtn.text('Follow');
-      followBtn.removeClass('btn-outline-danger');
-      followBtn.addClass('btn-outline-dark');
-
-      // Update the button's onclick to call followContributor
-      followBtn.attr('onclick', `followContributor('${account_id}')`);
-    },
-    error: function() {
-      console.log('Error occurred while unfollowing contributor');
-    }
-  });
-};
-
-// Function to search for contributors
-function searchContributors(query) {
+function searchFollowedContributors(query) {
   if (query.length === 0) {
     clearSearchResults();
     return;
@@ -73,7 +30,7 @@ function hideLoadingSpinner() {
 
 // Function to display search results in the modal
 function displaySearchResults(accounts) {
-  const resultsContainer = document.getElementById('search-results');
+  const resultsContainer = document.getElementById('mute-search-results');
   resultsContainer.innerHTML = '';
 
   if (accounts.length === 0) {
@@ -95,8 +52,8 @@ function displaySearchResults(accounts) {
           ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
-          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}')" style="float: right;">
-            Follow
+          <button class="btn btn-outline-secondary mute-button" data-account-id="${account.id}" style="float: right;">
+            ${isMuted(account.id) ? 'Unmute' : 'Mute'}
           </button>
         </div>
       </div>
@@ -104,20 +61,36 @@ function displaySearchResults(accounts) {
 
     resultsContainer.appendChild(resultItem);
   });
+
+  // Add event listeners for mute buttons
+  document.querySelectorAll('.mute-button').forEach(button => {
+    button.addEventListener('click', function() {
+      const accountId = this.dataset.accountId;
+      toggleMute(accountId); // Define this function to handle the mute/unmute action
+    });
+  });
 }
 
 // Function to clear the search results
 function clearSearchResults() {
-  const resultsContainer = document.getElementById('search-results');
+  const resultsContainer = document.getElementById('mute-search-results');
   resultsContainer.innerHTML = '';
 }
 
-// Event listener for the search box
-const searchInput = document.getElementById('search-input');
-if (searchInput) {
-  searchInput.addEventListener('keydown', function(event) {
+// Function to check if account is muted
+function isMuted(accountId) {
+  // Implement your logic to check if the account is muted
+  return false;
+}
+
+// Event listener for the search box in the mute contributor modal
+const muteSearchInput = document.getElementById('mute-search-input');
+if (muteSearchInput) {
+  muteSearchInput.addEventListener('keydown', function(event) {
     if (event.key === 'Enter' || event.keyCode === 13) {
-      searchContributors(this.value);
+      searchFollowedContributors(this.value);
     }
   });
 }
+
+// Add toggleMute function here to handle muting/unmuting
