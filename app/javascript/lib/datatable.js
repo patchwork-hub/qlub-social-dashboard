@@ -217,7 +217,7 @@ jQuery(function() {
       keywordInput.val('');
       isFilterHashtagInput.prop('checked', false);
     }
-    console.log('Form action:', form.attr('action'));
-    console.log('Form method:', form.attr('method'));
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    form.append(`<input type="hidden" name="authenticity_token" value="${csrfToken}">`);
   });
 });
