@@ -36,6 +36,8 @@ Rails.application.routes.draw do
       get 'step6', to: 'communities#step6'
       post 'step6', to: 'communities#step6_save'
       get 'search_contributor', to: 'communities#search_contributor'
+      post 'mute_contributor', to: 'communities#mute_contributor'
+      get 'is_muted', to: 'communities#is_muted'
     end
   end
 

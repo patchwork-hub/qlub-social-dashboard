@@ -18,17 +18,14 @@ function searchFollowedContributors(query) {
     });
 }
 
-// Function to show the loading spinner and disable background
 function showLoadingSpinner() {
   document.getElementById('disabled-overlay').style.display = 'flex';
 }
 
-// Function to hide the loading spinner and enable background
 function hideLoadingSpinner() {
   document.getElementById('disabled-overlay').style.display = 'none';
 }
 
-// Function to display search results in the modal
 function displaySearchResults(accounts) {
   const resultsContainer = document.getElementById('mute-search-results');
   resultsContainer.innerHTML = '';
@@ -53,37 +50,44 @@ function displaySearchResults(accounts) {
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
           <button class="btn btn-outline-secondary mute-button" data-account-id="${account.id}" style="float: right;">
-            ${isMuted(account.id) ? 'Unmute' : 'Mute'}
+            Loading...
           </button>
         </div>
       </div>
     `;
 
     resultsContainer.appendChild(resultItem);
+
+    isMuted(account.id).then(isMutedStatus => {
+      const muteButton = resultItem.querySelector('.mute-button');
+      muteButton.innerText = isMutedStatus ? 'Unmute' : 'Mute';
+    });
   });
 
-  // Add event listeners for mute buttons
   document.querySelectorAll('.mute-button').forEach(button => {
     button.addEventListener('click', function() {
       const accountId = this.dataset.accountId;
-      toggleMute(accountId); // Define this function to handle the mute/unmute action
+      toggleMute(accountId);
     });
   });
 }
 
-// Function to clear the search results
+
 function clearSearchResults() {
   const resultsContainer = document.getElementById('mute-search-results');
   resultsContainer.innerHTML = '';
 }
 
-// Function to check if account is muted
 function isMuted(accountId) {
-  // Implement your logic to check if the account is muted
-  return false;
+  return fetch(`/communities/is_muted?account_id=${accountId}`)
+    .then(response => response.json())
+    .then(data => data.is_muted)
+    .catch(error => {
+      console.log('Error checking mute status:', error);
+      return false;
+    });
 }
 
-// Event listener for the search box in the mute contributor modal
 const muteSearchInput = document.getElementById('mute-search-input');
 if (muteSearchInput) {
   muteSearchInput.addEventListener('keydown', function(event) {
@@ -93,4 +97,27 @@ if (muteSearchInput) {
   });
 }
 
-// Add toggleMute function here to handle muting/unmuting
+function toggleMute(accountId) {
+  isMuted(accountId).then(isCurrentlyMuted => {
+    fetch(`/communities/mute_contributor`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        account_id: accountId,
+        mute: !isCurrentlyMuted
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.querySelector(`.mute-button[data-account-id="${accountId}"]`).innerText = !isCurrentlyMuted ? 'Unmute' : 'Mute';
+      } else {
+        console.log('Failed to mute/unmute the account.');
+      }
+    })
+    .catch(error => console.log('Error toggling mute:', error));
+  });
+}
