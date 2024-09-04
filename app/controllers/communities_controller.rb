@@ -110,6 +110,11 @@ class CommunitiesController < BaseController
     end
   end
 
+  def step5_delete
+    PostHashtag.find(params[:format].to_i).destroy
+    redirect_to step5_communities_path
+  end
+
   def step5_save
     PostHashtagService.new.call(@current_user.account, post_hashtag_params)
     @community = Community.find(session[:form_data]['id'])

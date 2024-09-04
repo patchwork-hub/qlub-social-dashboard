@@ -84,7 +84,7 @@
                       %p= record.hashtag
                     %td
                       %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                      %a.text-danger{ href: step2_communities_path } Remove
+                      = link_to 'Remove', step5_delete_communities_path(record.id), method: :post, class: 'text-danger'
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
           .btn-group
