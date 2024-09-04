@@ -151,7 +151,7 @@ class CommunitiesController < BaseController
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
         q: query,
-        resolve: true,
+        resolve: false,
         limit: 5
       },
       headers: {
@@ -160,6 +160,28 @@ class CommunitiesController < BaseController
     )
     render json: response.parsed_response
   end
+
+  def mute_contributor
+    target_account_id = params[:account_id]
+    admin_account_id = get_community_admin_id
+    mute = params[:mute]
+    byebug
+    if mute
+      Mute.find_or_create_by!(account_id: admin_account_id, target_account_id: target_account_id, hide_notifications: true)
+    else
+      Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
+    end
+  
+    render json: { success: true }
+  end
+
+  def is_muted
+    target_account_id = params[:account_id]
+    admin_account_id = get_community_admin_id
+    is_muted = Mute.exists?(account_id: admin_account_id, target_account_id: target_account_id)
+  
+    render json: { is_muted: is_muted }
+  end  
 
   private
 
