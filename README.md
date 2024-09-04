@@ -62,7 +62,7 @@ We have outlined how Patchwork might be configured based on whether you are:
 - Running a Mastodon or Fediverse server just for me
 
 ## Get started
-Find full instructions on how to install Patchwork on your Mastodon server [here](https://github.com/patchwork-hub/patchwork_dashboard/wiki/Installation-guide).
+[Find full instructions on how to install Patchwork on your Mastodon server here](https://github.com/patchwork-hub/patchwork_dashboard/wiki/Installation-guide).
 
 
 Patchwork is a framework to add a suite of plug-ins to a Mastodon server, creating layers between the underlying plumbing of Mastodon and the frontend app used by a user to access it (usually also Mastodon).
@@ -71,7 +71,7 @@ Patchwork is a framework to add a suite of plug-ins to a Mastodon server, creati
 Before running Patchwork, please ensure you have set up a Mastodon server and it is running properly.
 
 
-You can find the instructions to set up a Mastodon server [here](https://docs.joinmastodon.org/admin/install/)
+[You can find the instructions to set up a Mastodon server here](https://docs.joinmastodon.org/admin/install/)
 
 
 Patchwork begins with the Dashboard.
