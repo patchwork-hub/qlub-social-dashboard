@@ -112,6 +112,17 @@ class CommunitiesController < BaseController
 
   def step5_delete
     PostHashtag.find(params[:format].to_i).destroy
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
+    redirect_to step5_communities_path
+  end
+
+  def step5_update
+    UpdateHashtagService.new.call(@current_user.account, params[:form_post_hashtag])
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
     redirect_to step5_communities_path
   end
 
