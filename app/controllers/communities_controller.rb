@@ -16,7 +16,7 @@ class CommunitiesController < BaseController
                         collection_id: form_params[:collection_id],
                         banner_image: form_params[:banner_image],
                         avatar_image: form_params[:avatar_image])
-    
+
     if @community.errors.any?
       @community_form = Form::Community.new(form_params)
       flash.now[:error] = @community.errors.full_messages.join(', ')

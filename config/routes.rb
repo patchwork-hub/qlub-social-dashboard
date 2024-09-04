@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       post 'step3', to: 'communities#step3_save'
       get 'step4', to: 'communities#step4'
       post 'step4', to: 'communities#step4_save'
+      post 'step5_delete', to: 'communities#step5_delete'
       get 'step5', to: 'communities#step5'
       post 'step5', to: 'communities#step5_save'
       get 'step6', to: 'communities#step6'
