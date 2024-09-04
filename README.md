@@ -32,7 +32,7 @@ Patchwork began with Newsmast and much of what is on offer in Patchwork was deve
 ## Architecture outline
 Patchwork supports and enhances the running of existing base level server software, such as Mastodon, as well as user facing platforms and apps built on top of them. It delivers new features and tools in the form of easy to use plug-ins, cloud based servers and micro-servers. 
 
-### Patchwork Dashboard
+### [Patchwork Dashboard](https://github.com/patchwork-hub/patchwork_dashboard/wiki/patchwork-dashboard)
 The Dashboard is the framework which supports all aspects of Patchwork. By itself, it delivers easy configuration of your server through a user friendly dashboard where Server Admins can manage their server with ease, including creating dedicated spaces, known as Channels, in your server which can then be broadcast to the wider social web.
 
 The Dashboard also lets you install additional plug-ins to enable more features.
@@ -61,7 +61,7 @@ We have outlined how Patchwork might be configured based on whether you are:
 - Running a Mastodon or Fediverse server for others
 - Running a Mastodon or Fediverse server just for me
 
-## Get started
+## [Get started](https://github.com/patchwork-hub/patchwork_dashboard/wiki/installation-guide)
 [Find full instructions on how to install Patchwork on your Mastodon server here](https://github.com/patchwork-hub/patchwork_dashboard/wiki/Installation-guide).
 
 
@@ -73,24 +73,20 @@ Before running Patchwork, please ensure you have set up a Mastodon server and it
 
 [You can find the instructions to set up a Mastodon server here](https://docs.joinmastodon.org/admin/install/)
 
-
-Patchwork begins with the Dashboard.
-
-
 Once your Mastodon server is up and running, please begin with this repository to set up the Patchwork Dashboard. Please find the full installation guide in the Dashboard wiki, linked above.
 
 
 Once the Dashboard is installed, you can introduce new features to make your server more powerful, and install additional Patchwork plug-ins with ease.
 
 
-## The Newsmast Foundation
+## [The Newsmast Foundation](https://github.com/patchwork-hub/patchwork_dashboard/wiki/The-Newsmast-Foundation)
 Our mission is to change social media for good. We’re a UK based registered charity, diverse, democratic and committed to making social media work by building safe, committed knowledge-sharing networks. We have a unique opportunity to seize the social internet from Big Tech and put it in service of users and society.
 
 We publish and maintain Newsmast and Patchwork, projects built with ActivityPub and networked with the social web (aka the Fediverse). We also run channel.org, a membership based social web accelerator programme for socially beneficial organisations to discover, understand & get the most out of the social web.
 
 We champion the work of journalists, academics, charities and NGOs – together with diverse voices, marginalised communities and people on the ground. Pooling facts, knowledge and ideas to tackle the biggest challenges worldwide.
 
-You can find more information about us & our mission on our website.
+You can find more information about us & our mission on our [website](https://www.newsmastfoundation.org/about-us/).
 
 ## The social web
 The social web is a decentralised network of platforms, servers, apps and more. The emergence of the social web has created a unique opportunity to seize the social internet from Big Tech and put it in service of users and society.
