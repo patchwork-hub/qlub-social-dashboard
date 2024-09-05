@@ -135,9 +135,14 @@ class CommunitiesController < BaseController
   end
 
   def step6
-    respond_to do |format|
-      format.html
-    end
+    @community = Community.find(session[:form_data]['id'])
+    @rule_from = Form::CommunityRule.new
+    @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
+  end
+
+  def step6_rule_create
+    CommunityRuleService.new.call(@current_user.account, params[:form_community_rule])
+    redirect_to step6_communities_path
   end
 
   def step6_save
