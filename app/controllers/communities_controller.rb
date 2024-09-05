@@ -186,7 +186,7 @@ class CommunitiesController < BaseController
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     mute = params[:mute]
-    byebug
+    
     if mute
       Mute.find_or_create_by!(account_id: admin_account_id, target_account_id: target_account_id, hide_notifications: true)
     else
