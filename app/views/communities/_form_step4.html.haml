@@ -47,11 +47,24 @@
           .table-responsive
             %table.table.mt-3.table-striped
               %tbody
-                %tr
-                  %td.text-center
-                    %p.text-muted.small You haven’t muted any contributors from this community yet
-                    %a.text-danger.small{ href: '#', title: 'Mute a contributor', 'data-toggle': 'modal', 'data-target': '#muteContributorModal' }
-                      Click here to search
+                - if @muted_accounts.size == 0
+                  %tr
+                    %td.text-center
+                      %p.text-muted.small You haven’t muted any contributors from this community yet
+                      %a.text-danger.small{ href: '#', title: 'Mute a contributor', 'data-toggle': 'modal', 'data-target': '#muteContributorModal' }
+                        Click here to search
+                - @muted_accounts.each do |account|
+                  %tr
+                    %td{ style: 'width: 20%;' }
+                      %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                    %td{ style: 'width: 70%;' }
+                      %h6.mb-0= account.username
+                      %p.text-muted.mb-0= raw(account.note)
+                    %td{ style: 'width: 10%;' }
+                      = form_with url: unmute_contributor_communities_path, method: :post, remote: true, authenticity_token: true do |form|
+                        = form.hidden_field :account_id, value: account.id
+                        %button.btn.btn-outline-secondary{ type: 'submit' }
+                          Unmute
       .card
         .card-body
           .row.d-flex.justify-content-between

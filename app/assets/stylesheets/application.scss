@@ -583,3 +583,8 @@ ul.pagination {
   display: flex;
   flex-direction: row;
 }
+
+// nested-fields-remove
+.nested-fields[style*="display: none"] {
+  display: none !important;
+}

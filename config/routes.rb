@@ -40,7 +40,10 @@ Rails.application.routes.draw do
       post 'step6_rule_create', to: 'communities#step6_rule_create'
       get 'search_contributor', to: 'communities#search_contributor'
       post 'mute_contributor', to: 'communities#mute_contributor'
+      post 'unmute_contributor', to: 'communities#unmute_contributor'
       get 'is_muted', to: 'communities#is_muted'
+      post 'set_visibility', to: 'communities#set_visibility'
+      post 'manage_additional_information', to: 'communities#manage_additional_information'
     end
   end
 

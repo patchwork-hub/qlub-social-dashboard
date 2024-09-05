@@ -11,6 +11,7 @@ import 'custom_js/followed_contributors_table';
 import 'custom_js/search_contributor';
 import 'custom_js/search_mute_contributor';
 import 'custom_js/post_hashtag';
+import 'custom_js/community_preview';
 
 import {far} from '@fortawesome/free-regular-svg-icons'
 import {fas} from '@fortawesome/free-solid-svg-icons'
@@ -177,6 +178,14 @@ $(document).ready(function() {
         arrowDown.style.display = "none";
         arrowUp.style.display = "inline-block";
       }
+    });
+  });
+
+  const saveChangeButtons = document.querySelectorAll('.save-change');
+
+  saveChangeButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      window.location.reload();
     });
   });
 
