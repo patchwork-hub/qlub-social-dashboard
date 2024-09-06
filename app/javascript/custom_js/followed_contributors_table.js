@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
   window.reload_contributors_table = function(url) {
-    console.log("page url" + url);
+    console.log("page url : " + url);
     $.ajax({
       url: url,
       method: 'GET',

@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
       method: 'GET',
       data: { q: { username_cont: username } },
       success: function(response) {
-        var contributors_table = $('#contributors_table');
+        console.log(response);
+        var contributors_table = $('#followed_contributors_table');
         contributors_table.html(response);
       },
       error: function() {

@@ -57,7 +57,6 @@ class CommunitiesController < BaseController
     @community = Community.find(session[:form_data]['id'])
     @contributor_records = load_contributors_records
     @contributor_search = commu_contributors_filter.build_search
-
     respond_to do |format|
       format.html { render partial: 'communities/contributors_table', locals: { records: @contributor_records } }
     end
@@ -69,6 +68,11 @@ class CommunitiesController < BaseController
 
     @community_hashtag_form = Form::CommunityHashtag.new
     @community = Community.find(session[:form_data]['id'])
+
+    @community_admin = CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
+    @follower_records = load_commu_follower_records
+    @follower_search = commu_follower_filter.build_search
+
     respond_to do |format|
       format.html
     end
@@ -279,6 +283,14 @@ class CommunitiesController < BaseController
 
   def load_post_hashtag_records
     post_hashtag_records_filter.get
+  end
+
+  def load_commu_follower_records
+    commu_follower_filter.get
+  end
+
+  def commu_follower_filter
+    @follower_filter = Filter::Account.new(params)
   end
 
   def commu_contributors_filter

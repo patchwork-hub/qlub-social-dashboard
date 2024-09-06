@@ -287,8 +287,7 @@ $(document).ready(function () {
         input.dispatchEvent(new Event("change"));
       });
     }
-  }
-});
+  };
 
 const togglePassword = (e) => {
   let input = e.closest('div').querySelector("input[type='password'], input[type='text']");

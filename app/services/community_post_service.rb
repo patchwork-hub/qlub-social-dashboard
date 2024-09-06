@@ -18,7 +18,6 @@ class CommunityPostService < BaseService
 
   def create_community
     process_community!
-    add_admin!
     @community
   end
 
