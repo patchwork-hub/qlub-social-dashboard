@@ -139,7 +139,7 @@ class CommunitiesController < BaseController
     @community = Community.find(session[:form_data]['id'])
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @aditional_information = @community.community_additional_informations
+    @aditional_information = @community.patchwork_community_additional_informations
     @community_admin = Account.find_by_id(get_community_admin_id)
   end
 
@@ -257,7 +257,7 @@ class CommunitiesController < BaseController
 
   def community_params
     params.require(:community).permit(
-      community_additional_informations_attributes: [:id, :heading, :text, :_destroy]
+      patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy]
     )
   end
 

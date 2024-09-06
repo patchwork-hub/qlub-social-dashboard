@@ -1,4 +1,4 @@
-class CreateCollections < ActiveRecord::Migration[7.1]
+class CreatePatchworkCollections < ActiveRecord::Migration[7.1]
   def change
     create_table :patchwork_collections do |t|
       t.string :name, null: false
