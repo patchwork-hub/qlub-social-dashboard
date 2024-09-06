@@ -17,7 +17,7 @@
           .row
             .col
               %label Type of posts
-              %p.text-muted.small Select which types of content from hashtags and key contributors are displayed within this community.
+              %p.text-muted.small Select which types of content from hashtags and key contributors are excluded from this channel.
           .row
             .col.card.list-group-item
               .icheck-primary
@@ -70,7 +70,7 @@
           .row.d-flex.justify-content-between
             .col-md-9-auto
               %label Keyword filtering
-              %p.text-muted.small Add keyword filters to prevent posts from the wider network using this keyword from appearing in the community.
+              %p.text-muted.small Add keyword filters to prevent posts from the wider network which contain this keyword from appearing in the channel.
             .col-md-3-auto.mt-auto
               %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add New
           .table-responsive
@@ -79,7 +79,7 @@
                 - if @filter_keywords.size == 0
                   %tr
                     %td.text-center
-                      %p.text-muted.small You haven’t muted any contributors from this community yet
+                      %p.text-muted.small You haven’t muted any keywords from this channel yet
                       %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal' }
                         Click here to add one
                 - @filter_keywords.each do |keyword|

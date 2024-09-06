@@ -18,38 +18,37 @@
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step 1 - Community Information
+              %h5.card-title Step 1 - Channel Information
         .card-body
-          %p.text-muted.small Fill out the basic details for your community. Provide a unique name, choose the collection it belongs to, and upload a banner and avatar image. Write a short bio to describe the community's purpose and theme. Inline tooltips will help guide you through each field.
+          %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme. Inline tooltips will help guide you through each field.
           .row
             .col-md-6.col-sm-12
-              = f.input :username, input_html: { type: "text", class: "form-control", id: "basic-url", aria: { describedby: "basic-addon3" } }, required: true
-              %p.text-muted.small This will be the community’s public display name. Once your community is created, you will not be able to change this.
+              = f.input :username, label: "Name", input_html: { type: "text", class: "form-control", id: "basic-url", aria: { describedby: "basic-addon3" } }, required: true
+              %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
             .col-md-6.col-sm-12
               = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
-              %p.text-muted.small Use this field to select the group or category that this community will belong to.
+              %p.text-muted.small Use this field to select the group or category that this channel will belong to.
           .row
             .col-md-12
               .alert.alert-light{ role: "alert", style: "background-color: #F6F8FA;" }
                 .d-flex.align-items-center
                   %p.mb-0{ style: "font-size: 13px; width: 22px; height: 22px; font-weight: 700;" } Tip
                   = image_tag("icons/circle_info.svg", class: "m-2", width: "30px", height: "30px", style: "color: #3FA7E8;")
-                  %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this community as collections help users find related communities easily.
+                  %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this channel as collections help users find channels their interested in more easily.
           .row
             .col-md-12
               = f.input :bio, as: :text, label: 'Bio', input_html: { class: "form-control", id: "community_bio" }
           .row.mt-3
             .col-md-8
               %label{ for: "customFile", class: "form-label" } Banner Image
-              .dropzone.p-5.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;" }
-                = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file", style: "display: none;", accept: "image/*" }
+              .dropzone.p-5.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;", id: "bannerDropzone" }
+                = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentBanner", 'data-error-id': "bannerUploadErrors", 'data-max-size': 5 }
                 - banner_image_url = session.dig(:form_data, 'banner_image_url') || ""
-                %img{ src: banner_image_url, alt: "Current Banner", class: "img-fluid", id: "currentBanner", style: "display: #{banner_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%" }
-                %div{ onclick: "document.getElementById('customFile').click();" }
+                %img{ src: banner_image_url, alt: "Current Banner", class: "img-fluid dropzone-preview", id: "currentBanner", style: "display: #{banner_image_url.present? ? 'block' : 'none'};" }
+                %div.dropzone-placeholder{ onclick: "document.getElementById('customFile').click();" }
                   %i.fa-solid.fa-upload
                   %p.mb-1 Drag & drop an image here or click to select a file
                   %p.mb-0.text-muted.small 1080 x 300 recommended dimensions, up to 5MB
-
               .upload-errors.text-danger.mt-2{ id: "bannerUploadErrors" }
 
             .col-md-4
@@ -60,52 +59,11 @@
                     - avatar_image_url = session.dig(:form_data, 'avatar_image_url') || ""
                     %img{ id: "currentAvatar", src: avatar_image_url, alt: "Avatar Preview", style: "display: #{avatar_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
                     %i.fa-solid.fa-image
-                    = f.input :avatar_image, as: :file, label: false, input_html: { id: "customFileAvatar", class: "form-control-file", style: "display: none;", accept: "image/*" }
+                    = f.input :avatar_image, as: :file, label: false, input_html: { id: "customFileAvatar", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentAvatar", 'data-error-id': "avatarUploadErrors", 'data-max-size': 2 }
                 .avatar-image-upload
                   %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFileAvatar').click();" } Upload image
                   %p.mt-4.text-muted.small SVG, PNG, JPG (max: 800x800px)
                 .avatar-upload-errors.text-danger.mt-2{ id: "avatarUploadErrors" }
-
-          :javascript
-            function setupFileUpload(inputId, previewId, errorId, maxSizeMB) {
-              const input = document.getElementById(inputId);
-              const preview = document.getElementById(previewId);
-              const errorContainer = document.getElementById(errorId);
-
-              input.addEventListener('change', function() {
-                const file = this.files[0];
-                errorContainer.textContent = ''; // Clear previous errors
-
-                if (file) {
-                  // Validate file type
-                  const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
-                  if (!allowedTypes.includes(file.type)) {
-                    errorContainer.textContent = 'Only JPG, PNG, and SVG images are allowed.';
-                    this.value = ''; // Clear the input
-                    return;
-                  }
-
-                  // Validate file size
-                  const maxSizeInBytes = maxSizeMB * 1024 * 1024;
-                  if (file.size > maxSizeInBytes) {
-                    errorContainer.textContent = `File size must be less than ${maxSizeMB} MB.`;
-                    this.value = ''; // Clear the input
-                    return;
-                  }
-
-                  // Display the image preview
-                  const reader = new FileReader();
-                  reader.onload = function(e) {
-                    preview.style.display = 'block';
-                    preview.src = e.target.result;
-                  }
-                  reader.readAsDataURL(file);
-                }
-              });
-            }
-
-            setupFileUpload('customFile', 'currentBanner', 'bannerUploadErrors', 5);
-            setupFileUpload('customFileAvatar', 'currentAvatar', 'avatarUploadErrors', 2);
 
       .row.d-flex.justify-content-between
         .col-auto

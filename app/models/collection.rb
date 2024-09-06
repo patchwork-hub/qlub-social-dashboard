@@ -3,5 +3,5 @@ class Collection < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
-  validates :sorting_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :sorting_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: true
 end

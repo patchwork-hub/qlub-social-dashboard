@@ -9,23 +9,28 @@
 
       .card-body
         - @server_settings.each do |setting|
+          - next if setting[:name] == 'Plug-ins'
           .row.mb-4
             .col-md-5
               %div
                 %strong= setting[:name]
                 - case setting[:name]
-                  - when 'Spam Block'
+                  - when 'Local Features'
+                    %p.text-muted.small.mt-2 Customise and design the experience of your community with a suite of features.
+                  - when 'User Management'
+                    %p.text-muted.small.mt-2 Foster community through engagement tools and control who has access to your server.
+                  - when 'Content filters'
+                    %p.text-muted.small.mt-2 Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin community.
+                  - when 'Spam filters'
                     %p.text-muted.small.mt-2 Filter out spam posts and bots from the wider network at a server level to keep your server clean.
-                  - when 'Content Moderation'
-                    %p.text-muted.small.mt-2 Control content entering your server from the wider network using keyword filters and controlling which servers your connected to in the wider network.
                   - when 'Federation'
                     %p.text-muted.small.mt-2 Decide which parts of the social web you want to be connected to, casting a broad net or staying focused.
-                  - when 'Local Features'
-                    %p.text-muted.small.mt-2 Customise and design your server’s experience, giving your community features to enhance their experience.
-                  - when 'User Management'
-                    %p.text-muted.small.mt-2 Foster community through engagement tools and control who has access.
                   - when 'Plug-ins'
                     %p.text-muted.small.mt-2 Enable more plug-ins created for Patchwork for more tools and functionality.
+                  - when 'Spam Block'
+                    %p.text-muted.small.mt-2 Block spam posts and bots from the wider network and keep your server clean. These are active at a server level.
+                  - when 'Content Moderation'
+                    %p.text-muted.small.mt-2 Control what content enters your server from the wider network by setting up keyword filters.
             .col-md-7
               - setting[:settings].each_with_index do |option, option_index|
                 - is_collapse = ['Content filters', 'Spam filters'].include?(option[:name])
@@ -49,7 +54,7 @@
                             = render 'shared/tooltip_custom', tooltip_text: 'Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin community.'
                       %br
                       - if option[:name].casecmp?('Spam filters')
-                        %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Spam filter name' }
+                        %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Select or create filter list' }
                           Add spam filter
                       - if option[:name].casecmp?('Content filters')
                         %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Custom filter name' }
@@ -136,7 +141,7 @@
                         %a{ href: '#', style: 'color: red;', title: 'Choose theme' }
                           Choose theme
                       - when 'Live blocklist'
-                        %a{ href: '#', style: 'color: red;', title: 'Set-up denylist' }
+                        %a{ href: 'https://connect.iftas.org/library/iftas-documentation/fedicheck/', style: 'color: red;', title: 'Set-up denylist', target: '_blank' }
                           Set-up denylist
                 - unless option_index == setting[:settings].size - 1
                   %hr

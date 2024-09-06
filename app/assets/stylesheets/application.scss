@@ -213,6 +213,11 @@ ul.pagination {
   position: relative;
   overflow: hidden;
   border-radius: 2%;
+  z-index: 1;
+  .text-light{
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .top-card::before {
@@ -225,6 +230,7 @@ ul.pagination {
   width: 220px;
   height: 230px;
   opacity: 0.5;
+  z-index: 0;
 }
 
 .card-body .fa-check {
@@ -587,4 +593,24 @@ ul.pagination {
 // nested-fields-remove
 .nested-fields[style*="display: none"] {
   display: none !important;
+}
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 0rem;
+  .card-equal-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+}
+
+.installed-button{
+  width: max-content !important;
 }

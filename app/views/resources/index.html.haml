@@ -2,31 +2,6 @@
   = 'Resources'
 
 .row
-  .col-12
-    .card.resource-mastodon
-      .card-header
-        .card-title
-          = image_tag("icons/mastodon.svg", class: "mr-2", width: "117", height: "50")
-
-      .card-body
-        %p
-          Patchwork runs on Mastodon's open-source software. If you're not already running Mastodon,
-          %br
-          you'll need to install this first.
-        %p.text-muted
-          Patchwork runs on Mastodon versions 1.2.0 and above. If you're not running one of these, you'll need to
-          %br
-          upgrade your Mastodon installation first.
-        .row.mt-5
-          .col-12.d-flex.justify-content-start
-            %div.btn-group
-              %button.btn.btn-outline-light.install-mastodon
-                = image_tag("icons/download.svg", class: "mr-2", width: "16", height: "16")
-                Install Mastodon
-              %button.btn.btn-outline-light.ml-3
-                Upgrade Mastodon
-
-.row
   .col-6
     .card.resource
       .card-header
@@ -39,7 +14,7 @@
         %p.text-muted.small
           Review technical specifications and documentation for different components of Patchwork.
         .mt-auto
-          %button.installed-button.btn.btn-outline-secondary View documentation
+          = link_to 'View documentation', 'https://github.com/patchwork-hub/patchwork_dashboard/wiki', class: 'installed-button btn btn-outline-secondary', target: '_blank'
   .col-6
     .card.resource
       .card-header
@@ -52,7 +27,7 @@
         %p.text-muted.small
           Patchwork is an open source project, licenced under AGPL-3.0. Our code is available on Github where you can read it and adapt it for yourself.
         .mt-auto
-          %button.install-button.btn.btn-outline-secondary View source code
+          = link_to 'View source code', 'https://github.com/patchwork-hub', class: 'installed-button btn btn-outline-secondary', target: '_blank'
 
 .row
   .col-6
@@ -67,7 +42,8 @@
         %p.text-muted.small
           Visit the Patchwork website for more information about Patchwork, the people behind it and the social web.
         .mt-auto
-          %button.installed-button.btn.btn-outline-secondary View website
+          = link_to 'View website', 'https://www.newsmastfoundation.org/', class: 'installed-button btn btn-outline-secondary', target: '_blank'  
+
   .col-6
     .card.resource
       .card-header
@@ -80,4 +56,4 @@
         %p.text-muted.small
           Check out the latest news from the team behind Patchwork. Here you can find news on upcoming features, updates from the social web and the future of social media.
         .mt-auto
-          %button.install-button.btn.btn-outline-secondary View latest news
+          = link_to 'View latest news', 'https://www.blog-pat.ch/', class: 'installed-button btn btn-outline-secondary', target: '_blank'

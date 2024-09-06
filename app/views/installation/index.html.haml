@@ -1,37 +1,84 @@
 - content_for :title do
   = 'Installation'
 
-.row
+.row 
+  .col-12
+    .card.resource-mastodon
+      .card-header
+        .card-title
+          = image_tag("icons/mastodon.svg", class: "mr-2", width: "117", height: "50")
+
+      .card-body
+        %p
+          Patchwork runs on Mastodon's open-source software. If you're not already running Mastodon,
+          %br
+          you'll need to install this first.
+        %p.text-muted
+          Patchwork runs on Mastodon versions 1.2.0 and above. If you're not running one of these, you'll need to
+          %br
+          upgrade your Mastodon installation first.
+        .row.mt-5
+          .col-12.d-flex.justify-content-start
+            %div.btn-group
+              %button.btn.btn-outline-light.install-mastodon
+                = image_tag("icons/download.svg", class: "mr-2", width: "16", height: "16")
+                Install Mastodon
+              %button.btn.btn-outline-light.ml-3
+                Upgrade Mastodon
+
+.row.cards-container
   .col-6
-    .card
+    .card.card-equal-height
       .card-header
         %h3.card-title Patchwork Standard
       .card-body
-        %p.text-muted.small
-          Install a lighter version of Patchwork with standard tools to enhance your server, including post, moderation & federation tools. Excludes community and channel features.
+        %p.text-muted
+          Install a lighter version of Patchwork with standard tools to enhance your server, including post, moderation & federation features. Excludes channels.
         .mt-auto
           %button.installed-button.btn.btn-outline-secondary
             Installed
             %i.fa-solid.fa-check
   .col-6
-    .card
+    .card.card-equal-height
       .card-header
-        %h3.card-title Patchwork Community Card
+        %h3.card-title Patchwork Community
       .card-body
-        %p.text-muted.small
-          Install a Patchwork with community & channel features to improve organisation and discovery on your server, as well as the features included in the standard version.
+        %p.text-muted
+          Install a more powerful version of Patchwork with channels, designed to improve organisation and discovery on your server, as well as the features included in the standard version.
         .mt-auto
           %button.install-button.btn.btn-outline-secondary Install
 
-.row.ml-1
+.row.pt-3
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Select a pack
+
+      .card-body
+        %p.text-muted Get started quickly and configure Patchwork in one click with our preset packs, designed to suit a variety of preferences and needs. Choose one and the dashboard is tuned to match. These can be starting points for you to build on.
+        .row
+          .col-12
+            .bordered-radio-group
+              .bordered-radio.mx-2.mt-3
+                %input.radio-button{name: "pack_selection", type: "radio", value: "everything_on"}
+                Everything on
+              .bordered-radio.mx-2.mt-3
+                %input.radio-button{name: "pack_selection", type: "radio", value: "spam_only"}
+                Spam only
+              .bordered-radio.mx-2.mt-3
+                %input.radio-button{name: "pack_selection", type: "radio", value: "fedi_pact"}
+                Fedi-pact
+              .bordered-radio.mx-2.mt-3
+                %input.radio-button{name: "pack_selection", type: "radio", value: "organisation"}
+                Organisation
+.row.d-flex.justify-content-end
+  .col-auto
+    %button.btn.btn-danger Save changes
+
+.row.ml-1.pt-3.pb-5
   .col-12
     %h6 Useful links
     .row
-      %a{ href: "#" }
+      %a{ href: 'https://github.com/patchwork-hub/patchwork_dashboard/wiki/Installation', target: '_blank' }
         = image_tag("icons/file-lines.svg", class: "mr-2", width: "16", height: "16")
         Installation Guide
-      %br
-    .row.mt-2
-      %a{ href: "#" }
-        = image_tag("icons/file-lines.svg", class: "mr-2", width: "16", height: "16")
-        Mastodon Installation

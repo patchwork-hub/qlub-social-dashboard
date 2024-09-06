@@ -15,11 +15,11 @@
             %select.select2.form-control.mx-3{ name: 'keyword_filter_group[name]', id: 'keyword_filter_group_name', style: 'width: 100%' }
           .mb-3.keyword_filters
             %div.d-flex
-              %div.col-8.mt-3
+              %div.col-7.mt-3
                 = f.label :keyword, class: 'form-label'
                 %span.text-danger *
               %div.col-4.mt-3
-                = f.label :filter_type, 'Filter Type', class: 'form-label'
+                = f.label :filter_type, 'Filter applies to', class: 'form-label'
             = f.fields_for :keyword_filters do |keyword_filter|
               = render 'server_settings/keyword_filter_fields', f: keyword_filter
           = link_to_add_association "Add another keyword", f, :keyword_filters, data: {association_insertion_node: '.keyword_filters', association_insertion_method: :append}
