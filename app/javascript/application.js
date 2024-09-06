@@ -209,8 +209,6 @@ $(document).ready(function () {
     });
   });
 
-});
-
   const uploadInputs = document.querySelectorAll(".upload-input");
 
   if(uploadInputs){

@@ -1,5 +1,5 @@
 class DashboardMailer < ActionMailer::Base
-  default from: %{Newsmast <#{ENV['SMTP_FROM_ADDRESS']}>}
+  default from: %{Patchwork <#{ENV['SMTP_FROM_ADDRESS']}>}
   layout "mailer"
 
   def invitation_codes_report(args={})
@@ -9,9 +9,9 @@ class DashboardMailer < ActionMailer::Base
     @email         = args[:email]
     @type          = args[:type]
     if @type == 'new_invitation_code'
-      @subject       = "Newsmast: #{@limit} #{@role.capitalize} Invitation Codes Report #{Time.zone.now.strftime('%Y-%m-%d')}"
+      @subject       = "Patchwork: #{@limit} #{@role.capitalize} Invitation Codes Report #{Time.zone.now.strftime('%Y-%m-%d')}"
     elsif @type == 'existing_invitation_code'
-      @subject       = "Newsmast: Existing Invitation Codes Report #{Time.zone.now.strftime('%Y-%m-%d')}"
+      @subject       = "Patchwork: Existing Invitation Codes Report #{Time.zone.now.strftime('%Y-%m-%d')}"
     end
     
     mail(to: @email, subject: @subject)
@@ -20,7 +20,7 @@ class DashboardMailer < ActionMailer::Base
   def users_report(args={})
     @download_link = args[:download_link]
     @email         = args[:email]
-    @subject       = "Newsmast: Users Report #{Time.zone.now.strftime('%Y-%m-%d')}"
+    @subject       = "Patchwork: Users Report #{Time.zone.now.strftime('%Y-%m-%d')}"
     
     mail(to: @email, subject: @subject)
   end

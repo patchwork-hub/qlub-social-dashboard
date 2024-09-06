@@ -21,7 +21,7 @@ module Dashboard
     config.paperclip_defaults = {
       log: true,
       whiny: false,
-      path:                     'mammoth/:class/:attachment/:id_partition/:style/:filename',
+      path:                     'patchwork/:class/:attachment/:id_partition/:style/:filename',
       bucket:                   ENV["S3_BUCKET"],
       preserve_files:           true,
       storage:                  :s3,
