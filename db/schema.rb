@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_02_161022) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_05_071209) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -380,6 +380,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_161022) do
     t.boolean "is_turn_on", default: false
     t.index ["mammoth_community_id"], name: "idx_on_mammoth_community_id_a08cf383bb"
     t.index ["user_id"], name: "index_community_community_amplifier_settings_on_user_id"
+  end
+
+  create_table "community_rules", force: :cascade do |t|
+    t.bigint "patchwork_community_id", null: false
+    t.bigint "patchwork_rules_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["patchwork_community_id"], name: "index_community_rules_on_patchwork_community_id"
+    t.index ["patchwork_rules_id"], name: "index_community_rules_on_patchwork_rules_id"
   end
 
   create_table "conversation_mutes", force: :cascade do |t|
@@ -1203,6 +1212,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_161022) do
     t.index ["patchwork_community_id"], name: "index_patchwork_joined_communities_on_patchwork_community_id"
   end
 
+  create_table "patchwork_rules", force: :cascade do |t|
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "pghero_space_stats", force: :cascade do |t|
     t.text "database"
     t.text "schema"
@@ -1724,6 +1739,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_161022) do
   add_foreign_key "canonical_email_blocks", "accounts", column: "reference_account_id", on_delete: :cascade
   add_foreign_key "community_community_amplifier_settings", "mammoth_communities"
   add_foreign_key "community_community_amplifier_settings", "users"
+  add_foreign_key "community_rules", "patchwork_communities"
+  add_foreign_key "community_rules", "patchwork_rules", column: "patchwork_rules_id"
   add_foreign_key "conversation_mutes", "accounts", name: "fk_225b4212bb", on_delete: :cascade
   add_foreign_key "conversation_mutes", "conversations", on_delete: :cascade
   add_foreign_key "custom_filter_keywords", "custom_filters", on_delete: :cascade

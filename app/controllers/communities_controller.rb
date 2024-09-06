@@ -16,7 +16,7 @@ class CommunitiesController < BaseController
                         collection_id: form_params[:collection_id],
                         banner_image: form_params[:banner_image],
                         avatar_image: form_params[:avatar_image])
-    
+
     if @community.errors.any?
       @community_form = Form::Community.new(form_params)
       flash.now[:error] = @community.errors.full_messages.join(', ')
@@ -110,6 +110,22 @@ class CommunitiesController < BaseController
     end
   end
 
+  def step5_delete
+    PostHashtag.find(params[:format].to_i).destroy
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
+    redirect_to step5_communities_path
+  end
+
+  def step5_update
+    UpdateHashtagService.new.call(@current_user.account, params[:form_post_hashtag])
+    @community = Community.find(session[:form_data]['id'])
+    @records = load_post_hashtag_records
+    @search = post_hashtag_records_filter.build_search
+    redirect_to step5_communities_path
+  end
+
   def step5_save
     PostHashtagService.new.call(@current_user.account, post_hashtag_params)
     @community = Community.find(session[:form_data]['id'])
@@ -119,9 +135,14 @@ class CommunitiesController < BaseController
   end
 
   def step6
-    respond_to do |format|
-      format.html
-    end
+    @community = Community.find(session[:form_data]['id'])
+    @rule_from = Form::CommunityRule.new
+    @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
+  end
+
+  def step6_rule_create
+    CommunityRuleService.new.call(@current_user.account, params[:form_community_rule])
+    redirect_to step6_communities_path
   end
 
   def step6_save
@@ -151,7 +172,7 @@ class CommunitiesController < BaseController
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
         q: query,
-        resolve: true,
+        resolve: false,
         limit: 5
       },
       headers: {
@@ -160,6 +181,28 @@ class CommunitiesController < BaseController
     )
     render json: response.parsed_response
   end
+
+  def mute_contributor
+    target_account_id = params[:account_id]
+    admin_account_id = get_community_admin_id
+    mute = params[:mute]
+    
+    if mute
+      Mute.find_or_create_by!(account_id: admin_account_id, target_account_id: target_account_id, hide_notifications: true)
+    else
+      Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
+    end
+  
+    render json: { success: true }
+  end
+
+  def is_muted
+    target_account_id = params[:account_id]
+    admin_account_id = get_community_admin_id
+    is_muted = Mute.exists?(account_id: admin_account_id, target_account_id: target_account_id)
+  
+    render json: { is_muted: is_muted }
+  end  
 
   private
 

@@ -25,6 +25,30 @@
               .col
                 = form.submit 'Save changes', class: 'btn btn-danger'
 
+#postHashtagEditModel.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Edit hashtag
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        %p.text-muted.small Edit the hashtag for this community.
+        = simple_form_for @form_post_hashtag, url: step5_update_communities_path do |form|
+          = form.hidden_field :community_id, value: @community.id
+          = form.hidden_field :id, id: 'post_hashtag_id' # Hidden field for the hashtag ID
+          .row
+            .col
+              .form-group
+                = form.label :hashtag, "Hashtag"
+                = form.text_field :hashtag, class: 'form-control', id: 'post_hashtag_name', required: true
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
+              .col
+                = form.submit 'Save changes', class: 'btn btn-danger'
+
 .container-fluid
   .row-md-12.my-4
     .col
@@ -81,10 +105,11 @@
                     %td
                       %i.far.fa-square.mr-4
                     %td
-                      %p "#{record.hashtag}"
+                      %p= record.hashtag
                     %td
-                      %a.text-danger.mr-2{ href: step2_communities_path } Edit
-                      %a.text-danger{ href: step2_communities_path } Remove
+                      %a.text-danger.mr-2{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'} Edit
+                      = link_to 'Remove', step5_delete_communities_path(record.id), method: :post, class: 'text-danger'
+
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
           .btn-group

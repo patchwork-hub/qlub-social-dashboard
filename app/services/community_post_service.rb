@@ -18,6 +18,7 @@ class CommunityPostService < BaseService
 
   def create_community
     process_community!
+    add_admin!
     @community
   end
 
@@ -40,7 +41,10 @@ class CommunityPostService < BaseService
   def prepare_slug
     @slug = @options[:username].parameterize.underscore
   end
-  
+
+  def add_admin!
+    process_community_admin!
+  end
 
   def community_attributes
     { id: get_id,
@@ -61,5 +65,17 @@ class CommunityPostService < BaseService
   def process_community!
     @community = @account.communities.new(community_attributes)
     @community.save!
+  end
+
+  def community_admin_attribute
+    {
+      account_id: @account.id,
+      patchwork_community_id: @community.id
+    }.compact
+  end
+
+  def process_community_admin!
+    @community_admin = CommunityAdmin.where(account_id: @account.id, patchwork_community_id: @community.id).first_or_initialize(community_admin_attribute)
+    @community_admin.save!
   end
 end

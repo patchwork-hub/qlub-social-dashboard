@@ -31,11 +31,16 @@ Rails.application.routes.draw do
       post 'step3', to: 'communities#step3_save'
       get 'step4', to: 'communities#step4'
       post 'step4', to: 'communities#step4_save'
+      post 'step5_update', to: 'communities#step5_update'
+      post 'step5_delete', to: 'communities#step5_delete'
       get 'step5', to: 'communities#step5'
       post 'step5', to: 'communities#step5_save'
       get 'step6', to: 'communities#step6'
       post 'step6', to: 'communities#step6_save'
+      post 'step6_rule_create', to: 'communities#step6_rule_create'
       get 'search_contributor', to: 'communities#search_contributor'
+      post 'mute_contributor', to: 'communities#mute_contributor'
+      get 'is_muted', to: 'communities#is_muted'
     end
   end
 

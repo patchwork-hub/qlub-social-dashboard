@@ -1,5 +1,26 @@
 - @selected_option = "public"
-
+#addCommunityRuleModel.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Create Rule
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        %p.text-muted.small Add rule for this community.
+        = simple_form_for @rule_from, url: step6_rule_create_communities_path do |form|
+          = form.hidden_field :community_id, value: @community.id
+          .row
+            .col
+              .form-group
+                = form.label :rule, "Rule"
+                = form.text_field :description, class: 'form-control', id: 'description', required: true
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
+              .col
+                = form.submit 'Save changes', class: 'btn btn-danger'
 .container-fluid
   .row-md-12.my-4
     .col
@@ -25,19 +46,16 @@
               No.
             .col-auto
               Rule
-          .row.mb-2
-            .col-auto.d-flex.align-items-center.justify-content-center{ style: "width: 50px;" }
-              1
-            .col
-              %input#exampleInputEmail1.form-control{ type: "email" }
-          .row.mb-2
-            .col-auto.d-flex.align-items-center.justify-content-center{ style: "width: 50px;" }
-              2
-            .col
-              %input#exampleInputEmail1.form-control{ type: "email" }
+          - @rule_records.each_with_index do |record, index|
+            .row.mb-2
+              .col-auto.text-center
+                %i.fas.fa-circle.fa-2x.text-blue
+                %span.mt-1= index + 1
+              .col
+                %input#exampleInputEmail1.form-control{placeholder: "#{record.rule.description}", type: "email"}/
           .row
             .col.text-right
-              %a.text-danger{ href: step2_communities_path } Add another rule
+              %a.text-danger{"data-toggle" => "modal", "data-target" => "#addCommunityRuleModel", :class => 'edit-link'} Add another rule
   .row
     .col-md-12
       .card

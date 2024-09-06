@@ -1,6 +1,7 @@
 import "bootstrap";
 import "admin-lte";
 import "@nathanvda/cocoon";
+
 import "lib/datatable";
 import "custom_js/api_util";
 import "custom_js/modal_handler";
@@ -9,6 +10,8 @@ import "custom_js/community_contributor_data_table";
 import "custom_js/header";
 import "custom_js/followed_contributors_table";
 import "custom_js/search_contributor";
+import 'custom_js/search_mute_contributor';
+import 'custom_js/post_hashtag';
 
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
