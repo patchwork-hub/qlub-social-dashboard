@@ -225,7 +225,9 @@ class CommunitiesController < BaseController
       flash[:success] = "Additional information added successfully!"
       redirect_to step6_communities_path
     else
-      flash.now[:error] = @additional_information.errors.full_messages.join(', ')
+      flash[:error] = "Something went wrong!"
+      step6 
+    
       render :step6
     end
   end
