@@ -8,6 +8,8 @@ class Community < ApplicationRecord
            class_name: 'CommunityAdditionalInformation',
            foreign_key: 'patchwork_community_id',
            dependent: :destroy
+
+  has_many :community_post_types, foreign_key: 'patchwork_community_id', dependent: :destroy
   
   accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
 

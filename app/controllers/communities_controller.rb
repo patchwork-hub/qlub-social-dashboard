@@ -86,11 +86,13 @@ class CommunitiesController < BaseController
   end
 
   def step4
+    @community = Community.find(session[:form_data]['id'])
     @filter_keywords = get_community_filter_keyword
     admin_id = get_community_admin_id
     @muted_accounts = get_muted_accounts
+    @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
     @community_filter_keyword = CommunityFilterKeyword.new(
-      patchwork_community_id: session[:form_data]['id'],
+      patchwork_community_id: @community.id,
       account_id: admin_id
     )
 
@@ -100,8 +102,16 @@ class CommunitiesController < BaseController
   end
 
   def step4_save
-    respond_to do |format|
-      format.html
+    @community = Community.find(session[:form_data]['id'])
+  
+    @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
+    
+    if @community_post_type.update(community_post_type_params)
+      flash[:success] = "Community post type preferences saved successfully!"
+      redirect_to step4_communities_path
+    else
+      flash[:error] = "Failed to save post type preferences."
+      render :step4
     end
   end
 
@@ -178,8 +188,10 @@ class CommunitiesController < BaseController
   def search_contributor
     query = params[:query]
     
-    api_base_url = ENV['LOCAL_DOMAIN']
-    token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token
+    api_base_url = 'http://localhost:3001/'
+    token = 'GDtc2wQoxu8r7LBdrK26UecQAnSLtSOh5YPD5YRlZRc'
+    # api_base_url = ENV['LOCAL_DOMAIN']
+    # token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
         q: query,
@@ -230,9 +242,7 @@ class CommunitiesController < BaseController
       redirect_to step6_communities_path
     else
       flash[:error] = "Something went wrong!"
-      step6 
-    
-      render :step6
+      redirect_to step6_communities_path
     end
   end
 
@@ -263,6 +273,10 @@ class CommunitiesController < BaseController
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy]
     )
+  end
+
+  def community_post_type_params
+    params.require(:community_post_type).permit(:posts, :reposts, :replies)
   end
 
   def records_filter

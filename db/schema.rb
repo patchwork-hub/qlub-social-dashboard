@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_05_071209) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_06_164158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -956,6 +956,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_05_071209) do
     t.index ["patchwork_community_id"], name: "index_patchwork_community_amplifiers_on_patchwork_community_id"
   end
 
+  create_table "patchwork_community_post_types", force: :cascade do |t|
+    t.bigint "patchwork_community_id", null: false
+    t.boolean "posts", default: false, null: false
+    t.boolean "reposts", default: false, null: false
+    t.boolean "replies", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["patchwork_community_id"], name: "index_patchwork_community_post_types_on_patchwork_community_id"
+  end
+
   create_table "patchwork_community_rules", force: :cascade do |t|
     t.bigint "patchwork_community_id", null: false
     t.bigint "patchwork_rules_id", null: false
@@ -1579,6 +1589,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_05_071209) do
   add_foreign_key "patchwork_community_additional_informations", "patchwork_communities", on_delete: :cascade
   add_foreign_key "patchwork_community_amplifiers", "accounts"
   add_foreign_key "patchwork_community_amplifiers", "patchwork_communities"
+  add_foreign_key "patchwork_community_post_types", "patchwork_communities", on_delete: :cascade
   add_foreign_key "patchwork_community_rules", "patchwork_communities"
   add_foreign_key "patchwork_community_rules", "patchwork_rules", column: "patchwork_rules_id"
   add_foreign_key "patchwork_joined_communities", "accounts"
