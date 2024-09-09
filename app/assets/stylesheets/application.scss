@@ -213,6 +213,11 @@ ul.pagination {
   position: relative;
   overflow: hidden;
   border-radius: 2%;
+  z-index: 1;
+  .text-light{
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .top-card::before {
@@ -225,6 +230,7 @@ ul.pagination {
   width: 220px;
   height: 230px;
   opacity: 0.5;
+  z-index: 0;
 }
 
 .card-body .fa-check {
@@ -479,7 +485,7 @@ ul.pagination {
   display: inline-block;
 }
 
-#create-channel {
+#create-channel, .type-of-post {
   accent-color: red;
 }
 
@@ -549,6 +555,28 @@ ul.pagination {
   padding-left: 0.5rem !important;
   accent-color: red;
 }
+
+#search-results {
+  position: relative;
+}
+
+#disabled-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+#loading-spinner img {
+  width: 100px; /* Adjust size as needed */
+  height: 100px;
+}
 /* community filter keyword */
 
 // d flex gap spacing
@@ -560,4 +588,29 @@ ul.pagination {
 .avatar-image-upload-container{
   display: flex;
   flex-direction: row;
+}
+
+// nested-fields-remove
+.nested-fields[style*="display: none"] {
+  display: none !important;
+}
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 0rem;
+  .card-equal-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+}
+
+.installed-button{
+  width: max-content !important;
 }

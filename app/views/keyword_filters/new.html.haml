@@ -13,7 +13,7 @@
             = f.text_field :keyword, class: 'form-control', required: true
 
           .mb-3
-            = f.label :filter_type, 'Filter Type', class: 'form-label'
+            = f.label :filter_type, 'Filter applies to', class: 'form-label'
             = f.select :filter_type, KeywordFilter.filter_types.keys.map { |type| [type.capitalize, type] }, {}, class: 'form-control', required: true
 
           .mb-3.d-flex.align-items-center

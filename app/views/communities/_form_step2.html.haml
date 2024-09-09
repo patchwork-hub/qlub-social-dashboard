@@ -67,7 +67,7 @@
                   %label Administrators
                 .row
                   .mt-auto
-                    %p.text-muted.small Assign administrators to your community by providing their details below.
+                    %p.text-muted.small Assign administrators to your channel by providing their details below.
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#myModal", "data-toggle" => "modal"} Add New
@@ -85,7 +85,7 @@
                 - if @records.size == 0
                   %tr
                     %td.text-center.info-box-content{colspan: "100%"}
-                      %p.text-muted.small You haven’t added any administrators to this community yet.
+                      %p.text-muted.small You haven’t added any administrators to this channel yet
                       %a.text-danger.small{href: "#", "data-toggle" => "modal", "data-target" => "#myModal"}
                         Click here to add one
                 - @records.each do |community_admin|
@@ -102,4 +102,5 @@
           .col-auto
             %a.btn.btn-outline-secondary{ href: step1_communities_path } Back
           .col-auto
-            %a.btn.btn-danger{ href: step3_communities_path, onclick: "reload_contributors_table(/communities/contributors_table)" } Continue
+            %a.btn.btn-danger{ href: step3_communities_path, onclick: "reload_contributors_table('/communities/contributors_table')" } Continue
+          

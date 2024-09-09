@@ -1,5 +1,25 @@
-- @selected_option = "public"
-
+#addCommunityRuleModel.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Create Rule
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        %p.text-muted.small Add rule for this community.
+        = simple_form_for @rule_from, url: step6_rule_create_communities_path do |form|
+          = form.hidden_field :community_id, value: @community.id
+          .row
+            .col
+              .form-group
+                = form.label :rule, "Rule"
+                = form.text_field :description, class: 'form-control', id: 'description', required: true
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
+              .col
+                = form.submit 'Save changes', class: 'btn btn-danger'
 .container-fluid
   .row-md-12.my-4
     .col
@@ -18,52 +38,52 @@
         .card-body
           .row
             .col
-              %label Community guidelines
-              %p.text-muted.small This section lets you add any guidelines specific to this community. You can include any important information members need to know before participating. Please ensure guidelines are clearly stated, and help maintain a respectful and organised environment. Please note these guidelines only apply to this community, not the server as a whole.
+              %label Channel guidelines
+              %p.text-muted.small This section lets you add any guidelines specific to this channel. You can include any important information users need to know before participating. Please ensure guidelines are clearly stated, and help maintain a respectful and organised environment. Please note these guidelines only apply to this channel, not the server as a whole.
           .row.mb-2
-            .col-auto
+            .col-auto.d-flex.align-items-center.justify-content-center{ style: "width: 50px;" }
               No.
             .col-auto
               Rule
-          .row.mb-2
-            .col-auto
-              %i.fas.fa-circle.fa-2x.text-blue
-            .col
-              %input#exampleInputEmail1.form-control{placeholder: "This is some text for a community rule.", type: "email"}/
-          .row.mb-2
-            .col-auto
-              %i.fas.fa-circle.fa-2x.text-blue
-            .col
-              %input#exampleInputEmail1.form-control{placeholder: "This is some text for a community rule.", type: "email"}/
+          - @rule_records.each_with_index do |record, index|
+            .row.mb-2
+              .col-auto.text-center
+                %i.fas.fa-circle.fa-2x.text-blue
+                %span.mt-1= index + 1
+              .col
+                %input#exampleInputEmail1.form-control{placeholder: "#{record.rule.description}", type: "email"}/
           .row
             .col.text-right
-              %a.text-danger{ href: step2_communities_path } Add another rule
+              %a.text-danger{"data-toggle" => "modal", "data-target" => "#addCommunityRuleModel", :class => 'edit-link'} Add another rule
   .row
     .col-md-12
       .card
-        .card-header
-          %h3.card-title Additional Information
         .card-body
-          .row.mb-2
-            .col-md-3
-              Heading
-            .col-md-8
-              text
-            .col-md-1
-          .row.mb-2
-            .col-md-3
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
-            .col-md-8
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
-            .col-md-1.text-center
-              %i.far.fa-trash-alt.text-danger
-          .row.mb-2
-            .col-md-3
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
-            .col-md-8
-              %input#exampleInputEmail1.form-control{placeholder: "Enter a heading", type: "email"}/
-            .col-md-1.text-center
-              %i.far.fa-trash-alt.text-danger
+          .row.d-flex.justify-content-between
+            .col-md-9-auto
+              %label Additional Information
+            .col-md-3-auto.mt-auto
+              %button.btn.btn-outline-secondary{ title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#communityInformation" } Add New
+          .table-responsive
+            %table.table.mt-3
+              %tbody
+                - if @aditional_information.size == 0
+                  %tr
+                    %td.text-center
+                      %p.text-muted.small You haven’t added any information for this community yet
+                      %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#communityInformation' }
+                        Click here to add one
+                - else
+                  %tr
+                    %th{ style: 'width: 30%;' } Heading
+                    %th{ style: 'width: 70%;' } Text
+                - @aditional_information.each do |information|
+                  %tr
+                    %td{ style: 'width: 30%;' }
+                      %input.form-control{ type: 'text', value: information.heading, readonly: true }
+                    %td{ style: 'width: 70%;' }
+                      %input.form-control{ type: 'text', value: information.text, readonly: true }
+
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step5_communities_path } Back
@@ -71,3 +91,5 @@
           %button.btn.btn-danger{"data-toggle" => "modal", "data-target" => "#previewCommunityModal"} Preview Community
 
 = render "preview_community"
+= render "information"
+

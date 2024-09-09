@@ -21,22 +21,6 @@
               .col
                 = form.submit 'Save', class: 'btn btn-danger'
 
-#contributorModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog{:role => "document"}
-    .modal-content
-      .modal-header
-        %h5#exampleModalLabel.modal-title Add a new contributor
-        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-          %span{"aria-hidden" => "true"} ×
-      .modal-body
-        .card-tools
-          .input-group.input-group-sm{style: "width: 150px;"}
-            %input.form-control.float-right{id: "search-input", type: "text", name: "username_cont", placeholder: "Search"}
-            .input-group-append
-              %button.btn.btn-default{type: "button", onclick: "reloadFollowers(document.getElementById('search-input').value)"}
-                %i.fas.fa-search
-        .table-responsive#contributors_table
-
 .container-fluid
   .row-md-12.my-4
     .col
@@ -59,7 +43,7 @@
                 %label Hashtags
               .row
                 .mt-auto
-                  %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your community.
+                  %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your channel.
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
                 %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
@@ -75,8 +59,8 @@
                 - if @records.size == 0
                   %tr
                     %td.text-center{ colspan: 2 }
-                      %p.text-muted You haven’t added any hashtags to this community yet
-                      %a.text-danger{ href: step3_communities_path } Click here to add one
+                      %p.text-muted.small You haven’t added any hashtags to this community yet
+                      %a.text-danger.small{ href: step3_communities_path } Click here to add one
                 - @records.each do |community_hashtag|
                   %tr
                     %td{style: "width: 30px;"}
@@ -93,24 +77,37 @@
           .row.d-flex.justify-content-between
             .col
               .row
-                %label Community contributors
+                %label Channel contributors
               .row
                 .mt-auto
-                  %p.text-muted.small Add key contributors by searching for them below. Posts from these contributors will be prominently featured in your community.
+                  %p.text-muted.small Add key contributors by searching for them below. Posts from these contributors will be prominently featured in your channel.
           .row
             .col
-              %label Your community contributors (0)
+              %label Your channel contributors (0)
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
-                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#contributorModal", "data-toggle" => "modal", onclick: "reloadFollowers(document.getElementById('search-input').value)"} Add New
-          .table-responsive#followed_contributors
+                %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#addContributorModal"} Add New
+          .table-responsive
+            %table.table.mt-3.table-striped
+              %tbody
+                - if @follower_records.size == 0
+                  %tr
+                    %td.text-center
+                      %p.text-muted.small You have not added any hashtags to this community yet
+                      %a.text-danger.small{ href: step2_communities_path } Click here to add one
+                - @follower_records.each do |record|
+                  %tr
+                    %td
+                      %p= record.username
+                    %td{style: "width: 60px;"}
+                      %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}')" } Unfollow
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_communities_path } Back
         .col-auto
           %a.btn.btn-danger{ href: step4_communities_path } Continue
 
-
+= render 'add_contributor'
 
 
 

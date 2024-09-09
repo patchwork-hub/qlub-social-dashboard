@@ -4,6 +4,8 @@ require "rails/all"
 
 require 'csv'
 
+require 'doorkeeper'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -19,7 +21,7 @@ module Dashboard
     config.paperclip_defaults = {
       log: true,
       whiny: false,
-      path:                     'mammoth/:class/:attachment/:id_partition/:style/:filename',
+      path:                     'patchwork/:class/:attachment/:id_partition/:style/:filename',
       bucket:                   ENV["S3_BUCKET"],
       preserve_files:           true,
       storage:                  :s3,

@@ -1,13 +1,3 @@
-GIT
-  remote: https://github.com/newsmast22/patch_commu
-  revision: f23c6dea07e586117e1ca05a457a916f98555a50
-  branch: main
-  specs:
-    patch_commu (0.1.0)
-      byebug
-      rails (~> 7.0)
-      strong_migrations
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -150,6 +140,8 @@ GEM
       railties (>= 4.1.0)
       responders
       warden (~> 1.2.3)
+    doorkeeper (5.7.1)
+      railties (>= 5)
     dotenv (3.1.2)
     dotenv-rails (3.1.2)
       dotenv (= 3.1.2)
@@ -165,6 +157,7 @@ GEM
     faraday-net_http (3.1.1)
       net-http
     ffi (1.17.0)
+    ffi (1.17.0-arm64-darwin)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -416,6 +409,7 @@ DEPENDENCIES
   cocoon
   debug
   devise
+  doorkeeper
   dotenv-rails
   faraday (~> 2.10, >= 2.10.1)
   haml
@@ -428,7 +422,6 @@ DEPENDENCIES
   jsonapi-serializer (~> 2.2)
   kaminari
   kt-paperclip (~> 7.1)
-  patch_commu!
   pg (~> 1.1)
   puma (~> 5.0)
   rails (~> 7.1.0, >= 7.0.4.2)

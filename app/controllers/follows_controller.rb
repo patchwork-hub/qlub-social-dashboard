@@ -1,6 +1,6 @@
 class FollowsController < BaseController
   def index
-    @current_acc = @current_user.account
+    @current_acc = CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
     @records = load_records
     @search = records_filter.build_search
     respond_to do |format|

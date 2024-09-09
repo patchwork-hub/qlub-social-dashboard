@@ -1,0 +1,8 @@
+%div.d-flex.nested-fields
+  %div.col-3.mb-3
+    = f.text_field :heading, class: 'form-control', placeholder: "Enter heading"
+  %div.col-8.mb-3
+    = f.text_field :text, class: 'form-control', placeholder: "Enter text"
+  %div.col-1.mb-3
+    = link_to_remove_association f, class: 'text-danger', title: "Remove" do
+      %i.far.fa-trash-alt
