@@ -63,12 +63,13 @@ class CommunitiesController < BaseController
   end
 
   def step3
+    @community = Community.find(session[:form_data]['id'])
+
     @records = load_commu_hashtag_records
     @search = commu_hashtag_records_filter.build_search
 
     @community_hashtag_form = Form::CommunityHashtag.new
-    @community = Community.find(session[:form_data]['id'])
-
+  
     @community_admin = CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
 
     @follower_records = load_contributors_records
@@ -325,6 +326,7 @@ class CommunitiesController < BaseController
   end
 
   def commu_hashtag_records_filter
+    params[:q] = { patchwork_community_id_eq: @community.id }
     @filter = Filter::CommunityHashtag.new(params)
   end
 
