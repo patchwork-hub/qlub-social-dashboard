@@ -1,11 +1,11 @@
 - content_for :title do
-  = 'Communities'
+  = 'Local channels'
 
 .row
   .col-12
     .card
       .card-header
-        %h3.card-title Your communities
+        %h3.card-title Local channels
         .card-tools
           = search_form_for @search do |f|
             .input-group.input-group-sm{style: "width: 150px;"}
@@ -14,14 +14,14 @@
                 %button.btn.btn-default{type: "submit"}
                   %i.fas.fa-search
       .card-body
-        %p.text-muted.small Here you can see a list of all the communities on your server. From this dashboard, you can easily import communities hosted on other servers, create new communities on this server or manage existing ones.
+        %p.text-muted Here you can see a list of all the channels on your server. From this dashboard, you can easily import channels hosted on other servers, create new ones hosted here or manage your existing channels.
         %table.table.no-side-borders.top-bottom-border{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
               %th.align-left
                 = check_box_tag :select_all, '', false, id: 'select_all'
-              %th Community
-              %th Username
+              %th Channels
+              %th Name
               %th No.of admins
               %th
           %tbody
@@ -57,8 +57,8 @@
           .col-12.d-flex.justify-content-center
             %div.btn-group
               %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
-                Import a community
+                Import a channel
                 = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
               %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_communities_path(new_community: 'true')}'" }
-                Create a community
+                Create a channel
                 = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")

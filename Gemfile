@@ -44,7 +44,7 @@ gem 'devise'
 gem 'cancancan'
 gem 'kt-paperclip', '~> 7.1'
 
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails'
 gem 'spreadsheet'
 gem 'sidekiq', '~> 6.5'
 gem 'hiredis', '~> 0.6'
@@ -55,8 +55,8 @@ gem "cocoon"
 
 gem "select2-rails"
 gem "strong_migrations"
-gem 'patch_commu', git: "https://github.com/newsmast22/patch_commu", branch: 'main'
 gem 'ransack'
 gem 'bcrypt'
 gem 'faraday', '~> 2.10', '>= 2.10.1'
 gem 'jsonapi-serializer', '~> 2.2'
+gem 'doorkeeper'
