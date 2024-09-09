@@ -1,4 +1,4 @@
-if Rails.env.development?
+# if Rails.env.development?
   if ServerSetting.count == 0
 
     settings = [
@@ -38,4 +38,4 @@ if Rails.env.development?
 
     p 'Server Settings are created!!'
   end
-end
+# end
