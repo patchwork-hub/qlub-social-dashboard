@@ -244,8 +244,7 @@ class CommunitiesController < BaseController
       redirect_to step6_communities_path
     else
       flash[:error] = "Something went wrong!"
-      step6
-      render :step6
+      redirect_to step6_communities_path
     end
   end
 
