@@ -96,6 +96,7 @@
                       %p.text-muted.small You have not added any hashtags to this community yet
                       %a.text-danger.small{ href: step2_communities_path } Click here to add one
                 - @follower_records.each do |record|
+                  - record = record.target_account
                   %tr
                     %td
                       %p= record.username

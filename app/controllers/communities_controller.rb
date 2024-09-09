@@ -70,8 +70,9 @@ class CommunitiesController < BaseController
     @community = Community.find(session[:form_data]['id'])
 
     @community_admin = CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
-    @follower_records = load_commu_follower_records
-    @follower_search = commu_follower_filter.build_search
+
+    @follower_records = load_contributors_records
+    @follower_search = commu_contributors_filter.build_search
 
     respond_to do |format|
       format.html
