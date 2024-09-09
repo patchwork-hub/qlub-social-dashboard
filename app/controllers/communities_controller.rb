@@ -91,10 +91,7 @@ class CommunitiesController < BaseController
     @filter_keywords = get_community_filter_keyword
     admin_id = get_community_admin_id
     @muted_accounts = get_muted_accounts
-<<<<<<< HEAD
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
-=======
->>>>>>> mmh_dev
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: @community.id,
       account_id: admin_id
@@ -223,11 +220,7 @@ class CommunitiesController < BaseController
     render json: { success: true }
   end
 
-<<<<<<< HEAD
   def unmute_contributor
-=======
-def unmute_contributor
->>>>>>> mmh_dev
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
@@ -250,13 +243,8 @@ def unmute_contributor
       redirect_to step6_communities_path
     else
       flash[:error] = "Something went wrong!"
-<<<<<<< HEAD
-      redirect_to step6_communities_path
-=======
-      step6 
-    
+      step6
       render :step6
->>>>>>> mmh_dev
     end
   end
 
@@ -289,13 +277,10 @@ def unmute_contributor
     )
   end
 
-<<<<<<< HEAD
   def community_post_type_params
     params.require(:community_post_type).permit(:posts, :reposts, :replies)
   end
 
-=======
->>>>>>> mmh_dev
   def records_filter
     @filter = Filter::Community.new(params)
   end
