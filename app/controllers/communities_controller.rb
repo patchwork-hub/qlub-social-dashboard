@@ -81,7 +81,7 @@ class CommunitiesController < BaseController
   end
 
   def step3_save
-    CommunityHashtagPostService.new.call(@current_user.account,
+    CommunityHashtagPostService.new.call(@community.community_admins&.first.account,
                 hashtag:  community_hashtag_params[:hashtag],
                 community_id: community_hashtag_params[:community_id])
     redirect_to step3_communities_path
@@ -323,7 +323,7 @@ class CommunitiesController < BaseController
   end
 
   def commu_contributors_filter
-    params[:q] = { account_id_eq: @current_user.account.id }
+    params[:q] = { account_id_eq: @community.community_admins&.first&.account_id }
     @contributor_filter = Filter::Follow.new(params)
   end
 
