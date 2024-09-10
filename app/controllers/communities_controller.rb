@@ -202,8 +202,9 @@ class CommunitiesController < BaseController
         'Authorization' => "Bearer #{token}"
       }
     )
+    sleep 2
     accounts = response.parsed_response['accounts']
-    saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
+    saved_accounts = Account.where(username: accounts&.map { |account| account['username'] })
     if saved_accounts.any?
       formatted_accounts = saved_accounts.map do |account|
         {
