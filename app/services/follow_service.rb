@@ -13,7 +13,7 @@ class FollowService < BaseService
       account_id: @source_account.id,
       show_reblogs: true,
       uri: nil,
-      notify: false,
+      notify: true,
       languages: nil
     }.compact
   end
