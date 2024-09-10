@@ -191,8 +191,8 @@ class CommunitiesController < BaseController
     query = params[:query]
     # api_base_url = ENV['LOCAL_DOMAIN']
     # token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1)&.token
-    api_base_url = 'https://patchwork.online/'
-    token = 'Esk4q-UpKdRYah2_4YBrWYRiARaHPjS1J-U2W6WhYh0'
+    api_base_url = 'https://staging.patchwork.online/'
+    token = '5x8Ki8hNRvQZWGdsldpHl3u7Df36sWQ95NGNoV1Hxlk'
   
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
@@ -212,7 +212,7 @@ class CommunitiesController < BaseController
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     mute = params[:mute]
-    
+    byebug
     if mute
       Mute.find_or_create_by!(account_id: admin_account_id, target_account_id: target_account_id, hide_notifications: true)
     else
