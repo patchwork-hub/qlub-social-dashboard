@@ -190,11 +190,7 @@ class CommunitiesController < BaseController
   def search_contributor
     query = params[:query]
     api_base_url = ENV['LOCAL_DOMAIN']
-    token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token
-    p "#{Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token}"
-    unless token
-      render json: { error: "API token not found" }, status: :internal_server_error and return
-    end
+    token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1)&.token
   
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
@@ -206,12 +202,8 @@ class CommunitiesController < BaseController
         'Authorization' => "Bearer #{token}"
       }
     )
-  
-    if response.success?
-      render json: response.parsed_response
-    else
-      render json: { error: "Failed to fetch contributors." }, status: :internal_server_error
-    end
+    
+    render json: response.parsed_response
   end  
 
   def mute_contributor
