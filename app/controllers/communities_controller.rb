@@ -202,15 +202,28 @@ class CommunitiesController < BaseController
         'Authorization' => "Bearer #{token}"
       }
     )
-    
-    render json: response.parsed_response
+    accounts = response.parsed_response['accounts']
+    saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
+    if saved_accounts.any?
+      formatted_accounts = saved_accounts.map do |account|
+        {
+          'id' => account.id.to_s,
+          'username' => account.username,
+          'display_name' => account.display_name,
+          'domain' => account.domain,
+          'note' => account.note
+        }
+      end
+      render json: { 'accounts' => formatted_accounts }
+    else
+      render json: { message: 'No saved accounts found' }
+    end
   end  
 
   def mute_contributor
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     mute = params[:mute]
-    byebug
     if mute
       Mute.find_or_create_by!(account_id: admin_account_id, target_account_id: target_account_id, hide_notifications: true)
     else
