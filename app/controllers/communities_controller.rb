@@ -189,16 +189,15 @@ class CommunitiesController < BaseController
 
   def search_contributor
     query = params[:query]
-    # api_base_url = ENV['LOCAL_DOMAIN']
-    # token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1)&.token
-    api_base_url = 'https://staging.patchwork.online/'
-    token = '5x8Ki8hNRvQZWGdsldpHl3u7Df36sWQ95NGNoV1Hxlk'
-  
+    api_base_url = ENV['MASTODON_INSTANCE_URL']
+    token = ENV['MASTODON_APPLICATION_TOKEN']
+   
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
         q: query,
         resolve: true,
-        limit: 5
+        limit: 5,
+        type: accounts
       },
       headers: {
         'Authorization' => "Bearer #{token}"
