@@ -31,16 +31,15 @@
               %h5.card-title Total server users
             %div
               = image_tag("icons/users.svg", class: "mr-2", width: "16", height: "16")
-        .card-body.mb-1
-          .row
-            .col-6.px-0
-              %h3 18,928
-            .col-1
-              = image_tag("icons/circle-up.svg", class: "mr-2", width: "16", height: "16")
-            .col-5
-              %h3 31.24%
-          .row
+        .card-body.mb-1.d-flex.align-items-center.justify-content-between
+          .col-5.ml-4.d-flex.flex-column.justify-content-center
+            %h3 18,928
             %p Since 23 July, 2024
+          .col-2.d-flex.justify-content-center.align-items-center
+            = image_tag("icons/circle-up.svg", class: "mr-2", width: "16", height: "16")
+          .col-5.d-flex.align-items-center
+            %h3 31.24%
+
     .row
       .card.small-card
         .card-header
@@ -49,16 +48,15 @@
               %h5.card-title Visits
             %div
               = image_tag("icons/eye.svg", class: "mr-2", width: "16", height: "16")
-        .card-body.mb-1
-          .row
-            .col-6.px-0
-              %h3 201
-            .col-1
-              = image_tag("icons/circle-up.svg", class: "mr-2", width: "16", height: "16")
-            .col-5
-              %h3 31.24%
-          .row
+        .card-body.mb-1.d-flex.align-items-center.justify-content-between
+          .col-5.ml-4
+            %h3 201
             %p Every 24 hours
+          .col-2.d-flex.align-items-center.justify-content-center
+            = image_tag("icons/circle-up.svg", class: "mr-2", width: "16", height: "16")
+          .col-5
+            %h3 31.24%
+            
   .col-4
     .card.small-card
       .card-header
@@ -121,7 +119,7 @@
         %p.text-muted.small.my-2
           Update the settings for your server to ensure content is being moderated correctly and spam filters are in place.
         %div.d-grid.gap-2.mt-auto.my-2
-          %button.btn.btn-danger.btn-block{type: "button"} View website
+          %a.btn.btn-danger.btn-block{ href: server_settings_path } View server settings
   .col-4
     .card.small-card
       .card-body
@@ -132,7 +130,7 @@
         %p.text-muted.small.my-2
           See a list of all your local channels and easily import, manage or create new channels in one place.
         %div.d-grid.gap-2.mt-auto.my-2
-          %button.btn.btn-danger.btn-block{type: "button"} View all local channels
+          %a.btn.btn-danger.btn-block{ href: communities_path } View all local channels
   .col-4
     .card.small-card
       .card-body
@@ -143,4 +141,4 @@
         %p.text-muted.small.my-2
           Install Patchwork patches to enable new features and controls.
         %div.d-grid.gap-2.mt-auto.my-2{style: 'padding-top: 18px;'}
-          %button.btn.btn-danger.btn-block{type: "button"} View installation panel
+          %a.btn.btn-danger.btn-block{ href: '/installation' } View installation panel

@@ -23,7 +23,7 @@
               = link_to communities_url, class: 'form-control float-right text-nowrap', title: 'back' do
                 Back
               - if @type == 'community-admin'
-                = link_to new_community_admin_url(community_id: @community.slug, type: 'community-admin'), class: 'form-control float-right', title: 'add new community admin' do
+                = link_to new_community_admin_url(community_id: @community.slug, type: 'community-admin'), class: 'form-control float-right', title: 'add new channel admin' do
                   %i.fa-solid.fa-user-plus
               - else
                 = link_to new_community_admin_url(community_id: @community.slug, type: 'rss-account'), class: 'form-control float-right', title: 'add new rss-account', style: 'color: #E33D26 !important' do
