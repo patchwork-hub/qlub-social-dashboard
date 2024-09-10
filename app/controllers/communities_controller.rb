@@ -190,10 +190,8 @@ class CommunitiesController < BaseController
   def search_contributor
     query = params[:query]
     
-    api_base_url = 'http://localhost:3001/'
-    token = 'GDtc2wQoxu8r7LBdrK26UecQAnSLtSOh5YPD5YRlZRc'
-    # api_base_url = ENV['LOCAL_DOMAIN']
-    # token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token
+    api_base_url = ENV['LOCAL_DOMAIN']
+    token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1).token
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
         q: query,

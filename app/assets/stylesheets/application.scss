@@ -503,6 +503,17 @@ ul.pagination {
   height: 200px;
 }
 
+.resource-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.card-body .installed-button {
+  align-self: flex-start;
+}
+
 .install-mastodon {
   background: linear-gradient(180deg, #6364FF 0%, #563ACC 99.99%);
 }

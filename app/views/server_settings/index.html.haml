@@ -16,11 +16,11 @@
                 %strong= setting[:name]
                 - case setting[:name]
                   - when 'Local Features'
-                    %p.text-muted.small.mt-2 Customise and design the experience of your community with a suite of features.
+                    %p.text-muted.small.mt-2 Customise and design the experience of your channel with a suite of features.
                   - when 'User Management'
-                    %p.text-muted.small.mt-2 Foster community through engagement tools and control who has access to your server.
+                    %p.text-muted.small.mt-2 Foster channel through engagement tools and control who has access to your server.
                   - when 'Content filters'
-                    %p.text-muted.small.mt-2 Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin community.
+                    %p.text-muted.small.mt-2 Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin channel.
                   - when 'Spam filters'
                     %p.text-muted.small.mt-2 Filter out spam posts and bots from the wider network at a server level to keep your server clean.
                   - when 'Federation'
@@ -51,7 +51,7 @@
                           - when 'Spam filters'
                             = render 'shared/tooltip_custom', tooltip_text: 'Block spam posts by applying a preset list of keyword filters or add your own. These are maintained with input from other Patchwork server admins.'
                           - when 'Content filters'
-                            = render 'shared/tooltip_custom', tooltip_text: 'Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin community.'
+                            = render 'shared/tooltip_custom', tooltip_text: 'Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin channel.'
                       %br
                       - if option[:name].casecmp?('Spam filters')
                         %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Select or create filter list' }
@@ -114,17 +114,17 @@
                           - when 'Search opt-out'
                             = render 'shared/tooltip_custom', tooltip_text: 'Make all text within the server, including user’s posts and bios, visible to search. Users are able to opt-out if they choose.'
                           - when 'Local only posts'
-                            = render 'shared/tooltip_custom', tooltip_text: 'Allow users to publish posts just to your server, fostering a greater sense of community.'
+                            = render 'shared/tooltip_custom', tooltip_text: 'Allow users to publish posts just to your server, fostering a greater sense of channel.'
                           - when 'Long posts and markdown'
                             = render 'shared/tooltip_custom', tooltip_text: 'Set character limits for posts and enable text formatting, including bold, italics & more.'
                           - when 'Local quote posts'
-                            = render 'shared/tooltip_custom', tooltip_text: 'Allow users to publish posts just to your server, fostering a greater sense of community.'
+                            = render 'shared/tooltip_custom', tooltip_text: 'Allow users to publish posts just to your server, fostering a greater sense of channel.'
                           - when 'Guest accounts'
                             = render 'shared/tooltip_custom', tooltip_text: 'Allow anyone with a Mastodon account to participate on your server with guest sign-in.'
                           - when 'e-Newsletters'
                             = render 'shared/tooltip_custom', tooltip_text: 'Foster a closer, more transparent connection with users on your server by sending regular, custom newsletters.'
                           - when 'Analytics'
-                            = render 'shared/tooltip_custom', tooltip_text: 'Understand your community and optimise your server with non-intrusive analytics.'
+                            = render 'shared/tooltip_custom', tooltip_text: 'Understand your channel and optimise your server with non-intrusive analytics.'
                         - if option[:name].casecmp?('Long posts and markdown')
                           %br
                           %span.ml-5.small{ style: 'color: grey;' }

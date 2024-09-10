@@ -45,7 +45,7 @@
           .row
             .col
               %label Mute accounts
-              %p.text-muted.small Choose accounts to Mute from the Community.
+              %p.text-muted.small Choose accounts to Mute from the channel.
           .row.d-flex.justify-content-between
             .col-auto
               %label Your muted contributors (0)
@@ -57,7 +57,7 @@
                 - if @muted_accounts.size == 0
                   %tr
                     %td.text-center
-                      %p.text-muted.small You haven’t muted any contributors from this community yet
+                      %p.text-muted.small You haven’t muted any contributors from this channel yet
                       %a.text-danger.small{ href: '#', title: 'Mute a contributor', 'data-toggle': 'modal', 'data-target': '#muteContributorModal' }
                         Click here to search
                 - @muted_accounts.each do |account|

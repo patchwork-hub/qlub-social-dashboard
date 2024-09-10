@@ -2,7 +2,7 @@
   .modal-dialog{:role => "document"}
     .modal-content
       .modal-header
-        %h5#exampleModalLabel.modal-title Add new community hashtag
+        %h5#exampleModalLabel.modal-title Add new channel hashtag
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
@@ -33,7 +33,7 @@
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
-        %p.text-muted.small Edit the hashtag for this community.
+        %p.text-muted.small Edit the hashtag for this channel.
         = simple_form_for @form_post_hashtag, url: step5_update_communities_path do |form|
           = form.hidden_field :community_id, value: @community.id
           = form.hidden_field :id, id: 'post_hashtag_id' # Hidden field for the hashtag ID

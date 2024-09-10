@@ -2,11 +2,11 @@
   .modal-dialog{:role => "document"}
     .modal-content
       .modal-header
-        %h5#exampleModalLabel.modal-title Add new community hashtag
+        %h5#exampleModalLabel.modal-title Add new channel hashtag
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
-        %p.text-muted.small Add a community hashtag using the form below. Every post on this hashtag will appear in the community. This allows community members to post to the community even when they’re somewhere else in the network.
+        %p.text-muted.small Add a channel hashtag using the form below. Every post on this hashtag will appear in the channel. This allows channel members to post to the channel even when they’re somewhere else in the network.
         = simple_form_for @community_hashtag_form, url: step3_communities_path do |form|
           = form.hidden_field :community_id, value: @community.id
           .row
@@ -59,8 +59,9 @@
                 - if @records.size == 0
                   %tr
                     %td.text-center{ colspan: 2 }
-                      %p.text-muted.small You haven’t added any hashtags to this community yet
-                      %a.text-danger.small{ href: step3_communities_path } Click here to add one
+                      %p.text-muted.small You haven’t added any hashtags to this channel yet
+                      %a.text-danger.small{ href: '#', title: 'Add new channel hashtag', 'data-toggle': 'modal', 'data-target': '#hashtagModal' }
+                        Click here to add one
                 - @records.each do |community_hashtag|
                   %tr
                     %td{style: "width: 30px;"}
@@ -93,8 +94,9 @@
                 - if @follower_records.size == 0
                   %tr
                     %td.text-center
-                      %p.text-muted.small You have not added any hashtags to this community yet
-                      %a.text-danger.small{ href: step2_communities_path } Click here to add one
+                      %p.text-muted.small You have not added any hashtags to this channel yet
+                      %a.text-danger.small{ href: '#', title: 'Add a contributor', 'data-toggle': 'modal', 'data-target': '#addContributorModal' }
+                        Click here to add one
                 - @follower_records.each do |record|
                   - record = record.target_account
                   %tr

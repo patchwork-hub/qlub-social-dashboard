@@ -6,7 +6,7 @@
         %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
           %span{"aria-hidden" => "true"} ×
       .modal-body
-        %p.text-muted.small Add rule for this community.
+        %p.text-muted.small Add rule for this channel.
         = simple_form_for @rule_from, url: step6_rule_create_communities_path do |form|
           = form.hidden_field :community_id, value: @community.id
           .row
@@ -70,7 +70,7 @@
                 - if @aditional_information.size == 0
                   %tr
                     %td.text-center
-                      %p.text-muted.small You haven’t added any information for this community yet
+                      %p.text-muted.small You haven’t added any information for this channel yet
                       %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#communityInformation' }
                         Click here to add one
                 - else
@@ -88,7 +88,7 @@
         .col
           %a.btn.btn-outline-secondary{ href: step5_communities_path } Back
         .col-auto
-          %button.btn.btn-danger{"data-toggle" => "modal", "data-target" => "#previewCommunityModal"} Preview Community
+          %button.btn.btn-danger{"data-toggle" => "modal", "data-target" => "#previewCommunityModal"} Preview Channel
 
 = render "preview_community"
 = render "information"
