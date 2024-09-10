@@ -217,7 +217,7 @@ class CommunitiesController < BaseController
       end
       render json: { 'accounts' => formatted_accounts }
     else
-      render json: { message: 'No saved accounts found' }
+      render json: { message: 'No saved accounts found', 'accounts' => [] }
     end
   end  
 
