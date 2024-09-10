@@ -7,17 +7,9 @@ function searchFollowedContributors(query) {
   showLoadingSpinner();
 
   fetch(`/communities/search_contributor?query=${encodeURIComponent(query)}`)
-    .then(async response => {
-      const data = await response.json();
+    .then(response => response.json())
+    .then(data => {
       hideLoadingSpinner();
-      
-      if (!response.ok) {
-        console.log('Error:', data.error || 'Unknown error');
-        clearSearchResults();
-        resultsContainer.innerHTML = `<p>${data.error || 'Error fetching results.'}</p>`;
-        return;
-      }
-      
       displaySearchResults(data.accounts);
     })
     .catch(error => {
