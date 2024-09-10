@@ -191,13 +191,12 @@ class CommunitiesController < BaseController
     query = params[:query]
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = ENV['MASTODON_APPLICATION_TOKEN']
-   
+
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
         q: query,
         resolve: true,
-        limit: 5,
-        type: accounts
+        limit: 5
       },
       headers: {
         'Authorization' => "Bearer #{token}"
