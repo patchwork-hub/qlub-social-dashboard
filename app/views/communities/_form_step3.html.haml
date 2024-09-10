@@ -8,7 +8,7 @@
       .modal-body
         %p.text-muted.small Add a channel hashtag using the form below. Every post on this hashtag will appear in the channel. This allows channel members to post to the channel even when they’re somewhere else in the network.
         = simple_form_for @community_hashtag_form, url: step3_communities_path do |form|
-          = form.hidden_field :community_id, value: @community.id
+          = form.hidden_field :community_id, value: @community.id, id: 'community_id'
           .row
             .col
               .form-group
@@ -84,7 +84,8 @@
                   %p.text-muted.small Add key contributors by searching for them below. Posts from these contributors will be prominently featured in your channel.
           .row
             .col
-              %label Your channel contributors (0)
+              %label
+                = "Your channel contributors (#{@follower_records.present? ? @follower_records.size : 0})"
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
                 %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#addContributorModal"} Add New
@@ -103,7 +104,7 @@
                     %td
                       %p= record.username
                     %td{style: "width: 60px;"}
-                      %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}')" } Unfollow
+                      %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}')" } Unfollow
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_communities_path } Back
