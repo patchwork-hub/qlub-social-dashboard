@@ -189,8 +189,10 @@ class CommunitiesController < BaseController
 
   def search_contributor
     query = params[:query]
-    api_base_url = ENV['LOCAL_DOMAIN']
-    token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1)&.token
+    # api_base_url = ENV['LOCAL_DOMAIN']
+    # token = Doorkeeper::AccessToken.find_by(resource_owner_id: 1)&.token
+    api_base_url = 'https://patchwork.online/'
+    token = 'Esk4q-UpKdRYah2_4YBrWYRiARaHPjS1J-U2W6WhYh0'
   
     response = HTTParty.get("#{api_base_url}/api/v2/search",
       query: {
