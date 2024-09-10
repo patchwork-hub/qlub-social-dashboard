@@ -1,7 +1,7 @@
 // Function to follow a contributor and update the button
-window.followContributor = function(account_id) {
+window.followContributor = function(account_id, community_id=null) {
   $.ajax({
-    url: `/accounts/${account_id}/follow`,
+    url: `/accounts/${account_id}/follow?community_id=${community_id}`,
     method: 'POST',
     success: function(response) {
       var followBtn = $(`#follow_btn_${account_id}`);
@@ -11,7 +11,7 @@ window.followContributor = function(account_id) {
       followBtn.addClass('btn-outline-danger');
 
       // Update the button's onclick to call unfollowContributor
-      followBtn.attr('onclick', `unfollowContributor('${account_id}')`);
+      followBtn.attr('onclick', `unfollowContributor('${account_id}', '${community_id}')`);
     },
     error: function() {
       console.log('Error occurred while following contributor');
@@ -20,9 +20,9 @@ window.followContributor = function(account_id) {
 };
 
 // Function to unfollow a contributor and update the button
-window.unfollowContributor = function(account_id) {
+window.unfollowContributor = function(account_id, community_id=null) {
   $.ajax({
-    url: `/accounts/${account_id}/unfollow`,
+    url: `/accounts/${account_id}/unfollow?community_id=${community_id}`,
     method: 'POST',
     success: function(response) {
       var followBtn = $(`#follow_btn_${account_id}`);
@@ -80,7 +80,10 @@ function displaySearchResults(accounts) {
     resultsContainer.innerHTML = '<p>No results found.</p>';
     return;
   }
-
+  var communityID = document.getElementById('community_id');
+  if(communityID){
+    communityID = communityID.value;
+  }
   accounts.forEach(account => {
     const resultItem = document.createElement('div');
     resultItem.className = 'list-group-item align-items-center';
@@ -95,7 +98,7 @@ function displaySearchResults(accounts) {
           ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
-          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}')" style="float: right;">
+          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}')" style="float: right;">
             Follow
           </button>
         </div>
