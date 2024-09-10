@@ -347,7 +347,7 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
+    CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).first.account_id
   end
 
   def get_muted_accounts
