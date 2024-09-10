@@ -7,26 +7,24 @@ function searchFollowedContributors(query) {
   showLoadingSpinner();
 
   fetch(`/communities/search_contributor?query=${encodeURIComponent(query)}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
+    .then(async response => {
+      const data = await response.json();
       hideLoadingSpinner();
-      if (data.error) {
-        console.log('Error:', data.error);
+      
+      if (!response.ok) {
+        console.log('Error:', data.error || 'Unknown error');
         clearSearchResults();
-        resultsContainer.innerHTML = '<p>Error fetching results.</p>';
+        resultsContainer.innerHTML = `<p>${data.error || 'Error fetching results.'}</p>`;
         return;
       }
+      
       displaySearchResults(data.accounts);
     })
     .catch(error => {
       hideLoadingSpinner();
       console.log('Error fetching search results:', error);
     });
+
 }
 
 function showLoadingSpinner() {
