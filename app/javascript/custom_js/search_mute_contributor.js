@@ -7,14 +7,17 @@ function searchFollowedContributors(query) {
   showLoadingSpinner();
 
   fetch(`/communities/search_contributor?query=${encodeURIComponent(query)}`)
-    .then(response => response.json())
+    .then(response => {
+      return response.json().then(data => {
+        if (!response.ok) {
+          throw new Error(data.message || 'Unknown error');
+        }
+        return data;
+      });
+    })
     .then(data => {
       hideLoadingSpinner();
       displaySearchResults(data.accounts);
-    })
-    .catch(error => {
-      hideLoadingSpinner();
-      console.log('Error fetching search results:', error);
     });
 
 }
