@@ -7,9 +7,20 @@ function searchFollowedContributors(query) {
   showLoadingSpinner();
 
   fetch(`/communities/search_contributor?query=${encodeURIComponent(query)}`)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
     .then(data => {
       hideLoadingSpinner();
+      if (data.error) {
+        console.log('Error:', data.error);
+        clearSearchResults();
+        resultsContainer.innerHTML = '<p>Error fetching results.</p>';
+        return;
+      }
       displaySearchResults(data.accounts);
     })
     .catch(error => {
