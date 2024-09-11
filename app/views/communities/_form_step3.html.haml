@@ -7,7 +7,7 @@
           %span{"aria-hidden" => "true"} ×
       .modal-body
         %p.text-muted.small Add a channel hashtag using the form below. Every post on this hashtag will appear in the channel. This allows channel members to post to the channel even when they’re somewhere else in the network.
-        = simple_form_for @community_hashtag_form, url: step3_communities_path do |form|
+        = simple_form_for @community_hashtag_form, url: step3_community_path do |form|
           = form.hidden_field :community_id, value: @community.id, id: 'community_id'
           .row
             .col
@@ -69,8 +69,8 @@
                     %td
                       = "##{community_hashtag.hashtag}"
                     %td{style: "width: 200px;"}
-                      %a.text-danger.mr-2{ href: step3_communities_path } Edit
-                      %a.text-danger{ href: step3_communities_path } Remove
+                      %a.text-danger.mr-2{ href: step3_community_path } Edit
+                      %a.text-danger{ href: step3_community_path } Remove
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
       .card
@@ -104,12 +104,12 @@
                     %td
                       %p= record.username
                     %td{style: "width: 60px;"}
-                      %button.btn.btn-block.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}')" } Unfollow
+                      %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}')" } Unfollow
       .row.d-flex.justify-content-between
         .col
-          %a.btn.btn-outline-secondary{ href: step2_communities_path } Back
+          %a.btn.btn-outline-secondary{ href: step2_community_path } Back
         .col-auto
-          %a.btn.btn-danger{ href: step4_communities_path } Continue
+          %a.btn.btn-danger{ href:step4_community_path(id: @community.id) } Continue
 
 = render 'add_contributor'
 
