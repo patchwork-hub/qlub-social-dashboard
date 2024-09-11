@@ -47,11 +47,12 @@
               Rule
           - @rule_records.each_with_index do |record, index|
             .row.mb-2
-              .col-auto.text-center
-                %i.fas.fa-circle.fa-2x.text-blue
-                %span.mt-1= index + 1
+              .col-auto
+                .position-relative.d-inline-block
+                  %i.fas.fa-circle.fa-2x.text-blue
+                  %span.position-absolute.index-text= index + 1
               .col
-                %input#exampleInputEmail1.form-control{placeholder: "#{record.rule.description}", type: "email"}/
+                %input.form-control{ type: 'text', value: record.rule.description, readonly: true }
           .row
             .col.text-right
               %a.text-danger{"data-toggle" => "modal", "data-target" => "#addCommunityRuleModel", :class => 'edit-link'} Add another rule

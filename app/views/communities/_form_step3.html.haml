@@ -54,7 +54,7 @@
                   %th{style: "width: 30px;"}
                     %i.far.fa-square.mr-4
                   %th
-                    %label.text-muted{ style: "font-size: 13px;" } Hashtags
+                    %label.text-muted{ style: "font-size: 14px;" } Hashtags
               %tbody
                 - if @records.size == 0
                   %tr
@@ -68,9 +68,10 @@
                       = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
                     %td
                       = "##{community_hashtag.hashtag}"
-                    %td{style: "width: 200px;"}
-                      %a.text-danger.mr-2{ href: step3_community_path } Edit
-                      %a.text-danger{ href: step3_community_path } Remove
+                    -#
+                      %td{style: "width: 200px;"}
+                        %a.text-danger.mr-2{ href: step3_community_path } Edit
+                        %a.text-danger{ href: step3_community_path } Remove
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
       .card

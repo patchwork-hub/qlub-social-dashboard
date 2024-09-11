@@ -625,3 +625,16 @@ ul.pagination {
 .installed-button{
   width: max-content !important;
 }
+
+.position-relative {
+  position: relative;
+}
+
+.position-absolute.index-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8em; /* Adjust size as needed */
+  color: white; /* Adjust color if necessary */
+}

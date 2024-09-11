@@ -49,7 +49,7 @@
           .row.d-flex.justify-content-between
             .col-auto
               %label Your muted contributors (0)
-            .col-auto
+            .col-3-auto
               %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#muteContributorModal"} Search
           .table-responsive
             %table.table.mt-3.table-striped
@@ -62,9 +62,9 @@
                         Click here to search
                 - @muted_accounts.each do |account|
                   %tr
-                    %td{ style: 'width: 20%;' }
+                    %td{ style: 'width: 10%;' }
                       %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
-                    %td{ style: 'width: 70%;' }
+                    %td{ style: 'width: 80%;' }
                       %h6.mb-0= account.username
                       %p.text-muted.mb-0= raw(account.note)
                     %td{ style: 'width: 10%;' }
