@@ -11,7 +11,7 @@ class FollowService < BaseService
 
   def follow_contributor!
     api_base_url = ENV['MASTODON_INSTANCE_URL']
-    token = fetch_oauth_token || ENV['MASTODON_APPLICATION_TOKEN']
+    token = fetch_oauth_token
 
     if api_base_url.nil? || token.nil?
       puts 'Error: Mastodon instance URL or application token is missing'
@@ -50,6 +50,7 @@ class FollowService < BaseService
   def follow_account(api_base_url, token)
     payload = { reblogs: true }
     headers = { 'Authorization' => "Bearer #{token}" }
+    puts "#{api_base_url}/api/v1/accounts/#{@target_mastodon_id}/follow"
     HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_mastodon_id}/follow",
       body: payload,
       headers: headers
@@ -66,8 +67,9 @@ class FollowService < BaseService
 
   def fetch_oauth_token
     return nil unless @account.user
-    OauthAccessToken.find_by(resource_owner_id: @account.user.id).token
+    Doorkeeper::AccessToken.find_by(resource_owner_id: @account.user.id)&.token
   end
+  
 
   def find_account(account_data)
     Account.find_by(id: @target_account.id)
