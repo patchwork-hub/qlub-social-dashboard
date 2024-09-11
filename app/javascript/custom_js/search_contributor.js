@@ -41,7 +41,7 @@ window.unfollowContributor = function(account_id, community_id=null) {
 };
 
 // Function to search for contributors
-function searchContributors(query) {
+function searchContributors(query, communityId) {
   if (query.length === 0) {
     clearSearchResults();
     return;
@@ -49,7 +49,7 @@ function searchContributors(query) {
 
   showLoadingSpinner();
 
-  fetch(`/communities/search_contributor?query=${encodeURIComponent(query)}`)
+  fetch(`/communities/${communityId}/search_contributor?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
       hideLoadingSpinner();
@@ -119,8 +119,9 @@ function clearSearchResults() {
 const searchInput = document.getElementById('search-input');
 if (searchInput) {
   searchInput.addEventListener('keydown', function(event) {
+    const communityId = this.getAttribute('data-communityId');
     if (event.key === 'Enter' || event.keyCode === 13) {
-      searchContributors(this.value);
+      searchContributors(this.value, communityId);
     }
   });
 }
