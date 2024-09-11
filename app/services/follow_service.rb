@@ -11,7 +11,8 @@ class FollowService < BaseService
 
   def follow_contributor!
     api_base_url = ENV['MASTODON_INSTANCE_URL']
-    token = fetch_oauth_token || ENV['MASTODON_APPLICATION_TOKEN']
+    token = fetch_oauth_token
+
     if api_base_url.nil? || token.nil?
       puts 'Error: Mastodon instance URL or application token is missing'
       return
@@ -65,19 +66,8 @@ class FollowService < BaseService
   end
 
   def fetch_oauth_token
-    return nil unless (user = @account&.user)
-  
-    puts "Account found: #{user.inspect}"
-  
-    oauth_token = OauthAccessToken.find_by(resource_owner_id: user.id)
-  
-    if oauth_token
-      puts "User ID: #{user.id} has token: #{oauth_token.inspect}"
-    else
-      puts "User ID: #{user.id} does not have an OAuth token"
-    end
-  
-    oauth_token&.token
+    return nil unless @account.user
+    Doorkeeper::AccessToken.find_by(resource_owner_id: @account.user.id)&.token
   end
   
 

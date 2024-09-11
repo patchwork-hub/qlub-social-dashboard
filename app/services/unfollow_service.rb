@@ -10,7 +10,7 @@ class UnfollowService < BaseService
 
   def follow_contributor!
     api_base_url = ENV['MASTODON_INSTANCE_URL']
-    token = ENV['MASTODON_APPLICATION_TOKEN']
+    token = fetch_oauth_token
 
     if api_base_url.nil? || token.nil?
       puts 'Error: Mastodon instance URL or application token is missing'
@@ -48,6 +48,11 @@ class UnfollowService < BaseService
       body: payload,
       headers: headers
     )
+  end
+
+  def fetch_oauth_token
+    return nil unless @account.user
+    Doorkeeper::AccessToken.find_by(resource_owner_id: @account.user.id)&.token
   end
 
   def process_api_response(response)
