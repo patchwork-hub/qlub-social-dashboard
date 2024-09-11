@@ -15,7 +15,6 @@ class LoginService < BaseService
       redirect_uri: 'urn:ietf:wg:oauth:2.0:oob',
       scope: 'read write follow'
     }
-    byebug
     response = HTTParty.post("#{api_base_url}/oauth/token", body: payload)
     
     if response.success?
