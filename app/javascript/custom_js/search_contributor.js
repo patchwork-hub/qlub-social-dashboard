@@ -1,7 +1,13 @@
 // Function to follow a contributor and update the button
-window.followContributor = function(account_id, community_id=null) {
+window.followContributor = function(account_id, community_id=null, mastodon_id=null) {
+  let queryParams = [];
+  if (community_id) queryParams.push(`community_id=${community_id}`);
+  if (mastodon_id) queryParams.push(`mastodon_id=${mastodon_id}`);
+  
+  const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
   $.ajax({
-    url: `/accounts/${account_id}/follow?community_id=${community_id}`,
+    url: `/accounts/${account_id}/follow${queryString}`,
     method: 'POST',
     success: function(response) {
       var followBtn = $(`#follow_btn_${account_id}`);
@@ -10,8 +16,7 @@ window.followContributor = function(account_id, community_id=null) {
       followBtn.removeClass('btn-outline-dark');
       followBtn.addClass('btn-outline-danger');
 
-      // Update the button's onclick to call unfollowContributor
-      followBtn.attr('onclick', `unfollowContributor('${account_id}', '${community_id}')`);
+      followBtn.attr('onclick', `unfollowContributor('${account_id}', '${community_id}', '${mastodon_id}')`);
     },
     error: function() {
       console.log('Error occurred while following contributor');
@@ -20,9 +25,15 @@ window.followContributor = function(account_id, community_id=null) {
 };
 
 // Function to unfollow a contributor and update the button
-window.unfollowContributor = function(account_id, community_id=null) {
+window.unfollowContributor = function(account_id, community_id=null, mastodon_id=null) {
+  let queryParams = [];
+  if (community_id) queryParams.push(`community_id=${community_id}`);
+  if (mastodon_id) queryParams.push(`mastodon_id=${mastodon_id}`);
+  
+  const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
+
   $.ajax({
-    url: `/accounts/${account_id}/unfollow?community_id=${community_id}`,
+    url: `/accounts/${account_id}/unfollow${queryString}`,
     method: 'POST',
     success: function(response) {
       var followBtn = $(`#follow_btn_${account_id}`);
@@ -32,7 +43,7 @@ window.unfollowContributor = function(account_id, community_id=null) {
       followBtn.addClass('btn-outline-dark');
 
       // Update the button's onclick to call followContributor
-      followBtn.attr('onclick', `followContributor('${account_id}')`);
+      followBtn.attr('onclick', `followContributor('${account_id}', '${community_id}', '${mastodon_id}')`);
     },
     error: function() {
       console.log('Error occurred while unfollowing contributor');
@@ -98,7 +109,7 @@ function displaySearchResults(accounts) {
           ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
-          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}')" style="float: right;">
+          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}', '${account.mastodon_id}')" style="float: right;">
             Follow
           </button>
         </div>
