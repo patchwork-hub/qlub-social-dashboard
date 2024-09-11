@@ -43,12 +43,12 @@ class CommunitiesController < BaseController
 
   def step2_save
     @community_admin = CommunityAdminPostService.new.call(
-      @current_user.account,
-      community_id: new_admin_form_params[:community_id],
-      display_name: new_admin_form_params[:display_name],
-      username: new_admin_form_params[:username],
-      email: new_admin_form_params[:email],
-      password: new_admin_form_params[:password])
+    @current_user.account,
+    community_id: new_admin_form_params[:community_id],
+    display_name: new_admin_form_params[:display_name],
+    username: new_admin_form_params[:username],
+    email: new_admin_form_params[:email],
+    password: new_admin_form_params[:password])
 
     redirect_to step2_communities_path
   end
@@ -64,17 +64,14 @@ class CommunitiesController < BaseController
 
   def step3
     @community = Community.find(session[:form_data]['id'])
-
     @records = load_commu_hashtag_records
     @search = commu_hashtag_records_filter.build_search
-
     @community_hashtag_form = Form::CommunityHashtag.new
-  
     @community_admin = CommunityAdmin.where(patchwork_community_id: session[:form_data]['id']).last.account_id
 
     @follower_records = load_contributors_records
     @follower_search = commu_contributors_filter.build_search
-    
+
     respond_to do |format|
       format.html
     end
@@ -105,9 +102,9 @@ class CommunitiesController < BaseController
 
   def step4_save
     @community = Community.find(session[:form_data]['id'])
-  
+
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
-    
+
     if @community_post_type.update(community_post_type_params)
       flash[:success] = "Community post type preferences saved successfully!"
       redirect_to step4_communities_path
@@ -204,20 +201,33 @@ class CommunitiesController < BaseController
     )
     sleep 2
     accounts = response.parsed_response['accounts']
-    saved_accounts = Account.where(username: accounts&.map { |account| account['username'] })
-    if saved_accounts.any?
-      formatted_accounts = saved_accounts.map do |account|
-        {
-          'id' => account.id.to_s,
-          'username' => account.username,
-          'display_name' => account.display_name,
-          'domain' => account.domain,
-          'note' => account.note
-        }
+
+    if accounts.any?
+      formatted_accounts = accounts.map do |account_obj|
+        account = Account.find_by(username: account_obj['username'])
+        if account
+          {
+            'mastodon_id' => account_obj['id'],
+            'id' => account.id.to_s,
+            'username' => account.username,
+            'display_name' => account.display_name,
+            'domain' => account.domain,
+            'note' => account.note
+          }
+        else
+          {
+            'mastodon_id' => account_obj['id'],
+            'username' => account_obj['username'],
+            'display_name' => account_obj['display_name'],
+            'domain' => account_obj['domain'],
+            'note' => 'Account not found in local database'
+          }
+        end
       end
+
       render json: { 'accounts' => formatted_accounts }
     else
-      render json: { message: 'No saved accounts found', 'accounts' => [] }
+      render json: { message: 'No accounts found', 'accounts' => [] }
     end
   end  
 
