@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 class FollowService < BaseService
-  def call(account, target_account, mastodon_id)
-    @account = account
+  def call(admin, target_account)
+    @admin = admin
     @target_account = target_account
-    @target_mastodon_id = mastodon_id
-
     follow_contributor!
   end
 
@@ -13,34 +11,9 @@ class FollowService < BaseService
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = fetch_oauth_token
 
-    if api_base_url.nil? || token.nil?
-      puts 'Error: Mastodon instance URL or application token is missing'
-      return
-    end
-
-    if api_base_url.nil? || token.nil?
-      puts 'Error: Mastodon instance URL or application token is missing'
-      return
-    end
-
     response = follow_account(api_base_url, token)
-
-    unless response.success?
-      puts "Error: Failed to fetch accounts from Mastodon API: #{response.message}"
-      return
-    end
-
     account_data = process_api_response(response)
-
     account = find_account(account_data)
-
-    if account
-      puts "Account found: #{account.inspect}"
-      return account
-    else
-      puts 'Account not found!!!'
-    end
-
   rescue HTTParty::Error => e
     puts "HTTP request failed: #{e.message}"
   rescue StandardError => e
@@ -50,11 +23,16 @@ class FollowService < BaseService
   def follow_account(api_base_url, token)
     payload = { reblogs: true }
     headers = { 'Authorization' => "Bearer #{token}" }
-    puts "#{api_base_url}/api/v1/accounts/#{@target_mastodon_id}/follow"
-    HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_mastodon_id}/follow",
+
+    HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_account.id}/follow",
       body: payload,
       headers: headers
     )
+  end
+
+  def fetch_oauth_token
+    return nil unless @admin.user
+    Doorkeeper::AccessToken.find_by(resource_owner_id: @admin.user.id)&.token
   end
 
   def process_api_response(response)
@@ -64,29 +42,8 @@ class FollowService < BaseService
 
     account_data
   end
-
-  def fetch_oauth_token
-    return nil unless @account.user
-    Doorkeeper::AccessToken.find_by(resource_owner_id: @account.user.id)&.token
-  end
   
-
   def find_account(account_data)
-    Account.find_by(id: @target_account.id)
-  end
-
-  def follow_attributes
-    {
-      target_account_id: @target_account.id,
-      account_id: @source_account.id,
-      show_reblogs: true,
-      uri: nil,
-      notify: true,
-      languages: nil
-    }.compact
-  end
-
-  def direct_follow!
-    @follow = Follow.find_or_create_by(follow_attributes)
+    Account.find_by(id: account_data['id'])
   end
 end
