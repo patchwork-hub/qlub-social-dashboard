@@ -67,7 +67,7 @@
                 Spam only
               .bordered-radio.mx-2.mt-3
                 %input.radio-button{name: "pack_selection", type: "radio", value: "fedi_pact"}
-                Fedi-pact
+                Safe spaces
               .bordered-radio.mx-2.mt-3
                 %input.radio-button{name: "pack_selection", type: "radio", value: "organisation"}
                 Organisation
@@ -79,6 +79,11 @@
   .col-12
     %h6 Useful links
     .row
-      %a{ href: 'https://github.com/patchwork-hub/patchwork_dashboard/wiki/Installation', target: '_blank' }
-        = image_tag("icons/file-lines.svg", class: "mr-2", width: "16", height: "16")
-        Installation Guide
+      .col
+        %a{ href: 'https://github.com/patchwork-hub/patchwork_dashboard/wiki/Installation', target: '_blank' }
+          = image_tag("icons/file-lines.svg", class: "mr-2", width: "16", height: "16")
+          Installation Guide
+      .col
+        %a{ href: 'https://fediverse-governance.github.io/images/quick-start.pdf ', target: '_blank' }
+          = image_tag("icons/file-lines.svg", class: "mr-2", width: "16", height: "16")
+          Governance guidelines
