@@ -62,7 +62,7 @@ class CommunitiesController < BaseController
     @search = commu_hashtag_records_filter.build_search
     @community_hashtag_form = Form::CommunityHashtag.new
     @community_admin = get_community_admin_id
-    @follower_records = load_contributors_records
+    @follow_records = load_follow_records
     @follower_search = commu_contributors_filter.build_search
 
     respond_to do |format|
@@ -71,10 +71,16 @@ class CommunitiesController < BaseController
   end
 
   def step3_save
-    CommunityHashtagPostService.new.call(@community.community_admins&.first.account,
-                hashtag:  community_hashtag_params[:hashtag],
-                community_id: community_hashtag_params[:community_id])
-    redirect_to step3_community_path
+    begin
+      CommunityHashtagPostService.new.call(@community.community_admins&.first.account,
+                                           hashtag: community_hashtag_params[:hashtag],
+                                           community_id: community_hashtag_params[:community_id])
+      flash[:success] = "Hashtag saved successfully!"
+      redirect_to step3_community_path
+    rescue CommunityHashtagPostService::InvalidHashtagError => e
+      flash[:error] = e.message
+      redirect_to step3_community_path
+    end
   end
 
   def step4
@@ -121,14 +127,14 @@ class CommunitiesController < BaseController
   end
 
   def step5_update
-    UpdateHashtagService.new.call(@current_user.account, params[:form_post_hashtag])
+    UpdateHashtagService.new.call(params[:form_post_hashtag])
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
     redirect_to step5_community_path
   end
 
   def step5_save
-    PostHashtagService.new.call(@current_user.account, post_hashtag_params)
+    PostHashtagService.new.call(post_hashtag_params)
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
     redirect_to step5_community_path
@@ -138,11 +144,11 @@ class CommunitiesController < BaseController
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
     @aditional_information = @community.patchwork_community_additional_informations
-    @community_admin = Account.find_by_id(get_community_admin_id)
+    @community_admins = Account.joins(:community_admins).where(community_admins: { patchwork_community_id: @community.id })
   end
 
   def step6_rule_create
-    CommunityRuleService.new.call(@current_user.account, params[:form_community_rule])
+    CommunityRuleService.new.call(params[:form_community_rule])
     redirect_to step6_community_path
   end
 
@@ -176,41 +182,35 @@ class CommunitiesController < BaseController
       query: {
         q: query,
         resolve: true,
-        limit: 5
+        limit: 11
       },
       headers: {
         'Authorization' => "Bearer #{token}"
       }
     )
-    sleep 3
+
     accounts = response.parsed_response['accounts']
-
-    if accounts.any?
-      formatted_accounts = accounts.map do |account_obj|
-        account = Account.find_by(username: account_obj['username'])
-        if account
-          {
-            'mastodon_id' => account_obj['id'],
-            'id' => account.id.to_s,
-            'username' => account.username,
-            'display_name' => account.display_name,
-            'domain' => account.domain,
-            'note' => account.note
-          }
-        else
-          {
-            'mastodon_id' => account_obj['id'],
-            'username' => account_obj['username'],
-            'display_name' => account_obj['display_name'],
-            'domain' => account_obj['domain'],
-            'note' => 'Account not found in local database'
-          }
-        end
+    
+    saved_accounts = []
+    if accounts.present?
+      while saved_accounts.empty?
+        saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
       end
+    end
 
+    if saved_accounts.any?
+      formatted_accounts = saved_accounts.map do |account|
+        {
+          'id' => account.id.to_s,
+          'username' => account.username,
+          'display_name' => account.display_name,
+          'domain' => account.domain,
+          'note' => account.note
+        }
+      end
       render json: { 'accounts' => formatted_accounts }
     else
-      render json: { message: 'No accounts found', 'accounts' => [] }
+      render json: { message: 'No saved accounts found', 'accounts' => [] }
     end
   end  
 
@@ -329,6 +329,14 @@ class CommunitiesController < BaseController
     commu_follower_filter.get
   end
 
+  def load_follow_records
+    account_id = get_community_admin_id
+    follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
+    follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
+    total_follows_ids = follow_ids + follow_request_ids
+    Account.where(id: total_follows_ids)
+  end
+   
   def commu_follower_filter
     @follower_filter = Filter::Account.new(params)
   end

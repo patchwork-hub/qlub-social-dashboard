@@ -86,26 +86,28 @@
           .row
             .col
               %label
-                = "Your channel contributors (#{@follower_records.present? ? @follower_records.size : 0})"
+                = "Your channel contributors (#{@follow_records.present? ? @follow_records.size : 0})"
             .col-auto.d-flex.flex-column.justify-content-end
               .mt-auto
                 %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#addContributorModal"} Add New
           .table-responsive
             %table.table.mt-3.table-striped
               %tbody
-                - if @follower_records.size == 0
+                - if @follow_records.size == 0
                   %tr
                     %td.text-center
-                      %p.text-muted.small You have not added any hashtags to this channel yet
+                      %p.text-muted.small You have not added any contributors to this channel yet
                       %a.text-danger.small{ href: '#', title: 'Add a contributor', 'data-toggle': 'modal', 'data-target': '#addContributorModal' }
                         Click here to add one
-                - @follower_records.each do |record|
-                  - record = record.target_account
+                - @follow_records.each do |record|
                   %tr
-                    %td
-                      %p= record.username
+                    %td{ style: 'width: 10%;' }
+                      %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                    %td{ style: 'width: 80%;' }
+                      %h6.mb-0= record.username
+                      %p.text-muted.mb-0= raw(record.note)
                     %td{style: "width: 60px;"}
-                      %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}')" } Unfollow
+                      %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_community_path } Back

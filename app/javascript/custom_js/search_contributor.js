@@ -1,8 +1,7 @@
 // Function to follow a contributor and update the button
-window.followContributor = function(account_id, community_id=null, mastodon_id=null) {
+window.followContributor = function(account_id, community_id=null) {
   let queryParams = [];
   if (community_id) queryParams.push(`community_id=${community_id}`);
-  if (mastodon_id) queryParams.push(`mastodon_id=${mastodon_id}`);
   
   const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
 
@@ -16,7 +15,7 @@ window.followContributor = function(account_id, community_id=null, mastodon_id=n
       followBtn.removeClass('btn-outline-dark');
       followBtn.addClass('btn-outline-danger');
 
-      followBtn.attr('onclick', `unfollowContributor('${account_id}', '${community_id}', '${mastodon_id}')`);
+      followBtn.attr('onclick', `unfollowContributor('${account_id}', '${community_id}')`);
     },
     error: function() {
       console.log('Error occurred while following contributor');
@@ -25,10 +24,9 @@ window.followContributor = function(account_id, community_id=null, mastodon_id=n
 };
 
 // Function to unfollow a contributor and update the button
-window.unfollowContributor = function(account_id, community_id=null, mastodon_id=null) {
+window.unfollowContributor = function(account_id, community_id=null) {
   let queryParams = [];
   if (community_id) queryParams.push(`community_id=${community_id}`);
-  if (mastodon_id) queryParams.push(`mastodon_id=${mastodon_id}`);
   
   const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
 
@@ -43,7 +41,7 @@ window.unfollowContributor = function(account_id, community_id=null, mastodon_id
       followBtn.addClass('btn-outline-dark');
 
       // Update the button's onclick to call followContributor
-      followBtn.attr('onclick', `followContributor('${account_id}', '${community_id}', '${mastodon_id}')`);
+      followBtn.attr('onclick', `followContributor('${account_id}', '${community_id}')`);
     },
     error: function() {
       console.log('Error occurred while unfollowing contributor');
@@ -109,7 +107,7 @@ function displaySearchResults(accounts) {
           ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
-          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}', '${account.mastodon_id}')" style="float: right;">
+          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}')" style="float: right;">
             Follow
           </button>
         </div>

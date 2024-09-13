@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 class UnfollowService < BaseService
-  def call(account, target_account, mastodon_id)
-    @source_account = account
+  def call(admin, target_account)
+    @admin = admin
     @target_account = target_account
-    @target_mastodon_id = mastodon_id
     follow_contributor!
   end
 
@@ -12,27 +11,9 @@ class UnfollowService < BaseService
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = fetch_oauth_token
 
-    if api_base_url.nil? || token.nil?
-      puts 'Error: Mastodon instance URL or application token is missing'
-      return
-    end
-    puts "api_base_url: #{api_base_url}"
     response = unfollow_account(api_base_url, token)
-
-    unless response.success?
-      puts "Error: Failed to fetch accounts from Mastodon API: #{response.message}"
-      return
-    end
-
     account_data = process_api_response(response)
-
     account = find_account(account_data)
-
-    if account
-      puts "Account: #{account.inspect}"
-    else
-      puts 'Account not found!!!'
-    end
 
   rescue HTTParty::Error => e
     puts "HTTP request failed: #{e.message}"
@@ -44,15 +25,15 @@ class UnfollowService < BaseService
     payload = { reblogs: true }
     headers = { 'Authorization' => "Bearer #{token}" }
 
-    HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_mastodon_id}/unfollow",
+    HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_account.id}/unfollow",
       body: payload,
       headers: headers
     )
   end
 
   def fetch_oauth_token
-    return nil unless @account.user
-    Doorkeeper::AccessToken.find_by(resource_owner_id: @account.user.id)&.token
+    return nil unless @admin.user
+    Doorkeeper::AccessToken.find_by(resource_owner_id: @admin.user.id)&.token
   end
 
   def process_api_response(response)
@@ -64,25 +45,6 @@ class UnfollowService < BaseService
   end
 
   def find_account(account_data)
-    account_id = account_data['id']
-    return nil unless account_id
-
-    Account.find_by(id: account_id)
-  end
-
-  def follow_attributes
-    {
-      target_account_id: @@target_account.id,
-      account_id: @source_account.id,
-      show_reblogs: true,
-      uri: nil,
-      notify: false,
-      languages: nil
-    }.compact
-  end
-
-  def direct_unfollow!
-    @follow = Follow.find_by(follow_attributes)
-    @follow&.destroy
+    Account.find_by(id: account_data['id'])
   end
 end
