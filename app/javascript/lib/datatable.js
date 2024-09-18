@@ -245,4 +245,14 @@ jQuery(function() {
     });
   });
 
+  $('#editHashtagModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+    var hashtagId = button.data('id');
+    var hashtag = button.data('hashtag');
+
+    var modal = $(this);
+    modal.find('#edit_hashtag_id').val(hashtagId);
+    modal.find('#edit_hashtag_input').val('#' + hashtag);
+  });
+
 });

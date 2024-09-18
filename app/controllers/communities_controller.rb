@@ -92,6 +92,23 @@ class CommunitiesController < BaseController
     end
   end
 
+  def step3_update_hashtag
+    community_hashtag = CommunityHashtag.find(params[:form_community_hashtag][:hashtag_id])
+    community_hashtag.update!(hashtag: params[:form_community_hashtag][:hashtag].gsub('#', ''))
+    flash[:success] = "Hashtag updated successfully!"
+    redirect_to step3_community_path
+  end
+
+  def step3_delete_hashtag
+    hashtag = CommunityHashtag.find(params[:community_hashtag_id])
+    if hashtag.destroy
+      flash[:success] = "Hashtag removed successfully!"
+    else
+      flash[:error] = "Failed to remove hashtag."
+    end
+    redirect_to step3_community_path(params[:id])
+  end
+
   def step4
     @filter_keywords = get_community_filter_keyword
     admin_id = get_community_admin_id

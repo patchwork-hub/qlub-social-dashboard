@@ -64,14 +64,14 @@
                         Click here to add one
                 - @records.each do |community_hashtag|
                   %tr
-                    %td{style: "width: 30px;"}
-                      = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
                     %td
+                      = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
+                    %td{ style: 'width: 80%;' }
                       = "##{community_hashtag.hashtag}"
-                    -#
-                      %td{style: "width: 200px;"}
-                        %a.text-danger.mr-2{ href: step3_community_path } Edit
-                        %a.text-danger{ href: step3_community_path } Remove
+                      %td
+                        %a.text-danger{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag } Edit
+                      %td
+                        = link_to 'Remove', step3_delete_hashtag_community_path(id: @community.id, community_hashtag_id: community_hashtag.id), method: :post, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow'
           %ul.pagination.pagination-sm.m-0.float-right
             = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
       .card
@@ -115,14 +115,4 @@
           %a.btn.btn-danger{ href:step4_community_path(id: @community.id) } Continue
 
 = render 'add_contributor'
-
-
-
-
-
-
-
-
-
-
-
+= render 'edit_hashtag'
