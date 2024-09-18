@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     member do
       get 'step2', to: 'communities#step2'
       post 'step2', to: 'communities#step2_save'
+      patch 'step2_update_admin'
       get 'step3', to: 'communities#step3'
       get 'contributors_table', to: 'communities#contributors_table'
       post 'step3', to: 'communities#step3_save'
@@ -47,7 +48,7 @@ Rails.application.routes.draw do
       post 'set_visibility', to: 'communities#set_visibility'
       post 'manage_additional_information', to: 'communities#manage_additional_information'
     end
-  end  
+  end
 
   resources :community_admins
 

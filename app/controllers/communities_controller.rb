@@ -30,10 +30,17 @@ class CommunitiesController < BaseController
   def step2
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
-    # @search = commu_admin_records_filter.build_search
+    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
+
+    @edit_admin_form = Form::CommunityAdmin.new(
+      community_id: @community.id,
+      display_name: @edit_admin&.display_name,
+      username: @edit_admin&.username
+    )
 
     respond_to do |format|
       format.html
+      format.json { render json: {admin_id: @edit_admin.id.to_s, display_name: @edit_admin.display_name, username: @edit_admin.username } }
     end
   end
 
@@ -49,11 +56,13 @@ class CommunitiesController < BaseController
     redirect_to step2_community_path
   end
 
-  def contributors_table
-    @contributor_records = load_contributors_records
-    @contributor_search = commu_contributors_filter.build_search
-    respond_to do |format|
-      format.html { render partial: 'communities/contributors_table', locals: { records: @contributor_records } }
+  def step2_update_admin
+    @community_admin = Account.find_by_id(params[:form_community_admin][:admin_id])
+    if @community_admin.update(admin_params)
+      redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
+    else
+      @records = load_commu_admin_records
+      render :step2
     end
   end
 
@@ -189,7 +198,7 @@ class CommunitiesController < BaseController
     )
 
     accounts = response.parsed_response['accounts']
-    
+
     saved_accounts = []
     if accounts.present?
       while saved_accounts.empty?
@@ -211,7 +220,7 @@ class CommunitiesController < BaseController
     else
       render json: { message: 'No saved accounts found', 'accounts' => [] }
     end
-  end  
+  end
 
   def mute_contributor
     target_account_id = params[:account_id]
@@ -222,7 +231,7 @@ class CommunitiesController < BaseController
     else
       Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
     end
-  
+
     render json: { success: true }
   end
 
@@ -230,7 +239,7 @@ class CommunitiesController < BaseController
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
-  
+
     redirect_to step4_community_path
   end
 
@@ -238,9 +247,9 @@ class CommunitiesController < BaseController
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     is_muted = Mute.exists?(account_id: admin_account_id, target_account_id: target_account_id)
-  
+
     render json: { is_muted: is_muted }
-  end  
+  end
 
   def manage_additional_information
     if params[:community].present? && params[:community][:patchwork_community_additional_informations_attributes].present?
@@ -261,7 +270,7 @@ class CommunitiesController < BaseController
   def initialize_form
     if params[:id].present?
       @community = Community.find(params[:id])
-      
+
       form_data = {
         id: @community.id,
         name: @community.name,
@@ -270,7 +279,7 @@ class CommunitiesController < BaseController
         banner_image: @community.banner_image,
         avatar_image: @community.avatar_image
       }
-      
+
       @community_form = Form::Community.new(form_data)
     elsif params[:new_community] == 'true'
       form_data = {}
@@ -297,6 +306,10 @@ class CommunitiesController < BaseController
 
   def new_admin_form_params
     params.require(:form_community_admin).permit(:community_id, :display_name, :username, :email, :password)
+  end
+
+  def admin_params
+    params.require(:form_community_admin).permit(:display_name, :username)
   end
 
   def community_params
@@ -340,7 +353,7 @@ class CommunitiesController < BaseController
     total_follows_ids = follow_ids + follow_request_ids
     Account.where(id: total_follows_ids)
   end
-   
+
   def commu_follower_filter
     @follower_filter = Filter::Account.new(params)
   end
@@ -378,7 +391,7 @@ class CommunitiesController < BaseController
     muted_account_ids = Mute.where(account_id: admin_account_id).pluck(:target_account_id)
     Account.where(id: muted_account_ids)
   end
-  
+
   def set_community
     @community = Community.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @community
