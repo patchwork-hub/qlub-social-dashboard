@@ -1,6 +1,6 @@
 class CommunitiesController < BaseController
   before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
-  before_action :initialize_form, expect: %i[show]
+  before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
 
   def step1
@@ -12,12 +12,14 @@ class CommunitiesController < BaseController
   def step1_save
     @community = CommunityPostService.new.call(
       @current_user.account,
+      id: form_params[:id],
       name: form_params[:name],
       bio: form_params[:bio],
       collection_id: form_params[:collection_id],
       banner_image: form_params[:banner_image],
       avatar_image: form_params[:avatar_image]
     )
+
     if @community.errors.any?
       @community_form = Form::Community.new(form_params)
       flash.now[:error] = @community.errors.full_messages.join(', ')
@@ -285,23 +287,27 @@ class CommunitiesController < BaseController
   private
 
   def initialize_form
-    if params[:id].present?
-      @community = Community.find(params[:id])
+    if params[:id].present? || (params[:form_community] && params[:form_community][:id].present?)
+      id = params[:id] || params[:form_community][:id]
+      @community = Community.find_by(id: id)
 
-      form_data = {
-        id: @community.id,
-        name: @community.name,
-        bio: @community.description,
-        collection_id: @community.patchwork_collection_id,
-        banner_image: @community.banner_image,
-        avatar_image: @community.avatar_image
-      }
-
-      @community_form = Form::Community.new(form_data)
-    elsif params[:new_community] == 'true'
+      if @community.present?
+        form_data = {
+          id: @community.id,
+          name: @community.name,
+          bio: @community.description,
+          collection_id: @community.patchwork_collection_id,
+          banner_image: @community.banner_image,
+          avatar_image: @community.avatar_image
+        }
+      else
+        form_data = {}
+      end
+    else
       form_data = {}
-      @community_form = Form::Community.new(form_data)
     end
+
+    @community_form = Form::Community.new(form_data)
   end
 
   def fetch_oauth_token

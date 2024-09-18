@@ -10,6 +10,7 @@ class Form::Community
 
   def initialize(options = {})
     options = options.is_a?(Hash) ? options.symbolize_keys : options
+    @id = options.fetch(:id) if options[:id]
     @name = options.fetch(:name) if options[:name]
     @collection_id = options.fetch(:collection_id) if options[:collection_id]
     @bio = options.fetch(:bio, nil) if options[:bio]

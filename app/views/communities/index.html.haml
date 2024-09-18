@@ -36,8 +36,9 @@
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
                 %td= community.slug
-                %th= community.community_admins.size
-                %th
+                %td= community.community_admins.size
+                %td
+                  %a.text-danger{ href: step1_communities_path(id: community.id) } Edit
         .row.mt-2
           .col
             %div.btn-group
