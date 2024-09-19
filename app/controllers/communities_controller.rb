@@ -205,37 +205,11 @@ class CommunitiesController < BaseController
     query = params[:query]
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = fetch_oauth_token || ENV['MASTODON_APPLICATION_TOKEN']
-    response = HTTParty.get("#{api_base_url}/api/v2/search",
-      query: {
-        q: query,
-        resolve: true,
-        limit: 11
-      },
-      headers: {
-        'Authorization' => "Bearer #{token}"
-      }
-    )
 
-    accounts = response.parsed_response['accounts']
+    result = ContributorSearchService.new(query, url: api_base_url, token: token).call
 
-    saved_accounts = []
-    if accounts.present?
-      while saved_accounts.empty?
-        saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
-      end
-    end
-
-    if saved_accounts.any?
-      formatted_accounts = saved_accounts.map do |account|
-        {
-          'id' => account.id.to_s,
-          'username' => account.username,
-          'display_name' => account.display_name,
-          'domain' => account.domain,
-          'note' => account.note
-        }
-      end
-      render json: { 'accounts' => formatted_accounts }
+    if result.any?
+      render json: { 'accounts' => result }
     else
       render json: { message: 'No saved accounts found', 'accounts' => [] }
     end
@@ -421,21 +395,6 @@ class CommunitiesController < BaseController
   end
 
   def set_current_step
-    case action_name
-    when 'step1', 'step1_save'
-      @current_step = 1
-    when 'step2', 'step2_save'
-      @current_step = 2
-    when 'step3', 'step3_save'
-      @current_step = 3
-    when 'step4', 'step4_save'
-      @current_step = 4
-    when 'step5', 'step5_save'
-      @current_step = 5
-    when 'step6', 'step6_save'
-      @current_step = 6
-    else
-      @current_step = 1
-    end
+    @current_step = action_name.match(/\d+/).to_s.to_i || 1
   end
 end

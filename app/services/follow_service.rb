@@ -10,10 +10,9 @@ class FollowService < BaseService
   def follow_contributor!
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = fetch_oauth_token
-
     response = follow_account(api_base_url, token)
     account_data = process_api_response(response)
-    account = find_account(account_data)
+    find_account(account_data)
   rescue HTTParty::Error => e
     puts "HTTP request failed: #{e.message}"
   rescue StandardError => e
@@ -42,7 +41,7 @@ class FollowService < BaseService
 
     account_data
   end
-  
+
   def find_account(account_data)
     Account.find_by(id: account_data['id'])
   end
