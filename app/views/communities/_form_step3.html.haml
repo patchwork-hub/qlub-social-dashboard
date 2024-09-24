@@ -102,7 +102,7 @@
                 - @follow_records.each do |record|
                   %tr
                     %td{ style: 'width: 10%;' }
-                      %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                      %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
                     %td{ style: 'width: 80%;' }
                       %h6.mb-0= record.username
                       %p.text-muted.mb-0= raw(record.note)

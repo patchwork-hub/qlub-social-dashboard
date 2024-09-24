@@ -63,7 +63,7 @@
                 - @muted_accounts.each do |account|
                   %tr
                     %td{ style: 'width: 10%;' }
-                      %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                      %img{ alt: "", src: account.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
                     %td{ style: 'width: 80%;' }
                       %h6.mb-0= account.username
                       %p.text-muted.mb-0= raw(account.note)
