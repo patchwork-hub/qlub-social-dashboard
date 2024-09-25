@@ -23,6 +23,7 @@
               %th Channels
               %th Name
               %th No. of admins
+              %th Status
               %th
           %tbody
             - if @records.size == 0
@@ -36,7 +37,15 @@
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
                 %td= community.slug
-                %td= community.community_admins.size
+                %td
+                  %span.badge.badge-pill.badge-light
+                    = image_tag("icons/user.svg", class: "mr-2", width: "11", height: "16")
+                    = community.community_admins.size
+                %td
+                  - if community.visibility.present?
+                    %span.badge.badge-pill.badge-success Complete
+                  - else
+                    %span.badge.badge-pill.badge-warning Incomplete
                 %td
                   %a.text-danger{ href: step1_communities_path(id: community.id) } Edit
         .row.mt-2
