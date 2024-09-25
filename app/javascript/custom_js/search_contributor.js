@@ -99,7 +99,7 @@ function displaySearchResults(accounts) {
     resultItem.innerHTML = `
       <div class="profile-info row">
         <div class="col-auto">
-          <img src="${account.avatar_url}" alt="${account.username}" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
+          <img src="${account.avatar_url}" alt="" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
         </div>
         <div class="col">
           <p class="mb-0">${account.display_name || account.username}</p>

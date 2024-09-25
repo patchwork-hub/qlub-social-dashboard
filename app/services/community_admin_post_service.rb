@@ -18,8 +18,6 @@ class CommunityAdminPostService < BaseService
   def create_user
     @user = User.where(email: @optons[:email]).first_or_initialize(email: @optons[:email], password: @optons[:password], password_confirmation: @optons[:password], role_id: '4', confirmed_at: Time.now.utc, account: @admin_acc, approved: true)
     @user.save(validate: false)
-    login_service = LoginService.new(@user, @optons[:password])
-    login_service.call
   end
 
   def community_admin_attribute

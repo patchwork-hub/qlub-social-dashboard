@@ -8,7 +8,7 @@
       %li.bg-secondary{style: "width: 65px; height: 5px;"}
       %li.bg-secondary{style: "width: 65px; height: 5px;"}
   .col-md-12
-    = simple_form_for @community_form, url: step1_communities_path do |f|
+    = simple_form_for @community_form, url: step1_communities_path, html: { multipart: true } do |f|
       = f.hidden_field :id
       .card.mt-4
         .card-header

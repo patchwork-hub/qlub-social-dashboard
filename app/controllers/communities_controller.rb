@@ -288,7 +288,9 @@ class CommunitiesController < BaseController
 
   def fetch_oauth_token
     admin = @community.community_admins&.first.account
-    Doorkeeper::AccessToken.find_by(resource_owner_id: admin.user.id)&.token
+
+    token_service = GenerateAdminAccessTokenService.new(admin.user.id)
+    token_service.call
   end
 
   def post_hashtag_params
