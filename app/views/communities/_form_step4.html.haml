@@ -72,6 +72,8 @@
                         = form.hidden_field :account_id, value: account.id
                         %button.btn.btn-sm.btn-outline-secondary{ type: 'submit' }
                           Unmute
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @muted_accounts, theme: 'bootstrap4'
       .card
         .card-body
           .row.d-flex.justify-content-between
@@ -98,7 +100,8 @@
                     %td
                       %a.text-danger{ href: community_filter_keyword_path(keyword, patchwork_community_id: @community.id), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
                         Remove
-
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step3_community_path } Back

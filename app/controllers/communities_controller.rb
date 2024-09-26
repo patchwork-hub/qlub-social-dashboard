@@ -2,6 +2,7 @@ class CommunitiesController < BaseController
   before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
   before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
+  PER_PAGE = 10
 
   def step1
     respond_to do |format|
@@ -352,7 +353,7 @@ class CommunitiesController < BaseController
     follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
     follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
     total_follows_ids = follow_ids + follow_request_ids
-    Account.where(id: total_follows_ids)
+    Account.where(id: total_follows_ids).page(params[:page]).per(PER_PAGE)
   end
 
   def commu_follower_filter
@@ -380,7 +381,7 @@ class CommunitiesController < BaseController
   end
 
   def get_community_filter_keyword
-    CommunityFilterKeyword.where(patchwork_community_id: @community.id)
+    CommunityFilterKeyword.where(patchwork_community_id: @community.id).page(params[:page]).per(PER_PAGE)
   end
 
   def get_community_admin_id
@@ -390,7 +391,7 @@ class CommunitiesController < BaseController
   def get_muted_accounts
     admin_account_id = get_community_admin_id
     muted_account_ids = Mute.where(account_id: admin_account_id).pluck(:target_account_id)
-    Account.where(id: muted_account_ids)
+    Account.where(id: muted_account_ids).page(params[:page]).per(PER_PAGE)
   end
 
   def set_community

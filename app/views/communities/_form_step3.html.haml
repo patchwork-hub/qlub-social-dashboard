@@ -108,6 +108,8 @@
                       %p.text-muted.mb-0= raw(record.note)
                     %td{style: "width: 60px;"}
                       %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @follow_records, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_community_path } Back

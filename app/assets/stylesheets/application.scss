@@ -132,17 +132,17 @@ aside {
 ul.pagination {
   li {
     a.page-link {
-      color: #00afdb !important;
+      color: grey !important;
       &:hover {
-        color: #E33D26 !important;
+        color: red !important;
       }
     }
   }
   li.active {
     a.page-link {
       color: #fff !important;
-      background-color: #00afdb !important;
-      border-color: #00afdb !important;
+      background-color: red !important;
+      border-color: red !important;
     }
   }
 }
@@ -628,7 +628,7 @@ ul.pagination {
     flex-direction: column;
     height: 100%;
   }
-  
+
   .card-body {
     display: flex;
     flex-direction: column;
@@ -649,6 +649,6 @@ ul.pagination {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 0.8em; 
-  color: white; 
+  font-size: 0.8em;
+  color: white;
 }
