@@ -324,7 +324,7 @@ class CommunitiesController < BaseController
   end
 
   def records_filter
-    @filter = Filter::Community.new(params)
+    Filter::Community.new(params)
   end
 
   def load_commu_admin_records
@@ -376,7 +376,7 @@ class CommunitiesController < BaseController
 
   def commu_hashtag_records_filter
     params[:q] = { patchwork_community_id_eq: @community.id }
-    @filter = Filter::CommunityHashtag.new(params)
+    Filter::CommunityHashtag.new(params)
   end
 
   def get_community_filter_keyword
