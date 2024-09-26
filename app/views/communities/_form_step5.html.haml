@@ -94,12 +94,14 @@
                   %tr
                     %td
                       %i.far.fa-square.mr-4
-                    %td{ style: 'width: 80%;' }
+                    %td{ style: 'width: 90%;' }
                       %p= record.hashtag
                     %td
-                      %a.text-danger.mr-2{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'} Edit
+                      %a.text-danger{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'}
+                        %i.fas.fa-edit
                     %td
-                      = link_to 'Remove', step5_delete_community_path(@community, post_hashtag_id: record.id), method: :post, class: 'text-danger'
+                      = link_to step5_delete_community_path(@community, post_hashtag_id: record.id), method: :post, class: 'text-danger', data: { confirm: 'Are you sure?' } do
+                        %i.far.fa-trash-alt
 
           .btn-group
             %button.btn.btn-default{type: "button"} Action

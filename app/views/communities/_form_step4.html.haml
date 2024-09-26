@@ -93,13 +93,13 @@
                         Click here to add one
                 - @filter_keywords.each do |keyword|
                   %tr
-                    %td{ style: 'width: 80%;' }= keyword.keyword
+                    %td{ style: 'width: 90%;' }= keyword.keyword
                     %td
                       %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
-                        Edit
+                        %i.fas.fa-edit
                     %td
                       %a.text-danger{ href: community_filter_keyword_path(keyword, patchwork_community_id: @community.id), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
-                        Remove
+                        %i.far.fa-trash-alt
           .pagination.pagination-sm.m-0.float-right
             = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
