@@ -6,9 +6,7 @@ import "lib/datatable";
 import "custom_js/api_util";
 import "custom_js/modal_handler";
 import "custom_js/keyword_groups";
-import "custom_js/community_contributor_data_table";
 import "custom_js/header";
-import "custom_js/followed_contributors_table";
 import "custom_js/search_contributor";
 import 'custom_js/search_mute_contributor';
 import 'custom_js/post_hashtag';
@@ -217,7 +215,7 @@ $(document).ready(function () {
       const errorId = input.getAttribute("data-error-id");
       const maxSizeMB = input.getAttribute("data-max-size");
       const isBanner = input.id === "customFile";
-  
+
       setupFileUpload(input.id, previewId, errorId, maxSizeMB, isBanner);
     })
   }
@@ -268,7 +266,7 @@ $(document).ready(function () {
 
     if (isBanner) {
       const dropzone = document.getElementById("bannerDropzone");
-      
+
       dropzone.addEventListener("dragover", function (e) {
         e.preventDefault();
         dropzone.style.backgroundColor = "#e9ecef";

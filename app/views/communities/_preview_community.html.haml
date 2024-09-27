@@ -16,7 +16,7 @@
           .row.mt-3.ml-2
             .col
               .row.ml-1
-                %h5.mb-0= @community.name 
+                %h5.mb-0= @community.name
                 = image_tag("icons/vector.svg", class: "mt-1 ml-1", width: "16", height: "16")
               %p.text-muted.small.mb-0= "@#{@community.slug} • Joined on #{@community.created_at.strftime('%b %Y')}"
               %p.text-muted.small.mb-1
@@ -24,15 +24,16 @@
           %hr
           - @community_admins.each do |community_admin|
             .row.mt-3
-              .col-auto
-                %img{ alt: "profile picture", src: asset_path('patchwork-logo.svg'), class: "rounded-circle", style: "width: 40px; height: 40px;" }
-              .col-10
+              .col-1
+                %img{ alt: "", src: community_admin.avatar_url, class: "rounded-circle", style: "width: 40px; height: 40px;" }
+              .col-8
                 %h6.mb-0= community_admin.display_name
-                %p.text-muted.mb-0= "@#{community_admin.username}"
-              .col-auto
-                .row
+                %p.text-muted.mb-0= community_admin.username
+              .col-3.d-flex
+                .row.ml-auto.p-2
                   = image_tag("icons/primary.svg", class: "mt-1 mr-2", width: "16", height: "16")
-                  %p.text-muted -h
+                  %p.text-muted
+                    = community_admin&.user&.current_sign_in_at ? time_ago_in_words(community_admin&.user&.current_sign_in_at) : "0h"
             .row.mt-1.mx-1
               %p= community_admin.note
         = simple_form_for @community, url: set_visibility_community_path, method: :post, local: true do |form|
@@ -41,19 +42,21 @@
             %p.text-muted.small Select whether only users on your server can participate in the channel or open it up to a wider audience.
 
             .btn-group-toggle.d-flex.justify-content-between
-              .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if @community.visibility == "public_access")}
+              - default_visibility = @community.visibility || 'public_access'
+
+              .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "public_access")}
                 = form.radio_button :visibility, 'public_access', autocomplete: 'off'
                 %p.small.mb-0 Public
                 %p.text-muted.text-smaller.mt-1 Allow users on any Patchwork-enabled server to discover and participate in your channel through the discovery hub.
                 %div.small.selected-indicator.mt-auto Selected
 
-              .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if @community.visibility == "guest_access")}
+              .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "guest_access")}
                 = form.radio_button :visibility, 'guest_access', autocomplete: 'off'
                 %p.small.mb-0 Share/guest access
                 %p.text-muted.text-smaller.mt-1 Allow users who have signed into the server as guests to access this channel. Please ensure "Guest accounts" are enabled in the server settings.
                 %div.small.selected-indicator.mt-auto Selected
 
-              .btn.btn-light.btn-lg.w-100.d-flex.flex-column.align-items-start{class: ("selected" if @community.visibility == "private_local")}
+              .btn.btn-light.btn-lg.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "private_local")}
                 = form.radio_button :visibility, 'private_local', autocomplete: 'off'
                 %p.small.mb-0 Private/local
                 %p.text-muted.text-smaller.mt-1 Only allow users on your server to participate in this channel.

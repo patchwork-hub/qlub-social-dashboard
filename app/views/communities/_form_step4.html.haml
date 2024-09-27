@@ -63,7 +63,7 @@
                 - @muted_accounts.each do |account|
                   %tr
                     %td{ style: 'width: 10%;' }
-                      %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                      %img{ alt: "", src: account.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
                     %td{ style: 'width: 80%;' }
                       %h6.mb-0= account.username
                       %p.text-muted.mb-0= raw(account.note)
@@ -72,6 +72,8 @@
                         = form.hidden_field :account_id, value: account.id
                         %button.btn.btn-sm.btn-outline-secondary{ type: 'submit' }
                           Unmute
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @muted_accounts, theme: 'bootstrap4'
       .card
         .card-body
           .row.d-flex.justify-content-between
@@ -86,19 +88,20 @@
                 - if @filter_keywords.size == 0
                   %tr
                     %td.text-center
-                      %p.text-muted.small You haven’t muted any keywords from this channel yet
+                      %p.text-muted.small You haven’t added any keywords to this channel yet
                       %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal' }
                         Click here to add one
                 - @filter_keywords.each do |keyword|
                   %tr
-                    %td{ style: 'width: 80%;' }= keyword.keyword
+                    %td{ style: 'width: 90%;' }= keyword.keyword
                     %td
                       %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
-                        Edit
+                        %i.fas.fa-edit
                     %td
                       %a.text-danger{ href: community_filter_keyword_path(keyword, patchwork_community_id: @community.id), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
-                        Remove
-
+                        %i.far.fa-trash-alt
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step3_community_path } Back

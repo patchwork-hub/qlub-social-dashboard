@@ -33,7 +33,9 @@ class UnfollowService < BaseService
 
   def fetch_oauth_token
     return nil unless @admin.user
-    Doorkeeper::AccessToken.find_by(resource_owner_id: @admin.user.id)&.token
+
+    token_service = GenerateAdminAccessTokenService.new(@admin.user.id)
+    token_service.call
   end
 
   def process_api_response(response)
