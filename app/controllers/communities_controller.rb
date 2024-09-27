@@ -1,7 +1,8 @@
 class CommunitiesController < BaseController
   before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
-  before_action :initialize_form, expect: %i[show]
+  before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
+  PER_PAGE = 10
 
   def step1
     respond_to do |format|
@@ -12,12 +13,14 @@ class CommunitiesController < BaseController
   def step1_save
     @community = CommunityPostService.new.call(
       @current_user.account,
+      id: form_params[:id],
       name: form_params[:name],
       bio: form_params[:bio],
       collection_id: form_params[:collection_id],
       banner_image: form_params[:banner_image],
       avatar_image: form_params[:avatar_image]
     )
+
     if @community.errors.any?
       @community_form = Form::Community.new(form_params)
       flash.now[:error] = @community.errors.full_messages.join(', ')
@@ -30,10 +33,17 @@ class CommunitiesController < BaseController
   def step2
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
-    # @search = commu_admin_records_filter.build_search
+    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
+
+    @edit_admin_form = Form::CommunityAdmin.new(
+      community_id: @community.id,
+      display_name: @edit_admin&.display_name,
+      username: @edit_admin&.username
+    )
 
     respond_to do |format|
       format.html
+      format.json { render json: {admin_id: @edit_admin.id.to_s, display_name: @edit_admin.display_name, username: @edit_admin.username } }
     end
   end
 
@@ -49,11 +59,13 @@ class CommunitiesController < BaseController
     redirect_to step2_community_path
   end
 
-  def contributors_table
-    @contributor_records = load_contributors_records
-    @contributor_search = commu_contributors_filter.build_search
-    respond_to do |format|
-      format.html { render partial: 'communities/contributors_table', locals: { records: @contributor_records } }
+  def step2_update_admin
+    @community_admin = Account.find_by_id(params[:form_community_admin][:admin_id])
+    if @community_admin.update(admin_params)
+      redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
+    else
+      @records = load_commu_admin_records
+      render :step2
     end
   end
 
@@ -81,6 +93,23 @@ class CommunitiesController < BaseController
       flash[:error] = e.message
       redirect_to step3_community_path
     end
+  end
+
+  def step3_update_hashtag
+    community_hashtag = CommunityHashtag.find(params[:form_community_hashtag][:hashtag_id])
+    community_hashtag.update!(hashtag: params[:form_community_hashtag][:hashtag].gsub('#', ''))
+    flash[:success] = "Hashtag updated successfully!"
+    redirect_to step3_community_path
+  end
+
+  def step3_delete_hashtag
+    hashtag = CommunityHashtag.find(params[:community_hashtag_id])
+    if hashtag.destroy
+      flash[:success] = "Hashtag removed successfully!"
+    else
+      flash[:error] = "Failed to remove hashtag."
+    end
+    redirect_to step3_community_path(params[:id])
   end
 
   def step4
@@ -154,6 +183,8 @@ class CommunitiesController < BaseController
 
   def set_visibility
     if @community.update(visibility: params[:community][:visibility])
+      admin_email = User.where(account_id: get_community_admin_id)
+      DashboardMailer.channel_created(@community, admin_email).deliver_now
       redirect_to communities_path
     else
       render :step6
@@ -177,41 +208,15 @@ class CommunitiesController < BaseController
     query = params[:query]
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = fetch_oauth_token || ENV['MASTODON_APPLICATION_TOKEN']
-    response = HTTParty.get("#{api_base_url}/api/v2/search",
-      query: {
-        q: query,
-        resolve: true,
-        limit: 11
-      },
-      headers: {
-        'Authorization' => "Bearer #{token}"
-      }
-    )
 
-    accounts = response.parsed_response['accounts']
-    
-    saved_accounts = []
-    if accounts.present?
-      while saved_accounts.empty?
-        saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
-      end
-    end
+    result = ContributorSearchService.new(query, url: api_base_url, token: token).call
 
-    if saved_accounts.any?
-      formatted_accounts = saved_accounts.map do |account|
-        {
-          'id' => account.id.to_s,
-          'username' => account.username,
-          'display_name' => account.display_name,
-          'domain' => account.domain,
-          'note' => account.note
-        }
-      end
-      render json: { 'accounts' => formatted_accounts }
+    if result.any?
+      render json: { 'accounts' => result }
     else
       render json: { message: 'No saved accounts found', 'accounts' => [] }
     end
-  end  
+  end
 
   def mute_contributor
     target_account_id = params[:account_id]
@@ -222,7 +227,7 @@ class CommunitiesController < BaseController
     else
       Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
     end
-  
+
     render json: { success: true }
   end
 
@@ -230,7 +235,7 @@ class CommunitiesController < BaseController
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
-  
+
     redirect_to step4_community_path
   end
 
@@ -238,9 +243,9 @@ class CommunitiesController < BaseController
     target_account_id = params[:account_id]
     admin_account_id = get_community_admin_id
     is_muted = Mute.exists?(account_id: admin_account_id, target_account_id: target_account_id)
-  
+
     render json: { is_muted: is_muted }
-  end  
+  end
 
   def manage_additional_information
     if params[:community].present? && params[:community][:patchwork_community_additional_informations_attributes].present?
@@ -259,28 +264,34 @@ class CommunitiesController < BaseController
   private
 
   def initialize_form
-    if params[:id].present?
-      @community = Community.find(params[:id])
-      
-      form_data = {
-        id: @community.id,
-        name: @community.name,
-        bio: @community.description,
-        collection_id: @community.patchwork_collection_id,
-        banner_image: @community.banner_image,
-        avatar_image: @community.avatar_image
-      }
-      
-      @community_form = Form::Community.new(form_data)
-    elsif params[:new_community] == 'true'
+    if params[:id].present? || (params[:form_community] && params[:form_community][:id].present?)
+      id = params[:id] || params[:form_community][:id]
+      @community = Community.find_by(id: id)
+
+      if @community.present?
+        form_data = {
+          id: @community.id,
+          name: @community.name,
+          bio: @community.description,
+          collection_id: @community.patchwork_collection_id,
+          banner_image: @community.banner_image,
+          avatar_image: @community.avatar_image
+        }
+      else
+        form_data = {}
+      end
+    else
       form_data = {}
-      @community_form = Form::Community.new(form_data)
     end
+
+    @community_form = Form::Community.new(form_data)
   end
 
   def fetch_oauth_token
     admin = @community.community_admins&.first.account
-    Doorkeeper::AccessToken.find_by(resource_owner_id: admin.user.id)&.token
+
+    token_service = GenerateAdminAccessTokenService.new(admin.user.id)
+    token_service.call
   end
 
   def post_hashtag_params
@@ -299,6 +310,10 @@ class CommunitiesController < BaseController
     params.require(:form_community_admin).permit(:community_id, :display_name, :username, :email, :password)
   end
 
+  def admin_params
+    params.require(:form_community_admin).permit(:display_name, :username)
+  end
+
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy]
@@ -310,7 +325,7 @@ class CommunitiesController < BaseController
   end
 
   def records_filter
-    @filter = Filter::Community.new(params)
+    Filter::Community.new(params)
   end
 
   def load_commu_admin_records
@@ -338,9 +353,9 @@ class CommunitiesController < BaseController
     follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
     follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
     total_follows_ids = follow_ids + follow_request_ids
-    Account.where(id: total_follows_ids)
+    Account.where(id: total_follows_ids).page(params[:page]).per(PER_PAGE)
   end
-   
+
   def commu_follower_filter
     @follower_filter = Filter::Account.new(params)
   end
@@ -362,11 +377,11 @@ class CommunitiesController < BaseController
 
   def commu_hashtag_records_filter
     params[:q] = { patchwork_community_id_eq: @community.id }
-    @filter = Filter::CommunityHashtag.new(params)
+    Filter::CommunityHashtag.new(params)
   end
 
   def get_community_filter_keyword
-    CommunityFilterKeyword.where(patchwork_community_id: @community.id)
+    CommunityFilterKeyword.where(patchwork_community_id: @community.id).page(params[:page]).per(PER_PAGE)
   end
 
   def get_community_admin_id
@@ -376,30 +391,15 @@ class CommunitiesController < BaseController
   def get_muted_accounts
     admin_account_id = get_community_admin_id
     muted_account_ids = Mute.where(account_id: admin_account_id).pluck(:target_account_id)
-    Account.where(id: muted_account_ids)
+    Account.where(id: muted_account_ids).page(params[:page]).per(PER_PAGE)
   end
-  
+
   def set_community
     @community = Community.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @community
   end
 
   def set_current_step
-    case action_name
-    when 'step1', 'step1_save'
-      @current_step = 1
-    when 'step2', 'step2_save'
-      @current_step = 2
-    when 'step3', 'step3_save'
-      @current_step = 3
-    when 'step4', 'step4_save'
-      @current_step = 4
-    when 'step5', 'step5_save'
-      @current_step = 5
-    when 'step6', 'step6_save'
-      @current_step = 6
-    else
-      @current_step = 1
-    end
+    @current_step = action_name.match(/\d+/).to_s.to_i || 1
   end
 end

@@ -2,7 +2,7 @@
 window.followContributor = function(account_id, community_id=null) {
   let queryParams = [];
   if (community_id) queryParams.push(`community_id=${community_id}`);
-  
+
   const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
 
   $.ajax({
@@ -10,7 +10,7 @@ window.followContributor = function(account_id, community_id=null) {
     method: 'POST',
     success: function(response) {
       var followBtn = $(`#follow_btn_${account_id}`);
-      
+
       followBtn.text('Unfollow');
       followBtn.removeClass('btn-outline-dark');
       followBtn.addClass('btn-outline-danger');
@@ -27,7 +27,7 @@ window.followContributor = function(account_id, community_id=null) {
 window.unfollowContributor = function(account_id, community_id=null) {
   let queryParams = [];
   if (community_id) queryParams.push(`community_id=${community_id}`);
-  
+
   const queryString = queryParams.length > 0 ? '?' + queryParams.join('&') : '';
 
   $.ajax({
@@ -35,7 +35,7 @@ window.unfollowContributor = function(account_id, community_id=null) {
     method: 'POST',
     success: function(response) {
       var followBtn = $(`#follow_btn_${account_id}`);
-      
+
       followBtn.text('Follow');
       followBtn.removeClass('btn-outline-danger');
       followBtn.addClass('btn-outline-dark');
@@ -99,7 +99,7 @@ function displaySearchResults(accounts) {
     resultItem.innerHTML = `
       <div class="profile-info row">
         <div class="col-auto">
-          <img src="/assets/patchwork-logo.svg" alt="${account.username}" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
+          <img src="${account.avatar_url}" alt="" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
         </div>
         <div class="col">
           <p class="mb-0">${account.display_name || account.username}</p>

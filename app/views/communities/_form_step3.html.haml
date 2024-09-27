@@ -64,16 +64,18 @@
                         Click here to add one
                 - @records.each do |community_hashtag|
                   %tr
-                    %td{style: "width: 30px;"}
-                      = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
                     %td
+                      = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
+                    %td{ style: 'width: 90%;' }
                       = "##{community_hashtag.hashtag}"
-                    -#
-                      %td{style: "width: 200px;"}
-                        %a.text-danger.mr-2{ href: step3_community_path } Edit
-                        %a.text-danger{ href: step3_community_path } Remove
-          %ul.pagination.pagination-sm.m-0.float-right
-            = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
+                      %td
+                        %a.text-danger{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
+                          %i.fas.fa-edit
+                      %td
+                        = link_to step3_delete_hashtag_community_path(id: @community.id, community_hashtag_id: community_hashtag.id), method: :post, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow' do
+                          %i.far.fa-trash-alt
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @records, theme: 'bootstrap4'
       .card
         .card-body
           .row.d-flex.justify-content-between
@@ -102,12 +104,14 @@
                 - @follow_records.each do |record|
                   %tr
                     %td{ style: 'width: 10%;' }
-                      %img{ alt: "", src: asset_path('patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                      %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
                     %td{ style: 'width: 80%;' }
                       %h6.mb-0= record.username
                       %p.text-muted.mb-0= raw(record.note)
                     %td{style: "width: 60px;"}
                       %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
+          .pagination.pagination-sm.m-0.float-right
+            = paginate @follow_records, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_community_path } Back
@@ -115,14 +119,4 @@
           %a.btn.btn-danger{ href:step4_community_path(id: @community.id) } Continue
 
 = render 'add_contributor'
-
-
-
-
-
-
-
-
-
-
-
+= render 'edit_hashtag'

@@ -83,19 +83,26 @@
                     %label.text-muted{ style: "font-size: 14px;" } Hashtags
                   %th{style: "width: 200px"}
               %tbody
+                - if @records.size == 0
+                  %tr
+                    %td{ colspan: 3, class: "text-center" }
+                      %p.text-muted.small You haven’t added any hashtags to this channel yet
+                      %a.text-danger.small{ href: '#', title: 'Add new channel hashtag', 'data-toggle': 'modal', 'data-target': '#postHashtagModel' }
+                        Click here to add one
+
                 - @records.each do |record|
                   %tr
                     %td
                       %i.far.fa-square.mr-4
-                    %td{ style: 'width: 80%;' }
+                    %td{ style: 'width: 90%;' }
                       %p= record.hashtag
                     %td
-                      %a.text-danger.mr-2{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'} Edit
+                      %a.text-danger{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'}
+                        %i.fas.fa-edit
                     %td
-                      = link_to 'Remove', step5_delete_community_path(@community, post_hashtag_id: record.id), method: :post, class: 'text-danger'
+                      = link_to step5_delete_community_path(@community, post_hashtag_id: record.id), method: :post, class: 'text-danger', data: { confirm: 'Are you sure?' } do
+                        %i.far.fa-trash-alt
 
-          %ul.pagination.pagination-sm.m-0.float-right
-            = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
           .btn-group
             %button.btn.btn-default{type: "button"} Action
             %button.btn.btn-default.dropdown-toggle.dropdown-icon{"data-toggle" => "dropdown", type: "button"}

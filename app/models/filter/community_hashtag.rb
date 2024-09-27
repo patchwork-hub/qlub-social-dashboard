@@ -1,13 +1,20 @@
 class Filter::CommunityHashtag < Filter::Common
   def initialize(params)
     super(params)
+    @q = params[:q] || {}
+    @current_page = params[:page] || 1
+    @per_page = 10
   end
 
   def paginated_scope
-    CommunityHashtag.offset((@current_page - 1) * @per_page).limit(@per_page)
+    build_search.result.page(@current_page).per(@per_page)
   end
 
   def build_search
     CommunityHashtag.ransack(@q)
+  end
+
+  def get
+    paginated_scope
   end
 end
