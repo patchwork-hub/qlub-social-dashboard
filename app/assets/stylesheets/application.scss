@@ -134,15 +134,15 @@ ul.pagination {
     a.page-link {
       color: grey !important;
       &:hover {
-        color: red !important;
+        color: #DC3545 !important;
       }
     }
   }
   li.active {
     a.page-link {
       color: #fff !important;
-      background-color: red !important;
-      border-color: red !important;
+      background-color: #DC3545 !important;
+      border-color: #DC3545 !important;
     }
   }
 }
@@ -159,7 +159,7 @@ ul.pagination {
   color: #00afdb !important;
 
   &:hover {
-    color: #E33D26 !important;
+    color: #DC3545 !important;
   }
 }
 
@@ -385,8 +385,8 @@ ul.pagination {
 }
 
 .step.active .circle {
-  border-color: #ff0000;
-  color: #ff0000;
+  border-color: #DC3545;
+  color: #DC3545;
 }
 
 .step.active .label {
@@ -398,7 +398,7 @@ ul.pagination {
 }
 
 .step.done .circle {
-  border-color: #ff0000;
+  border-color: #DC3545;
   background: url('check.svg') no-repeat;
   background-size: 36px 36px;
   background-position: center;
@@ -425,7 +425,7 @@ ul.pagination {
 }
 
 .red {
-  color: red;
+  color: #DC3545;
 }
 
 .custom-modal-width {
@@ -459,12 +459,12 @@ ul.pagination {
 }
 
 .btn-group-toggle .btn.selected {
-  border-color: red;
+  border-color: #DC3545;
 }
 
 .btn-group-toggle .btn.selected .selected-indicator {
   display: block;
-  background-color: red;
+  background-color: #DC3545;
   color: white;
   border-radius: 0 0 5px 5px;
   padding: 5px 0;
@@ -485,7 +485,7 @@ ul.pagination {
 }
 
 .btn-group-toggle .btn.selected input[type="radio"] {
-  border-color: red;
+  border-color: #DC3545;
 }
 
 .bordered-checkbox, .bordered-radio {
@@ -497,7 +497,7 @@ ul.pagination {
 }
 
 .type-of-post {
-  accent-color: red;
+  accent-color: #DC3545;
 }
 
 .text-smaller {
@@ -575,7 +575,7 @@ ul.pagination {
 /* community filter keyword */
 .filter-hashtag {
   padding-left: 0.5rem !important;
-  accent-color: red;
+  accent-color: #DC3545;
 }
 
 #search-results {
