@@ -1,9 +1,9 @@
-# frozen_string_literal: true
-
 class FollowService < BaseService
-  def call(admin, target_account)
+  def call(admin, target_account, notify: true, reblogs: true)
     @admin = admin
     @target_account = target_account
+    @notify = notify
+    @reblogs = reblogs
     follow_contributor!
   end
 
@@ -20,13 +20,27 @@ class FollowService < BaseService
   end
 
   def follow_account(api_base_url, token)
-    payload = { reblogs: true }
-    headers = { 'Authorization' => "Bearer #{token}" }
+    payload = {
+      reblogs: @reblogs,
+      notify: @notify
+    }
 
-    HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_account.id}/follow",
-      body: payload,
-      headers: headers
-    )
+    headers = {
+      'Authorization' => "Bearer #{token}",
+      'Content-Type' => 'application/json'
+    }
+
+    response = HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_account.id}/follow",
+                             body: payload.to_json,
+                             headers: headers)
+
+    if response.code == 200
+      puts "Follow request successful: #{response.body}"
+    else
+      puts "Failed to follow account: #{response.body}"
+    end
+
+    response
   end
 
   def fetch_oauth_token
