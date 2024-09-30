@@ -1,8 +1,7 @@
 class FollowService < BaseService
-  def call(admin, target_account, notify: true, reblogs: true)
+  def call(admin, target_account, reblogs: true)
     @admin = admin
     @target_account = target_account
-    @notify = notify
     @reblogs = reblogs
     follow_contributor!
   end
@@ -21,8 +20,7 @@ class FollowService < BaseService
 
   def follow_account(api_base_url, token)
     payload = {
-      reblogs: @reblogs,
-      notify: @notify
+      reblogs: @reblogs
     }
 
     headers = {
