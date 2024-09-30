@@ -42,7 +42,7 @@
 
                 - if @community_form.banner_image.is_a?(ActionDispatch::Http::UploadedFile)
                   - banner_image_url = @community_form.banner_image.tempfile.path
-                - elsif @community_form.banner_image.attached?
+                - elsif @community_form.banner_image.present?
                   - banner_image_url = url_for(@community_form.banner_image)
                 - else
                   - banner_image_url = ''
@@ -62,7 +62,7 @@
 
                     - if @community_form.avatar_image.is_a?(ActionDispatch::Http::UploadedFile)
                       - avatar_image_url = @community_form.avatar_image.tempfile.path
-                    - elsif @community_form.avatar_image.attached?
+                    - elsif @community_form.avatar_image.present?
                       - avatar_image_url = url_for(@community_form.avatar_image)
                     - else
                       - avatar_image_url = ''
