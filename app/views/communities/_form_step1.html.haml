@@ -40,7 +40,9 @@
               .dropzone.p-5.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;", id: "bannerDropzone" }
                 = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentBanner", 'data-error-id': "bannerUploadErrors", 'data-max-size': 5 }
 
-                - if @community_form.banner_image.present?
+                - if @community_form.banner_image.is_a?(ActionDispatch::Http::UploadedFile)
+                  - banner_image_url = @community_form.banner_image.tempfile.path
+                - elsif @community_form.banner_image.attached?
                   - banner_image_url = url_for(@community_form.banner_image)
                 - else
                   - banner_image_url = ''
@@ -58,7 +60,9 @@
                 .avatar-upload-container
                   .rounded-circle.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
 
-                    - if @community_form.avatar_image.present?
+                    - if @community_form.avatar_image.is_a?(ActionDispatch::Http::UploadedFile)
+                      - avatar_image_url = @community_form.avatar_image.tempfile.path
+                    - elsif @community_form.avatar_image.attached?
                       - avatar_image_url = url_for(@community_form.avatar_image)
                     - else
                       - avatar_image_url = ''
