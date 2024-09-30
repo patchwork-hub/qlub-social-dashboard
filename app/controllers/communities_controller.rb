@@ -11,9 +11,10 @@ class CommunitiesController < BaseController
   end
 
   def step1_save
+    id = form_params[:id].presence
     @community = CommunityPostService.new.call(
       @current_user.account,
-      id: form_params[:id],
+      id: id,
       name: form_params[:name],
       bio: form_params[:bio],
       collection_id: form_params[:collection_id],
