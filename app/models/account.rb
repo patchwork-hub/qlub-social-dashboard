@@ -24,7 +24,15 @@ class Account < ApplicationRecord
            .where.not(follows: { account_id: account_id })
            .distinct
   end
-  
+
+  def avatar_url
+    if avatar_remote_url.present?
+      avatar_remote_url
+    elsif avatar_file_name.present?
+      "https://#{ENV['S3_BUCKET']}/accounts/avatars/#{id}/original/#{avatar_file_name}"
+    else
+      ActionController::Base.helpers.asset_path('patchwork-logo.svg')
+    end
+  end
+
 end
-
-

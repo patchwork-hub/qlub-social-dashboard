@@ -7,7 +7,7 @@
       .card-header
         %h3.card-title Local channels
         .card-tools
-          = search_form_for @search do |f|
+          = search_form_for @search, url: communities_path, method: :get do |f|
             .input-group.input-group-sm{style: "width: 150px;"}
               = f.search_field :name_cont, class: "form-control float-right", placeholder: "Search"
               .input-group-append
@@ -23,6 +23,7 @@
               %th Channels
               %th Name
               %th No. of admins
+              %th Status
               %th
           %tbody
             - if @records.size == 0
@@ -36,8 +37,19 @@
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
                 %td= community.slug
-                %th= community.community_admins.size
-                %th
+                %td
+                  %span.badge.badge-pill.badge-light
+                    = image_tag("icons/user.svg", class: "mr-2", width: "11", height: "16")
+                    = community.community_admins.size
+                %td
+                  - if community.visibility.present?
+                    %span.badge.badge-pill.badge-success Complete
+                  - else
+                    %span.badge.badge-pill.badge-warning Incomplete
+                %td
+                  %a.text-danger{ href: step1_communities_path(id: community.id) }
+                    %i.fas.fa-edit
+
         .row.mt-2
           .col
             %div.btn-group
@@ -51,8 +63,9 @@
                 .dropdown-divider
                 %a.dropdown-item{href: "#"} Separated link
           .col
-            %ul.pagination.pagination-sm.m-0.float-right
-              = render partial: 'kaminari/paginator', locals: { custom_paginator: @filter }
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @records, theme: 'bootstrap4'
+
         .row.mt-4
           .col-12.d-flex.justify-content-center
             %div.btn-group

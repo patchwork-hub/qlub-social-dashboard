@@ -1,19 +1,17 @@
-# frozen_string_literal: true
-
 class FollowService < BaseService
-  def call(admin, target_account)
+  def call(admin, target_account, reblogs: true)
     @admin = admin
     @target_account = target_account
+    @reblogs = reblogs
     follow_contributor!
   end
 
   def follow_contributor!
     api_base_url = ENV['MASTODON_INSTANCE_URL']
     token = fetch_oauth_token
-
     response = follow_account(api_base_url, token)
     account_data = process_api_response(response)
-    account = find_account(account_data)
+    find_account(account_data)
   rescue HTTParty::Error => e
     puts "HTTP request failed: #{e.message}"
   rescue StandardError => e
@@ -21,18 +19,32 @@ class FollowService < BaseService
   end
 
   def follow_account(api_base_url, token)
-    payload = { reblogs: true }
-    headers = { 'Authorization' => "Bearer #{token}" }
+    payload = {
+      reblogs: @reblogs
+    }
 
-    HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_account.id}/follow",
-      body: payload,
-      headers: headers
-    )
+    headers = {
+      'Authorization' => "Bearer #{token}",
+      'Content-Type' => 'application/json'
+    }
+
+    response = HTTParty.post("#{api_base_url}/api/v1/accounts/#{@target_account.id}/follow",
+                             body: payload.to_json,
+                             headers: headers)
+
+    if response.code == 200
+      puts "Follow request successful: #{response.body}"
+    else
+      puts "Failed to follow account: #{response.body}"
+    end
+
+    response
   end
 
   def fetch_oauth_token
     return nil unless @admin.user
-    Doorkeeper::AccessToken.find_by(resource_owner_id: @admin.user.id)&.token
+    token_service = GenerateAdminAccessTokenService.new(@admin.user.id)
+    token_service.call
   end
 
   def process_api_response(response)
@@ -42,7 +54,7 @@ class FollowService < BaseService
 
     account_data
   end
-  
+
   def find_account(account_data)
     Account.find_by(id: account_data['id'])
   end

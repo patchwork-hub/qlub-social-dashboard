@@ -1,0 +1,22 @@
+#editHashtagModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "editHashtagLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#editHashtagLabel.modal-title Edit Hashtag
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        = simple_form_for @community_hashtag_form, url: step3_update_hashtag_community_path, method: :patch, html: { id: 'edit_hashtag_form' } do |form|
+          = form.hidden_field :community_id, value: @community.id, id: 'edit_community_id'
+          = form.hidden_field :hashtag_id, id: 'edit_hashtag_id'
+          .row
+            .col
+              .form-group
+                = form.label :hashtag
+                = form.text_field :hashtag, class: 'form-control', id: 'edit_hashtag_input'
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
+              .col
+                = form.submit 'Save changes', class: 'btn btn-danger'
