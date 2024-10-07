@@ -7,7 +7,7 @@ module Api
       def index
 
         @channels = Community.where.not(visibility: nil)
-        render json: Api::V1::ChannelSerializer.new(@channels)
+        render json: Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
       end
 
     end
