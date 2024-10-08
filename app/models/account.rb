@@ -5,6 +5,8 @@ class Account < ApplicationRecord
   has_many :communities
   has_many :community_admins
 
+  before_create :generate_keys
+
   validates :username, uniqueness: true, presence: true
 
   def self.ransackable_attributes(auth_object = nil)
@@ -33,6 +35,18 @@ class Account < ApplicationRecord
     else
       ActionController::Base.helpers.asset_path('patchwork-logo.svg')
     end
+  end
+
+  def generate_keys
+    return unless local? && private_key.blank? && public_key.blank?
+
+    keypair = OpenSSL::PKey::RSA.new(2048)
+    self.private_key = keypair.to_pem
+    self.public_key  = keypair.public_key.to_pem
+  end
+
+  def local?
+    domain.nil?
   end
 
 end
