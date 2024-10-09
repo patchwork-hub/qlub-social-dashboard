@@ -42,8 +42,7 @@ class CommunityPostService < BaseService
     validate_unique_name
     return @community if @community&.errors&.any?
 
-    update_community_attributes
-    @community.save!
+    @community.update!(community_attributes)
     @community
   end
 
@@ -70,10 +69,6 @@ class CommunityPostService < BaseService
       avatar_image: @options[:avatar_image],
       account_id: @account.id
     }.compact
-  end
-
-  def update_community_attributes
-    @community.assign_attributes(community_attributes)
   end
 
   def get_position
