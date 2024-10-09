@@ -6,8 +6,9 @@ module Api
 
       def index
 
-        @channels = Community.where.not(visibility: nil)
-        render json: Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
+        @channels = Collection.joins(:patchwork_communities).where.not(patchwork_communities: { visibility: nil }).order(sorting_index: :asc)
+        render json: Api::V1::ActiveChannelsSerializer.new(@channels).serializable_hash.to_json
+
       end
 
     end
