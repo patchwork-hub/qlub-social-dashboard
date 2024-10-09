@@ -37,7 +37,7 @@ class CommunityPostService < BaseService
   end
 
   def update_community
-    @community = Community.find_or_initialize_by(id: @options[:id])
+    @community = Community.find_by(id: @options[:id])
     validate_collection
     validate_unique_name
     return @community if @community&.errors&.any?
