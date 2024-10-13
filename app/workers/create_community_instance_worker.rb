@@ -25,7 +25,7 @@ class CreateCommunityInstanceDataWorker
   end
 
   def initialize_lambda_client
-    Aws::Lambda::Client.new(region: ENV['AWS_REGION'])
+    Aws::Lambda::Client.new(region: ENV['S#_REGION'])
   end
 
   def build_payload(community, community_slug, domain)
