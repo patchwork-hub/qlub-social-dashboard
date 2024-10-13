@@ -1,7 +1,7 @@
 require 'httparty'
 
 class CreateCommunityInstanceDataWorker
-  include Sidekiq::Worker
+
   WEB_PORT = 1000
   SIDEKIQ_PORT = 3000
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
