@@ -7,7 +7,8 @@ class CreateCommunityInstanceDataWorker
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
-  def perform(community)
+  def perform(community_id)
+    community = Community.find(community_id)
     community_slug = community.slug
     domain = generate_domain(community_slug)
 
