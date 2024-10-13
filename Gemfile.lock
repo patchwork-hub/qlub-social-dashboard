@@ -89,9 +89,6 @@ GEM
     aws-sdk-kms (1.87.0)
       aws-sdk-core (~> 3, >= 3.199.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-lambda (1.124.0)
-      aws-sdk-core (~> 3, >= 3.199.0)
-      aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.155.0)
       aws-sdk-core (~> 3, >= 3.199.0)
       aws-sdk-kms (~> 1)
@@ -400,7 +397,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  aws-sdk-lambda
   aws-sdk-s3 (~> 1.117)
   bcrypt
   better_errors
