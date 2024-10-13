@@ -1,6 +1,7 @@
 require 'httparty'
 
-class CreateCommunityInstanceDataWorker
+class CreateCommunityInstanceDataJob < ApplicationJob
+  queue_as :default
 
   WEB_PORT = 1000
   SIDEKIQ_PORT = 3000
