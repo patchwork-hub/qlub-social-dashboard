@@ -1,19 +1,19 @@
-require 'aws-sdk-lambda'
+require 'httparty'
 
 class CreateCommunityInstanceDataWorker
   include Sidekiq::Worker
   WEB_PORT = 1000
   SIDEKIQ_PORT = 3000
+  LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
+  LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
   def perform(community)
     community_slug = community.slug
     domain = generate_domain(community_slug)
 
-    lambda_client = initialize_lambda_client
-
     payload = build_payload(community, community_slug, domain)
 
-    response = invoke_lambda(lambda_client, payload)
+    response = invoke_lambda(payload)
 
     handle_response(response)
   end
@@ -22,10 +22,6 @@ class CreateCommunityInstanceDataWorker
 
   def generate_domain(community_slug)
     "#{community_slug}.channel.org"
-  end
-
-  def initialize_lambda_client
-    Aws::Lambda::Client.new(region: ENV['S3_REGION'])
   end
 
   def build_payload(community, community_slug, domain)
@@ -39,7 +35,9 @@ class CreateCommunityInstanceDataWorker
       WEB_DOMAIN: domain,
       STREAMING_API_BASE_URL: "wss://#{domain}",
       LOCAL_DOMAIN: domain,
-      WORKPLACE_DB_DATABASE: community_slug
+      WORKPLACE_DB_DATABASE: community_slug,
+      AWS_ACCESS_KEY_ID: ENV['AWS_ACCESS_KEY_ID'],
+      AWS_SECRET_ACCESS_KEY: ENV['AWS_SECRET_ACCESS_KEY']
     }.to_json
   end
 
@@ -51,19 +49,25 @@ class CreateCommunityInstanceDataWorker
     SIDEKIQ_PORT + community_id.to_i
   end
 
-  def invoke_lambda(client, payload)
-    client.invoke(
-      function_name: 'GenerateCommunityInstanceJsonData',
-      invocation_type: 'Event',
-      payload: payload
+  def invoke_lambda(payload)
+    response = HTTParty.post(
+      LAMBDA_URL,
+      body: payload,
+      headers: {
+        'Content-Type' => 'application/json',
+        'x-api-key' => LAMBDA_API_KEY
+      }
     )
+
+    response
   end
 
   def handle_response(response)
-    if response.successful?
-      Rails.logger.info("Lambda function triggered successfully")
+    Rails.logger.info("Lambda invocation response: #{response.body}")
+    if response.success?
+      Rails.logger.info("Lambda function triggered successfully: #{response.body}")
     else
-      Rails.logger.error("Lambda invocation failed: #{response.inspect}")
+      Rails.logger.error("Lambda invocation failed: #{response.code} #{response.message}, Body: #{response.body}")
     end
   end
 end
