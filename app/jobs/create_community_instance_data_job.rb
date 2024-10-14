@@ -26,6 +26,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
 
   def build_payload(community_id, community_slug, domain)
     {
+      id: community_id,
       client: community_slug,
       web: calculate_web_port(community_id),
       sidekiq: calculate_sidekiq_port(community_id),
