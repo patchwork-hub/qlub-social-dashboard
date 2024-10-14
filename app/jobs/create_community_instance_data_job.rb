@@ -10,8 +10,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
 
   def perform(community_id, community_slug)
     domain = generate_domain(community_slug)
-
-    payload = build_payload(community_id, community_slug, domain)
+    admins = prepare_admins(community_id)
+    payload = build_payload(community_id, community_slug, domain, admins)
 
     response = invoke_lambda(payload)
 
@@ -24,7 +24,13 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     "#{community_slug}.channel.org"
   end
 
-  def build_payload(community_id, community_slug, domain)
+  def prepare_admins(community_id)
+    Account.joins(:community_admins)
+           .where(community_admins: { patchwork_community_id: community_id })
+           .map { |account| "@#{account.username}@#{ENV['LOCAL_DOMAIN']}" }
+  end
+
+  def build_payload(community_id, community_slug, domain, admins)
     {
       id: community_id,
       client: "#{community_id}_#{community_slug}",
@@ -38,7 +44,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       LOCAL_DOMAIN: domain,
       WORKPLACE_DB_DATABASE: community_slug,
       AWS_ACCESS_KEY_ID: ENV['AWS_ACCESS_KEY_ID'],
-      AWS_SECRET_ACCESS_KEY: ENV['AWS_SECRET_ACCESS_KEY']
+      AWS_SECRET_ACCESS_KEY: ENV['AWS_SECRET_ACCESS_KEY'],
+      ADMINS: admins
     }.to_json
   end
 
