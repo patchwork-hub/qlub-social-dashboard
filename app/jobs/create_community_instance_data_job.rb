@@ -8,12 +8,10 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
-  def perform(community_id)
-    community = Community.find(community_id)
-    community_slug = community.slug
+  def perform(community_id, community_slug)
     domain = generate_domain(community_slug)
 
-    payload = build_payload(community, community_slug, domain)
+    payload = build_payload(community_id, community_slug, domain)
 
     response = invoke_lambda(payload)
 
@@ -26,11 +24,11 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     "#{community_slug}.channel.org"
   end
 
-  def build_payload(community, community_slug, domain)
+  def build_payload(community_id, community_slug, domain)
     {
       client: community_slug,
-      web: calculate_web_port(community.id),
-      sidekiq: calculate_sidekiq_port(community.id),
+      web: calculate_web_port(community_id),
+      sidekiq: calculate_sidekiq_port(community_id),
       upstream_web: "#{community_slug}_web",
       upstream_stream: "#{community_slug}_stream",
       REDIS_NAMESPACE: community_slug,
