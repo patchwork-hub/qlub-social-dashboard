@@ -27,11 +27,11 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   def build_payload(community_id, community_slug, domain)
     {
       id: community_id,
-      client: community_slug,
+      client: "#{community_id}_#{community_slug}",
       web: calculate_web_port(community_id),
       sidekiq: calculate_sidekiq_port(community_id),
-      upstream_web: "#{community_slug}_web",
-      upstream_stream: "#{community_slug}_stream",
+      upstream_web: "#{community_id}_#{community_slug}_web",
+      upstream_stream: "#{community_id}_#{community_slug}_stream",
       REDIS_NAMESPACE: community_slug,
       WEB_DOMAIN: domain,
       STREAMING_API_BASE_URL: "wss://#{domain}",
