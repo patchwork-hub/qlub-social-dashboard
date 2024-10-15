@@ -28,6 +28,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     Account.joins(:community_admins)
            .where(community_admins: { patchwork_community_id: community_id })
            .map { |account| "@#{account.username}@#{ENV['LOCAL_DOMAIN']}" }
+           .join(', ')
   end
 
   def build_payload(community_id, community_slug, domain, admins)
