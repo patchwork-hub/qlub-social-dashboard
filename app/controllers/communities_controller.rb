@@ -186,6 +186,7 @@ class CommunitiesController < BaseController
     if @community.update(visibility: params[:community][:visibility])
       # admin_email = User.where(account_id: get_community_admin_id)
       # DashboardMailer.channel_created(@community, admin_email).deliver_now
+      CreateCommunityInstanceDataJob.perform_later(@community.id, @community.slug) if ENV['ALLOW_CHANNELS_CREATION'] == 'true'
       redirect_to communities_path
     else
       render :step6

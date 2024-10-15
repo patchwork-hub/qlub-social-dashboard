@@ -37,13 +37,12 @@ class CommunityPostService < BaseService
   end
 
   def update_community
-    @community = Community.find_or_initialize_by(id: @options[:id])
+    @community = Community.find_by(id: @options[:id])
     validate_collection
     validate_unique_name
     return @community if @community&.errors&.any?
 
-    update_community_attributes
-    @community.save!
+    @community.update!(community_attributes)
     @community
   end
 
@@ -66,14 +65,22 @@ class CommunityPostService < BaseService
       patchwork_collection_id: @collection.id,
       position: get_position,
       admin_following_count: 0,
-      banner_image: @options[:banner_image],
-      avatar_image: @options[:avatar_image],
+      banner_image: attach_image(@options[:banner_image], 'banner'),
+      avatar_image: attach_image(@options[:avatar_image], 'avatar'),
       account_id: @account.id
     }.compact
   end
 
-  def update_community_attributes
-    @community.assign_attributes(community_attributes)
+  def attach_image(image, type)
+    return unless image
+
+    filename = "#{type}/#{SecureRandom.uuid}_#{image.original_filename}"
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: image,
+      filename: filename,
+      content_type: image.content_type
+    )
+    blob
   end
 
   def get_position
