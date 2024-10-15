@@ -3,14 +3,12 @@ require 'httparty'
 class CreateCommunityInstanceDataJob < ApplicationJob
   queue_as :default
 
-  WEB_PORT = 1000
-  SIDEKIQ_PORT = 3000
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
   def perform(community_id, community_slug)
     domain = generate_domain(community_slug)
-    admins = prepare_admins(community_id)
+    admins = prepare_admins(community_id, domain)
     payload = build_payload(community_id, community_slug, domain, admins)
 
     response = invoke_lambda(payload)
@@ -24,10 +22,10 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     "#{community_slug}.channel.org"
   end
 
-  def prepare_admins(community_id)
+  def prepare_admins(community_id, domain)
     Account.joins(:community_admins)
            .where(community_admins: { patchwork_community_id: community_id })
-           .map { |account| "@#{account.username}@#{ENV['LOCAL_DOMAIN']}" }
+           .map { |account| "@#{account.username}@#{domain}" }
            .join(', ')
   end
 
@@ -51,11 +49,11 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   end
 
   def calculate_web_port(community_id)
-    WEB_PORT + community_id.to_i
+    ENV['WEB_PORT'] + community_id.to_i
   end
 
   def calculate_sidekiq_port(community_id)
-    SIDEKIQ_PORT + community_id.to_i
+    ENV['SIDEKIQ_PORT'] + community_id.to_i
   end
 
   def invoke_lambda(payload)
