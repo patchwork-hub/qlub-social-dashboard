@@ -3,8 +3,8 @@ require 'httparty'
 class CreateCommunityInstanceDataJob < ApplicationJob
   queue_as :default
 
-  WEB_PORT = 1000
-  SIDEKIQ_PORT = 3000
+  WEB_PORT = 6000
+  SIDEKIQ_PORT = 7000
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
