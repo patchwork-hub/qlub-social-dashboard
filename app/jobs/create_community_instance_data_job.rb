@@ -8,7 +8,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
 
   def perform(community_id, community_slug)
     domain = generate_domain(community_slug)
-    admins = prepare_admins(community_id, domain)
+    admins = prepare_admins(community_id)
     payload = build_payload(community_id, community_slug, domain, admins)
 
     response = invoke_lambda(payload)
@@ -22,10 +22,10 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     "#{community_slug}.channel.org"
   end
 
-  def prepare_admins(community_id, domain)
+  def prepare_admins(community_id)
     Account.joins(:community_admins)
            .where(community_admins: { patchwork_community_id: community_id })
-           .map { |account| "@#{account.username}@#{domain}" }
+           .map { |account| "@#{account.username}@channel.org" }
            .join(', ')
   end
 
