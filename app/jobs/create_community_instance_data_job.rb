@@ -49,11 +49,11 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   end
 
   def calculate_web_port(community_id)
-    ENV['WEB_PORT'] + community_id.to_i
+    ENV['WEB_PORT'].to_i + community_id.to_i
   end
 
   def calculate_sidekiq_port(community_id)
-    ENV['SIDEKIQ_PORT'] + community_id.to_i
+    ENV['SIDEKIQ_PORT'].to_i + community_id.to_i
   end
 
   def invoke_lambda(payload)
