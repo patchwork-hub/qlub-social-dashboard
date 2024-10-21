@@ -31,6 +31,7 @@ RUN apt-get install -y --no-install-recommends \
     default-libmysqlclient-dev \
     openssl \
     tzdata \
+    file\ 
     imagemagick \
     iproute2 \
     nodejs \
