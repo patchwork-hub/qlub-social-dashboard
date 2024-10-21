@@ -17,22 +17,6 @@ module Dashboard
     config.load_defaults 7.0
 
     config.time_zone = "London"
-    
-    config.paperclip_defaults = {
-      log: true,
-      whiny: false,
-      path:                     'patchwork/:class/:attachment/:id_partition/:style/:filename',
-      bucket:                   ENV["S3_BUCKET"],
-      preserve_files:           true,
-      storage:                  :s3,
-      url:                      ":s3_domain_url",
-      s3_protocol:              ENV["S3_PROTOCOL"] || "https",
-      s3_credentials: {
-        s3_region:              ENV["S3_REGION"],
-        access_key_id:          ENV["AWS_ACCESS_KEY_ID"],
-        secret_access_key:      ENV["AWS_SECRET_ACCESS_KEY"]
-      }
-    }
 
     # smtp settings
     config.action_mailer.smtp_settings = {
