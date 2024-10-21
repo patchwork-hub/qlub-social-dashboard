@@ -1,14 +1,9 @@
 class Community < ApplicationRecord
   self.table_name = 'patchwork_communities'
-  has_attached_file :avatar_image,
-                    path: "community/:slug/avatar_image/:filename",
-                    s3_protocol: :https,
-                    url: ":s3_domain_url"
 
-  has_attached_file :banner_image,
-                    path: "community/:slug/banner_image/:filename",
-                    s3_protocol: :https,
-                    url: ":s3_domain_url"
+  has_attached_file :avatar_image
+
+  has_attached_file :banner_image
 
   validates_attachment_content_type :avatar_image, content_type: /\Aimage\/.*\z/
   validates_attachment_content_type :banner_image, content_type: /\Aimage\/.*\z/
