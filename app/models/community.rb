@@ -5,8 +5,8 @@ class Community < ApplicationRecord
 
   has_attached_file :banner_image
 
-  validates_attachment_content_type :avatar_image, content_type: /\Aimage\/.*\z/
-  validates_attachment_content_type :banner_image, content_type: /\Aimage\/.*\z/
+  validates_attachment_content_type :avatar_image, content_type: ["image/jpg", "image/jpeg", "image/png"]
+  validates_attachment_content_type :banner_image, content_type: ["image/jpg", "image/jpeg", "image/png"]
 
   has_many :community_admins,
             foreign_key: 'patchwork_community_id'
