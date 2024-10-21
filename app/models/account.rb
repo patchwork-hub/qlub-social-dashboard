@@ -1,11 +1,20 @@
 require 'spreadsheet'
 
 class Account < ApplicationRecord
+  IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].freeze
+
   has_one :user, inverse_of: :account
   has_many :communities
   has_many :community_admins
 
   before_create :generate_keys
+
+  has_attached_file :avatar
+
+  has_attached_file :header
+
+  validates_attachment_content_type :avatar, content_type: IMAGE_MIME_TYPES
+  validates_attachment_content_type :header, content_type: IMAGE_MIME_TYPES
 
   validates :username, uniqueness: true, presence: true
 

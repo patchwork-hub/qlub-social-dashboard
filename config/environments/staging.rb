@@ -104,7 +104,7 @@ Rails.application.configure do
     },
     url: ':s3_alias_url',
     s3_host_alias: ENV["S3_ALIAS_HOST"],
-    path: 'patchwork/:class/:attachment/:id_partition/:style/:filename',
+    path: ':class/:attachment/:id_partition/:style/:filename',
     s3_protocol: :https
   }
 
