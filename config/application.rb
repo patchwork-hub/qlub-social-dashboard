@@ -18,8 +18,6 @@ module Dashboard
 
     config.time_zone = "London"
 
-    config.active_storage.service = :amazon
-
     # smtp settings
     config.action_mailer.smtp_settings = {
       address:                  ENV["SMTP_SERVER"],
