@@ -13,14 +13,22 @@ class Community < ApplicationRecord
   validates_attachment_content_type :avatar_image, content_type: /\Aimage\/.*\z/
   validates_attachment_content_type :banner_image, content_type: /\Aimage\/.*\z/
 
-  has_many :community_admins, foreign_key: 'patchwork_community_id'
+  has_many :community_admins,
+            foreign_key: 'patchwork_community_id'
 
   has_many :patchwork_community_additional_informations,
-           class_name: 'CommunityAdditionalInformation',
-           foreign_key: 'patchwork_community_id',
-           dependent: :destroy
+            class_name: 'CommunityAdditionalInformation',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
 
-  has_many :community_post_types, foreign_key: 'patchwork_community_id', dependent: :destroy
+  has_many :community_post_types,
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
+
+
+  belongs_to :patchwork_collection,
+            class_name: 'Collection',
+            foreign_key: 'patchwork_collection_id'
 
   accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
 
