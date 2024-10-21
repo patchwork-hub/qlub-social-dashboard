@@ -1,6 +1,6 @@
 class Community < ApplicationRecord
   self.table_name = 'patchwork_communities'
-
+  
   has_attached_file :avatar_image
 
   has_attached_file :banner_image
@@ -20,11 +20,19 @@ class Community < ApplicationRecord
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
-
   belongs_to :patchwork_collection,
             class_name: 'Collection',
             foreign_key: 'patchwork_collection_id'
 
+  has_many :community_post_types,
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
+
+
+  belongs_to :patchwork_collection,
+            class_name: 'Collection',
+            foreign_key: 'patchwork_collection_id'
+  
   accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
