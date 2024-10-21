@@ -25,7 +25,8 @@
           - @community_admins.each do |community_admin|
             .row.mt-3
               .col-1
-                %img{ alt: "", src: community_admin.avatar.url, class: "rounded-circle", style: "width: 40px; height: 40px;" }
+                - admin_avatar_image_url = community_admin.avatar.present? ? community_admin.avatar.url : 'patchwork-logo.svg'
+                %img{ alt: "", src: asset_path(admin_avatar_image_url), class: "rounded-circle", style: "width: 40px; height: 40px;" }
               .col-8
                 %h6.mb-0= community_admin.display_name
                 %p.text-muted.mb-0= community_admin.username
