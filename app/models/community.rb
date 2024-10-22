@@ -4,8 +4,22 @@ class Community < ApplicationRecord
   IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].freeze
   LIMIT = 2.megabytes
 
+  NAME_LENGTH_LIMIT = 30
+  DESCRIPTION_LENGTH_LIMIT = 500
+
   has_attached_file :avatar_image
   has_attached_file :banner_image
+
+  validates :name, presence: true,
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+
+  validates :slug, presence: true,
+    format: { with: /\A[a-z0-9_]+\z/i, message: "only allows letters, numbers, and underscores" },
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+
+  normalizes :slug, with: ->(slug) { slug.squish.parameterize.underscore }
+
+  validates :description, length: { maximum: DESCRIPTION_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
   validates_attachment_content_type :avatar_image, content_type: IMAGE_MIME_TYPES
   validates_attachment_content_type :banner_image, content_type: IMAGE_MIME_TYPES
