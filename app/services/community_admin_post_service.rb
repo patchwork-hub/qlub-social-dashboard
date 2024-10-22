@@ -11,7 +11,12 @@ class CommunityAdminPostService < BaseService
   private
 
   def create_account
+    community = Community.find_by_id(@optons[:community_id].to_i)
+    avatar_file = community.avatar_image.present? ? community.avatar_image : ''
+    banner_file = community.banner_image.present? ? community.banner_image : ''
     @admin_acc = Account.where(username: @optons[:username]).first_or_initialize(username: @optons[:username], display_name: @optons[:display_name])
+    @admin_acc.avatar = avatar_file
+    @admin_acc.header = banner_file
     @admin_acc.save
   end
 
