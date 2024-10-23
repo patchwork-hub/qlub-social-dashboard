@@ -7,7 +7,7 @@ class Api::V1::RecommendedGroupChannelsSerializer
   attributes :id, :name, :slug
 
   attribute :grouped_channels do |object|
-    grouped_channels = object.patchwork_communities.where.not(visibility: nil).order(position: :asc).group_by(&:id)
+    grouped_channels = object.patchwork_communities.where.not(visibility: nil, patchwork_community_type_id: nil).order(position: :asc).group_by(&:id)
     grouped_channels.map do |id, communities|
       {
         id: id,
