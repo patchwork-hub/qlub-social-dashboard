@@ -14,7 +14,7 @@ class Collection < ApplicationRecord
   scope :recommended_group_channels, -> {
     joins(patchwork_communities: :patchwork_community_type)
       .where(patchwork_communities: { is_recommended: true })
-      .where.not(patchwork_communities: { visibility: nil })
+      .where.not(patchwork_communities: { visibility: nil, patchwork_community_type_id: nil } )
       .order('patchwork_community_types.sorting_index ASC')
   }
 
