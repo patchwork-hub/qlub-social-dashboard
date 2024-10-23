@@ -67,7 +67,7 @@ class CommunityPostService < BaseService
   def community_attributes
     attributes = {
       description: @options[:bio],
-      is_recommended: false,
+      is_recommended: @options[:is_recommended],
       guides: nil,
       patchwork_collection_id: @collection.id,
       position: get_position,
