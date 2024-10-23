@@ -11,6 +11,20 @@ module Api
 
       end
 
+      def recommend_channels
+
+        recommended_channels = Community.recommended
+        render json: Api::V1::RecommendedChannelsSerializer.new(recommended_channels).serializable_hash.to_json
+      
+      end
+
+      def group_recommended_channels
+
+        recommended_group_channels = Collection.recommended_group_channels
+        render json: Api::V1::RecommendedGroupChannelsSerializer.new(recommended_group_channels).serializable_hash.to_json
+      
+      end
+
     end
   end
 end
