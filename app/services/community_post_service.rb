@@ -26,6 +26,7 @@ class CommunityPostService < BaseService
 
   def create_community
     validate_collection
+    validate_community_type
     validate_uniqueness(:name)
     validate_uniqueness(:slug)
     return @community if @community&.errors&.any?
@@ -41,6 +42,7 @@ class CommunityPostService < BaseService
   def update_community
     @community = Community.find_by(id: @options[:id])
     validate_collection
+    validate_community_type
     validate_uniqueness(:name)
     validate_uniqueness(:slug)
     return @community if @community&.errors&.any?
@@ -54,7 +56,12 @@ class CommunityPostService < BaseService
 
   def validate_collection
     @collection = Collection.find_by(id: @options[:collection_id])
-    raise ActiveRecord::RecordNotFound, "Collection not found" if @collection.nil?
+    handle_not_found('Collection') if @collection.nil?
+  end
+
+  def validate_community_type
+    @community_type = CommunityType.find_by(id: @options[:community_type_id])
+    handle_not_found('Community Type') if @community_type.nil?
   end
 
   def community_attributes
@@ -67,7 +74,8 @@ class CommunityPostService < BaseService
       admin_following_count: 0,
       avatar_image: @options[:avatar_image],
       banner_image: @options[:banner_image],
-      account_id: @account.id
+      account_id: @account.id,
+      patchwork_community_type_id: @community_type.id
     }
 
     if @options[:id].nil?
@@ -75,6 +83,10 @@ class CommunityPostService < BaseService
       attributes[:slug] = @options[:slug]
     end
     attributes.compact
+  end
+
+  def handle_not_found(resource_name)
+    raise ActiveRecord::RecordNotFound, "#{resource_name} not found"
   end
 
   def get_position

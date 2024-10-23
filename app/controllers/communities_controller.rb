@@ -20,7 +20,8 @@ class CommunitiesController < BaseController
       bio: form_params[:bio],
       collection_id: form_params[:collection_id],
       banner_image: form_params[:banner_image],
-      avatar_image: form_params[:avatar_image]
+      avatar_image: form_params[:avatar_image],
+      community_type_id: form_params[:community_type_id]
     )
 
     if @community.errors.any?
@@ -295,7 +296,8 @@ class CommunitiesController < BaseController
           bio: @community.description,
           collection_id: @community.patchwork_collection_id,
           banner_image: @community.banner_image,
-          avatar_image: @community.avatar_image
+          avatar_image: @community.avatar_image,
+          community_type_id: @community.patchwork_community_type_id
         }
       else
         form_data = {}
@@ -323,7 +325,7 @@ class CommunitiesController < BaseController
   end
 
   def form_params
-    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image)
+    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :community_type_id)
   end
 
   def new_admin_form_params
