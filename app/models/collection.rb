@@ -16,6 +16,7 @@ class Collection < ApplicationRecord
     joins(:patchwork_communities)
       .where(patchwork_communities: { is_recommended: true })
       .where.not(patchwork_communities: { visibility: nil } )
+      .where.not(patchwork_communities: { patchwork_community_type: nil} )
       .group('patchwork_collections.id')
       .order('patchwork_collections.sorting_index ASC')
   }

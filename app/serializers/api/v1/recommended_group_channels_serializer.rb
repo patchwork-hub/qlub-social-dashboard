@@ -6,7 +6,7 @@ class Api::V1::RecommendedGroupChannelsSerializer
 
   attributes :id, :name, :slug
 
-  attribute :patchwork_community_type do |object|
+  attribute :recommended_channels do |object|
     Api::V1::RecommendedChannelsSerializer.new(object.patchwork_communities.recommended).serializable_hash
   end
 
