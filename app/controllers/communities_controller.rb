@@ -16,10 +16,12 @@ class CommunitiesController < BaseController
       @current_user.account,
       id: id,
       name: form_params[:name],
+      slug: form_params[:slug],
       bio: form_params[:bio],
       collection_id: form_params[:collection_id],
       banner_image: form_params[:banner_image],
-      avatar_image: form_params[:avatar_image]
+      avatar_image: form_params[:avatar_image],
+      community_type_id: form_params[:community_type_id]
     )
 
     if @community.errors.any?
@@ -50,22 +52,37 @@ class CommunitiesController < BaseController
 
   def step2_save
     @community_admin = CommunityAdminPostService.new.call(
-    @current_user.account,
-    community_id: new_admin_form_params[:community_id],
-    display_name: new_admin_form_params[:display_name],
-    username: new_admin_form_params[:username],
-    email: new_admin_form_params[:email],
-    password: new_admin_form_params[:password])
+      @current_user.account,
+      community_id: new_admin_form_params[:community_id],
+      display_name: new_admin_form_params[:display_name],
+      username: new_admin_form_params[:username],
+      email: new_admin_form_params[:email],
+      password: new_admin_form_params[:password]
+    )
 
-    redirect_to step2_community_path
+    if @community_admin.errors.any?
+      flash.now[:error] = @community_admin.errors.full_messages.join(', ')
+      @records = load_commu_admin_records
+      @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
+      set_edit_admin
+      render :step2
+    else
+      flash[:notice] = 'Admin created successfully'
+      redirect_to step2_community_path
+    end
   end
 
   def step2_update_admin
     @community_admin = Account.find_by_id(params[:form_community_admin][:admin_id])
-    if @community_admin.update(admin_params)
+    begin
+      @community_admin.update!(display_name: params[:form_community_admin][:display_name], username: params[:form_community_admin][:username])
       redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
-    else
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error("Admin update failed: #{e.message}")
+      flash.now[:error] = @community_admin.errors.full_messages.join(', ')
       @records = load_commu_admin_records
+      @new_admin_form = Form::CommunityAdmin.new(community_id: @community.id)
+      set_edit_admin
       render :step2
     end
   end
@@ -275,10 +292,12 @@ class CommunitiesController < BaseController
         form_data = {
           id: @community.id,
           name: @community.name,
+          slug: @community.slug,
           bio: @community.description,
           collection_id: @community.patchwork_collection_id,
           banner_image: @community.banner_image,
-          avatar_image: @community.avatar_image
+          avatar_image: @community.avatar_image,
+          community_type_id: @community.patchwork_community_type_id
         }
       else
         form_data = {}
@@ -306,15 +325,11 @@ class CommunitiesController < BaseController
   end
 
   def form_params
-    params.require(:form_community).permit(:id, :name, :collection_id, :bio, :banner_image, :avatar_image)
+    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :community_type_id)
   end
 
   def new_admin_form_params
     params.require(:form_community_admin).permit(:community_id, :display_name, :username, :email, :password)
-  end
-
-  def admin_params
-    params.require(:form_community_admin).permit(:display_name, :username)
   end
 
   def community_params
@@ -400,6 +415,15 @@ class CommunitiesController < BaseController
   def set_community
     @community = Community.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @community
+  end
+
+  def set_edit_admin
+    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
+    @edit_admin_form = Form::CommunityAdmin.new(
+      community_id: @community.id,
+      display_name: @edit_admin&.display_name,
+      username: @edit_admin&.username
+    )
   end
 
   def set_current_step

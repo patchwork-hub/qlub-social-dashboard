@@ -17,13 +17,22 @@
               %h5.card-title Step 1 - Channel Information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme. Inline tooltips will help guide you through each field.
+          - readonly = params[:id].present?
           .row
             .col-md-6.col-sm-12
-              = f.input :name, label: "Name", input_html: { type: "text", class: "form-control", id: "basic-url", aria: { describedby: "basic-addon3" } }, required: true
+              = f.input :name, label: "Display Name", input_html: { type: "text", class: "form-control", readonly: readonly }, required: true
               %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
+            .col-md-6.col-sm-12
+              = f.input :slug, label: "Slug", input_html: { type: "text", class: "form-control", readonly: readonly }, required: true
+              %p.text-muted.small This will be the channel’s slug. Once your channel is created, you will not be able to change this.
+          .row
+            .col-md-6.col-sm-12
+              = f.input :community_type_id, label: 'Community Type', as: :select, collection: CommunityType.all.collect { |type| [type.name, type.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a community type" } }
+              %p.text-muted.small Use this field to select the community type that this channel will belong to.
             .col-md-6.col-sm-12
               = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
               %p.text-muted.small Use this field to select the group or category that this channel will belong to.
+
           .row
             .col-md-12
               .alert.alert-light{ role: "alert", style: "background-color: #F6F8FA;" }

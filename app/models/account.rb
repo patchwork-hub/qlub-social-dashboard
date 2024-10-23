@@ -2,6 +2,7 @@ require 'spreadsheet'
 
 class Account < ApplicationRecord
   IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].freeze
+  NAME_LENGTH_LIMIT = 30
 
   has_one :user, inverse_of: :account
   has_many :communities
@@ -16,7 +17,12 @@ class Account < ApplicationRecord
   validates_attachment_content_type :avatar, content_type: IMAGE_MIME_TYPES
   validates_attachment_content_type :header, content_type: IMAGE_MIME_TYPES
 
-  validates :username, uniqueness: true, presence: true
+  validates :display_name, presence: true,
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+
+  validates :username, presence: true,
+    format: { with: /\A[a-z0-9_]+\z/i, message: "only allows letters, numbers, and underscores" },
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
   def self.ransackable_attributes(auth_object = nil)
     ["dob", "domain", "uri", "url", "username"]
