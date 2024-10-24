@@ -25,9 +25,9 @@ module Api
 
       private
 
-      def set_collection 
-        @collection = Collection.find_by(slug: params[:id])
-      end
+        def set_collection 
+          @collection = Collection.find_by(slug: params[:id])
+        end
 
     end
   end
