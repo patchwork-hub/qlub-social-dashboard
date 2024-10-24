@@ -20,4 +20,8 @@ class Api::V1::RecommendedChannelsSerializer
     object.avatar_image.url
   end
 
+  attribute :domain_name do |object|
+    object.slug.present? ? "#{object.slug}.channel.org" : nil
+  end
+
 end
