@@ -1,6 +1,6 @@
 # frozen_string_literal: true
  
-class Api::V1::ActiveChannelsSerializer
+class Api::V1::ActiveChannelSerializer
   include JSONAPI::Serializer
   include Rails.application.routes.url_helpers
 

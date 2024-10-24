@@ -11,5 +11,7 @@ namespace :api, defaults: { format: :json } do
         get :group_recommended_channels
       end
     end
+
+    resources :collections, only: %i[ index show]
   end
 end

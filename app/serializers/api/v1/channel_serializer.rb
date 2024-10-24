@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-class Api::V1::RecommendedChannelsSerializer
+class Api::V1::ChannelSerializer
   include JSONAPI::Serializer
   include Rails.application.routes.url_helpers
+
+  set_type :channel
 
   attributes :id, :name, :slug, :description, :is_recommended, :admin_following_count,
              :account_id, :patchwork_collection_id, :guides, :participants_count,
              :visibility
 
-  attribute :patchwork_community_type do |object|
+  attribute :community_type do |object|
     Api::V1::PatchworkCommunityTypeSerializer.new(object.patchwork_community_type).serializable_hash
   end
           
