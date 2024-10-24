@@ -6,7 +6,7 @@ class ContentTypesController < ApplicationController
     if @content_type.save
       redirect_to step3_community_path(id: params[:content_type][:patchwork_community_id])
     else
-      redirect_to step3_community_path
+      redirect_to step3_community_path(id: params[:content_type][:patchwork_community_id])
     end
   end
 

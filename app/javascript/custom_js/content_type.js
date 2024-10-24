@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }).then(response => {
       if (response.ok) {
+        window.location.reload();
         console.log("Content type created or updated successfully");
       } else {
         console.error("Error creating or updating content type");
