@@ -2,6 +2,7 @@ class CommunitiesController < BaseController
   before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
   before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
+  before_action :set_content_type, only: %i[step3 step4 step5]
   PER_PAGE = 10
 
   def step1
@@ -417,6 +418,10 @@ class CommunitiesController < BaseController
   def set_community
     @community = Community.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @community
+  end
+
+  def set_content_type
+    @content_type = @community.content_type
   end
 
   def set_edit_admin

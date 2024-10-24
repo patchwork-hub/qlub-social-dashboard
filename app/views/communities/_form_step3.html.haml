@@ -1,26 +1,3 @@
-#hashtagModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
-  .modal-dialog{:role => "document"}
-    .modal-content
-      .modal-header
-        %h5#exampleModalLabel.modal-title Add new channel hashtag
-        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
-          %span{"aria-hidden" => "true"} ×
-      .modal-body
-        %p.text-muted.small Add a channel hashtag using the form below. Every post on this hashtag will appear in the channel. This allows channel members to post to the channel even when they’re somewhere else in the network.
-        = simple_form_for @community_hashtag_form, url: step3_community_path do |form|
-          = form.hidden_field :community_id, value: @community.id, id: 'community_id'
-          .row
-            .col
-              .form-group
-                = form.label :hashtag
-                = form.text_field :hashtag, class: 'form-control', value: '#'
-          .modal-footer
-            %div.d-flex.justify-content-between
-              .col
-                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
-              .col
-                = form.submit 'Save', class: 'btn btn-danger'
-
 .container-fluid
   .row-md-12.my-4
     .col
@@ -37,86 +14,176 @@
         .card-header
           %h3.card-title Step 3 - Add content
         .card-body
-          .row.d-flex.justify-content-between
+          = hidden_field_tag :community_id, @community.id, id: 'community_id'
+          .row.d-flex
             .col-auto
               .row
-                %label Hashtags
+                %label Content type
               .row
                 .mt-auto
-                  %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your channel.
-            .col-auto.d-flex.flex-column.justify-content-end
-              .mt-auto
-                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
-          .table-responsive
-            %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
-              %thead
-                %tr
-                  %th{style: "width: 30px;"}
-                    %i.far.fa-square.mr-4
-                  %th
-                    %label.text-muted{ style: "font-size: 14px;" } Hashtags
-              %tbody
-                - if @records.size == 0
-                  %tr
-                    %td.text-center{ colspan: 2 }
-                      %p.text-muted.small You haven’t added any hashtags to this channel yet
-                      %a.text-danger.small{ href: '#', title: 'Add new channel hashtag', 'data-toggle': 'modal', 'data-target': '#hashtagModal' }
-                        Click here to add one
-                - @records.each do |community_hashtag|
-                  %tr
-                    %td
-                      = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
-                    %td{ style: 'width: 90%;' }
-                      = "##{community_hashtag.hashtag}"
-                      %td
-                        %a.text-danger{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
-                          %i.fas.fa-edit
-                      %td
-                        = link_to step3_delete_hashtag_community_path(id: @community.id, community_hashtag_id: community_hashtag.id), method: :post, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow' do
-                          %i.far.fa-trash-alt
-          .pagination.pagination-sm.m-0.float-right
-            = paginate @records, theme: 'bootstrap4'
-      .card
-        .card-body
-          .row.d-flex.justify-content-between
-            .col
-              .row
-                %label Channel contributors
-              .row
-                .mt-auto
-                  %p.text-muted.small Add key contributors by searching for them below. Posts from these contributors will be prominently featured in your channel.
+                  %p.text-muted.small At tincidunt ultrices auctor volutpat lectus.
           .row
-            .col
-              %label
-                = "Your channel contributors (#{@follow_records.present? ? @follow_records.size : 0})"
-            .col-auto.d-flex.flex-column.justify-content-end
-              .mt-auto
-                %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#addContributorModal"} Add New
-          .table-responsive
-            %table.table.mt-3.table-striped
-              %tbody
-                - if @follow_records.size == 0
+            .d-flex.align-items-center.justify-content-between.mb-2
+              %div
+                %label.form-check-label.switch
+                  %input.form-check-input.switch-input#broadcast_channel_switch{ type: 'checkbox', checked: @content_type&.broadcast_channel? }
+                  %span.switch-slider.round
+                    %span.slider-tick
+                      %i.fa-solid.fa-check
+                    %span.slider-cross
+                      %i.fa-solid.fa-xmark
+                %span.ml-2
+                  Broadcast Channel
+                %span
+                  = render 'shared/tooltip_custom', tooltip_text: 'Broadcast Channel', tooltip_position: 'left'
+          %hr
+          .row
+            .d-flex.align-items-center.justify-content-between.mb-2
+              %div
+                %label.form-check-label.switch
+                  %input.form-check-input.switch-input#group_channel_switch{ type: 'checkbox', checked: @content_type&.group_channel? }
+                  %span.switch-slider.round
+                    %span.slider-tick
+                      %i.fa-solid.fa-check
+                    %span.slider-cross
+                      %i.fa-solid.fa-xmark
+                %span.ml-2
+                  Group Channel
+                %span
+                  = render 'shared/tooltip_custom', tooltip_text: 'Group Channel', tooltip_position: 'left'
+          %hr
+          .row
+            .d-flex.align-items-center.justify-content-between.mb-2
+              %div
+                %label.form-check-label.switch
+                  %input.form-check-input.switch-input#custom_channel_switch{ type: 'checkbox', checked: @content_type&.custom_channel?, data: { toggle: 'collapse', target: '#nested-options' } }
+                  %span.switch-slider.round
+                    %span.slider-tick
+                      %i.fa-solid.fa-check
+                    %span.slider-cross
+                      %i.fa-solid.fa-xmark
+                %span.ml-2
+                  Custom Channel
+                %span
+                  = render 'shared/tooltip_custom', tooltip_text: 'Custom Channel', tooltip_position: 'left'
+
+          .collapse#nested-options
+            .nested-options.mt-2.ml-2
+              .row
+                .col
+                  .form-check
+                    = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
+                    %label.form-check-label.switch
+                      %input.form-check-input.switch-input#contributor_or{ type: 'checkbox', checked: @content_type&.or_condition? }
+                      %span.switch-slider.round
+                        %span.slider-tick
+                          %i.fa-solid.fa-check
+                        %span.slider-cross
+                          %i.fa-solid.fa-xmark
+                    %span.ml-2
+                      Contributors OR Hashtags
+              %hr
+              .row.mt-2
+                .col
+                  .form-check
+                    = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
+                    %label.form-check-label.switch
+                      %input.form-check-input.switch-input#contributor_and{ type: 'checkbox', checked: @content_type&.and_condition? }
+                      %span.switch-slider.round
+                        %span.slider-tick
+                          %i.fa-solid.fa-check
+                        %span.slider-cross
+                          %i.fa-solid.fa-xmark
+                    %span.ml-2
+                      Contributors AND Hashtags
+
+      #hashtags-section{ style: "display: none;" }
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col-auto
+                .row
+                  %label Hashtags
+                .row
+                  .mt-auto
+                    %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your channel.
+              .col-auto.d-flex.flex-column.justify-content-end
+                .mt-auto
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
+            .table-responsive
+              %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
+                %thead
                   %tr
-                    %td.text-center
-                      %p.text-muted.small You have not added any contributors to this channel yet
-                      %a.text-danger.small{ href: '#', title: 'Add a contributor', 'data-toggle': 'modal', 'data-target': '#addContributorModal' }
-                        Click here to add one
-                - @follow_records.each do |record|
-                  %tr
-                    %td{ style: 'width: 10%;' }
-                      %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
-                    %td{ style: 'width: 80%;' }
-                      %h6.mb-0= record.username
-                      %p.text-muted.mb-0= raw(record.note)
-                    %td{style: "width: 60px;"}
-                      %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
-          .pagination.pagination-sm.m-0.float-right
-            = paginate @follow_records, theme: 'bootstrap4'
+                    %th{style: "width: 30px;"}
+                      %i.far.fa-square.mr-4
+                    %th
+                      %label.text-muted{ style: "font-size: 14px;" } Hashtags
+                %tbody
+                  - if @records.size == 0
+                    %tr
+                      %td.text-center{ colspan: 2 }
+                        %p.text-muted.small You haven’t added any hashtags to this channel yet
+                        %a.text-danger.small{ href: '#', title: 'Add new channel hashtag', 'data-toggle': 'modal', 'data-target': '#hashtagModal' }
+                          Click here to add one
+                  - @records.each do |community_hashtag|
+                    %tr
+                      %td
+                        = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
+                      %td{ style: 'width: 90%;' }
+                        = "##{community_hashtag.hashtag}"
+                        %td
+                          %a.text-danger{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
+                            %i.fas.fa-edit
+                        %td
+                          = link_to step3_delete_hashtag_community_path(id: @community.id, community_hashtag_id: community_hashtag.id), method: :post, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow' do
+                            %i.far.fa-trash-alt
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @records, theme: 'bootstrap4'
+      #contributors-section{ style: "display: none;" }
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col
+                .row
+                  %label Channel contributors
+                .row
+                  .mt-auto
+                    %p.text-muted.small Add key contributors by searching for them below. Posts from these contributors will be prominently featured in your channel.
+            .row
+              .col
+                %label
+                  = "Your channel contributors (#{@follow_records.present? ? @follow_records.size : 0})"
+              .col-auto.d-flex.flex-column.justify-content-end
+                .mt-auto
+                  %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#addContributorModal"} Add New
+            .table-responsive
+              %table.table.mt-3.table-striped
+                %tbody
+                  - if @follow_records.size == 0
+                    %tr
+                      %td.text-center
+                        %p.text-muted.small You have not added any contributors to this channel yet
+                        %a.text-danger.small{ href: '#', title: 'Add a contributor', 'data-toggle': 'modal', 'data-target': '#addContributorModal' }
+                          Click here to add one
+                  - @follow_records.each do |record|
+                    %tr
+                      %td{ style: 'width: 10%;' }
+                        %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                      %td{ style: 'width: 80%;' }
+                        %h6.mb-0= record.username
+                        %p.text-muted.mb-0= raw(record.note)
+                      %td{style: "width: 60px;"}
+                        %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @follow_records, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_community_path } Back
         .col-auto
-          %a.btn.btn-danger{ href:step4_community_path(id: @community.id) } Continue
+          - is_broadcast_or_group = @content_type&.broadcast_channel? || @content_type&.group_channel?
+          - continue_path = is_broadcast_or_group ? step5_community_path(id: @community.id) : step4_community_path(id: @community.id)
+          %a.btn.btn-danger{ href:continue_path } Continue
 
 = render 'add_contributor'
 = render 'edit_hashtag'
+= render 'add_hashtag'

@@ -8,9 +8,11 @@
         %li.bg-danger.active{style: "width: 65px; height: 5px;"}
         %li.bg-secondary{style: "width: 65px; height: 5px;"}
         %li.bg-secondary{style: "width: 65px; height: 5px;"}
+
+  - is_broadcast_or_group = @content_type&.broadcast_channel? || @content_type&.group_channel?
   .row
     .col-md-12
-      .card
+      .card{ class: ("d-none" if is_broadcast_or_group) }
         .card-header
           %h3.card-title Step 4 - Filter Content
         .card-body
@@ -40,7 +42,7 @@
 
                 = f.submit 'Save Changes', class: 'btn btn-sm btn-outline-secondary'
 
-      .card
+      .card{ class: ("d-none" if is_broadcast_or_group) }
         .card-body
           .row
             .col
@@ -74,7 +76,8 @@
                           Unmute
           .pagination.pagination-sm.m-0.float-right
             = paginate @muted_accounts, theme: 'bootstrap4'
-      .card
+
+      .card{ class: ("d-none" if is_broadcast_or_group) }
         .card-body
           .row.d-flex.justify-content-between
             .col-md-9-auto
