@@ -34,13 +34,9 @@ class Api::V1::ActiveChannelSerializer
           visibility: community.visibility,
           domain_name: community.slug.present? ? "#{community.slug}.channel.org" : nil,
           status: community.visibility.present? ? 'Complete' : 'Incomplete',
-          banner_image_url: image_url(community.banner_image),
-          avatar_image_url: image_url(community.avatar_image)
+          banner_image_url:    community.banner_image.url,
+          avatar_image_url: community.avatar_image.url
         }
-      end
-
-      def image_url(image)
-        image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true) : nil
       end
   end
 end
