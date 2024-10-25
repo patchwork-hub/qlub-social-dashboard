@@ -4,13 +4,8 @@ module Api
   module V1
     class ChannelsController < ApiController
 
-      def index
-
-        @channels = Collection.joins(:patchwork_communities).where.not(patchwork_communities: { visibility: nil }).order(sorting_index: :asc)
-        render json: Api::V1::ActiveChannelSerializer.new(@channels).serializable_hash.to_json
-
-      end
-
+      skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels]
+      
       def recommend_channels
 
         recommended_channels = Community.recommended

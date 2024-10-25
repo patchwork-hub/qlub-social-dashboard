@@ -5,7 +5,7 @@ namespace :api, defaults: { format: :json } do
     resources :accounts
     patch 'api_key/rotate', to: 'api_keys#rotate'
     
-    resources :channels, only: %i[ index ] do
+    resources :channels, only: [  ] do
       collection do
         get :recommend_channels
         get :group_recommended_channels
