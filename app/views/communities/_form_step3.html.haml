@@ -180,8 +180,8 @@
         .col
           %a.btn.btn-outline-secondary{ href: step2_community_path } Back
         .col-auto
-          - is_broadcast_or_group = @content_type&.broadcast_channel? || @content_type&.group_channel?
-          - continue_path = is_broadcast_or_group ? step5_community_path(id: @community.id) : step4_community_path(id: @community.id)
+          - is_not_custom_channel = !@content_type&.custom_channel?
+          - continue_path = is_not_custom_channel ? step5_community_path(id: @community.id) : step4_community_path(id: @community.id)
           %a.btn.btn-danger{ href:continue_path } Continue
 
 = render 'add_contributor'

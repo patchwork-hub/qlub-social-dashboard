@@ -36,6 +36,8 @@ class Community < ApplicationRecord
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
+  accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
+
   has_many :community_post_types,
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
@@ -50,15 +52,20 @@ class Community < ApplicationRecord
 
 
   belongs_to :patchwork_community_type,
-            class_name: 'CommunityType',
-            foreign_key: 'patchwork_community_type_id'
+              class_name: 'CommunityType',
+              foreign_key: 'patchwork_community_type_id'
 
   has_one :content_type,
-          class_name: 'ContentType',
-          foreign_key: 'patchwork_community_id',
-          dependent: :destroy
+            class_name: 'ContentType',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
 
-  accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
+  has_many :patchwork_community_links,
+            class_name: 'CommunityLink',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
+
+  accepts_nested_attributes_for :patchwork_community_links, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
 

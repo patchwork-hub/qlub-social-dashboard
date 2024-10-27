@@ -13,6 +13,6 @@ class ContentTypesController < ApplicationController
   private
 
   def content_type_params
-    params.require(:content_type).permit(:channel_type, :contributor_condition, :patchwork_community_id)
+    params.require(:content_type).permit(:channel_type, :custom_condition, :patchwork_community_id)
   end
 end

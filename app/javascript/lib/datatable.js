@@ -255,4 +255,15 @@ jQuery(function() {
     modal.find('#edit_hashtag_input').val('#' + hashtag);
   });
 
+  const saveAndPreviewBtn = document.getElementById("save-and-preview-btn");
+  const form = document.getElementById("additionalForm");
+
+  saveAndPreviewBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+
+    form.submit();
+
+    $('#previewCommunityModal').modal('show');
+  });
+
 });

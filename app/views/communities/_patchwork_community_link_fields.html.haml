@@ -1,0 +1,10 @@
+%tr.nested-fields
+  %td{ style: 'width: 20%;' }
+    = f.select :icon, options_for_select(CommunityLink.icons.keys.map { |icon| [icon.titleize, icon] }), {}, class: 'form-control'
+  %td{ style: 'width: 30%;' }
+    = f.text_field :name, class: 'form-control', placeholder: "Enter name"
+  %td{ colspan: 2, style: 'width: 45%;' }
+    = f.text_field :url, class: 'form-control', placeholder: "Enter URL here"
+  %td{ colspan: 2, style: 'width: 5%;' }
+    = link_to_remove_association f, class: 'text-danger', title: "Remove" do
+      %i.far.fa-trash-alt

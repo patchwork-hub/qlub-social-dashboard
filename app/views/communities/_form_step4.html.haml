@@ -9,10 +9,10 @@
         %li.bg-secondary{style: "width: 65px; height: 5px;"}
         %li.bg-secondary{style: "width: 65px; height: 5px;"}
 
-  - is_broadcast_or_group = @content_type&.broadcast_channel? || @content_type&.group_channel?
+  - is_not_custom_channel = !@content_type&.custom_channel?
   .row
     .col-md-12
-      .card{ class: ("d-none" if is_broadcast_or_group) }
+      .card{ class: ("d-none" if is_not_custom_channel) }
         .card-header
           %h3.card-title Step 4 - Filter Content
         .card-body
@@ -42,7 +42,7 @@
 
                 = f.submit 'Save Changes', class: 'btn btn-sm btn-outline-secondary'
 
-      .card{ class: ("d-none" if is_broadcast_or_group) }
+      .card{ class: ("d-none" if is_not_custom_channel) }
         .card-body
           .row
             .col
@@ -77,7 +77,7 @@
           .pagination.pagination-sm.m-0.float-right
             = paginate @muted_accounts, theme: 'bootstrap4'
 
-      .card{ class: ("d-none" if is_broadcast_or_group) }
+      .card{ class: ("d-none" if is_not_custom_channel) }
         .card-body
           .row.d-flex.justify-content-between
             .col-md-9-auto

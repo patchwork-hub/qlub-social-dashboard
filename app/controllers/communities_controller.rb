@@ -192,7 +192,6 @@ class CommunitiesController < BaseController
   def step6
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @aditional_information = @community.patchwork_community_additional_informations
     @community_admins = Account.joins(:community_admins).where(community_admins: { patchwork_community_id: @community.id })
   end
 
@@ -270,17 +269,21 @@ class CommunitiesController < BaseController
   end
 
   def manage_additional_information
-    if params[:community].present? && params[:community][:patchwork_community_additional_informations_attributes].present?
+    if params[:community].present?
       if @community.update(community_params)
-        flash[:success] = "Additional information added successfully!"
-        redirect_to step6_community_path and return
+        respond_to do |format|
+          format.html
+        end
       else
-        flash[:error] = "Failed to save additional information!"
-        redirect_to step6_community_path and return
+        respond_to do |format|
+          format.html { redirect_to step6_community_path, alert: 'Failed to save information.' }
+          format.js
+        end
       end
+    else
+      flash[:error] = "No information to save!"
+      redirect_to step6_community_path and return
     end
-    flash[:error] = "No information to save!"
-    redirect_to step6_community_path and return
   end
 
   private
@@ -337,7 +340,8 @@ class CommunitiesController < BaseController
 
   def community_params
     params.require(:community).permit(
-      patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy]
+      patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
+      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy]
     )
   end
 

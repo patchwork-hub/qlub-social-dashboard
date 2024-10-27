@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         content_type: {
           channel_type: channelType,
           patchwork_community_id: communityId,
-          contributor_condition: elements.contributorOr.checked ? "or_condition" : elements.contributorAnd.checked ? "and_condition" : null,
+          custom_condition: elements.contributorOr.checked ? "or_condition" : elements.contributorAnd.checked ? "and_condition" : null,
         }
       })
     }).then(response => {
