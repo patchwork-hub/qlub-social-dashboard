@@ -67,6 +67,11 @@ class Community < ApplicationRecord
 
   accepts_nested_attributes_for :patchwork_community_links, allow_destroy: true
 
+  has_many :patchwork_community_rules,
+            class_name: 'CommunityRule',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
+
   validates :name, presence: true, uniqueness: true
 
   scope :recommended, -> {
