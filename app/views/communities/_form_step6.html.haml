@@ -55,44 +55,60 @@
                 %input.form-control{ type: 'text', value: record.rule.description, readonly: true }
           .row
             .col.text-right
-              %a.text-danger{"data-toggle" => "modal", "data-target" => "#addCommunityRuleModel", :class => 'edit-link'} Add another rule
-  .row
-    .col-md-12
-      .card
-        .card-body
-          .row.d-flex.justify-content-between
-            .col-md-9-auto
-              %label Additional Information
-            .col-md-3-auto.mt-auto
-              %button.btn.btn-outline-secondary{ title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#communityInformation" } Add New
-          .table-responsive
-            %table.table.mt-3
-              %tbody
-                - if @aditional_information.size == 0
-                  %tr
-                    %td.text-center
-                      %p.text-muted.small You haven’t added any information for this channel yet
-                      %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#communityInformation' }
-                        Click here to add one
-                - else
+              %a.text-danger.small{"data-toggle" => "modal", "data-target" => "#addCommunityRuleModel", :class => 'edit-link'} Add another rule
+  = simple_form_for @community, url: manage_additional_information_community_path, method: :post, html: { id: 'additionalForm' } do |form|
+    .row
+      .col-md-12
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col-md-9-auto
+                %label Additional Information
+                %p.text-muted.small Provide any additional information relevant to this channel.
+
+            .table-responsive
+              %table.table.mt-3
+                %thead
                   %tr
                     %th{ style: 'width: 30%;' } Heading
-                    %th{ colspan: 2, style: 'width: 70%;' } Text
-                - @aditional_information.each do |information|
-                  %tr
-                    %td{ style: 'width: 30%;' }
-                      %input.form-control{ type: 'text', value: information.heading, readonly: true }
-                    %td{ style: 'width: 65%;' }
-                      %input.form-control{ type: 'text', value: information.text, readonly: true }
-                    %td{ style: 'width: 5%;' }
-                      %a.text-danger{ href: '#', title: 'Edit', 'data-toggle': 'modal', 'data-target': '#communityInformation' }
-                        %i.fas.fa-edit
+                    %th{ style: 'width: 65%;' } Text
+                    %th{ style: 'width: 5%;' }
+                %tbody.patchwork_community_additional_informations
+                  = form.simple_fields_for :patchwork_community_additional_informations, allow_destroy: true do |f|
+                    = render 'communities/patchwork_community_additional_information_fields', f: f
 
-      .row.d-flex.justify-content-between
-        .col
-          %a.btn.btn-outline-secondary{ href: step5_community_path } Back
-        .col-auto
-          %button.btn.btn-danger{"data-toggle" => "modal", "data-target" => "#previewCommunityModal"} Preview Channel
+            .row
+              .col.text-right
+                = link_to_add_association 'Add Information', form, :patchwork_community_additional_informations, data: { association_insertion_node: '.patchwork_community_additional_informations', association_insertion_method: :append }, class: 'text-danger small'
+
+    .row.mt-3
+      .col-md-12
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col-md-9-auto
+                %label Add links
+                %p.text-muted.small These are the links that will appear in the left hand side bar of your channel page. These are useful for linking to any other pages you may wish to promote such as socials, blogs, podcasts etc.
+
+            .table-responsive
+              %table.table.mt-3
+                %thead
+                  %tr
+                    %th{ style: 'width: 20%;' } Icon
+                    %th{ style: 'width: 30%;' } Name
+                    %th{ colspan: 2, style: 'width: 50%;' } URL
+                %tbody.patchwork_community_links
+                  = form.simple_fields_for :patchwork_community_links, allow_destroy: true do |f|
+                    = render 'communities/patchwork_community_link_fields', f: f
+
+            .row
+              .col.text-right
+                = link_to_add_association 'Add Link', form, :patchwork_community_links, data: { association_insertion_node: '.patchwork_community_links', association_insertion_method: :append }, class: 'text-danger small'
+
+    .row.d-flex.justify-content-between
+      .col
+        %a.btn.btn-outline-secondary{ href: step5_community_path } Back
+      .col-auto
+        %button.btn.btn-danger#save-and-preview-btn Save & Preview
 
 = render "preview_community"
-= render "information"

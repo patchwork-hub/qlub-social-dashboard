@@ -11,6 +11,7 @@ import "custom_js/search_contributor";
 import 'custom_js/search_mute_contributor';
 import 'custom_js/post_hashtag';
 import 'custom_js/community_preview';
+import 'custom_js/content_type'
 
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";

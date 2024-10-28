@@ -96,4 +96,6 @@ Rails.application.routes.draw do
   draw :api_v1
 
   resources :collections
+
+  resources :content_types, only: [:create]
 end
