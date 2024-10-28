@@ -100,7 +100,7 @@ class CommunityPostService < BaseService
       patchwork_community_type_id: @community_type.id
     }
 
-    if @options[:id].nil? || @community&.visibility&.nil?
+    if @options[:id].nil? || !@community&.visibility&.present?
       attributes[:name] = @options[:name]
       attributes[:slug] = @options[:slug]
     end
