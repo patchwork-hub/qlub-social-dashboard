@@ -28,7 +28,7 @@ class CommunitiesController < BaseController
 
     if @community.errors.any?
       @community_form = Form::Community.new(form_params)
-      flash.now[:error] = @community.errors.full_messages.join(', ')
+      flash.now[:error] = @community.errors.full_messages
       render :step1
     else
       redirect_to step2_community_path(@community)
