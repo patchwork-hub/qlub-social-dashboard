@@ -21,11 +21,13 @@ class Community < ApplicationRecord
 
   validates :description, length: { maximum: DESCRIPTION_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
-  validates_attachment_content_type :avatar_image, content_type: IMAGE_MIME_TYPES
-  validates_attachment_content_type :banner_image, content_type: IMAGE_MIME_TYPES
+  validates_attachment :avatar_image,
+                       content_type: { content_type: IMAGE_MIME_TYPES },
+                       size: { less_than: LIMIT }
 
-  validates_attachment_size :avatar_image, less_than: LIMIT
-  validates_attachment_size :banner_image, less_than: LIMIT
+  validates_attachment :banner_image,
+                       content_type: { content_type: IMAGE_MIME_TYPES },
+                       size: { less_than: LIMIT }
 
   has_many :community_admins,
             foreign_key: 'patchwork_community_id',
