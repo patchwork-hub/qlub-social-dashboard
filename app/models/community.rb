@@ -74,6 +74,13 @@ class Community < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+  scope :recommended, -> {
+    joins(:patchwork_community_type)
+      .where(patchwork_communities: { is_recommended: true })
+      .where.not(patchwork_communities: { visibility: nil })
+      .order('patchwork_community_types.sorting_index ASC')
+  }
+
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
   def self.ransackable_attributes(auth_object = nil)
@@ -83,4 +90,5 @@ class Community < ApplicationRecord
   def self.ransackable_associations(auth_object = nil)
     []
   end
+
 end
