@@ -258,12 +258,13 @@ jQuery(function() {
   const saveAndPreviewBtn = document.getElementById("save-and-preview-btn");
   const form = document.getElementById("additionalForm");
 
-  saveAndPreviewBtn.addEventListener("click", function(event) {
-    event.preventDefault();
+  if (saveAndPreviewBtn) {
+    saveAndPreviewBtn.addEventListener("click", function(event) {
+      event.preventDefault();
 
-    form.submit();
+      form.submit();
 
-    $('#previewCommunityModal').modal('show');
-  });
-
+      $('#previewCommunityModal').modal('show');
+    });
+  }
 });

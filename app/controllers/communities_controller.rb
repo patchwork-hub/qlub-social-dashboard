@@ -72,6 +72,12 @@ class CommunitiesController < BaseController
       flash[:notice] = 'Admin created successfully'
       redirect_to step2_community_path
     end
+  rescue ActiveRecord::RecordInvalid => e
+    flash.now[:error] = e.message
+    @records = load_commu_admin_records
+    @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
+    set_edit_admin
+    render :step2
   end
 
   def step2_update_admin
@@ -149,7 +155,6 @@ class CommunitiesController < BaseController
 
   def step4_save
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
-
     if @community_post_type.update(community_post_type_params)
       flash[:success] = "Community post type preferences saved successfully!"
       redirect_to step4_community_path
