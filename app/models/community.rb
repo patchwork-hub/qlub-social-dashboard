@@ -28,12 +28,15 @@ class Community < ApplicationRecord
   validates_attachment_size :banner_image, less_than: LIMIT
 
   has_many :community_admins,
-            foreign_key: 'patchwork_community_id'
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
 
   has_many :patchwork_community_additional_informations,
             class_name: 'CommunityAdditionalInformation',
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
+
+  accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
 
   has_many :community_post_types,
             foreign_key: 'patchwork_community_id',
@@ -49,10 +52,25 @@ class Community < ApplicationRecord
 
 
   belongs_to :patchwork_community_type,
-            class_name: 'CommunityType',
-            foreign_key: 'patchwork_community_type_id'
+              class_name: 'CommunityType',
+              foreign_key: 'patchwork_community_type_id'
 
-  accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
+  has_one :content_type,
+            class_name: 'ContentType',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
+
+  has_many :patchwork_community_links,
+            class_name: 'CommunityLink',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
+
+  accepts_nested_attributes_for :patchwork_community_links, allow_destroy: true
+
+  has_many :patchwork_community_rules,
+            class_name: 'CommunityRule',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
 

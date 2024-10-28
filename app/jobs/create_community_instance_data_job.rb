@@ -7,9 +7,15 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
   def perform(community_id, community_slug)
-    domain = generate_domain(community_slug)
-    admins = prepare_admins(community_id)
-    payload = build_payload(community_id, community_slug, domain, admins)
+    @domain = generate_domain(community_slug)
+    @admins = prepare_admins(community_id)
+    community = Community.find_by_id(community_id)
+    @rules = prepare_rules(community)
+    @additional_information = prepare_additional_information(community)
+    @links = prepare_links(community)
+    @header_image = community.banner_image.url
+    payload = build_payload(community_id, community_slug)
+    puts payload
 
     response = invoke_lambda(payload)
 
@@ -29,7 +35,25 @@ class CreateCommunityInstanceDataJob < ApplicationJob
            .join(', ')
   end
 
-  def build_payload(community_id, community_slug, domain, admins)
+  def prepare_rules(community)
+    Rule.where(id: community.patchwork_community_rules.pluck(:patchwork_rules_id)).each_with_object({}) do |rule, hash|
+      hash[rule.id] = rule.description
+    end
+  end
+
+  def prepare_additional_information(community)
+    community.patchwork_community_additional_informations.each_with_object({}) do |info, hash|
+      hash[info.id] = { 'heading' => info.heading, 'text' => info.text }
+    end
+  end
+
+  def prepare_links(community)
+    community.patchwork_community_links.each_with_object({}) do |link, hash|
+      hash[link.id] = { 'icon' => link.icon, 'name' => link.name, 'url' => link.url }
+    end
+  end
+
+  def build_payload(community_id, community_slug)
     {
       id: community_id,
       client: "#{community_id}_#{community_slug}",
@@ -38,13 +62,17 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       upstream_web: "#{community_id}_#{community_slug}_web",
       upstream_stream: "#{community_id}_#{community_slug}_stream",
       REDIS_NAMESPACE: community_slug,
-      WEB_DOMAIN: domain,
-      STREAMING_API_BASE_URL: "wss://#{domain}",
-      LOCAL_DOMAIN: domain,
+      WEB_DOMAIN: @domain,
+      STREAMING_API_BASE_URL: "wss://#{@domain}",
+      LOCAL_DOMAIN: @domain,
       WORKPLACE_DB_DATABASE: community_slug,
       AWS_ACCESS_KEY_ID: ENV['AWS_ACCESS_KEY_ID'],
       AWS_SECRET_ACCESS_KEY: ENV['AWS_SECRET_ACCESS_KEY'],
-      ADMINS: admins
+      ADMINS: @admins,
+      RULES: @rules,
+      INFORMATION: @additional_information,
+      LINKS: @links,
+      HEADER_IMAGE: @header_image
     }.to_json
   end
 

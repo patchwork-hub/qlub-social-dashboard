@@ -1,0 +1,22 @@
+#hashtagModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :role => "dialog", :tabindex => "-1"}
+  .modal-dialog{:role => "document"}
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Add new channel hashtag
+        %button.close{"aria-label" => "Close", "data-dismiss" => "modal", :type => "button"}
+          %span{"aria-hidden" => "true"} ×
+      .modal-body
+        %p.text-muted.small Add a channel hashtag using the form below. Every post on this hashtag will appear in the channel. This allows channel members to post to the channel even when they’re somewhere else in the network.
+        = simple_form_for @community_hashtag_form, url: step3_community_path do |form|
+          = form.hidden_field :community_id, value: @community.id, id: 'community_id'
+          .row
+            .col
+              .form-group
+                = form.label :hashtag
+                = form.text_field :hashtag, class: 'form-control', value: '#'
+          .modal-footer
+            %div.d-flex.justify-content-between
+              .col
+                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Close
+              .col
+                = form.submit 'Save', class: 'btn btn-danger'
