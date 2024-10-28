@@ -1,4 +1,5 @@
 class CommunityPostService < BaseService
+
   def call(account, options = {})
     @account = account
     @options = options
@@ -33,6 +34,7 @@ class CommunityPostService < BaseService
 
     @community = @account.communities.new(community_attributes)
     @community.save!
+    set_default_additional_information
     @community
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community creation failed: #{e.message}")
@@ -46,8 +48,10 @@ class CommunityPostService < BaseService
     validate_uniqueness(:name)
     validate_uniqueness(:slug)
     return @community if @community&.errors&.any?
+    set_default_additional_information
 
     @community.update!(community_attributes)
+
     @community
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community update failed: #{e.message}")
@@ -62,6 +66,22 @@ class CommunityPostService < BaseService
   def validate_community_type
     @community_type = CommunityType.find_by(id: @options[:community_type_id])
     handle_not_found('Community Type') if @community_type.nil?
+  end
+
+  def set_default_additional_information
+    additional_info = @community.patchwork_community_additional_informations.first
+
+    if additional_info.nil?
+      @community.patchwork_community_additional_informations.create(
+        heading: "Additional Information",
+        text: @options[:bio]
+      )
+    elsif additional_info.text != @options[:bio]
+      additional_info.update(
+        heading: "Additional Information",
+        text: @options[:bio]
+      )
+    end
   end
 
   def community_attributes
