@@ -115,7 +115,9 @@
               %a.dropdown-item{href: "#"} Separated link
       .row.d-flex.justify-content-between
         .col
-          %a.btn.btn-outline-secondary{ href: step4_community_path } Back
+          - is_not_custom_channel = !@content_type&.custom_channel?
+          - back_path = is_not_custom_channel ? step3_community_path(id: @community.id) : step4_community_path(id: @community.id)
+          %a.btn.btn-outline-secondary{ href: back_path } Back
         .col-auto
           %a.btn.btn-danger{ href: step6_community_path } Continue
 

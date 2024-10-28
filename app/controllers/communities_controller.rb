@@ -2,6 +2,7 @@ class CommunitiesController < BaseController
   before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
   before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
+  before_action :set_content_type, only: %i[step3 step4 step5]
   PER_PAGE = 10
 
   def step1
@@ -71,6 +72,12 @@ class CommunitiesController < BaseController
       flash[:notice] = 'Admin created successfully'
       redirect_to step2_community_path
     end
+  rescue ActiveRecord::RecordInvalid => e
+    flash.now[:error] = e.message
+    @records = load_commu_admin_records
+    @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
+    set_edit_admin
+    render :step2
   end
 
   def step2_update_admin
@@ -148,7 +155,6 @@ class CommunitiesController < BaseController
 
   def step4_save
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
-
     if @community_post_type.update(community_post_type_params)
       flash[:success] = "Community post type preferences saved successfully!"
       redirect_to step4_community_path
@@ -191,7 +197,6 @@ class CommunitiesController < BaseController
   def step6
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @aditional_information = @community.patchwork_community_additional_informations
     @community_admins = Account.joins(:community_admins).where(community_admins: { patchwork_community_id: @community.id })
   end
 
@@ -269,17 +274,21 @@ class CommunitiesController < BaseController
   end
 
   def manage_additional_information
-    if params[:community].present? && params[:community][:patchwork_community_additional_informations_attributes].present?
+    if params[:community].present?
       if @community.update(community_params)
-        flash[:success] = "Additional information added successfully!"
-        redirect_to step6_community_path and return
+        respond_to do |format|
+          format.html
+        end
       else
-        flash[:error] = "Failed to save additional information!"
-        redirect_to step6_community_path and return
+        respond_to do |format|
+          format.html { redirect_to step6_community_path, alert: 'Failed to save information.' }
+          format.js
+        end
       end
+    else
+      flash[:error] = "No information to save!"
+      redirect_to step6_community_path and return
     end
-    flash[:error] = "No information to save!"
-    redirect_to step6_community_path and return
   end
 
   private
@@ -336,7 +345,8 @@ class CommunitiesController < BaseController
 
   def community_params
     params.require(:community).permit(
-      patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy]
+      patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
+      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy]
     )
   end
 
@@ -417,6 +427,10 @@ class CommunitiesController < BaseController
   def set_community
     @community = Community.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @community
+  end
+
+  def set_content_type
+    @content_type = @community.content_type
   end
 
   def set_edit_admin
