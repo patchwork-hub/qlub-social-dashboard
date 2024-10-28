@@ -71,16 +71,18 @@ class CommunityPostService < BaseService
   def set_default_additional_information
     additional_info = @community.patchwork_community_additional_informations.first
 
-    if additional_info.nil?
-      @community.patchwork_community_additional_informations.create(
-        heading: "Additional Information",
-        text: @options[:bio]
-      )
-    elsif additional_info.text != @options[:bio]
-      additional_info.update(
-        heading: "Additional Information",
-        text: @options[:bio]
-      )
+    if @options[:bio].present?
+      if additional_info.nil?
+        @community.patchwork_community_additional_informations.create(
+          heading: "Additional Information",
+          text: @options[:bio]
+        )
+      elsif additional_info.text != @options[:bio]
+        additional_info.update(
+          heading: "Additional Information",
+          text: @options[:bio]
+        )
+      end
     end
   end
 
@@ -98,7 +100,7 @@ class CommunityPostService < BaseService
       patchwork_community_type_id: @community_type.id
     }
 
-    if @options[:id].nil?
+    if @options[:id].nil? || !@community&.visibility&.present?
       attributes[:name] = @options[:name]
       attributes[:slug] = @options[:slug]
     end
