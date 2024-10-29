@@ -156,9 +156,9 @@ GEM
       logger
     faraday-net_http (3.1.1)
       net-http
-    ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
     ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -262,6 +262,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.0)
     rack (2.2.9)
+    rack-cors (2.0.2)
+      rack (>= 2.0.0)
     rack-session (1.0.2)
       rack (< 3)
     rack-test (2.1.0)
@@ -425,6 +427,7 @@ DEPENDENCIES
   kt-paperclip (~> 7.2)
   pg (~> 1.1)
   puma (~> 5.0)
+  rack-cors
   rails (~> 7.1.0, >= 7.0.4.2)
   ransack
   redis (~> 4.5)
