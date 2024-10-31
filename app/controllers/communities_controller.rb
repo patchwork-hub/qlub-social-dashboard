@@ -205,6 +205,25 @@ class CommunitiesController < BaseController
     redirect_to step6_community_path
   end
 
+  def manage_additional_information
+
+    if params[:community].present?
+      if @community.update(community_params)
+        respond_to do |format|
+          format.html
+        end
+      else
+        respond_to do |format|
+          format.html { redirect_to step6_community_path, alert: 'Failed to save information.' }
+          format.js
+        end
+      end
+    else
+      flash[:error] = "No information to save!"
+      redirect_to step6_community_path and return
+    end
+  end
+
   def set_visibility
     visibility = params.dig(:community, :visibility).presence || 'public_access'
     if @community.update(visibility: visibility)
@@ -273,24 +292,6 @@ class CommunitiesController < BaseController
     render json: { is_muted: is_muted }
   end
 
-  def manage_additional_information
-    if params[:community].present?
-      if @community.update(community_params)
-        respond_to do |format|
-          format.html
-        end
-      else
-        respond_to do |format|
-          format.html { redirect_to step6_community_path, alert: 'Failed to save information.' }
-          format.js
-        end
-      end
-    else
-      flash[:error] = "No information to save!"
-      redirect_to step6_community_path and return
-    end
-  end
-
   private
 
   def initialize_form
@@ -299,6 +300,8 @@ class CommunitiesController < BaseController
       @community = Community.find_by(id: id)
 
       if @community.present?
+        @community.build_patchwork_community_contact_email if @community.patchwork_community_contact_email.nil?
+
         form_data = {
           id: @community.id,
           name: @community.name,
@@ -346,7 +349,8 @@ class CommunitiesController < BaseController
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
-      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy]
+      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy],
+      patchwork_community_contact_email_attributes: [:contact_email]
     )
   end
 

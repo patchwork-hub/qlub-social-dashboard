@@ -14,6 +14,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @additional_information = prepare_additional_information(community)
     @links = prepare_links(community)
     @header_image = community.banner_image.url
+    @contact_email = community.patchwork_community_contact_email.contact_email
     payload = build_payload(community_id, community_slug)
     puts payload
 
@@ -72,7 +73,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       RULES: @rules,
       INFORMATION: @additional_information,
       LINKS: @links,
-      HEADER_IMAGE: @header_image
+      HEADER_IMAGE: @header_image,
+      SITE_CONTACT_EMAIL: @contact_email
     }.to_json
   end
 
