@@ -56,6 +56,7 @@
           .row
             .col.text-right
               %a.text-danger.small{"data-toggle" => "modal", "data-target" => "#addCommunityRuleModel", :class => 'edit-link'} Add another rule
+
   = simple_form_for @community, url: manage_additional_information_community_path, method: :post, html: { id: 'additionalForm' } do |form|
     .row
       .col-md-12
@@ -104,6 +105,24 @@
             .row
               .col.text-right
                 = link_to_add_association 'Add Link', form, :patchwork_community_links, data: { association_insertion_node: '.patchwork_community_links', association_insertion_method: :append }, class: 'text-danger small'
+
+    .row.mt-3
+      .col-md-12
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col-md-9-auto
+                %label Add Contact e-mail
+                %p.text-muted.small How people can reach you for legal or support inquiries.
+
+            .table-responsive
+              %table.table.mt-3
+                %tbody
+                  = form.simple_fields_for :patchwork_community_contact_email do |email_form|
+                    %tr
+                      %th{ style: 'width: 15%;' } Contact e-mail
+                      %td
+                        = email_form.input :contact_email, label: false, as: :email, input_html: { placeholder: "Enter contact e-mail" }
 
     .row.d-flex.justify-content-between
       .col

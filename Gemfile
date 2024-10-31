@@ -60,3 +60,5 @@ gem 'bcrypt'
 gem 'faraday', '~> 2.10', '>= 2.10.1'
 gem 'jsonapi-serializer', '~> 2.2'
 gem 'doorkeeper'
+
+gem 'rack-cors'
