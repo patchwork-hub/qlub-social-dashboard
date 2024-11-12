@@ -16,11 +16,11 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @links = prepare_links(community)
     @header_image = community.banner_image.url
     @contact_email = community.patchwork_community_contact_email.contact_email
-    @content_type = get_content_type(community)
+    @channel_type = get_channel_type(community)
     payload = build_payload(community_id, community_slug)
     puts payload
 
-    response = invoke_lambda(payload)
+    # response = invoke_lambda(payload)
 
     handle_response(response)
   end
@@ -56,7 +56,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     end
   end
 
-  def get_content_type(community)
+  def get_channel_type(community)
     content_type = community.content_type
     # instead of nil, want to get ""
     content_type&.channel_type || ""
@@ -84,7 +84,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       HEADER_IMAGE: @header_image,
       SITE_CONTACT_EMAIL: @contact_email,
       DISPLAY_NAME: @display_name,
-      CONTENT_TYPE: @content_type
+      CHANNEL_TYPE: @channel_type
     }.to_json
   end
 
