@@ -9,6 +9,7 @@ namespace :api, defaults: { format: :json } do
       collection do
         get :recommend_channels
         get :group_recommended_channels
+        get :search
       end
     end
 

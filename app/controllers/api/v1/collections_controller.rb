@@ -3,7 +3,7 @@
 module Api
   module V1
     class CollectionsController < ApiController
-
+      skip_before_action :verify_key!, only: [:index]
       before_action :set_collection, only: [:show]
 
       def index
