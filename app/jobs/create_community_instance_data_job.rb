@@ -20,7 +20,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     payload = build_payload(community_id, community_slug)
     puts payload
 
-    # response = invoke_lambda(payload)
+    response = invoke_lambda(payload)
 
     handle_response(response)
   end
