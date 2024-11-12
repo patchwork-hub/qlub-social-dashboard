@@ -58,7 +58,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
 
   def get_content_type(community)
     content_type = community.content_type
-    content_type&.channel_type
+    # instead of nil, want to get ""
+    content_type&.channel_type || ""
   end
 
   def build_payload(community_id, community_slug)
