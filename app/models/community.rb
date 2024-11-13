@@ -14,10 +14,10 @@ class Community < ApplicationRecord
     length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
   validates :slug, presence: true,
-    format: { with: /\A[a-z0-9_]+\z/i, message: "only allows letters, numbers, and underscores" },
+    format: { with: /\A[a-z0-9-]+\z/i, message: "only allows letters, numbers, and dashes" },
     length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
-  normalizes :slug, with: ->(slug) { slug.squish.parameterize.underscore }
+  normalizes :slug, with: ->(slug) { slug.squish.parameterize }
 
   validates :description, length: { maximum: DESCRIPTION_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
