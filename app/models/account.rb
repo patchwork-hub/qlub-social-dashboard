@@ -6,7 +6,6 @@ class Account < ApplicationRecord
 
   has_one :user, inverse_of: :account
   has_many :communities
-  has_many :community_admins
 
   before_create :generate_keys
 
@@ -26,10 +25,6 @@ class Account < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     ["dob", "domain", "uri", "url", "username"]
-  end
-
-  def self.ransackable_associations(auth_object = nil)
-    ["community_admins"]
   end
 
   def followed?(target_account_id)

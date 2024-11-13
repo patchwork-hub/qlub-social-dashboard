@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_10_31_100101) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_12_065538) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -840,12 +840,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_31_100101) do
   end
 
   create_table "patchwork_communities_admins", force: :cascade do |t|
-    t.bigint "account_id", null: false
     t.bigint "patchwork_community_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id", "patchwork_community_id"], name: "index_patchwork_communities_admins_on_account_and_community", unique: true
-    t.index ["account_id"], name: "index_patchwork_communities_admins_on_account_id"
+    t.string "display_name"
+    t.string "email"
+    t.string "username"
+    t.string "password"
     t.index ["patchwork_community_id"], name: "index_patchwork_communities_admins_on_patchwork_community_id"
   end
 
@@ -1547,7 +1548,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_10_31_100101) do
   add_foreign_key "oauth_applications", "users", column: "owner_id", name: "fk_b0988c7c0a", on_delete: :cascade
   add_foreign_key "patchwork_communities", "accounts"
   add_foreign_key "patchwork_communities", "patchwork_collections"
-  add_foreign_key "patchwork_communities_admins", "accounts"
   add_foreign_key "patchwork_communities_admins", "patchwork_communities"
   add_foreign_key "patchwork_communities_filter_keywords", "accounts"
   add_foreign_key "patchwork_communities_filter_keywords", "patchwork_communities"
