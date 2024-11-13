@@ -26,4 +26,8 @@ class Api::V1::ChannelSerializer
     object.slug.present? ? "#{object.slug}.channel.org" : nil
   end
 
+  attribute :follower do |object|
+    0
+  end
+
 end
