@@ -91,8 +91,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       HEADER_IMAGE: @header_image,
       SITE_CONTACT_EMAIL: @contact_email,
       DISPLAY_NAME: @display_name,
+      MAIN_CHANNEL: "false",
       CHANNEL_TYPE: @channel_type,
-      MAIN_CHANNEL: "false"
     }.to_json
   end
 
