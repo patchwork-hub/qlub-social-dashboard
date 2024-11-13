@@ -32,9 +32,17 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   end
 
   def prepare_admins(community_id)
-    CommunityAdmin.where(patchwork_community_id: community_id)
+    admins = CommunityAdmin.where(patchwork_community_id: community_id)
                 .select(:display_name, :email, :username, :password, :id)
-                .to_json
+
+    admins.each_with_object({}) do |admin, hash|
+      hash[admin.id] = {
+        'display_name' => admin.display_name,
+        'email' => admin.email,
+        'username' => admin.username,
+        'password' => admin.password
+      }
+    end
   end
 
   def prepare_rules(community)
@@ -84,7 +92,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       SITE_CONTACT_EMAIL: @contact_email,
       DISPLAY_NAME: @display_name,
       CHANNEL_TYPE: @channel_type,
-      MAIN_CHANNEL: false
+      MAIN_CHANNEL: "false"
     }.to_json
   end
 
