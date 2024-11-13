@@ -15,7 +15,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @additional_information = prepare_additional_information(community)
     @links = prepare_links(community)
     @header_image = community.banner_image.url
-    @contact_email = community.patchwork_community_contact_email.contact_email
+    @contact_email = community.patchwork_community_contact_email&.contact_email
     @channel_type = get_channel_type(community)
     payload = build_payload(community_id, community_slug)
     puts payload
@@ -32,10 +32,9 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   end
 
   def prepare_admins(community_id)
-    Account.joins(:community_admins)
-           .where(community_admins: { patchwork_community_id: community_id })
-           .map { |account| "@#{account.username}@channel.org" }
-           .join(', ')
+    CommunityAdmin.where(patchwork_community_id: community_id)
+                .select(:display_name, :email, :username, :password, :id)
+                .to_json
   end
 
   def prepare_rules(community)
@@ -84,7 +83,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       HEADER_IMAGE: @header_image,
       SITE_CONTACT_EMAIL: @contact_email,
       DISPLAY_NAME: @display_name,
-      CHANNEL_TYPE: @channel_type
+      CHANNEL_TYPE: @channel_type,
+      MAIN_CHANNEL: false
     }.to_json
   end
 

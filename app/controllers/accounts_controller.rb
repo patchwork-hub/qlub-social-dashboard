@@ -1,24 +1,27 @@
 class AccountsController < BaseController
   before_action :find_account, only: [:follow, :unfollow]
+  before_action :find_admin, only: [:follow, :unfollow]
 
   def show; end
 
   def follow
-    community = Community.find(params[:community_id])
-    community_admin = community.community_admins&.first.account
-    follow = FollowService.new.call(community_admin, @account)
+    FollowService.new.call(@admin, @account)
     render json: { message: 'successfully_followed' }, status: :ok
   end
 
   def unfollow
-    community = Community.find(params[:community_id])
-    community_admin = community.community_admins&.first.account
-    unfollow = UnfollowService.new.call(community_admin, @account)
+    UnfollowService.new.call(@admin, @account)
     render json: { message: 'successfully_unfollowed' }, status: :ok
   end
 
   def find_account
     @account = Account.find(params[:id])
+  end
+
+  def find_admin
+    community = Community.find(params[:community_id])
+    account_name = community.slug.underscore
+    @admin = Account.where(username: account_name).first
   end
 
   def records_filter

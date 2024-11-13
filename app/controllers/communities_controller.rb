@@ -38,7 +38,7 @@ class CommunitiesController < BaseController
   def step2
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
-    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
+    @edit_admin = CommunityAdmin.find_by(id: params[:admin_id]) || CommunityAdmin.new
 
     @edit_admin_form = Form::CommunityAdmin.new(
       community_id: @community.id,
@@ -81,7 +81,7 @@ class CommunitiesController < BaseController
   end
 
   def step2_update_admin
-    @community_admin = Account.find_by_id(params[:form_community_admin][:admin_id])
+    @community_admin = CommunityAdmin.find_by_id(params[:form_community_admin][:admin_id])
     begin
       @community_admin.update!(display_name: params[:form_community_admin][:display_name], username: params[:form_community_admin][:username])
       redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
@@ -110,7 +110,7 @@ class CommunitiesController < BaseController
 
   def step3_save
     begin
-      CommunityHashtagPostService.new.call(@community.community_admins&.first.account,
+      CommunityHashtagPostService.new.call(get_community_admin_id,
                                            hashtag: community_hashtag_params[:hashtag],
                                            community_id: community_hashtag_params[:community_id])
       flash[:success] = "Hashtag saved successfully!"
@@ -197,7 +197,8 @@ class CommunitiesController < BaseController
   def step6
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @community_admins = Account.joins(:community_admins).where(community_admins: { patchwork_community_id: @community.id })
+    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
+    @admin = Account.where(id: get_community_admin_id).first
   end
 
   def step6_rule_create
@@ -324,7 +325,7 @@ class CommunitiesController < BaseController
   end
 
   def fetch_oauth_token
-    admin = @community.community_admins&.first.account
+    admin = Account.where(id: get_community_admin_id).first
 
     token_service = GenerateAdminAccessTokenService.new(admin.user.id)
     token_service.call
@@ -395,7 +396,7 @@ class CommunitiesController < BaseController
   end
 
   def commu_contributors_filter
-    params[:q] = { account_id_eq: @community.community_admins&.first&.account_id }
+    params[:q] = { account_id_eq: get_community_admin_id }
     @contributor_filter = Filter::Follow.new(params)
   end
 
@@ -419,7 +420,8 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    CommunityAdmin.where(patchwork_community_id: params[:id]).first.account_id
+    account_name = @community.slug.underscore
+    Account.where(username: account_name).pluck(:id).first
   end
 
   def get_muted_accounts
