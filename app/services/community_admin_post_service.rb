@@ -35,7 +35,7 @@ class CommunityAdminPostService < BaseService
     domain = ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain
     domain = domain.gsub(/^[^.]+\./, '')
 
-    admin = Account.where(username: account_name).first_or_initialize(username: account_name, display_name: account_name, avatar: avatar_file, header: header_file)
+    admin = Account.where(username: account_name).first_or_initialize(username: account_name, display_name: account_name, avatar: avatar_file, header: header_file, note: community.description)
     return if admin.persisted?
 
     admin.save(validate: false)
