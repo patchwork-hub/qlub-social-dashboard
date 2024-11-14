@@ -91,11 +91,11 @@
                 - @records.each do |community_admin|
                   %tr
                     %td.text-center
-                      = check_box_tag "selected_accounts[]", community_admin.account.id, false, class: 'select_account'
-                    %td= community_admin.account.display_name
-                    %td= community_admin.account.username
-                    %td= community_admin.account&.user&.email
-                    %td= community_admin.account&.user&.role&.name
+                      = check_box_tag "selected_accounts[]", community_admin.id, false, class: 'select_account'
+                    %td= community_admin.display_name
+                    %td= community_admin.username
+                    %td= community_admin.email
+                    %td= "community-admin"
                     %td
                       %a.text-danger{ href: '#', class: 'edit-admin-link', "data-community-id" => @community.id, "data-admin-id" => community_admin.id }
                         %i.fas.fa-edit

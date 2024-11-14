@@ -3,6 +3,7 @@ class CommunitiesController < BaseController
   before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
   before_action :set_content_type, only: %i[step3 step4 step5]
+  before_action :set_api_credentials, only: %i[search_contributor step3_save step3_update_hashtag step3_delete_hashtag]
   PER_PAGE = 10
 
   def step1
@@ -38,7 +39,7 @@ class CommunitiesController < BaseController
   def step2
     @records = load_commu_admin_records
     @new_admin_form = Form::CommunityAdmin.new
-    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
+    @edit_admin = CommunityAdmin.find_by(id: params[:admin_id]) || CommunityAdmin.new
 
     @edit_admin_form = Form::CommunityAdmin.new(
       community_id: @community.id,
@@ -81,7 +82,7 @@ class CommunitiesController < BaseController
   end
 
   def step2_update_admin
-    @community_admin = Account.find_by_id(params[:form_community_admin][:admin_id])
+    @community_admin = CommunityAdmin.find_by_id(params[:form_community_admin][:admin_id])
     begin
       @community_admin.update!(display_name: params[:form_community_admin][:display_name], username: params[:form_community_admin][:username])
       redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
@@ -109,29 +110,32 @@ class CommunitiesController < BaseController
   end
 
   def step3_save
-    begin
-      CommunityHashtagPostService.new.call(@community.community_admins&.first.account,
-                                           hashtag: community_hashtag_params[:hashtag],
-                                           community_id: community_hashtag_params[:community_id])
-      flash[:success] = "Hashtag saved successfully!"
-      redirect_to step3_community_path
-    rescue CommunityHashtagPostService::InvalidHashtagError => e
-      flash[:error] = e.message
-      redirect_to step3_community_path
-    end
+    perform_hashtag_action(community_hashtag_params[:hashtag].gsub('#', ''), community_hashtag_params[:community_id], :follow)
+    flash[:notice] = "Hashtag saved successfully!"
+    redirect_to step3_community_path
+  rescue CommunityHashtagPostService::InvalidHashtagError => e
+    flash[:error] = e.message
+    redirect_to step3_community_path
   end
 
   def step3_update_hashtag
     community_hashtag = CommunityHashtag.find(params[:form_community_hashtag][:hashtag_id])
+
+    perform_hashtag_action(community_hashtag.hashtag, nil, :unfollow)
+
     community_hashtag.update!(hashtag: params[:form_community_hashtag][:hashtag].gsub('#', ''))
-    flash[:success] = "Hashtag updated successfully!"
+    perform_hashtag_action(community_hashtag.hashtag, nil, :follow)
+
+    flash[:notice] = "Hashtag updated successfully!"
     redirect_to step3_community_path
   end
 
   def step3_delete_hashtag
     hashtag = CommunityHashtag.find(params[:community_hashtag_id])
+
     if hashtag.destroy
-      flash[:success] = "Hashtag removed successfully!"
+      perform_hashtag_action(hashtag.hashtag, nil, :unfollow)
+      flash[:notice] = "Hashtag removed successfully!"
     else
       flash[:error] = "Failed to remove hashtag."
     end
@@ -156,7 +160,7 @@ class CommunitiesController < BaseController
   def step4_save
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
     if @community_post_type.update(community_post_type_params)
-      flash[:success] = "Community post type preferences saved successfully!"
+      flash[:notice] = "Community post type preferences saved successfully!"
       redirect_to step4_community_path
     else
       flash[:error] = "Failed to save post type preferences."
@@ -197,7 +201,8 @@ class CommunitiesController < BaseController
   def step6
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @community_admins = Account.joins(:community_admins).where(community_admins: { patchwork_community_id: @community.id })
+    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
+    @admin = Account.where(id: get_community_admin_id).first
   end
 
   def step6_rule_create
@@ -251,10 +256,8 @@ class CommunitiesController < BaseController
 
   def search_contributor
     query = params[:query]
-    api_base_url = ENV['MASTODON_INSTANCE_URL']
-    token = fetch_oauth_token || ENV['MASTODON_APPLICATION_TOKEN']
 
-    result = ContributorSearchService.new(query, url: api_base_url, token: token).call
+    result = ContributorSearchService.new(query, url: @api_base_url, token: @token).call
 
     if result.any?
       render json: { 'accounts' => result }
@@ -323,13 +326,6 @@ class CommunitiesController < BaseController
     @community_form = Form::Community.new(form_data)
   end
 
-  def fetch_oauth_token
-    admin = @community.community_admins&.first.account
-
-    token_service = GenerateAdminAccessTokenService.new(admin.user.id)
-    token_service.call
-  end
-
   def post_hashtag_params
     params.require(:form_post_hashtag).permit(:hashtag1, :hashtag2, :hashtag3, :community_id)
   end
@@ -395,7 +391,7 @@ class CommunitiesController < BaseController
   end
 
   def commu_contributors_filter
-    params[:q] = { account_id_eq: @community.community_admins&.first&.account_id }
+    params[:q] = { account_id_eq: get_community_admin_id }
     @contributor_filter = Filter::Follow.new(params)
   end
 
@@ -419,7 +415,8 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    CommunityAdmin.where(patchwork_community_id: params[:id]).first.account_id
+    account_name = @community.slug.underscore
+    Account.where(username: account_name).pluck(:id).first
   end
 
   def get_muted_accounts
@@ -444,6 +441,31 @@ class CommunitiesController < BaseController
       display_name: @edit_admin&.display_name,
       username: @edit_admin&.username
     )
+  end
+
+  def set_api_credentials
+    @api_base_url = ENV['MASTODON_INSTANCE_URL']
+    @token = fetch_oauth_token
+  end
+
+  def fetch_oauth_token
+    admin = Account.where(id: get_community_admin_id).first
+
+    token_service = GenerateAdminAccessTokenService.new(admin.user.id)
+    token_service.call
+  end
+
+  def perform_hashtag_action(hashtag_name, community_id = nil, action)
+    if action == :follow && community_id
+      CommunityHashtagPostService.new.call(get_community_admin_id, hashtag: hashtag_name, community_id: community_id)
+    end
+
+    hashtag = SearchHashtagService.new(@api_base_url, @token, hashtag_name).call
+    return puts "Hashtag not found" unless hashtag
+
+    service_class = action == :follow ? FollowHashtagService : UnfollowHashtagService
+    result = service_class.new(@api_base_url, @token, hashtag[:name]).call
+    puts result ? "Successfully #{action}ed ##{hashtag[:name]}" : "Failed to #{action} ##{hashtag[:name]}"
   end
 
   def set_current_step

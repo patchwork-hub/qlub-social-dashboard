@@ -40,17 +40,21 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const initializeFormState = () => {
-    const shouldShowNestedOptions = elements.customChannelSwitch.checked;
-    elements.nestedOptions.classList.toggle("show", shouldShowNestedOptions);
+    if (elements.customChannelSwitch) {
+      const shouldShowNestedOptions = elements.customChannelSwitch.checked;
+      elements.nestedOptions.classList.toggle("show", shouldShowNestedOptions);
 
-    toggleVisibility();
+      toggleVisibility();
+    }
   };
 
   const toggleVisibility = () => {
     const { contributorOr, contributorAnd, hashtagsSection, contributorsSection } = elements;
-    const isAnyChecked = contributorOr.checked || contributorAnd.checked;
-    hashtagsSection.style.display = isAnyChecked ? "block" : "none";
-    contributorsSection.style.display = isAnyChecked ? "block" : "none";
+    if (contributorOr && contributorAnd) {
+      const isAnyChecked = contributorOr.checked || contributorAnd.checked;
+      hashtagsSection.style.display = isAnyChecked ? "block" : "none";
+      contributorsSection.style.display = isAnyChecked ? "block" : "none";
+    }
   };
 
   const handleChannelSwitch = (event, channelType) => {
@@ -76,15 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
     createOrUpdateContentType(activeChannelType);
   };
 
-  elements.contributorOr.addEventListener("change", () => {
-    toggleCheckboxes(elements.contributorOr, elements.contributorAnd);
-    createOrUpdateContentType("custom_channel");
-  });
-
-  elements.contributorAnd.addEventListener("change", () => {
-    toggleCheckboxes(elements.contributorAnd, elements.contributorOr);
-    createOrUpdateContentType("custom_channel");
-  });
+  if (elements.contributorOr) {
+    elements.contributorOr.addEventListener("change", () => {
+      toggleCheckboxes(elements.contributorOr, elements.contributorAnd);
+      createOrUpdateContentType("custom_channel");
+    });
+  }
+  if (elements.contributorAnd) {
+    elements.contributorAnd.addEventListener("change", () => {
+      toggleCheckboxes(elements.contributorAnd, elements.contributorOr);
+      createOrUpdateContentType("custom_channel");
+    });
+  }
 
   const toggleCheckboxes = (primary, secondary) => {
     if (primary.checked) {
@@ -94,12 +101,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializeFormState();
 
-  elements.customChannelSwitch.addEventListener("change", (e) => handleChannelSwitch(e, "custom_channel"));
-  elements.broadcastChannelSwitch.addEventListener("change", (e) => handleChannelSwitch(e, "broadcast_channel"));
-  elements.groupChannelSwitch.addEventListener("change", (e) => handleChannelSwitch(e, "group_channel"));
+  if (elements.customChannelSwitch) {
+    elements.customChannelSwitch.addEventListener("change", (e) => handleChannelSwitch(e, "custom_channel"));
+  }
 
-  elements.contributorOr.addEventListener("change", toggleVisibility);
-  elements.contributorAnd.addEventListener("change", toggleVisibility);
+  if (elements.broadcastChannelSwitch) {
+    elements.broadcastChannelSwitch.addEventListener("change", (e) => handleChannelSwitch(e, "broadcast_channel"));
+  }
+
+  if (elements.groupChannelSwitch) {
+    elements.groupChannelSwitch.addEventListener("change", (e) => handleChannelSwitch(e, "group_channel"));
+  }
+
+  if (elements.contributorAnd) {
+    elements.contributorOr.addEventListener("change", toggleVisibility);
+  }
+
+  if (elements.contributorAnd) {
+    elements.contributorAnd.addEventListener("change", toggleVisibility);
+  }
 
   toggleVisibility();
 });
