@@ -57,6 +57,7 @@ class CommunityAdminPostService < BaseService
       confirmed_at: Time.now.utc,
       role: UserRole.find_by(name: 'community-admin'),
       account: admin,
+      agreement: true,
       approved: true
     )
 
