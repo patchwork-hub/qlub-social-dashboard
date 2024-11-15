@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CommunityAdminPostService < BaseService
+  include ActionView::Helpers::SanitizeHelper
+
   def call(account, options = {})
     @options = options
     create_admin!
@@ -35,7 +37,13 @@ class CommunityAdminPostService < BaseService
     domain = ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain
     domain = domain.gsub(/^[^.]+\./, '')
     username = "#{account_name}_channel"
-    admin = Account.where(username: username).first_or_initialize(username: username, display_name: username, avatar: avatar_file, header: header_file, note: community.description)
+    admin = Account.where(username: username).first_or_initialize(
+      username: username,
+      display_name: username,
+      avatar: avatar_file,
+      header: header_file,
+      note: strip_tags(community.description)
+    )
 
     admin.save(validate: false)
 
