@@ -25,7 +25,7 @@
           - @community_admins.each do |community_admin|
             .row.mt-3
               .col-1
-                - admin_avatar_image_url = @admin.avatar.present? ? @admin.avatar.url : 'patchwork-logo.svg'
+                - admin_avatar_image_url = @community.avatar_image.present? ? @community.avatar_image.url : 'patchwork-logo.svg'
                 %img{ alt: "", src: asset_path(admin_avatar_image_url), class: "rounded-circle", style: "width: 40px; height: 40px;" }
               .col-8
                 %h6.mb-0= community_admin.display_name
@@ -36,7 +36,7 @@
                   %p.text-muted
                     = @admin&.user&.current_sign_in_at ? time_ago_in_words(@admin&.user&.current_sign_in_at) : "0h"
             .row.mt-1.mx-1
-              %p= @admin.note
+              %p= @admin&.note
         = simple_form_for @community, url: set_visibility_community_path, method: :post, local: true do |form|
           .add-to-server.mt-4
             %h6 Choose visibility
