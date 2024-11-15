@@ -415,7 +415,7 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    account_name = @community.slug.underscore
+    account_name = "#{@community.slug.underscore}_channel"
     Account.where(username: account_name).pluck(:id).first
   end
 
