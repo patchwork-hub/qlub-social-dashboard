@@ -237,6 +237,8 @@ jQuery(function() {
         $('#edit_admin_admin_id').val(data.admin_id);
         $('#edit_admin_display_name').val(data.display_name);
         $('#edit_admin_username').val(data.username);
+        $('#edit_admin_email').val(data.email);
+        $('#edit_admin_password').val(data.password);
         $('#editAdminModal').modal('show');
       },
       error: function () {
