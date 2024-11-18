@@ -26,7 +26,19 @@
             .col
               .form-group
                 = form.label :user_name
-                = form.text_field :username, class: 'form-control', value: @edit_admin.username, id: 'edit_admin_username', required: true
+                = form.text_field :username, class: 'form-control', value: @edit_admin.username, id: 'edit_admin_username', disabled: true
+          .row
+            .col
+              .form-group
+                = form.label :email
+                = form.text_field :email, class: 'form-control', value: @edit_admin.email, id: 'edit_admin_email', required: true
+          .row
+            .col
+              .form-group.position-relative.password
+                = form.label :password, 'Password', class: 'form-label'
+                = form.password_field :password, class: 'form-control', value: @edit_admin.password, id: 'edit_admin_password', required: true
+                %i.fa-solid.fa-eye-slash.red{onclick: 'window.togglePassword(this)'}
+
           .modal-footer
             %div.d-flex.justify-content-end
               .col
