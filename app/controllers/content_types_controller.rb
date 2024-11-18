@@ -15,17 +15,17 @@ class ContentTypesController < ApplicationController
   private
 
   def update_admin
-    if @content_type.group_channel?
-      community = Community.find_by(id: params[:content_type][:patchwork_community_id])
+    community = Community.find_by(id: params[:content_type][:patchwork_community_id])
 
-      if community
-        account_name = "#{community.slug.underscore}_channel"
-        account = Account.find_by(username: account_name)
-        if account.update(locked: true)
-          Rails.logger.info("Account #{account_name} locked successfully.")
-        else
-          Rails.logger.error("Failed to lock account: #{account.errors.full_messages.join(', ')}")
-        end
+    if community
+      account_name = "#{community.slug.underscore}_channel"
+      account = Account.find_by(username: account_name)
+      if @content_type.group_channel?
+        account.update(locked: true)
+        Rails.logger.info("Account #{account_name} locked successfully.")
+      else
+        account.update(locked: false)
+        Rails.logger.info("Account #{account_name} unlocked successfully.")
       end
     end
   end
