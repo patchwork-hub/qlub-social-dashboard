@@ -3,9 +3,15 @@ class CommunityLink < ApplicationRecord
   belongs_to :community, class_name: 'Community', foreign_key: 'patchwork_community_id'
 
   enum icon: {
-    pen: 'Pen',
-    podcast: 'Podcast',
-    message: 'Message',
+    pen: 'PenIcon',
+    podcast: 'PodcastIcon',
+    chat: 'ChatIcon',
+    website: 'WebsiteIcon',
+    rss_feed: 'RssFeedIcon',
+    bluesky: 'Butterfly',
+    thread: 'ThreadIcon',
+    mastodon: 'Mastodon',
+    message: 'MessageIcon',
     none_icon: 'None'
   }
 
