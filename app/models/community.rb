@@ -5,6 +5,7 @@ class Community < ApplicationRecord
   LIMIT = 2.megabytes
 
   NAME_LENGTH_LIMIT = 30
+  SLUG_LENGTH_LIMIT = 22
   DESCRIPTION_LENGTH_LIMIT = 500
 
   has_attached_file :avatar_image
@@ -15,7 +16,7 @@ class Community < ApplicationRecord
 
   validates :slug, presence: true,
     format: { with: /\A[a-z0-9-]+\z/i, message: "only allows letters, numbers, and dashes" },
-    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+    length: { maximum: SLUG_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
   normalizes :slug, with: ->(slug) { slug.squish.parameterize }
 

@@ -62,5 +62,18 @@ class CommunityAdminPostService < BaseService
     )
 
     user.save!
+
+    policy = AccountStatusesCleanupPolicy.find_or_initialize_by(account_id: admin.id)
+
+    policy.assign_attributes(
+      enabled: true,
+      min_status_age: 1.week.seconds
+    )
+
+    if policy.save
+      puts "Policy created or updated successfully!"
+    else
+      puts "Failed to create or update policy: #{policy.errors.full_messages.join(", ")}"
+    end
   end
 end
