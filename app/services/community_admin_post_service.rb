@@ -36,10 +36,9 @@ class CommunityAdminPostService < BaseService
     account_name = community.slug.underscore
     domain = ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain
     domain = domain.gsub(/^[^.]+\./, '')
-    username = "#{account_name}_channel"
-    admin = Account.where(username: username).first_or_initialize(
-      username: username,
-      display_name: username,
+    admin = Account.where(username: account_name).first_or_initialize(
+      username: account_name,
+      display_name: account_name,
       avatar: avatar_file,
       header: header_file,
       note: strip_tags(community.description)
