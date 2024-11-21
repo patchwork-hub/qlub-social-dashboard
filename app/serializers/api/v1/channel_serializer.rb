@@ -23,7 +23,7 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :domain_name do |object|
-    object.slug.present? ? "#{object.slug}.channel.org" : nil
+    object.slug.present? ? "#{object.slug}.channel.org" : "channel.org"
   end
 
   attribute :follower do |object|

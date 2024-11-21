@@ -8,8 +8,9 @@ module Api
 
       def index
 
-        @collections = Collection.order(sorting_index: :asc)
-        render json: Api::V1::CollectionSerializer.new(@collections, { params: { recommended: false } }).serializable_hash.to_json
+      @all_collections = Collection.order(sorting_index: :asc).to_a
+      add_all_collection
+      render json: Api::V1::CollectionSerializer.new(@all_collections, params: { recommended: false }).serializable_hash.to_json
 
       end
 
@@ -27,6 +28,18 @@ module Api
 
         def set_collection 
           @collection = Collection.find_by(slug: params[:id])
+        end
+
+        def add_all_collection
+
+          @all_collections.unshift(Collection.new(
+          id: (@all_collections.last&.id || 1) + 1,
+          name: "All",
+          slug: "all-collection",
+          sorting_index: 0,
+          created_at: nil,
+          updated_at: nil
+        ))
         end
 
     end

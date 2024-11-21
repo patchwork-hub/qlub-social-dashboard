@@ -9,8 +9,9 @@ module Api
       
       def recommend_channels
 
-        recommended_channels = Community.recommended
-        render json: Api::V1::ChannelSerializer.new(recommended_channels).serializable_hash.to_json
+        @recommended_channels = Community.recommended.to_a
+        add_main_channel
+        render json: Api::V1::ChannelSerializer.new(@recommended_channels).serializable_hash.to_json
       
       end
 
@@ -44,6 +45,25 @@ module Api
 
       def set_channel 
         @channel = Community.find_by(slug: params[:id])
+      end
+
+      def add_main_channel
+        @recommended_channels.unshift(Community.new(
+          id: (@recommended_channels.last&.id || 1) + 1,
+          name: "Main channel",
+          slug: "",
+          description: "",
+          is_recommended: true,
+          admin_following_count: 0,
+          account_id: nil,
+          patchwork_collection_id: nil,
+          position: 0,
+          guides: {},
+          participants_count: 0,
+          visibility: 0,
+          created_at: nil,
+          updated_at: nil
+        ))
       end
 
     end
