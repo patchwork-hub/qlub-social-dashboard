@@ -18,7 +18,7 @@ class Community < ApplicationRecord
     format: { with: /\A[a-z0-9-]+\z/i, message: "only allows letters, numbers, and dashes" },
     length: { maximum: SLUG_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
-  validate :slug_uniqueness_within_accounts
+  validate :slug_uniqueness_within_accounts, on: :create
 
   normalizes :slug, with: ->(slug) { slug.squish.parameterize }
 
