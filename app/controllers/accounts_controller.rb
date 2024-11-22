@@ -20,7 +20,7 @@ class AccountsController < BaseController
 
   def find_admin
     community = Community.find(params[:community_id])
-    account_name = "#{community.slug.underscore}_channel"
+    account_name = community.slug.underscore
     @admin = Account.where(username: account_name).first
   end
 
