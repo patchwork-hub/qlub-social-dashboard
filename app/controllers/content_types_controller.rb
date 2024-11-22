@@ -18,7 +18,7 @@ class ContentTypesController < ApplicationController
     community = Community.find_by(id: params[:content_type][:patchwork_community_id])
 
     if community
-      account_name = "#{community.slug.underscore}_channel"
+      account_name = community.slug.underscore
       account = Account.find_by(username: account_name)
       if @content_type.group_channel?
         account.update(locked: true)
