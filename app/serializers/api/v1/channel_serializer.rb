@@ -15,11 +15,11 @@ class Api::V1::ChannelSerializer
   end
           
   attribute :banner_image_url do |object|
-    object.slug.present? ? object.banner_image.url : "https://i.postimg.cc/0yw7jGrm/banner-image.jpg"
+    object.slug.present? ? object.banner_image.url : "https://s3-eu-west-2.amazonaws.com/patchwork-prod/explore/science.jpg"
   end
 
   attribute :avatar_image_url do |object|
-    object.slug.present? ? object.avatar_image.url : "https://i.postimg.cc/gJkwV3cg/avatar.jpg"
+    object.slug.present? ? object.avatar_image.url : "https://s3-eu-west-2.amazonaws.com/patchwork-prod/explore/science.jpg"
   end
 
   attribute :domain_name do |object|
