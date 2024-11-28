@@ -1,5 +1,4 @@
 class ServerSettingsController < ApplicationController
-  load_and_authorize_resource class: 'ServerSetting'
   before_action :set_keyword_filter_group, only: [:index]
 
   def index

@@ -1,6 +1,4 @@
 class BaseController < ApplicationController
-  load_and_authorize_resource
-
   def index
     @records = load_records
     @search = records_filter.build_search

@@ -1,7 +1,5 @@
 class ApiKeysController < ApplicationController
   respond_to :html, :json
-  load_and_authorize_resource
-
   def index
     @api_key = ApiKey.first
   end
