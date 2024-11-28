@@ -1,6 +1,6 @@
 %tr.nested-fields
   %td{ style: 'width: 20%;' }
-    = f.select :icon, options_for_select(CommunityLink.icons.keys.map { |icon| [icon.titleize, icon] }), {}, class: 'form-control'
+    = f.select :icon, options_for_select(CommunityLink.icons.keys.map { |icon| [icon.titleize, icon] }, f.object.icon), {}, class: 'form-control'
   %td{ style: 'width: 30%;' }
     = f.text_field :name, class: 'form-control', placeholder: "Enter name"
   %td{ colspan: 2, style: 'width: 45%;' }

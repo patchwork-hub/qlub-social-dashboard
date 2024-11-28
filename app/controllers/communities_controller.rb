@@ -44,12 +44,14 @@ class CommunitiesController < BaseController
     @edit_admin_form = Form::CommunityAdmin.new(
       community_id: @community.id,
       display_name: @edit_admin&.display_name,
-      username: @edit_admin&.username
+      username: @edit_admin&.username,
+      email: @edit_admin&.email,
+      password: @edit_admin&.password
     )
 
     respond_to do |format|
       format.html
-      format.json { render json: {admin_id: @edit_admin.id.to_s, display_name: @edit_admin.display_name, username: @edit_admin.username } }
+      format.json { render json: {admin_id: @edit_admin.id.to_s, display_name: @edit_admin.display_name, username: @edit_admin.username, email: @edit_admin.email, password: @edit_admin.password } }
     end
   end
 
@@ -84,7 +86,7 @@ class CommunitiesController < BaseController
   def step2_update_admin
     @community_admin = CommunityAdmin.find_by_id(params[:form_community_admin][:admin_id])
     begin
-      @community_admin.update!(display_name: params[:form_community_admin][:display_name], username: params[:form_community_admin][:username])
+      @community_admin.update!(display_name: params[:form_community_admin][:display_name], email: params[:form_community_admin][:email], password: params[:form_community_admin][:password])
       redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error("Admin update failed: #{e.message}")

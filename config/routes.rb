@@ -12,12 +12,6 @@ Rails.application.routes.draw do
 
   health_check_routes
 
-  resources :wait_lists, only: %i[ index show create ]
-  get '/invitation_codes', to: 'wait_lists#invitation_codes', as: :invitation_codes
-  get 'invitation_code_list', to: 'wait_lists#invitation_code_list', as: :invitation_code_list
-  get '/invitation_codes/:id', to: 'wait_lists#invitation_code', as: :invitation_code
-  match '/invitation_codes/export/new', to: 'wait_lists#export', as: :export_invitation_codes, via: [:get, :post]
-
   resources :follows
 
   resources :communities do
@@ -58,7 +52,7 @@ Rails.application.routes.draw do
   resources :community do
     resources :hashtag
   end
-  resources :reports, only: %i[ index show ]
+
   resources :accounts do
     member do
       post 'follow'
@@ -68,11 +62,6 @@ Rails.application.routes.draw do
       match :export, via: [:get, :post]
     end
   end
-
-  resources :app_versions
-  put "history/:id/deprecate", to: 'app_versions#deprecate'
-  resources :global_filters
-  get '/timelines_status', to: 'timelines_status#index'
 
   resources :server_settings do
     collection do

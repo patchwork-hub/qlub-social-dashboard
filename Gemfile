@@ -41,7 +41,6 @@ gem 'health_check'
 gem 'aws-sdk-s3', '~> 1.117', require: false
 gem "kaminari"
 gem 'devise'
-gem 'cancancan'
 gem 'kt-paperclip', '~> 7.2'
 
 gem 'dotenv-rails'

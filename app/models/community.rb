@@ -5,6 +5,7 @@ class Community < ApplicationRecord
   LIMIT = 2.megabytes
 
   NAME_LENGTH_LIMIT = 30
+  SLUG_LENGTH_LIMIT = 22
   DESCRIPTION_LENGTH_LIMIT = 500
 
   has_attached_file :avatar_image
@@ -15,7 +16,9 @@ class Community < ApplicationRecord
 
   validates :slug, presence: true,
     format: { with: /\A[a-z0-9-]+\z/i, message: "only allows letters, numbers, and dashes" },
-    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+    length: { maximum: SLUG_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+
+  validate :slug_uniqueness_within_accounts, on: :create
 
   normalizes :slug, with: ->(slug) { slug.squish.parameterize }
 
@@ -91,6 +94,14 @@ class Community < ApplicationRecord
   }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
+
+  def slug_uniqueness_within_accounts
+    return unless slug.present?
+
+    if Account.where(username: slug.underscore).exists?
+      errors.add(:slug, "is already taken by an existing account username")
+    end
+  end
 
   def self.ransackable_attributes(auth_object = nil)
     ["name"]

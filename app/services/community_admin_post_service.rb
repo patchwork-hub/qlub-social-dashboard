@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CommunityAdminPostService < BaseService
+  include ActionView::Helpers::SanitizeHelper
+
   def call(account, options = {})
     @options = options
     create_admin!
@@ -34,9 +36,13 @@ class CommunityAdminPostService < BaseService
     account_name = community.slug.underscore
     domain = ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain
     domain = domain.gsub(/^[^.]+\./, '')
-
-    admin = Account.where(username: account_name).first_or_initialize(username: account_name, display_name: account_name, avatar: avatar_file, header: header_file)
-    return if admin.persisted?
+    admin = Account.where(username: account_name).first_or_initialize(
+      username: account_name,
+      display_name: account_name,
+      avatar: avatar_file,
+      header: header_file,
+      note: strip_tags(community.description)
+    )
 
     admin.save(validate: false)
 
@@ -50,11 +56,23 @@ class CommunityAdminPostService < BaseService
       confirmed_at: Time.now.utc,
       role: UserRole.find_by(name: 'community-admin'),
       account: admin,
+      agreement: true,
       approved: true
     )
 
-    return if user.persisted?
-
     user.save!
+
+    policy = AccountStatusesCleanupPolicy.find_or_initialize_by(account_id: admin.id)
+
+    policy.assign_attributes(
+      enabled: true,
+      min_status_age: 1.week.seconds
+    )
+
+    if policy.save
+      puts "Policy created or updated successfully!"
+    else
+      puts "Failed to create or update policy: #{policy.errors.full_messages.join(", ")}"
+    end
   end
 end
