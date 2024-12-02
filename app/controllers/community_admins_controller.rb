@@ -14,7 +14,7 @@ class CommunityAdminsController < ApplicationController
   def create
     @community_admin = @community.community_admins.new(community_admin_params)
     if @community_admin.save
-      CommunityAdminPostService.new(@community_admin)
+      CommunityAdminPostService.new(@community_admin).call
       flash[:notice] = 'Community admin created successfully.'
       redirect_to step2_community_path(@community)
     else
@@ -30,7 +30,7 @@ class CommunityAdminsController < ApplicationController
   def update
     @community_admin = CommunityAdmin.find(params[:id])
     if @community_admin.update(community_admin_params)
-      CommunityAdminPostService.new(@community_admin)
+      CommunityAdminPostService.new(@community_admin).call
       flash[:notice] = 'Community admin updated successfully.'
       redirect_to step2_community_path(@community)
     else

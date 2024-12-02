@@ -1,5 +1,6 @@
 class CommunityAdminPostService < BaseService
   def initialize(community_admin)
+    byebug
     @community_admin = community_admin
   end
 
@@ -15,8 +16,6 @@ class CommunityAdminPostService < BaseService
 
     avatar_file = community.avatar_image || ''
     header_file = community.banner_image || ''
-    domain = ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain
-    domain = domain.gsub(/^[^.]+\./, '')
 
     # Create or find account
     admin = Account.where(username: @community_admin.username).first_or_initialize(
