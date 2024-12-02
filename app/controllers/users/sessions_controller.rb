@@ -8,23 +8,23 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def create
-    super do |resource|
-      # We only need to call this if this hasn't already been
-      # called from one of the two-factor or sign-in token
-      # authentication methods
+    self.resource = warden.authenticate!(auth_options)
 
-      on_authentication_success(resource, :password) unless @on_authentication_success_called
+    if resource.persisted? && !policy(resource).login?
+      sign_out(resource)
+      flash[:error] = "You are not authorized to log in."
+      Rails.logger.debug("Flash message: #{flash[:error]}")
+      redirect_to new_user_session_path and return
+    end
+
+    super do |resource|
+      if resource.persisted?
+        sign_in(resource)
+      end
     end
   end
 
   def destroy
     super
-  end
-
-  protected
-
-  def on_authentication_success(user, security_measure)
-    @on_authentication_success_called = true
-    sign_in(user)
   end
 end

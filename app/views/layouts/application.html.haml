@@ -56,4 +56,6 @@
       .container.mt-5
         .w-25.m-auto
           = image_tag 'patchwork-with-text.svg', alt: 'Patchwork Logo', width: '100%'
+        .w-50.m-auto
+          = render "shared/flash"
         = yield
