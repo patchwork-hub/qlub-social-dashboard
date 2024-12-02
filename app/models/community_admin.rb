@@ -5,6 +5,10 @@ class CommunityAdmin < ApplicationRecord
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
   validates :display_name, :username, :password, presence: true
 
+  ROLES = %w[OrganizationAdmin UserAdmin].freeze
+
+  validates :role, presence: true, inclusion: { in: ROLES }
+
   def self.ransackable_attributes(auth_object = nil)
     ["account_id", "created_at", "id", "id_value", "patchwork_community_id", "updated_at"]
   end

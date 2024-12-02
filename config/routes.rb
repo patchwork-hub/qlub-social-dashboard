@@ -14,15 +14,13 @@ Rails.application.routes.draw do
 
   resources :follows
 
-  resources :communities do
+  resources :communities, path: 'channels' do
     collection do
       get 'step1', to: 'communities#step1', as: 'step1_new'
       post 'step1', to: 'communities#step1_save'
     end
     member do
       get 'step2', to: 'communities#step2'
-      post 'step2', to: 'communities#step2_save'
-      patch 'step2_update_admin'
       get 'step3', to: 'communities#step3'
       patch 'step3_update_hashtag'
       post 'step3_delete_hashtag', to: 'communities#step3_delete_hashtag'
@@ -87,4 +85,8 @@ Rails.application.routes.draw do
   resources :collections
 
   resources :content_types, only: [:create]
+
+  resources :community_admins
+
+  resources :master_admins, except: [:show, :destroy]
 end

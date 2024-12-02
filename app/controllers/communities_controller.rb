@@ -1,4 +1,5 @@
 class CommunitiesController < BaseController
+  before_action :authenticate_user!
   before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
   before_action :initialize_form, expect: %i[index]
   before_action :set_current_step, except: %i[show]
@@ -15,7 +16,7 @@ class CommunitiesController < BaseController
   def step1_save
     id = form_params[:id].presence
     @community = CommunityPostService.new.call(
-      @current_user.account,
+      current_user.account,
       id: id,
       name: form_params[:name],
       slug: form_params[:slug],
@@ -38,64 +39,7 @@ class CommunitiesController < BaseController
 
   def step2
     @records = load_commu_admin_records
-    @new_admin_form = Form::CommunityAdmin.new
-    @edit_admin = CommunityAdmin.find_by(id: params[:admin_id]) || CommunityAdmin.new
-
-    @edit_admin_form = Form::CommunityAdmin.new(
-      community_id: @community.id,
-      display_name: @edit_admin&.display_name,
-      username: @edit_admin&.username,
-      email: @edit_admin&.email,
-      password: @edit_admin&.password
-    )
-
-    respond_to do |format|
-      format.html
-      format.json { render json: {admin_id: @edit_admin.id.to_s, display_name: @edit_admin.display_name, username: @edit_admin.username, email: @edit_admin.email, password: @edit_admin.password } }
-    end
-  end
-
-  def step2_save
-    @community_admin = CommunityAdminPostService.new.call(
-      @current_user.account,
-      community_id: new_admin_form_params[:community_id],
-      display_name: new_admin_form_params[:display_name],
-      username: new_admin_form_params[:username],
-      email: new_admin_form_params[:email],
-      password: new_admin_form_params[:password]
-    )
-
-    if @community_admin.errors.any?
-      flash.now[:error] = @community_admin.errors.full_messages.join(', ')
-      @records = load_commu_admin_records
-      @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
-      set_edit_admin
-      render :step2
-    else
-      flash[:notice] = 'Admin created successfully'
-      redirect_to step2_community_path
-    end
-  rescue ActiveRecord::RecordInvalid => e
-    flash.now[:error] = e.message
-    @records = load_commu_admin_records
-    @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
-    set_edit_admin
-    render :step2
-  end
-
-  def step2_update_admin
-    @community_admin = CommunityAdmin.find_by_id(params[:form_community_admin][:admin_id])
-    begin
-      @community_admin.update!(display_name: params[:form_community_admin][:display_name], email: params[:form_community_admin][:email], password: params[:form_community_admin][:password])
-      redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.error("Admin update failed: #{e.message}")
-      flash.now[:error] = @community_admin.errors.full_messages.join(', ')
-      @records = load_commu_admin_records
-      @new_admin_form = Form::CommunityAdmin.new(community_id: @community.id)
-      set_edit_admin
-      render :step2
-    end
+    @community_admin = CommunityAdmin.new
   end
 
   def step3
@@ -340,10 +284,6 @@ class CommunitiesController < BaseController
     params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :community_type_id, :is_recommended)
   end
 
-  def new_admin_form_params
-    params.require(:form_community_admin).permit(:community_id, :display_name, :username, :email, :password)
-  end
-
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
@@ -434,15 +374,6 @@ class CommunitiesController < BaseController
 
   def set_content_type
     @content_type = @community.content_type
-  end
-
-  def set_edit_admin
-    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
-    @edit_admin_form = Form::CommunityAdmin.new(
-      community_id: @community.id,
-      display_name: @edit_admin&.display_name,
-      username: @edit_admin&.username
-    )
   end
 
   def set_api_credentials

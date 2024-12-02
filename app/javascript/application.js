@@ -12,6 +12,7 @@ import 'custom_js/search_mute_contributor';
 import 'custom_js/post_hashtag';
 import 'custom_js/community_preview';
 import 'custom_js/content_type'
+import 'custom_js/admin'
 
 import { far } from "@fortawesome/free-regular-svg-icons";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -38,6 +39,15 @@ $(document).ready(function () {
   const element = document.getElementById("community_bio");
   if (element) {
     ClassicEditor.create(element, {
+      toolbar: ["bold", "italic", "link"],
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  const admin_note = document.getElementById("master_admin_note");
+  if (admin_note) {
+    ClassicEditor.create(admin_note, {
       toolbar: ["bold", "italic", "link"],
     }).catch((error) => {
       console.error(error);

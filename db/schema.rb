@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_12_065538) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_01_170720) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -847,6 +847,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_12_065538) do
     t.string "email"
     t.string "username"
     t.string "password"
+    t.bigint "account_id"
+    t.string "role"
+    t.index ["account_id"], name: "index_patchwork_communities_admins_on_account_id"
     t.index ["patchwork_community_id"], name: "index_patchwork_communities_admins_on_patchwork_community_id"
   end
 
@@ -1548,6 +1551,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_12_065538) do
   add_foreign_key "oauth_applications", "users", column: "owner_id", name: "fk_b0988c7c0a", on_delete: :cascade
   add_foreign_key "patchwork_communities", "accounts"
   add_foreign_key "patchwork_communities", "patchwork_collections"
+  add_foreign_key "patchwork_communities_admins", "accounts", on_delete: :cascade
   add_foreign_key "patchwork_communities_admins", "patchwork_communities"
   add_foreign_key "patchwork_communities_filter_keywords", "accounts"
   add_foreign_key "patchwork_communities_filter_keywords", "patchwork_communities"
