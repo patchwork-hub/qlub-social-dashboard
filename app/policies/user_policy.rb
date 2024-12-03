@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def login?
-    user&.role&.name.in?(%w[MasterAdmin OrganizationAdmin])
+    user&.role&.name.in?(%w[MasterAdmin OrganizationAdmin UserAdmin])
   end
 
   def master_admin?
