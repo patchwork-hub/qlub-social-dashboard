@@ -38,7 +38,11 @@ module ApplicationHelper
     current_user && policy(current_user).master_admin?
   end
 
-  def master_or_organization_admin?
-    current_user && policy(current_user).master_or_organization_admin?
+  def organization_admin?
+    current_user && policy(current_user).organization_admin?
+  end
+
+  def user_admin?
+    current_user && policy(current_user).user_admin?
   end
 end

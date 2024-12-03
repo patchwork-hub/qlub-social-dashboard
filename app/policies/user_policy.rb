@@ -7,7 +7,11 @@ class UserPolicy < ApplicationPolicy
     user&.role&.name.in?(%w[MasterAdmin])
   end
 
-  def master_or_organization_admin?
-    user&.role&.name.in?(%w[MasterAdmin OrganizationAdmin])
+  def organization_admin?
+    user&.role&.name.in?(%w[OrganizationAdmin])
+  end
+
+  def user_admin?
+    user&.role&.name.in?(%w[UserAdmin])
   end
 end
