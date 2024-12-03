@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def sidebar_menu_items
-    if current_user && policy(current_user).master_admin?
+    if master_admin?
       [
         { path: '/homepage', id: 'homepage-link', header: 'Homepage', icon: 'home.svg', text: 'Home', active_if: 'homepage' },
         { path: server_settings_path, id: 'server-settings-link', header: 'Server settings', icon: 'sliders.svg', text: 'Server settings', active_if: ['server_settings', 'keyword_filter_groups', 'keyword_filters'] },
@@ -25,11 +25,16 @@ module ApplicationHelper
       ]
     end
   end
+
   def active_class(active_if)
     if active_if.is_a?(Array)
       active_if.include?(controller_name) ? 'active' : ''
     else
       controller_name == active_if ? 'active' : ''
     end
+  end
+
+  def master_admin?
+    current_user && policy(current_user).master_admin?
   end
 end

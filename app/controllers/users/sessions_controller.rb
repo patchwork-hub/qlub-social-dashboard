@@ -27,4 +27,14 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     super
   end
+
+  protected
+
+  def after_sign_in_path_for(resource)
+    if resource.master_admin?
+      root_path
+    else
+      communities_path
+    end
+  end
 end

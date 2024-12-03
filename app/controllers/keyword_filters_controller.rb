@@ -1,4 +1,5 @@
 class KeywordFiltersController < ApplicationController
+  before_action :authorize_master_admin!
   before_action :set_keyword_filter_group
   before_action :set_keyword_filter, only: [:edit, :update, :destroy]
 
@@ -63,4 +64,7 @@ class KeywordFiltersController < ApplicationController
     params.require(:keyword_filter_group).permit(:name)
   end
 
+  def authorize_master_admin!
+    authorize :master_admin, :index?
+  end
 end

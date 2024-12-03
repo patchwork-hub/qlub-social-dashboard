@@ -1,4 +1,5 @@
 class ServerSettingsController < ApplicationController
+  before_action :authorize_master_admin!
   before_action :set_keyword_filter_group, only: [:index]
 
   def index
@@ -67,5 +68,9 @@ class ServerSettingsController < ApplicationController
     end
 
     @data
+  end
+
+  def authorize_master_admin!
+    authorize :master_admin, :index?
   end
 end

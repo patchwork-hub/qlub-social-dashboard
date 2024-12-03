@@ -1,4 +1,5 @@
 class AccountsController < BaseController
+  before_action :authorize_master_admin!
   before_action :find_account, only: [:follow, :unfollow]
   before_action :find_admin, only: [:follow, :unfollow]
 
@@ -26,5 +27,9 @@ class AccountsController < BaseController
 
   def records_filter
     @filter = Filter::Account.new(params)
+  end
+
+  def authorize_master_admin!
+    authorize :master_admin, :index?
   end
 end

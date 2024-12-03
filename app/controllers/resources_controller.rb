@@ -1,8 +1,7 @@
-class InstallationController < ApplicationController
+class ResourcesController < ApplicationController
   before_action :authorize_master_admin!
 
   def index
-
   end
 
   private

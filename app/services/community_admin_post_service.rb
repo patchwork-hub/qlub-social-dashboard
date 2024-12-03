@@ -1,6 +1,5 @@
 class CommunityAdminPostService < BaseService
   def initialize(community_admin)
-    byebug
     @community_admin = community_admin
   end
 
@@ -25,7 +24,9 @@ class CommunityAdminPostService < BaseService
       header: header_file,
       note: community.description
     )
-    admin.save(validate: false)
+    admin.save!
+
+    @community_admin.update(account_id: admin.id)
 
     # Create or find user
     user = User.where(email: @community_admin.email).first_or_initialize(

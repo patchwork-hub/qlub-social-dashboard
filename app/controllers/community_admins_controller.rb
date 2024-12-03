@@ -1,12 +1,6 @@
 class CommunityAdminsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_community!
-
-  def index
-  end
-
-  def show
-  end
+  before_action :set_community!, only: %i[create update]
 
   def new
   end

@@ -297,7 +297,7 @@ class CommunitiesController < BaseController
   end
 
   def records_filter
-    Filter::Community.new(params)
+    Filter::Community.new(params, current_user)
   end
 
   def load_commu_admin_records

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  authenticate :user, lambda { |u| u.owner? } do
+  authenticate :user, lambda { |u| u.master_admin? } do
     mount Sidekiq::Web, at: 'sidekiq', as: :sidekiq
   end
 
@@ -86,7 +86,7 @@ Rails.application.routes.draw do
 
   resources :content_types, only: [:create]
 
-  resources :community_admins
+  resources :community_admins, except: [:show, :index]
 
   resources :master_admins, except: [:show, :destroy]
 end

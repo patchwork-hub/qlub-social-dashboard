@@ -11,8 +11,8 @@ class User < ApplicationRecord
 
   validates :email, uniqueness: true, presence: true
 
-  def owner?
-    role.name == 'Owner'
+  def master_admin?
+    role.name == 'MasterAdmin'
   end
 
   def primary_community

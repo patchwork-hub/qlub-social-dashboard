@@ -24,7 +24,7 @@
               %th Name
               %th No. of admins
               %th Status
-              %th
+              %th Action
           %tbody
             - if @records.size == 0
               %tr
@@ -50,28 +50,29 @@
                   %a.text-danger{ href: step1_communities_path(id: community.id) }
                     %i.fas.fa-edit
 
-        .row.mt-2
-          .col
-            %div.btn-group
-              %button.btn.btn-default{type: "button"} Action
-              %button.btn.btn-default.dropdown-toggle.dropdown-hover.dropdown-icon{type: "button", "data-toggle" => "dropdown"}
-                %span.sr-only Toggle Dropdown
-              .dropdown-menu{role: "menu"}
-                %a.dropdown-item{href: "#"} Action
-                %a.dropdown-item{href: "#"} Another action
-                %a.dropdown-item{href: "#"} Something else here
-                .dropdown-divider
-                %a.dropdown-item{href: "#"} Separated link
-          .col
-            .pagination.pagination-sm.m-0.float-right
-              = paginate @records, theme: 'bootstrap4'
+        - if master_admin?
+          .row.mt-2
+            .col
+              %div.btn-group
+                %button.btn.btn-default{type: "button"} Action
+                %button.btn.btn-default.dropdown-toggle.dropdown-hover.dropdown-icon{type: "button", "data-toggle" => "dropdown"}
+                  %span.sr-only Toggle Dropdown
+                .dropdown-menu{role: "menu"}
+                  %a.dropdown-item{href: "#"} Action
+                  %a.dropdown-item{href: "#"} Another action
+                  %a.dropdown-item{href: "#"} Something else here
+                  .dropdown-divider
+                  %a.dropdown-item{href: "#"} Separated link
+            .col
+              .pagination.pagination-sm.m-0.float-right
+                = paginate @records, theme: 'bootstrap4'
 
-        .row.mt-4
-          .col-12.d-flex.justify-content-center
-            %div.btn-group
-              %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
-                Import a channel
-                = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
-              %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_new_communities_path(new_community: 'true')}'" }
-                Create a channel
-                = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
+          .row.mt-4
+            .col-12.d-flex.justify-content-center
+              %div.btn-group
+                %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
+                  Import a channel
+                  = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
+                %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_new_communities_path(new_community: 'true')}'" }
+                  Create a channel
+                  = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
