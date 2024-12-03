@@ -38,11 +38,11 @@ class ApplicationPolicy
   private
 
   def master_admin?
-    user&.role&.name == 'MasterAdmin'
+    user&.role&.name.in?(%w[MasterAdmin])
   end
 
   def organization_admin?
-    user&.role&.name == 'OrganizationAdmin'
+    user&.role&.name.in?(%w[OrganizationAdmin])
   end
 
   class Scope

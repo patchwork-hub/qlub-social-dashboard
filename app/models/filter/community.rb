@@ -26,7 +26,7 @@ class Filter::Community < Filter::Common
   end
 
   def master_admin?
-    @current_user&.role&.name == 'MasterAdmin'
+    @current_user&.role&.name.in?(%w[MasterAdmin])
   end
 
   def account_id

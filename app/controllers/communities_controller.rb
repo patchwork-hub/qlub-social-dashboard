@@ -24,6 +24,7 @@ class CommunitiesController < BaseController
       collection_id: form_params[:collection_id],
       banner_image: form_params[:banner_image],
       avatar_image: form_params[:avatar_image],
+      logo_image: form_params[:logo_image],
       community_type_id: form_params[:community_type_id],
       is_recommended: form_params[:is_recommended]
     )
@@ -259,6 +260,7 @@ class CommunitiesController < BaseController
           collection_id: @community.patchwork_collection_id,
           banner_image: @community.banner_image,
           avatar_image: @community.avatar_image,
+          logo_image: @community.logo_image,
           community_type_id: @community.patchwork_community_type_id,
           is_recommended: @community.is_recommended
         }
@@ -281,7 +283,7 @@ class CommunitiesController < BaseController
   end
 
   def form_params
-    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :community_type_id, :is_recommended)
+    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :logo_image, :community_type_id, :is_recommended)
   end
 
   def community_params
