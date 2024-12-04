@@ -3,7 +3,7 @@ class CommunityAdmin < ApplicationRecord
   belongs_to :community, foreign_key: 'patchwork_community_id'
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
-  validates :display_name, :username, :password, presence: true
+  validates :username, presence: true
 
   ROLES = %w[OrganisationAdmin UserAdmin].freeze
 
