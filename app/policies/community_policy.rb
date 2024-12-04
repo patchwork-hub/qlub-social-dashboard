@@ -93,6 +93,6 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def not_user_admin?
-    user&.role&.name.in?(%w[MasterAdmin OrganizationAdmin])
+    user&.role&.name.in?(%w[MasterAdmin OrganisationAdmin])
   end
 end

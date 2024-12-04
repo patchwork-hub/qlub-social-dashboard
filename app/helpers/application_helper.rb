@@ -48,8 +48,8 @@ module ApplicationHelper
     current_user && policy(current_user).master_admin?
   end
 
-  def organization_admin?
-    current_user && policy(current_user).organization_admin?
+  def organisation_admin?
+    current_user && policy(current_user).organisation_admin?
   end
 
   def user_admin?

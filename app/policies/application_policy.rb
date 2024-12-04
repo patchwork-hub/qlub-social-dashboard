@@ -41,8 +41,8 @@ class ApplicationPolicy
     user&.role&.name.in?(%w[MasterAdmin])
   end
 
-  def organization_admin?
-    user&.role&.name.in?(%w[OrganizationAdmin])
+  def organisation_admin?
+    user&.role&.name.in?(%w[OrganisationAdmin])
   end
 
   class Scope
