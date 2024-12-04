@@ -7,6 +7,7 @@ class CommunityAdminsController < ApplicationController
 
   def create
     @community_admin = @community.community_admins.new(community_admin_params)
+    authorize @community_admin, :create?
     if @community_admin.save
       CommunityAdminPostService.new(@community_admin).call
       flash[:notice] = 'Community admin created successfully.'
