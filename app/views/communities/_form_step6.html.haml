@@ -23,13 +23,7 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      %ol.carousel-indicators
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
+      = carousel_indicators(@current_step)
   .row
     .col-md-12
       .card

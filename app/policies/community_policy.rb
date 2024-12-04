@@ -1,96 +1,98 @@
 # app/policies/community_policy.rb
 class CommunityPolicy < ApplicationPolicy
+  def initialize_form?
+    user&.role&.name.in?(%w[MasterAdmin]) || user_has_access_to_community?
+  end
+
   def index?
-    user.present? && (user.role.name == 'MasterAdmin' || related_community_admin?)
+    initialize_form?
   end
 
   def step1?
-    can_manage_community?
+    initialize_form?
   end
 
   def step1_save?
-    can_manage_community?
+    initialize_form?
   end
 
   def step2?
-    can_manage_community?
+    initialize_form?
   end
 
   def step2_save?
-    can_manage_community?
+    initialize_form?
   end
 
   def step2_update_admin?
-    can_manage_community?
+    initialize_form?
   end
 
   def step3?
-    can_manage_channel?
+    initialize_form?
   end
 
   def step3_save?
-    can_manage_channel?
+    initialize_form?
   end
 
   def step3_update_hashtag?
-    can_manage_channel?
+    initialize_form?
   end
 
   def step3_delete_hashtag?
-    can_manage_channel?
+    initialize_form?
   end
 
   def step4?
-    can_manage_channel?
+    initialize_form?
   end
 
   def step4_save?
-    can_manage_channel?
+    initialize_form?
   end
 
   def step5?
-    can_manage_channel?
+    not_user_admin?
   end
 
   def step5_save?
-    can_manage_channel?
+    step5?
   end
 
   def step5_update?
-    can_manage_channel?
+    step5?
   end
 
   def step5_delete?
-    can_manage_channel?
+    step5?
   end
 
   def step6?
-    can_manage_channel?
+    step5?
   end
 
   def step6_rule_create?
-    can_manage_channel?
+    step5?
   end
 
   def manage_additional_information?
-    can_manage_community?
+    step5?
   end
 
   def set_visibility?
-    can_manage_community?
+    step5?
   end
 
   private
 
-  def can_manage_community?
-    user.has_role?(:MasterAdmin) || user.has_role?(:OrganizationAdmin)
+  def user_has_access_to_community?
+    return false unless user.present? && record.present?
+
+    CommunityAdmin.exists?(patchwork_community_id: record.id, account_id: user.account_id)
   end
 
-  def can_manage_channel?
-    user.has_role?(:MasterAdmin) || user.has_role?(:OrganizationAdmin) || user.has_role?(:UserAdmin)
-  end
-
-  def related_community_admin?
-    CommunityAdmin.exists?(account_id: user.account_id)
+  def not_user_admin?
+    user&.role&.name.in?(%w[MasterAdmin OrganizationAdmin])
   end
 end

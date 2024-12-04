@@ -1,77 +1,70 @@
-%section.content
-  .container-fluid
-    .row-md-12.my-4
-      .col
-        %ol.carousel-indicators
-          %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-          %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-          %li.bg-secondary{style: "width: 65px; height: 5px;"}
-          %li.bg-secondary{style: "width: 65px; height: 5px;"}
-          %li.bg-secondary{style: "width: 65px; height: 5px;"}
-          %li.bg-secondary{style: "width: 65px; height: 5px;"}
-    .row
-      .col-md-12
-        .card
-          .card-header
-            %h3.card-title Step 2 - Admin Details
-          .card-body
-            .row.d-flex.justify-content-between
-              .col-auto
-                .row
-                  %label Administrators
-                .row
-                  .mt-auto
-                    %p.text-muted.small Assign additional administrators to your channel by providing their details below.
-              .col-auto.d-flex.flex-column.justify-content-end
+.container-fluid
+  .row-md-12.my-4
+    .col
+      = carousel_indicators(@current_step)
+  .row
+    .col-md-12
+      .card
+        .card-header
+          %h3.card-title Step 2 - Admin Details
+        .card-body
+          .row.d-flex.justify-content-between
+            .col-auto
+              .row
+                %label Administrators
+              .row
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add New
-            %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
-              %thead
+                  %p.text-muted.small Assign additional administrators to your channel by providing their details below.
+            .col-auto.d-flex.flex-column.justify-content-end
+              .mt-auto
+                %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add New
+          %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
+            %thead
+              %tr
+                %th.align-left
+                  = check_box_tag :select_all, '', false, id: 'select_all'
+                %th Display name
+                %th Username
+                %th Email address
+                %th Role
+                %th
+            %tbody
+              - if @records.size == 0
                 %tr
-                  %th.align-left
-                    = check_box_tag :select_all, '', false, id: 'select_all'
-                  %th Display name
-                  %th Username
-                  %th Email address
-                  %th Role
-                  %th
-              %tbody
-                - if @records.size == 0
-                  %tr
-                    %td.text-center.info-box-content{colspan: "100%"}
-                      %p.text-muted.small You haven’t added any administrators to this channel yet
-                      %a.text-danger.small{href: "#", "data-toggle" => "modal", "data-target" => "#communityAdminModal"}
-                        Click here to add one
-                - @records.each do |community_admin|
-                  %tr
-                    %td.text-center
-                      = check_box_tag "selected_accounts[]", community_admin.id, false, class: 'select_account'
-                    %td= community_admin.display_name
-                    %td= community_admin.username
-                    %td= community_admin.email
-                    %td= community_admin.role
-                    %td
-                      %a.text-danger{
-                        href: "#",
-                        "data-target" => "#communityAdminModal",
-                        "data-toggle" => "modal",
-                        "data-admin-id": community_admin.id,
-                        "data-display-name": community_admin.display_name,
-                        "data-username": community_admin.username,
-                        "data-email": community_admin.email,
-                        "data-password": community_admin.password,
-                        "data-role": community_admin.role
-                      }
-                        %i.fas.fa-edit
-            .pagination.pagination-sm.m-0.float-right.mt-1
-              = paginate @records, theme: 'bootstrap4'
-        .row.d-flex.justify-content-between
-          .col-auto
-            %a.btn.btn-outline-secondary{ href: step1_communities_path(id: @community.id) } Back
-          .col-auto
-            %a.btn.btn-danger{
-              href: step3_community_path(id: @community.id),
-              class: (@records.size == 0 ? 'disabled' : '')
-            } Continue
+                  %td.text-center.info-box-content{colspan: "100%"}
+                    %p.text-muted.small You haven’t added any administrators to this channel yet
+                    %a.text-danger.small{href: "#", "data-toggle" => "modal", "data-target" => "#communityAdminModal"}
+                      Click here to add one
+              - @records.each do |community_admin|
+                %tr
+                  %td.text-center
+                    = check_box_tag "selected_accounts[]", community_admin.id, false, class: 'select_account'
+                  %td= community_admin.display_name
+                  %td= community_admin.username
+                  %td= community_admin.email
+                  %td= community_admin.role
+                  %td
+                    %a.text-danger{
+                      href: "#",
+                      "data-target" => "#communityAdminModal",
+                      "data-toggle" => "modal",
+                      "data-admin-id": community_admin.id,
+                      "data-display-name": community_admin.display_name,
+                      "data-username": community_admin.username,
+                      "data-email": community_admin.email,
+                      "data-password": community_admin.password,
+                      "data-role": community_admin.role
+                    }
+                      %i.fas.fa-edit
+          .pagination.pagination-sm.m-0.float-right.mt-1
+            = paginate @records, theme: 'bootstrap4'
+      .row.d-flex.justify-content-between
+        .col-auto
+          %a.btn.btn-outline-secondary{ href: step1_communities_path(id: @community.id) } Back
+        .col-auto
+          %a.btn.btn-danger{
+            href: step3_community_path(id: @community.id),
+            class: (@records.size == 0 ? 'disabled' : '')
+          } Continue
 
 = render 'community_admin_modal'

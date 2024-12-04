@@ -34,6 +34,16 @@ module ApplicationHelper
     end
   end
 
+  def carousel_indicators(current_step)
+    total_steps = user_admin? ? 4 : 6
+    content_tag(:ol, class: 'carousel-indicators') do
+      (1..total_steps).map do |step|
+        css_class = step <= current_step ? 'bg-danger active' : 'bg-secondary'
+        content_tag(:li, '', class: css_class, style: 'width: 65px; height: 5px;')
+      end.join.html_safe
+    end
+  end
+
   def master_admin?
     current_user && policy(current_user).master_admin?
   end

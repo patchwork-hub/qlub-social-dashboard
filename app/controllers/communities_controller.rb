@@ -1,10 +1,11 @@
 class CommunitiesController < BaseController
   before_action :authenticate_user!
-  before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
-  before_action :initialize_form, expect: %i[index]
+  before_action :set_community, only: %i[step2 step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
+  before_action :initialize_form, only: %i[step1]
   before_action :set_current_step, except: %i[show]
   before_action :set_content_type, only: %i[step3 step4 step5]
   before_action :set_api_credentials, only: %i[search_contributor step3_save step3_update_hashtag step3_delete_hashtag]
+  before_action :fetch_community_admins, only: %i[step4 step6]
   PER_PAGE = 10
 
   def step1
@@ -116,6 +117,7 @@ class CommunitiesController < BaseController
   end
 
   def step5
+    authorize @community, :step5?
     @form_post_hashtag = Form::PostHashtag.new
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -125,6 +127,7 @@ class CommunitiesController < BaseController
   end
 
   def step5_delete
+    authorize @community, :step5_delete?
     PostHashtag.find(params[:post_hashtag_id].to_i).destroy
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -132,6 +135,7 @@ class CommunitiesController < BaseController
   end
 
   def step5_update
+    authorize @community, :step5_update?
     UpdateHashtagService.new.call(params[:form_post_hashtag])
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -139,6 +143,7 @@ class CommunitiesController < BaseController
   end
 
   def step5_save
+    authorize @community, :step5_save?
     PostHashtagService.new.call(post_hashtag_params)
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -146,19 +151,20 @@ class CommunitiesController < BaseController
   end
 
   def step6
+    authorize @community, :step6?
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
     @admin = Account.where(id: get_community_admin_id).first
   end
 
   def step6_rule_create
+    authorize @community, :step6_rule_create?
     CommunityRuleService.new.call(params[:form_community_rule])
     redirect_to step6_community_path
   end
 
   def manage_additional_information
-
+    authorize @community, :manage_additional_information?
     if params[:community].present?
       if @community.update(community_params)
         respond_to do |format|
@@ -177,6 +183,7 @@ class CommunitiesController < BaseController
   end
 
   def set_visibility
+    authorize @community, :set_visibility?
     visibility = params.dig(:community, :visibility).presence || 'public_access'
     if @community.update(visibility: visibility)
       # admin_email = User.where(account_id: get_community_admin_id)
@@ -248,7 +255,7 @@ class CommunitiesController < BaseController
     if params[:id].present? || (params[:form_community] && params[:form_community][:id].present?)
       id = params[:id] || params[:form_community][:id]
       @community = Community.find_by(id: id)
-
+      authorize @community, :initialize_form?
       if @community.present?
         @community.build_patchwork_community_contact_email if @community.patchwork_community_contact_email.nil?
 
@@ -272,6 +279,10 @@ class CommunitiesController < BaseController
     end
 
     @community_form = Form::Community.new(form_data)
+  end
+
+  def fetch_community_admins
+    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
   end
 
   def post_hashtag_params
@@ -371,6 +382,7 @@ class CommunitiesController < BaseController
 
   def set_community
     @community = Community.find(params[:id])
+    authorize @community, :initialize_form?
     raise ActiveRecord::RecordNotFound unless @community
   end
 
