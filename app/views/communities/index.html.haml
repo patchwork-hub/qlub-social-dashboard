@@ -45,7 +45,7 @@
                     = image_tag("icons/user.svg", class: "mr-2", width: "11", height: "16")
                     = community.community_admins.size
                 %td
-                  - if community.visibility.present?
+                  - if community.visibility.present? || (User.find_by(account_id: community&.community_admins&.first&.account_id)&.role&.name.in?(%w[UserAdmin]) && master_admin?)
                     %span.badge.badge-pill.badge-success Complete
                   - else
                     %span.badge.badge-pill.badge-warning Incomplete
