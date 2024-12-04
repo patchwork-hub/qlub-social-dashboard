@@ -1,6 +1,7 @@
 class CommunityAdminPostService < BaseService
-  def initialize(community_admin)
+  def initialize(community_admin, current_user)
     @community_admin = community_admin
+    @current_user = current_user
   end
 
   def call
@@ -27,18 +28,24 @@ class CommunityAdminPostService < BaseService
     admin.save!
 
     @community_admin.update(account_id: admin.id)
-
-    # Create or find user
-    user = User.where(email: @community_admin.email).first_or_initialize(
+    user_attributes = {
       email: @community_admin.email,
-      password: @community_admin.password,
-      password_confirmation: @community_admin.password,
       confirmed_at: Time.now.utc,
       role: UserRole.find_by(name: @community_admin.role),
       account: admin,
       agreement: true,
       approved: true
-    )
+    }
+
+    unless @current_user&.role&.name.in?(%w[UserAdmin])
+      user_attributes[:password] = @community_admin.password
+      user_attributes[:password_confirmation] = @community_admin.password
+    end
+
+    user_attributes.compact!
+
+    # Create or find user
+    user = User.where(email: @community_admin.email).first_or_initialize(user_attributes)
     user.save!
 
     # Link account with a cleanup policy

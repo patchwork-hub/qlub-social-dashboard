@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
       document.querySelector('#community_admin_display_name').value = displayName || '';
       document.querySelector('#community_admin_username').value = username || '';
       document.querySelector('#community_admin_email').value = email || '';
-      document.querySelector('#community_admin_password').value = password || '';
+      const passwordField = document.querySelector('#community_admin_password');
+      if (passwordField) {
+        passwordField.value = password || '';
+      }
       document.querySelector('#community_admin_role').value = role || '';
 
       if (adminId) {

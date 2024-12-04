@@ -16,35 +16,36 @@
               .row
                 .mt-auto
                   %p.text-muted.small At tincidunt ultrices auctor volutpat lectus.
-          .row
-            .d-flex.align-items-center.justify-content-between.mb-2
-              %div
-                %label.form-check-label.switch
-                  %input.form-check-input.switch-input#broadcast_channel_switch{ type: 'checkbox', checked: @content_type&.broadcast_channel? }
-                  %span.switch-slider.round
-                    %span.slider-tick
-                      %i.fa-solid.fa-check
-                    %span.slider-cross
-                      %i.fa-solid.fa-xmark
-                %span.ml-2
-                  Broadcast Channel
-                %span
-                  = render 'shared/tooltip_custom', tooltip_text: 'Broadcast Channel', tooltip_position: 'left'
-          %hr
-          .row
-            .d-flex.align-items-center.justify-content-between.mb-2
-              %div
-                %label.form-check-label.switch
-                  %input.form-check-input.switch-input#group_channel_switch{ type: 'checkbox', checked: @content_type&.group_channel? }
-                  %span.switch-slider.round
-                    %span.slider-tick
-                      %i.fa-solid.fa-check
-                    %span.slider-cross
-                      %i.fa-solid.fa-xmark
-                %span.ml-2
-                  Group Channel
-                %span
-                  = render 'shared/tooltip_custom', tooltip_text: 'Group Channel', tooltip_position: 'left'
+          - unless user_admin?
+            .row
+              .d-flex.align-items-center.justify-content-between.mb-2
+                %div
+                  %label.form-check-label.switch
+                    %input.form-check-input.switch-input#broadcast_channel_switch{ type: 'checkbox', checked: @content_type&.broadcast_channel? }
+                    %span.switch-slider.round
+                      %span.slider-tick
+                        %i.fa-solid.fa-check
+                      %span.slider-cross
+                        %i.fa-solid.fa-xmark
+                  %span.ml-2
+                    Broadcast Channel
+                  %span
+                    = render 'shared/tooltip_custom', tooltip_text: 'Broadcast Channel', tooltip_position: 'left'
+            %hr
+            .row
+              .d-flex.align-items-center.justify-content-between.mb-2
+                %div
+                  %label.form-check-label.switch
+                    %input.form-check-input.switch-input#group_channel_switch{ type: 'checkbox', checked: @content_type&.group_channel? }
+                    %span.switch-slider.round
+                      %span.slider-tick
+                        %i.fa-solid.fa-check
+                      %span.slider-cross
+                        %i.fa-solid.fa-xmark
+                  %span.ml-2
+                    Group Channel
+                  %span
+                    = render 'shared/tooltip_custom', tooltip_text: 'Group Channel', tooltip_position: 'left'
           %hr
           .row
             .d-flex.align-items-center.justify-content-between.mb-2
