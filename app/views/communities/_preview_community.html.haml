@@ -9,10 +9,10 @@
         %p.text-muted.small Use the preview below to check that your channel is set up and curated correctly.
         .community-preview{ style: 'border: 1px solid #ddd; padding: 10px; max-height: 450px; overflow-y: auto;' }
           .row.no-gutters
-            %img{ src: @community.banner_image.present? ? @community.banner_image.url : 'community-banner.svg', style: "width: 100%; max-height: 200px;" }
+            %img{ src: asset_path(@community.banner_image.present? ? @community.banner_image.url : 'community-banner.svg'), style: "width: 100%; max-height: 200px;" }
           .row.align-items-center.ml-2
             .col-auto
-              %img{ alt: "profile picture", src: asset_path(@community.avatar_image.present? ? @community.avatar_image.url : 'patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 80px; height: 80px; margin-top: -60px; border: 2px solid white;" }
+              %img{ src: asset_path(@community.avatar_image.present? ? @community.avatar_image.url : 'patchwork-logo.svg'), class: "rounded-circle mr-2", style: "width: 80px; height: 80px; margin-top: -60px; border: 2px solid white;" }
           .row.mt-3.ml-2
             .col
               .row.ml-1
