@@ -1,8 +1,8 @@
 class CommunitiesController < BaseController
   before_action :authenticate_user!
-  before_action :set_community, except: %i[step1 step1_save index new show is_muted]
+  before_action :set_community, except: %i[step1 step1_save index new is_muted]
   before_action :initialize_form, only: %i[step1]
-  before_action :set_current_step, except: %i[show]
+  before_action :set_current_step
   before_action :set_content_type, only: %i[step3 step4 step5]
   before_action :set_api_credentials, only: %i[search_contributor step3_save step3_update_hashtag step3_delete_hashtag]
   before_action :fetch_community_admins, only: %i[step4 step6]
@@ -197,13 +197,6 @@ class CommunitiesController < BaseController
   def new
     respond_to do |format|
       format.html
-    end
-  end
-
-  def show
-    respond_to do |format|
-      format.html
-      format.json { render json: @community, serializer: REST::CommunitySerializer }
     end
   end
 
