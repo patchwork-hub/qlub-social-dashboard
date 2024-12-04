@@ -36,7 +36,7 @@ class CommunityPostService < BaseService
     @community.save!
     set_default_additional_information
     user = User.find_by(account_id: @account.id)
-    join_if_user_admin if user&.role&.name.in?(%w[UserAdmin])
+    join_if_user_admin(user) if user&.role&.name.in?(%w[UserAdmin])
     @community
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community creation failed: #{e.message}")
