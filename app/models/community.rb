@@ -82,8 +82,6 @@ class Community < ApplicationRecord
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
-  accepts_nested_attributes_for :patchwork_community_contact_email, allow_destroy: true
-
   validates :name, presence: true, uniqueness: true
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }

@@ -256,7 +256,6 @@ class CommunitiesController < BaseController
       @community = Community.find_by(id: id)
       authorize @community, :initialize_form?
       if @community.present?
-        @community.build_patchwork_community_contact_email if @community.patchwork_community_contact_email.nil?
 
         form_data = {
           id: @community.id,
