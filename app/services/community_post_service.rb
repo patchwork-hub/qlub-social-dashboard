@@ -94,6 +94,7 @@ class CommunityPostService < BaseService
       patchwork_collection_id: @collection.id,
       position: get_position,
       admin_following_count: 0,
+      logo_image: @options[:logo_image],
       avatar_image: @options[:avatar_image],
       banner_image: @options[:banner_image],
       account_id: @account.id,

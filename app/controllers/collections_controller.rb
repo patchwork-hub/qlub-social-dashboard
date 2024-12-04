@@ -1,4 +1,5 @@
 class CollectionsController < ApplicationController
+  before_action :authorize_master_admin!
   before_action :set_collection, only: %i[show edit update]
 
   def index
@@ -41,5 +42,9 @@ class CollectionsController < ApplicationController
 
   def collection_params
     params.require(:collection).permit(:name, :slug, :sorting_index)
+  end
+
+  def authorize_master_admin!
+    authorize :master_admin, :index?
   end
 end

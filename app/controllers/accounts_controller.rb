@@ -20,8 +20,7 @@ class AccountsController < BaseController
 
   def find_admin
     community = Community.find(params[:community_id])
-    account_name = community.slug.underscore
-    @admin = Account.where(username: account_name).first
+    @admin = Account.find_by(id: CommunityAdmin.where(patchwork_community_id: community.id).pluck(:account_id).first)
   end
 
   def records_filter

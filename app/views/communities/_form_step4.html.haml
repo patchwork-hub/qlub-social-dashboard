@@ -1,13 +1,7 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      %ol.carousel-indicators
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-danger.active{style: "width: 65px; height: 5px;"}
-        %li.bg-secondary{style: "width: 65px; height: 5px;"}
-        %li.bg-secondary{style: "width: 65px; height: 5px;"}
+      = carousel_indicators(@current_step)
 
   - is_not_custom_channel = !@content_type&.custom_channel?
   .row
@@ -108,8 +102,13 @@
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step3_community_path } Back
-        .col-auto
-          %a.btn.btn-danger{ href: step5_community_path } Continue
+        - if user_admin?
+          .col-auto
+            %button.btn.btn-block.btn-danger{type: "button", "data-target" => "#previewCommunityModal", "data-toggle" => "modal"} Save & Preview
+        - else
+          .col-auto
+            %a.btn.btn-danger{ href: step5_community_path } Continue
 
 = render 'mute_contributor'
 = render 'keyword_filter'
+= render 'preview_community'

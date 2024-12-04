@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  authenticate :user, lambda { |u| u.owner? } do
+  authenticate :user, lambda { |u| u.master_admin? } do
     mount Sidekiq::Web, at: 'sidekiq', as: :sidekiq
   end
 
@@ -12,23 +12,15 @@ Rails.application.routes.draw do
 
   health_check_routes
 
-  resources :wait_lists, only: %i[ index show create ]
-  get '/invitation_codes', to: 'wait_lists#invitation_codes', as: :invitation_codes
-  get 'invitation_code_list', to: 'wait_lists#invitation_code_list', as: :invitation_code_list
-  get '/invitation_codes/:id', to: 'wait_lists#invitation_code', as: :invitation_code
-  match '/invitation_codes/export/new', to: 'wait_lists#export', as: :export_invitation_codes, via: [:get, :post]
-
   resources :follows
 
-  resources :communities do
+  resources :communities, path: 'channels' do
     collection do
       get 'step1', to: 'communities#step1', as: 'step1_new'
       post 'step1', to: 'communities#step1_save'
     end
     member do
       get 'step2', to: 'communities#step2'
-      post 'step2', to: 'communities#step2_save'
-      patch 'step2_update_admin'
       get 'step3', to: 'communities#step3'
       patch 'step3_update_hashtag'
       post 'step3_delete_hashtag', to: 'communities#step3_delete_hashtag'
@@ -58,7 +50,7 @@ Rails.application.routes.draw do
   resources :community do
     resources :hashtag
   end
-  resources :reports, only: %i[ index show ]
+
   resources :accounts do
     member do
       post 'follow'
@@ -68,11 +60,6 @@ Rails.application.routes.draw do
       match :export, via: [:get, :post]
     end
   end
-
-  resources :app_versions
-  put "history/:id/deprecate", to: 'app_versions#deprecate'
-  resources :global_filters
-  get '/timelines_status', to: 'timelines_status#index'
 
   resources :server_settings do
     collection do
@@ -98,4 +85,8 @@ Rails.application.routes.draw do
   resources :collections
 
   resources :content_types, only: [:create]
+
+  resources :community_admins, except: [:show, :index]
+
+  resources :master_admins, except: [:show, :destroy]
 end
