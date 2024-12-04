@@ -89,7 +89,7 @@ class CommunityPostService < BaseService
   end
 
   def join_if_user_admin(user)
-    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @account.display_name, email: user.email, role: user&.role&.name)
+    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: user.email, role: user&.role&.name)
   end
 
   def community_attributes

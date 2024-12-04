@@ -1,3 +1,4 @@
+- is_disable = user_admin?
 .modal.fade#communityAdminModal{ tabindex: '-1', aria: { labelledby: 'communityAdminModalLabel', hidden: 'true' } }
   .modal-dialog
     .modal-content
@@ -16,20 +17,21 @@
             .col
               .form-group
                 = f.label :role
-                = f.select :role, CommunityAdmin::ROLES, {}, class: 'form-control'
+                = f.select :role, CommunityAdmin::ROLES, {}, class: 'form-control', disabled: is_disable
           .mb-3
             = f.label :display_name, class: "form-label"
             = f.text_field :display_name, class: "form-control", id: "community_admin_display_name"
           .mb-3
             = f.label :username, class: "form-label"
-            = f.text_field :username, class: "form-control", id: "community_admin_username"
+            = f.text_field :username, class: "form-control", id: "community_admin_username", disabled: is_disable
           .mb-3
             = f.label :email, class: "form-label"
-            = f.email_field :email, class: "form-control", id: "community_admin_email"
-          .mb-3.form-group.position-relative.password
-            = f.label :password, class: "form-label"
-            = f.password_field :password, class: "form-control", id: "community_admin_password"
-            %i.fa-solid.fa-eye-slash.red{onclick: 'togglePassword(this)'}
+            = f.email_field :email, class: "form-control", id: "community_admin_email", disabled: is_disable
+          - unless user_admin?
+            .mb-3.form-group.position-relative.password
+              = f.label :password, class: "form-label"
+              = f.password_field :password, class: "form-control", id: "community_admin_password"
+              %i.fa-solid.fa-eye-slash.red{onclick: 'togglePassword(this)'}
           .modal-footer
             %div.d-flex.justify-content-end
               .col
