@@ -81,7 +81,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def set_visibility?
-    step5?
+    step5? && !related_user_admin?
   end
 
   private
@@ -94,5 +94,10 @@ class CommunityPolicy < ApplicationPolicy
 
   def not_user_admin?
     master_admin? || organisation_admin?
+  end
+
+  def related_user_admin?
+    user = User.where(account_id: record.community_admins.pluck(:account_id).first).first
+    user&.role&.name.in?(%w[UserAdmin])
   end
 end

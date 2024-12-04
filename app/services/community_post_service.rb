@@ -35,6 +35,8 @@ class CommunityPostService < BaseService
     @community = @account.communities.new(community_attributes)
     @community.save!
     set_default_additional_information
+    user = User.find_by(account_id: @account.id)
+    join_if_user_admin if user&.role&.name.in?(%w[UserAdmin])
     @community
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community creation failed: #{e.message}")
@@ -84,6 +86,10 @@ class CommunityPostService < BaseService
         )
       end
     end
+  end
+
+  def join_if_user_admin(user)
+    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @account.display_name, email: user.email, role: user&.role&.name)
   end
 
   def community_attributes
