@@ -5,7 +5,7 @@ class Community < ApplicationRecord
   LIMIT = 2.megabytes
 
   NAME_LENGTH_LIMIT = 30
-  SLUG_LENGTH_LIMIT = 22
+  SLUG_LENGTH_LIMIT = 15
   DESCRIPTION_LENGTH_LIMIT = 500
 
   has_attached_file :logo_image
