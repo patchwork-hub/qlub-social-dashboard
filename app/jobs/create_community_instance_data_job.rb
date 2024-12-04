@@ -15,7 +15,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @additional_information = prepare_additional_information(community)
     @links = prepare_links(community)
     @header_image = community.banner_image.url
-    @contact_email = community.patchwork_community_contact_email&.contact_email
+    @contact_email = CommunityAdmin.where(patchwork_community_id: community_id).pluck(:email).first
     @channel_type = get_channel_type(community)
     payload = build_payload(community_id, community_slug)
     puts payload
