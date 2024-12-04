@@ -1,7 +1,8 @@
 class CommunityAdminPostService < BaseService
-  def initialize(community_admin, current_user)
+  def initialize(community_admin, current_user, community)
     @community_admin = community_admin
     @current_user = current_user
+    @community = community
   end
 
   def call
@@ -47,6 +48,10 @@ class CommunityAdminPostService < BaseService
     # Create or find user
     user = User.where(email: @community_admin.email).first_or_initialize(user_attributes)
     user.save!
+
+    if @community_admin.role.in?(%w[UserAdmin])
+      @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
+    end
 
     # Link account with a cleanup policy
     policy = AccountStatusesCleanupPolicy.find_or_initialize_by(account_id: admin.id)
