@@ -4,10 +4,13 @@ class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  
+  require 'httparty'
 
   self.responder = ApplicationResponder
   respond_to :html
 
+  before_action :authenticate_user_from_cookie
 	before_action :authenticate_user!
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
@@ -52,5 +55,36 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     flash[:error] = "You are not authorized to perform this action."
     redirect_back_or_to(communities_path)
+  end
+  
+  private
+
+  def authenticate_user_from_cookie
+    token = cookies[:access_token]
+    return unless token
+
+    user_info = validate_token(token)
+
+    if user_info
+      user = User.find_by(id: user_info["resource_owner_id"])
+      if user
+        sign_in(user)
+      else
+        redirect_to new_user_session_path, alert: 'User not found.'
+      end
+    else
+      redirect_to new_user_session_path, alert: 'Invalid token.'
+    end
+  end
+
+  def validate_token(token)
+    begin
+      url = Rails.env.development? ? 'http://localhost:3000/oauth/token/info' : 'https://channel.org/oauth/token/info'
+      response = HTTParty.get(url, headers: { 'Authorization' => "Bearer #{token}" })
+      JSON.parse(response.body)
+    rescue HTTParty::Error => e
+      Rails.logger.error "Error fetching user info: #{e.message}"
+      nil
+    end
   end
 end

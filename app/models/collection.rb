@@ -10,4 +10,15 @@ class Collection < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
   validates :sorting_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: true
+
+  #joins(patchwork_communities: :patchwork_community_type)
+  scope :recommended_group_channels, -> {
+    joins(:patchwork_communities)
+      .where(patchwork_communities: { is_recommended: true })
+      .where.not(patchwork_communities: { visibility: nil } )
+      .where.not(patchwork_communities: { patchwork_community_type: nil} )
+      .group('patchwork_collections.id')
+      .order('patchwork_collections.sorting_index ASC')
+  }
+
 end
