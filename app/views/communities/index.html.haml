@@ -1,11 +1,13 @@
+- title = user_admin? ? "Channel feeds" : "Channels"
+
 - content_for :title do
-  = 'Local channels'
+  = #{title}
 
 .row
   .col-12
     .card
       .card-header
-        %h3.card-title Local channels
+        %h3.card-title #{title}
         .card-tools
           = search_form_for @search, url: communities_path, method: :get do |f|
             .input-group.input-group-sm{style: "width: 150px;"}
@@ -30,7 +32,7 @@
               %tr
                 %td.text-center.info-box-content{colspan: "100%"}
                   %p.text-muted.small You haven’t added any hashtags to this channel yet
-                  - if master_admin?
+                  - if master_admin? || user_admin?
                     %a.text-danger.small{ href: step1_new_communities_path(new_community: 'true') } Click here to add one
             - @records.each do |community|
               %tr
