@@ -18,14 +18,11 @@ class ContentTypesController < ApplicationController
     community = Community.find_by(id: params[:content_type][:patchwork_community_id])
 
     if community
-      account_name = community.slug.underscore
-      account = Account.find_by(username: account_name)
+      account = Account.find_by(id: community&.community_admins&.first&.account_id)
       if @content_type.group_channel?
         account.update(locked: true)
-        Rails.logger.info("Account #{account_name} locked successfully.")
       else
         account.update(locked: false)
-        Rails.logger.info("Account #{account_name} unlocked successfully.")
       end
     end
   end

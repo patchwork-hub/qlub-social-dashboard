@@ -1,7 +1,7 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step)
+      = carousel_indicators(@current_step, @community)
 
   - is_not_custom_channel = !@content_type&.custom_channel?
   .row
@@ -102,7 +102,7 @@
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step3_community_path } Back
-        - if user_admin?
+        - if has_user_admin_owner?(@community)
           .col-auto
             %button.btn.btn-block.btn-danger{type: "button", "data-target" => "#previewCommunityModal", "data-toggle" => "modal"} Save & Preview
         - else

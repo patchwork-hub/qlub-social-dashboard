@@ -35,8 +35,8 @@ class CommunityPostService < BaseService
     @community = @account.communities.new(community_attributes)
     @community.save!
     set_default_additional_information
-    user = User.find_by(account_id: @account.id)
-    join_if_user_admin(user) if user&.role&.name.in?(%w[UserAdmin])
+
+    assign_admin_and_create_content_type
     @community
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community creation failed: #{e.message}")
@@ -88,8 +88,12 @@ class CommunityPostService < BaseService
     end
   end
 
-  def join_if_user_admin(user)
-    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: user.email, role: user&.role&.name)
+  def assign_admin_and_create_content_type
+    user = User.find_by(account_id: @account.id)
+    if user&.role&.name.in?(%w[UserAdmin])
+      @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: user.email, role: user&.role&.name)
+      @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
+    end
   end
 
   def community_attributes

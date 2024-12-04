@@ -37,7 +37,7 @@
                     = @admin&.user&.current_sign_in_at ? time_ago_in_words(@admin&.user&.current_sign_in_at) : "0h"
             .row.mt-1.mx-1
               %p= @admin&.note
-        - if user_admin?
+        - if has_user_admin_owner?(@community)
           .modal-footer
             %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
             %a.btn.btn-danger{ href: communities_path } Create Channel
