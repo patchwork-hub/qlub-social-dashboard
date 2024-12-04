@@ -1,7 +1,7 @@
 # app/policies/community_policy.rb
 class CommunityPolicy < ApplicationPolicy
   def initialize_form?
-    master_admin? || user_has_access_to_community?
+    master_admin? || user_has_access_to_community? || user_admin?
   end
 
   def index?
