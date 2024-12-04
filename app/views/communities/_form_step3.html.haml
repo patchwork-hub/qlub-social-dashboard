@@ -1,7 +1,7 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step)
+      = carousel_indicators(@current_step, @community)
   .row
     .col-md-12
       .card
@@ -16,7 +16,7 @@
               .row
                 .mt-auto
                   %p.text-muted.small At tincidunt ultrices auctor volutpat lectus.
-          - unless user_admin?
+          - unless has_user_admin_owner?(@community)
             .row
               .d-flex.align-items-center.justify-content-between.mb-2
                 %div

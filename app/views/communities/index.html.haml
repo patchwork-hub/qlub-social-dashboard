@@ -32,7 +32,7 @@
               %tr
                 %td.text-center.info-box-content{colspan: "100%"}
                   %p.text-muted.small You haven’t added any hashtags to this channel yet
-                  - if master_admin? || user_admin?
+                  - unless organisation_admin?
                     %a.text-danger.small{ href: step1_new_communities_path(new_community: 'true') } Click here to add one
             - @records.each do |community|
               %tr
@@ -45,7 +45,7 @@
                     = image_tag("icons/user.svg", class: "mr-2", width: "11", height: "16")
                     = community.community_admins.size
                 %td
-                  - if community.visibility.present? || (User.find_by(account_id: community&.community_admins&.first&.account_id)&.role&.name.in?(%w[UserAdmin]) && master_admin?)
+                  - if community.visibility.present? || has_user_admin_owner?(community)
                     %span.badge.badge-pill.badge-success Complete
                   - else
                     %span.badge.badge-pill.badge-warning Incomplete

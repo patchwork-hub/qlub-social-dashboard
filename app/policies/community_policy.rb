@@ -1,4 +1,3 @@
-# app/policies/community_policy.rb
 class CommunityPolicy < ApplicationPolicy
   def initialize_form?
     master_admin? || user_has_access_to_community? || user_admin?
@@ -53,7 +52,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step5?
-    not_user_admin?
+    !related_user_admin?
   end
 
   def step5_save?
@@ -81,7 +80,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def set_visibility?
-    step5? && !related_user_admin?
+    step5?
   end
 
   private
@@ -92,12 +91,9 @@ class CommunityPolicy < ApplicationPolicy
     CommunityAdmin.exists?(patchwork_community_id: record.id, account_id: user.account_id)
   end
 
-  def not_user_admin?
-    master_admin? || organisation_admin?
-  end
-
   def related_user_admin?
-    user = User.where(account_id: record.community_admins.pluck(:account_id).first).first
+    account_id = record&.community_admins&.first&.account_id
+    user = User.find_by(account_id: account_id)
     user&.role&.name.in?(%w[UserAdmin])
   end
 end

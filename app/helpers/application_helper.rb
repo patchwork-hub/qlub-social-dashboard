@@ -37,8 +37,8 @@ module ApplicationHelper
     end
   end
 
-  def carousel_indicators(current_step)
-    total_steps = user_admin? ? 4 : 6
+  def carousel_indicators(current_step, community)
+    total_steps = user_admin? || has_user_admin_owner?(community) ? 4 : 6
     content_tag(:ol, class: 'carousel-indicators') do
       (1..total_steps).map do |step|
         css_class = step <= current_step ? 'bg-danger active' : 'bg-secondary'
@@ -57,5 +57,11 @@ module ApplicationHelper
 
   def user_admin?
     current_user && policy(current_user).user_admin?
+  end
+
+  def has_user_admin_owner?(community)
+    account_id = community&.community_admins&.first&.account_id
+    user = User.find_by(account_id: account_id)
+    user&.role&.name.in?(%w[UserAdmin])
   end
 end
