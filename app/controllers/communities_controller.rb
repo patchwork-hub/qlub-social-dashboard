@@ -1,6 +1,6 @@
 class CommunitiesController < BaseController
   before_action :authenticate_user!
-  before_action :set_community, only: %i[step2 step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
+  before_action :set_community, except: %i[step1 step1_save index new show is_muted]
   before_action :initialize_form, only: %i[step1]
   before_action :set_current_step, except: %i[show]
   before_action :set_content_type, only: %i[step3 step4 step5]
@@ -50,7 +50,6 @@ class CommunitiesController < BaseController
     @community_hashtag_form = Form::CommunityHashtag.new
     @community_admin = get_community_admin_id
     @follow_records = load_follow_records
-    @follower_search = commu_contributors_filter.build_search
 
     respond_to do |format|
       format.html
@@ -321,10 +320,6 @@ class CommunitiesController < BaseController
     commu_hashtag_records_filter.get
   end
 
-  def load_contributors_records
-    commu_contributors_filter.get
-  end
-
   def load_post_hashtag_records
     post_hashtag_records_filter.get
   end
@@ -343,11 +338,6 @@ class CommunitiesController < BaseController
 
   def commu_follower_filter
     @follower_filter = Filter::Account.new(params)
-  end
-
-  def commu_contributors_filter
-    params[:q] = { account_id_eq: get_community_admin_id }
-    @contributor_filter = Filter::Follow.new(params)
   end
 
   def commu_admin_records_filter
@@ -370,8 +360,7 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    account_name = @community.slug.underscore
-    Account.where(username: account_name).pluck(:id).first
+    CommunityAdmin.where(patchwork_community_id: @community.id).pluck(:account_id).first
   end
 
   def get_muted_accounts
@@ -397,7 +386,6 @@ class CommunitiesController < BaseController
 
   def fetch_oauth_token
     admin = Account.where(id: get_community_admin_id).first
-
     token_service = GenerateAdminAccessTokenService.new(admin.user.id)
     token_service.call
   end

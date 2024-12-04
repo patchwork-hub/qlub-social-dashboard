@@ -6,7 +6,7 @@ function searchFollowedContributors(query, communityId) {
 
   showLoadingSpinner();
 
-  fetch(`/communities/${communityId}/search_contributor?query=${encodeURIComponent(query)}`)
+  fetch(`/channels/${communityId}/search_contributor?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
       hideLoadingSpinner();
@@ -79,7 +79,7 @@ function clearSearchResults() {
 }
 
 function isMuted(accountId, communityId) {
-  return fetch(`/communities/${communityId}/is_muted?account_id=${accountId}`)
+  return fetch(`/channels/${communityId}/is_muted?account_id=${accountId}`)
     .then(response => response.json())
     .then(data => data.is_muted)
     .catch(error => {
@@ -100,7 +100,7 @@ if (muteSearchInput) {
 
 function toggleMute(accountId, communityId) {
   isMuted(accountId, communityId).then(isCurrentlyMuted => {
-    fetch(`/communities/${communityId}/mute_contributor`, {
+    fetch(`/channels/${communityId}/mute_contributor`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
