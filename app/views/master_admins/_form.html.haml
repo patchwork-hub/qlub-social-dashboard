@@ -1,0 +1,34 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          = "#{action_name.capitalize} Community Admin"
+      .card-body.w-250
+        = simple_form_for @master_admin, url: (@master_admin.id ? master_admin_path(@master_admin.id) : master_admins_path), method: (@master_admin.id ? :patch : :post), local: true do |f|
+          .row
+            .col-md-6
+              = f.input :display_name, label: "Display Name", input_html: { class: "form-control" }
+            .col-md-6
+              = f.input :username, label: "Username", input_html: { class: "form-control" }
+
+          .row
+            .col-md-6
+              = f.input :email, label: "Email", input_html: { class: "form-control" }
+            .col-md-6
+              =  f.input :role, label: "Role", input_html: { class: "form-control", value: "MasterAdmin", disabled: true }
+
+          .row
+            .col-md-6
+              = f.input :password, label: "Password", input_html: { class: "form-control" }
+            .col-md-6
+              = f.input :password_confirmation, label: "Confirm Password", input_html: { class: "form-control" }
+
+          .row
+            .col-md-12
+              = f.input :note, as: :text, label: 'Note', input_html: { class: "form-control", id: "master_admin_note" }
+
+          .row
+            .col-md-12.d-flex.justify-content-center
+              = f.submit (@master_admin.id ? 'Update Community Admin' : 'Create Community Admin'), class: 'btn btn-primary mx-2 btn-custom'
+              = link_to 'Cancel', master_admins_path, class: 'btn btn-secondary mx-2 btn-custom'

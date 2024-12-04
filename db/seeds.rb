@@ -8,4 +8,5 @@
 
 Dir[Rails.root.join('db', 'seeds', '*.rb')].each do |seed|
   load seed
+  load 'db/seeds/community_user_role.rb'
 end

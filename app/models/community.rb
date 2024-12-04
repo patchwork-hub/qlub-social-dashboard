@@ -8,6 +8,7 @@ class Community < ApplicationRecord
   SLUG_LENGTH_LIMIT = 22
   DESCRIPTION_LENGTH_LIMIT = 500
 
+  has_attached_file :logo_image
   has_attached_file :avatar_image
   has_attached_file :banner_image
 
@@ -23,6 +24,10 @@ class Community < ApplicationRecord
   normalizes :slug, with: ->(slug) { slug.squish.parameterize }
 
   validates :description, length: { maximum: DESCRIPTION_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+
+  validates_attachment :logo_image,
+                       content_type: { content_type: IMAGE_MIME_TYPES },
+                       size: { less_than: LIMIT }
 
   validates_attachment :avatar_image,
                        content_type: { content_type: IMAGE_MIME_TYPES },
@@ -76,13 +81,6 @@ class Community < ApplicationRecord
             class_name: 'CommunityRule',
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
-
-  has_one :patchwork_community_contact_email,
-            class_name: 'CommunityContactEmail',
-            foreign_key: 'patchwork_community_id',
-            dependent: :destroy
-
-  accepts_nested_attributes_for :patchwork_community_contact_email, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
 

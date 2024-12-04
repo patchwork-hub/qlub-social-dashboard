@@ -1,6 +1,10 @@
 require "application_responder"
 
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   self.responder = ApplicationResponder
   respond_to :html
 
@@ -42,5 +46,11 @@ class ApplicationController < ActionController::Base
       format.js { head :not_found }
       format.json { head :not_found }
     end
+  end
+
+
+  def user_not_authorized
+    flash[:error] = "You are not authorized to perform this action."
+    redirect_back_or_to(communities_path)
   end
 end

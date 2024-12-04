@@ -221,32 +221,6 @@ jQuery(function() {
     form.append(`<input type="hidden" name="authenticity_token" value="${csrfToken}">`);
   });
 
-  $(document).on('click', '.edit-admin-link', function (e) {
-    e.preventDefault();
-
-    var communityId = $(this).data('community-id');
-    var adminId = $(this).data('admin-id');
-
-    var url = `/communities/${communityId}/step2?admin_id=${adminId}`;
-
-    $.ajax({
-      url: url,
-      type: 'GET',
-      dataType: 'json',
-      success: function (data) {
-        $('#edit_admin_admin_id').val(data.admin_id);
-        $('#edit_admin_display_name').val(data.display_name);
-        $('#edit_admin_username').val(data.username);
-        $('#edit_admin_email').val(data.email);
-        $('#edit_admin_password').val(data.password);
-        $('#editAdminModal').modal('show');
-      },
-      error: function () {
-        alert('An error occurred while loading the admin details.');
-      }
-    });
-  });
-
   $('#editHashtagModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget);
     var hashtagId = button.data('id');

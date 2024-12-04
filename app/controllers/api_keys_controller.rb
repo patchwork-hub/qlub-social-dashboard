@@ -1,4 +1,5 @@
 class ApiKeysController < ApplicationController
+  before_action :authorize_master_admin!
   respond_to :html, :json
   def index
     @api_key = ApiKey.first
@@ -26,5 +27,9 @@ class ApiKeysController < ApplicationController
 
   def api_key_params
     params.require(:api_key).permit(:key, :secret)
+  end
+
+  def authorize_master_admin!
+    authorize :master_admin, :index?
   end
 end

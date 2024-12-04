@@ -1,9 +1,11 @@
 class CommunitiesController < BaseController
-  before_action :set_community, only: %i[step2 contributors_table step3 step4 step4_save step5 step5_delete step5_update step5_save step6 set_visibility manage_additional_information]
-  before_action :initialize_form, expect: %i[index]
+  before_action :authenticate_user!
+  before_action :set_community, except: %i[step1 step1_save index new show is_muted]
+  before_action :initialize_form, only: %i[step1]
   before_action :set_current_step, except: %i[show]
   before_action :set_content_type, only: %i[step3 step4 step5]
   before_action :set_api_credentials, only: %i[search_contributor step3_save step3_update_hashtag step3_delete_hashtag]
+  before_action :fetch_community_admins, only: %i[step4 step6]
   PER_PAGE = 10
 
   def step1
@@ -15,7 +17,7 @@ class CommunitiesController < BaseController
   def step1_save
     id = form_params[:id].presence
     @community = CommunityPostService.new.call(
-      @current_user.account,
+      current_user.account,
       id: id,
       name: form_params[:name],
       slug: form_params[:slug],
@@ -23,6 +25,7 @@ class CommunitiesController < BaseController
       collection_id: form_params[:collection_id],
       banner_image: form_params[:banner_image],
       avatar_image: form_params[:avatar_image],
+      logo_image: form_params[:logo_image],
       community_type_id: form_params[:community_type_id],
       is_recommended: form_params[:is_recommended]
     )
@@ -38,64 +41,7 @@ class CommunitiesController < BaseController
 
   def step2
     @records = load_commu_admin_records
-    @new_admin_form = Form::CommunityAdmin.new
-    @edit_admin = CommunityAdmin.find_by(id: params[:admin_id]) || CommunityAdmin.new
-
-    @edit_admin_form = Form::CommunityAdmin.new(
-      community_id: @community.id,
-      display_name: @edit_admin&.display_name,
-      username: @edit_admin&.username,
-      email: @edit_admin&.email,
-      password: @edit_admin&.password
-    )
-
-    respond_to do |format|
-      format.html
-      format.json { render json: {admin_id: @edit_admin.id.to_s, display_name: @edit_admin.display_name, username: @edit_admin.username, email: @edit_admin.email, password: @edit_admin.password } }
-    end
-  end
-
-  def step2_save
-    @community_admin = CommunityAdminPostService.new.call(
-      @current_user.account,
-      community_id: new_admin_form_params[:community_id],
-      display_name: new_admin_form_params[:display_name],
-      username: new_admin_form_params[:username],
-      email: new_admin_form_params[:email],
-      password: new_admin_form_params[:password]
-    )
-
-    if @community_admin.errors.any?
-      flash.now[:error] = @community_admin.errors.full_messages.join(', ')
-      @records = load_commu_admin_records
-      @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
-      set_edit_admin
-      render :step2
-    else
-      flash[:notice] = 'Admin created successfully'
-      redirect_to step2_community_path
-    end
-  rescue ActiveRecord::RecordInvalid => e
-    flash.now[:error] = e.message
-    @records = load_commu_admin_records
-    @new_admin_form = Form::CommunityAdmin.new(new_admin_form_params)
-    set_edit_admin
-    render :step2
-  end
-
-  def step2_update_admin
-    @community_admin = CommunityAdmin.find_by_id(params[:form_community_admin][:admin_id])
-    begin
-      @community_admin.update!(display_name: params[:form_community_admin][:display_name], email: params[:form_community_admin][:email], password: params[:form_community_admin][:password])
-      redirect_to step2_community_path(@community.id), notice: 'Admin updated successfully'
-    rescue ActiveRecord::RecordInvalid => e
-      Rails.logger.error("Admin update failed: #{e.message}")
-      flash.now[:error] = @community_admin.errors.full_messages.join(', ')
-      @records = load_commu_admin_records
-      @new_admin_form = Form::CommunityAdmin.new(community_id: @community.id)
-      set_edit_admin
-      render :step2
-    end
+    @community_admin = CommunityAdmin.new
   end
 
   def step3
@@ -104,7 +50,6 @@ class CommunitiesController < BaseController
     @community_hashtag_form = Form::CommunityHashtag.new
     @community_admin = get_community_admin_id
     @follow_records = load_follow_records
-    @follower_search = commu_contributors_filter.build_search
 
     respond_to do |format|
       format.html
@@ -171,6 +116,7 @@ class CommunitiesController < BaseController
   end
 
   def step5
+    authorize @community, :step5?
     @form_post_hashtag = Form::PostHashtag.new
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -180,6 +126,7 @@ class CommunitiesController < BaseController
   end
 
   def step5_delete
+    authorize @community, :step5_delete?
     PostHashtag.find(params[:post_hashtag_id].to_i).destroy
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -187,6 +134,7 @@ class CommunitiesController < BaseController
   end
 
   def step5_update
+    authorize @community, :step5_update?
     UpdateHashtagService.new.call(params[:form_post_hashtag])
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -194,6 +142,7 @@ class CommunitiesController < BaseController
   end
 
   def step5_save
+    authorize @community, :step5_save?
     PostHashtagService.new.call(post_hashtag_params)
     @records = load_post_hashtag_records
     @search = post_hashtag_records_filter.build_search
@@ -201,19 +150,20 @@ class CommunitiesController < BaseController
   end
 
   def step6
+    authorize @community, :step6?
     @rule_from = Form::CommunityRule.new
     @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
-    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
     @admin = Account.where(id: get_community_admin_id).first
   end
 
   def step6_rule_create
+    authorize @community, :step6_rule_create?
     CommunityRuleService.new.call(params[:form_community_rule])
     redirect_to step6_community_path
   end
 
   def manage_additional_information
-
+    authorize @community, :manage_additional_information?
     if params[:community].present?
       if @community.update(community_params)
         respond_to do |format|
@@ -232,6 +182,7 @@ class CommunitiesController < BaseController
   end
 
   def set_visibility
+    authorize @community, :set_visibility?
     visibility = params.dig(:community, :visibility).presence || 'public_access'
     if @community.update(visibility: visibility)
       # admin_email = User.where(account_id: get_community_admin_id)
@@ -303,9 +254,8 @@ class CommunitiesController < BaseController
     if params[:id].present? || (params[:form_community] && params[:form_community][:id].present?)
       id = params[:id] || params[:form_community][:id]
       @community = Community.find_by(id: id)
-
+      authorize @community, :initialize_form?
       if @community.present?
-        @community.build_patchwork_community_contact_email if @community.patchwork_community_contact_email.nil?
 
         form_data = {
           id: @community.id,
@@ -315,6 +265,7 @@ class CommunitiesController < BaseController
           collection_id: @community.patchwork_collection_id,
           banner_image: @community.banner_image,
           avatar_image: @community.avatar_image,
+          logo_image: @community.logo_image,
           community_type_id: @community.patchwork_community_type_id,
           is_recommended: @community.is_recommended
         }
@@ -328,6 +279,10 @@ class CommunitiesController < BaseController
     @community_form = Form::Community.new(form_data)
   end
 
+  def fetch_community_admins
+    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
+  end
+
   def post_hashtag_params
     params.require(:form_post_hashtag).permit(:hashtag1, :hashtag2, :hashtag3, :community_id)
   end
@@ -337,18 +292,13 @@ class CommunitiesController < BaseController
   end
 
   def form_params
-    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :community_type_id, :is_recommended)
-  end
-
-  def new_admin_form_params
-    params.require(:form_community_admin).permit(:community_id, :display_name, :username, :email, :password)
+    params.require(:form_community).permit(:id, :name, :slug, :collection_id, :bio, :banner_image, :avatar_image, :logo_image, :community_type_id, :is_recommended)
   end
 
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
-      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy],
-      patchwork_community_contact_email_attributes: [:contact_email]
+      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy]
     )
   end
 
@@ -357,7 +307,7 @@ class CommunitiesController < BaseController
   end
 
   def records_filter
-    Filter::Community.new(params)
+    Filter::Community.new(params, current_user)
   end
 
   def load_commu_admin_records
@@ -366,10 +316,6 @@ class CommunitiesController < BaseController
 
   def load_commu_hashtag_records
     commu_hashtag_records_filter.get
-  end
-
-  def load_contributors_records
-    commu_contributors_filter.get
   end
 
   def load_post_hashtag_records
@@ -392,11 +338,6 @@ class CommunitiesController < BaseController
     @follower_filter = Filter::Account.new(params)
   end
 
-  def commu_contributors_filter
-    params[:q] = { account_id_eq: get_community_admin_id }
-    @contributor_filter = Filter::Follow.new(params)
-  end
-
   def commu_admin_records_filter
     params[:q] = { patchwork_community_id_eq: @community.id }
     @filter = Filter::CommunityAdmin.new(params)
@@ -417,8 +358,7 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    account_name = @community.slug.underscore
-    Account.where(username: account_name).pluck(:id).first
+    CommunityAdmin.where(patchwork_community_id: @community.id).pluck(:account_id).first
   end
 
   def get_muted_accounts
@@ -429,20 +369,12 @@ class CommunitiesController < BaseController
 
   def set_community
     @community = Community.find(params[:id])
+    authorize @community, :initialize_form?
     raise ActiveRecord::RecordNotFound unless @community
   end
 
   def set_content_type
     @content_type = @community.content_type
-  end
-
-  def set_edit_admin
-    @edit_admin = Account.find_by(id: CommunityAdmin.find_by(id: params[:admin_id])&.account_id) || Account.new
-    @edit_admin_form = Form::CommunityAdmin.new(
-      community_id: @community.id,
-      display_name: @edit_admin&.display_name,
-      username: @edit_admin&.username
-    )
   end
 
   def set_api_credentials
@@ -452,7 +384,6 @@ class CommunitiesController < BaseController
 
   def fetch_oauth_token
     admin = Account.where(id: get_community_admin_id).first
-
     token_service = GenerateAdminAccessTokenService.new(admin.user.id)
     token_service.call
   end

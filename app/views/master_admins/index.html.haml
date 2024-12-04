@@ -1,0 +1,31 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          Master Admins
+        .card-tools
+          %button.btn.btn-sm.btn-danger.ml-3{ onclick: "window.location='#{new_master_admin_path}'" }
+            Create a Master Admin
+            = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
+
+      .card-body
+
+        %table.table.no-side-borders.top-bottom-border{data: {url: master_admins_url, type: 'master_admin'}}
+          %thead
+            %tr
+              %th Display Name
+              %th Username
+              %th Email
+              %th Role
+              %th Actions
+          %tbody
+            - @master_admins&.each do |master_admin|
+              %tr
+                %td= master_admin&.display_name
+                %td= master_admin&.username
+                %td= master_admin&.email
+                %td= UserRole.find_by(id: master_admin&.role_id).name
+                %td
+                  %a{ href: edit_master_admin_path(master_admin.user_id), title: 'Edit' }
+                    %i.fa-solid.fa-edit.ml-2{ style: "color: red;" }

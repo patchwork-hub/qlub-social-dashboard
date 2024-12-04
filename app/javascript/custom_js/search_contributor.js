@@ -58,7 +58,7 @@ function searchContributors(query, communityId) {
 
   showLoadingSpinner();
 
-  fetch(`/communities/${communityId}/search_contributor?query=${encodeURIComponent(query)}`)
+  fetch(`/channels/${communityId}/search_contributor?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
       hideLoadingSpinner();
