@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Populate the form fields
       document.querySelector('#community_admin_display_name').value = displayName || '';
-      document.querySelector('#community_admin_username').value = username || '';
+      const usernameField = document.querySelector('#community_admin_username');
+      usernameField.value = username || '';
       document.querySelector('#community_admin_email').value = email || '';
       const passwordField = document.querySelector('#community_admin_password');
       if (passwordField) {
@@ -37,6 +38,8 @@ document.addEventListener('DOMContentLoaded', function () {
         methodInput.setAttribute('value', 'patch');
 
         document.querySelector('.modal-title').innerHTML = 'Edit Community Admin';
+
+        usernameField.setAttribute('disabled', 'true');
       } else {
         // Create mode
         form.setAttribute('action', '/community_admins');

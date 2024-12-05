@@ -12,23 +12,17 @@ class CommunityAdminPostService < BaseService
   private
 
   def create_admin!
-    community = @community_admin.community
-    return unless community
-
-    avatar_file = community.avatar_image || ''
-    header_file = community.banner_image || ''
-
-    # Create or find account
-    admin = Account.where(username: @community_admin.username).first_or_initialize(
-      username: @community_admin.username,
+    admin = Account.find_or_initialize_by(username: @community_admin.username)
+    admin.assign_attributes(
       display_name: @community_admin.display_name,
-      avatar: avatar_file,
-      header: header_file,
-      note: community.description
+      avatar: @community.avatar_image || '',
+      header: @community.banner_image || '',
+      note: @community.description
     )
     admin.save!
 
     @community_admin.update(account_id: admin.id)
+
     user_attributes = {
       email: @community_admin.email,
       confirmed_at: Time.now.utc,
@@ -43,22 +37,19 @@ class CommunityAdminPostService < BaseService
       user_attributes[:password_confirmation] = @community_admin.password
     end
 
-    user_attributes.compact!
-
-    # Create or find user
-    user = User.where(email: @community_admin.email).first_or_initialize(user_attributes)
+    user = User.find_or_initialize_by(email: @community_admin.email)
+    user.assign_attributes(user_attributes.compact)
     user.save!
 
-    if @community_admin.role.in?(%w[UserAdmin])
+    if @community_admin.role == 'UserAdmin'
       @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
     end
 
-    # Link account with a cleanup policy
+    # Set account cleanup policy
     policy = AccountStatusesCleanupPolicy.find_or_initialize_by(account_id: admin.id)
     policy.assign_attributes(enabled: true, min_status_age: 1.week.seconds)
-
-    unless policy.save
-      Rails.logger.error "Failed to create or update policy: #{policy.errors.full_messages.join(', ')}"
-    end
+    policy.save!
+  rescue StandardError => e
+    Rails.logger.error "Error in CommunityAdminPostService: #{e.message}"
   end
 end
