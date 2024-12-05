@@ -15,7 +15,7 @@
               .row
                 .mt-auto
                   %p.text-muted.small Assign additional administrators to your channel by providing their details below.
-            - if master_admin?
+            - if master_admin? && @records.size < 1
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add New
