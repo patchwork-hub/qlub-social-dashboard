@@ -19,19 +19,19 @@
                 .row
                   .col.card.list-group-item
                     .form-check
-                      = f.check_box :posts, class: 'form-check-input type-of-post mr-2 my-2'
+                      = f.check_box :posts, class: 'form-check-input red-check-box mr-2 my-2'
                       = f.label :posts, 'Posts', class: 'form-check-label my-1'
 
                 .row
                   .col.card.list-group-item
                     .form-check
-                      = f.check_box :reposts, class: 'form-check-input type-of-post mr-2 my-2'
+                      = f.check_box :reposts, class: 'form-check-input red-check-box mr-2 my-2'
                       = f.label :reposts, 'Reposts', class: 'form-check-label my-1'
 
                 .row
                   .col.card.list-group-item
                     .form-check
-                      = f.check_box :replies, class: 'form-check-input type-of-post mr-2 my-2'
+                      = f.check_box :replies, class: 'form-check-input red-check-box mr-2 my-2'
                       = f.label :replies, 'Replies', class: 'form-check-label my-1'
 
                 = f.submit 'Save Changes', class: 'btn btn-sm btn-outline-secondary'
@@ -102,7 +102,7 @@
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step3_community_path } Back
-        - if has_user_admin_owner?(@community)
+        - if @community.channel_feed?
           .col-auto
             %button.btn.btn-block.btn-danger{type: "button", "data-target" => "#previewCommunityModal", "data-toggle" => "modal"} Save & Preview
         - else

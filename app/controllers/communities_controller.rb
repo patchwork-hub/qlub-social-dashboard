@@ -4,9 +4,15 @@ class CommunitiesController < BaseController
   before_action :initialize_form, only: %i[step1]
   before_action :set_current_step
   before_action :set_content_type, only: %i[step3 step4 step5]
-  before_action :set_api_credentials, only: %i[search_contributor step3_save step3_update_hashtag step3_delete_hashtag]
+  before_action :set_api_credentials, only: %i[search_contributor step3 step3_save step3_update_hashtag step3_delete_hashtag step4]
   before_action :fetch_community_admins, only: %i[step4 step6]
   PER_PAGE = 10
+
+  def index
+    @channel_type = params[:channel_type] || 'channel'
+    @records = records_filter.get.where(channel_type: @channel_type)
+    @search = records_filter.build_search
+  end
 
   def step1
     respond_to do |format|
@@ -17,7 +23,7 @@ class CommunitiesController < BaseController
   def step1_save
     id = form_params[:id].presence
     @community = CommunityPostService.new.call(
-      current_user.account,
+      current_user,
       id: id,
       name: form_params[:name],
       slug: form_params[:slug],
@@ -48,11 +54,9 @@ class CommunitiesController < BaseController
     @records = load_commu_hashtag_records
     @search = commu_hashtag_records_filter.build_search
     @community_hashtag_form = Form::CommunityHashtag.new
-    @community_admin = get_community_admin_id
     @follow_records = load_follow_records
-
-    respond_to do |format|
-      format.html
+    if @token.nil?
+      flash[:warning] = "To proceed with the search and follow action, please create a Boost Bot account first."
     end
   end
 
@@ -98,9 +102,8 @@ class CommunitiesController < BaseController
       patchwork_community_id: @community.id,
       account_id: admin_id
     )
-
-    respond_to do |format|
-      format.html
+    if @token.nil?
+      flash[:warning] = "To proceed with the search and mute action, please create a Boost Bot account first."
     end
   end
 
@@ -351,7 +354,7 @@ class CommunitiesController < BaseController
   end
 
   def get_community_admin_id
-    CommunityAdmin.where(patchwork_community_id: @community.id).pluck(:account_id).first
+    CommunityAdmin.where(patchwork_community_id: @community.id, is_boost_bot: true).pluck(:account_id).first
   end
 
   def get_muted_accounts
@@ -377,8 +380,10 @@ class CommunitiesController < BaseController
 
   def fetch_oauth_token
     admin = Account.where(id: get_community_admin_id).first
-    token_service = GenerateAdminAccessTokenService.new(admin.user.id)
-    token_service.call
+    if admin
+      token_service = GenerateAdminAccessTokenService.new(admin.user.id)
+      token_service.call
+    end
   end
 
   def perform_hashtag_action(hashtag_name, community_id = nil, action)

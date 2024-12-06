@@ -2,6 +2,15 @@ document.addEventListener('DOMContentLoaded', function () {
   var editButtons = document.querySelectorAll('[data-target="#communityAdminModal"]');
   var form = document.querySelector('#new_admin_form');
 
+  window.updateRoleField = function (checkbox) {
+    const roleField = document.querySelector('#community_admin_role');
+    if (checkbox.checked) {
+      roleField.value = 'OrganisationAdmin';
+    } else {
+      roleField.value = '';
+    }
+  };
+
   editButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       var adminId = this.getAttribute('data-admin-id');
@@ -10,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var email = this.getAttribute('data-email');
       var password = this.getAttribute('data-password');
       var role = this.getAttribute('data-role');
+      var isBoostBot = this.getAttribute('data-is-boost-bot') === 'true';
 
       // Populate the form fields
       document.querySelector('#community_admin_display_name').value = displayName || '';
@@ -20,7 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (passwordField) {
         passwordField.value = password || '';
       }
-      document.querySelector('#community_admin_role').value = role || '';
+      const roleField = document.querySelector('#community_admin_role');
+      roleField.value = role || '';
+
+      // Handle checkboxes based on attributes
+      document.querySelector('#is_organisation_admin').checked = role === 'OrganisationAdmin';
+      document.querySelector('#community_admin_is_boost_bot').checked = isBoostBot;
 
       if (adminId) {
         // Edit mode
@@ -50,6 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (methodInput) methodInput.remove();
 
         document.querySelector('.modal-title').innerHTML = 'Create Community Admin';
+
+        usernameField.removeAttribute('disabled');
       }
     });
   });

@@ -93,6 +93,8 @@ class Community < ApplicationRecord
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
+  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed' }
+
   def slug_uniqueness_within_accounts
     return unless slug.present?
 
