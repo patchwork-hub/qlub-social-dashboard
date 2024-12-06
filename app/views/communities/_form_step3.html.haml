@@ -16,7 +16,7 @@
               .row
                 .mt-auto
                   %p.text-muted.small At tincidunt ultrices auctor volutpat lectus.
-          - unless has_user_admin_owner?(@community)
+          - if @community.channel?
             .row
               .d-flex.align-items-center.justify-content-between.mb-2
                 %div

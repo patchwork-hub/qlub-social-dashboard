@@ -18,7 +18,8 @@ class ContentTypesController < ApplicationController
     community = Community.find_by(id: params[:content_type][:patchwork_community_id])
 
     if community
-      account = Account.find_by(id: community&.community_admins&.first&.account_id)
+      account = Account.find_by(id: community&.community_admins&.where(is_boost_bot: true)&.first&.account_id)
+
       if @content_type.group_channel?
         account.update(locked: true)
       else

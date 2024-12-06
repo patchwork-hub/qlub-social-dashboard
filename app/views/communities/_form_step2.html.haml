@@ -15,7 +15,7 @@
               .row
                 .mt-auto
                   %p.text-muted.small Assign additional administrators to your channel by providing their details below.
-            - if master_admin? && @records.size < 1
+            - if master_admin?
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add New
@@ -43,7 +43,7 @@
                   %td= community_admin.display_name
                   %td= community_admin.username
                   %td= community_admin.email
-                  %td= community_admin.role
+                  %td= community_admin.role.present? ? community_admin.role : 'Boost Bot'
                   %td
                     %a.text-danger{
                       href: "#",
@@ -54,7 +54,8 @@
                       "data-username": community_admin.username,
                       "data-email": community_admin.email,
                       "data-password": community_admin.password,
-                      "data-role": community_admin.role
+                      "data-role": community_admin.role,
+                      "data-is-boost-bot": community_admin.is_boost_bot.to_s
                     }
                       %i.fas.fa-edit
           .pagination.pagination-sm.m-0.float-right.mt-1

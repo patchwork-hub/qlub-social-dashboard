@@ -37,7 +37,7 @@ class CommunityAdminsController < ApplicationController
   private
 
   def community_admin_params
-    params.require(:community_admin).permit(:patchwork_community_id, :display_name, :username, :email, :password, :role)
+    params.require(:community_admin).permit(:patchwork_community_id, :display_name, :username, :email, :password, :is_boost_bot, :role)
   end
 
   def set_community!

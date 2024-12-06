@@ -3,16 +3,15 @@ class Filter::Community < Filter::Common
     @current_user = current_user
     super(params)
     @q = params[:q] || {}
+    @channel_type = params[:channel_type]
     @current_page = params[:page] || 1
     @per_page = 10
   end
 
   def get
-    paginated_scope
-  end
-
-  def paginated_scope
-    build_search.result.order(id: :desc).page(@current_page).per(@per_page)
+    scope = build_search.result.order(id: :desc)
+    scope = scope.where(channel_type: @channel_type) if @channel_type.present?
+    scope.page(@current_page).per(@per_page)
   end
 
   def build_search

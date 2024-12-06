@@ -7,7 +7,7 @@ class CommunityAdmin < ApplicationRecord
 
   ROLES = %w[OrganisationAdmin UserAdmin].freeze
 
-  validates :role, presence: true, inclusion: { in: ROLES }
+  validates :role, inclusion: { in: ROLES, message: "%{value} is not a valid role" }, allow_blank: true
 
   def self.ransackable_attributes(auth_object = nil)
     ["account_id", "created_at", "id", "id_value", "patchwork_community_id", "updated_at"]

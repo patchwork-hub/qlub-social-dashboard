@@ -1,7 +1,8 @@
 class CommunityPostService < BaseService
 
-  def call(account, options = {})
-    @account = account
+  def call(current_user, options = {})
+    @current_user = current_user
+    @account = @current_user.account
     @options = options
 
     if @options[:id].present?
@@ -26,35 +27,44 @@ class CommunityPostService < BaseService
   end
 
   def create_community
-    validate_collection
-    validate_community_type
-    validate_uniqueness(:name)
-    validate_uniqueness(:slug)
-    return @community if @community&.errors&.any?
+    ActiveRecord::Base.transaction do
+      validate_collection
+      validate_community_type
+      validate_uniqueness(:name)
+      validate_uniqueness(:slug)
+      return @community if @community&.errors&.any?
 
-    @community = @account.communities.new(community_attributes)
-    @community.save!
-    set_default_additional_information
+      @community = @account.communities.new(community_attributes)
+      @community.save!
+      set_default_additional_information
 
-    assign_admin_and_create_content_type
-    @community
+      if @current_user&.role&.name.in?(%w[UserAdmin])
+        assign_admin_and_create_content_type
+        @community.update(channel_type: 'channel_feed')
+      else
+        @community.update(channel_type: 'channel')
+      end
+      @community
+    end
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community creation failed: #{e.message}")
     @community
   end
 
   def update_community
-    @community = Community.find_by(id: @options[:id])
-    validate_collection
-    validate_community_type
-    validate_uniqueness(:name)
-    validate_uniqueness(:slug)
-    return @community if @community&.errors&.any?
-    set_default_additional_information
+    ActiveRecord::Base.transaction do
+      @community = Community.find_by(id: @options[:id])
+      validate_collection
+      validate_community_type
+      validate_uniqueness(:name)
+      validate_uniqueness(:slug)
+      return @community if @community&.errors&.any?
+      set_default_additional_information
 
-    @community.update!(community_attributes)
+      @community.update!(community_attributes)
 
-    @community
+      @community
+    end
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community update failed: #{e.message}")
     @community
@@ -89,11 +99,8 @@ class CommunityPostService < BaseService
   end
 
   def assign_admin_and_create_content_type
-    user = User.find_by(account_id: @account.id)
-    if user&.role&.name.in?(%w[UserAdmin])
-      @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: user.email, role: user&.role&.name)
-      @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
-    end
+    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: @current_user.email, role: @current_user&.role&.name, is_boost_bot: true)
+    @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
   end
 
   def community_attributes
