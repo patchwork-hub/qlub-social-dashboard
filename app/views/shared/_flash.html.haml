@@ -18,9 +18,3 @@
 							= m
 			%button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
 				%span{"aria-hidden" => "true"} ×
-
-	- if type == 'warning'
-		.alert.alert-warning.alert-dismissible.fade.show{role: "alert"}
-			= msg.html_safe
-			%button.close{"aria-label" => "Close", "data-dismiss" => "alert", type: "button"}
-				%span{"aria-hidden" => "true"} ×

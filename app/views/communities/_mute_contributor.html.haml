@@ -7,6 +7,10 @@
           = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
         %p.small Use the search functionality below to mute contributors from your channel.
+        - if @token.nil?
+          %p.small.red
+            %i.fa-solid.fa-triangle-exclamation
+            To proceed with the search and mute action, please enable or create a boost bot account.
         %button.btn.btn-outline-secondary{ type: "button" }
           Mute from shared list
           = image_tag("icons/pen-line.svg", class: "mb-1", width: "16", height: "16")
