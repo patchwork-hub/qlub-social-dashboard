@@ -55,9 +55,6 @@ class CommunitiesController < BaseController
     @search = commu_hashtag_records_filter.build_search
     @community_hashtag_form = Form::CommunityHashtag.new
     @follow_records = load_follow_records
-    if @token.nil?
-      flash[:warning] = "To proceed with the search and follow action, please create a Boost Bot account first."
-    end
   end
 
   def step3_save
@@ -102,9 +99,6 @@ class CommunitiesController < BaseController
       patchwork_community_id: @community.id,
       account_id: admin_id
     )
-    if @token.nil?
-      flash[:warning] = "To proceed with the search and mute action, please create a Boost Bot account first."
-    end
   end
 
   def step4_save
