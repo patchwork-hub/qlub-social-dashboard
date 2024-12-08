@@ -99,7 +99,7 @@ class CommunityPostService < BaseService
   end
 
   def assign_admin_and_create_content_type
-    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: @current_user.email, role: @current_user&.role&.name, is_boost_bot: true)
+    @community.community_admins.create(account_id: @account.id, username: @community.slug, display_name: @community.name, email: @current_user.email, role: @current_user&.role&.name, is_boost_bot: true)
     @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
   end
 

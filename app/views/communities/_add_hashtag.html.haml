@@ -10,7 +10,7 @@
         - if @token.nil?
           %p.small.red
             %i.fa-solid.fa-triangle-exclamation
-            To create hashtag, please enable or create a boost bot account.
+            To create hashtag, please enable boost bot.
         = simple_form_for @community_hashtag_form, url: step3_community_path do |form|
           = form.hidden_field :community_id, value: @community.id, id: 'community_id'
           .row
