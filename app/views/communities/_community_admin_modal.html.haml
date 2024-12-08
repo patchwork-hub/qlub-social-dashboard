@@ -10,10 +10,12 @@
         = simple_form_for @community_admin, url: (@community_admin.persisted? ? community_admin_path(@community_admin) : community_admins_path), method: (@community_admin.persisted? ? :patch : :post), html: { id: 'new_admin_form' } do |f|
           = f.hidden_field :community_id, value: @community.id
           = f.hidden_field :role, id: 'community_admin_role', value: @community_admin.role || ''
-          .row
-            .col-12.form-group
-              = f.label :channel_name
-              = f.text_field :channel, class: 'form-control', value: @community.name, disabled: true
+          .mb-3
+            = f.label :display_name, class: "form-label"
+            = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, disabled: true
+          .mb-3
+            = f.label :username, class: "form-label"
+            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug, disabled: true
           - if @community.channel?
             .row.mb-3
               .col
@@ -25,15 +27,9 @@
                   = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot', disabled: is_disable
                   = f.label :is_boost_bot, "Boost Bot", class: "form-check-label", for: 'community_admin_is_boost_bot'
           .mb-3
-            = f.label :display_name, class: "form-label"
-            = f.text_field :display_name, class: "form-control", id: "community_admin_display_name"
-          .mb-3
-            = f.label :username, class: "form-label"
-            = f.text_field :username, class: "form-control", id: "community_admin_username", disabled: is_disable
-          .mb-3
             = f.label :email, class: "form-label"
             = f.email_field :email, class: "form-control", id: "community_admin_email", disabled: is_disable
-          - if @community.channel? || master_admin?
+          - if @community.channel?
             .mb-3.form-group.position-relative.password
               = f.label :password, class: "form-label"
               = f.password_field :password, class: "form-control", id: "community_admin_password"
