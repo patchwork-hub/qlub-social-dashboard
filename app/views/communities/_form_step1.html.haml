@@ -52,11 +52,11 @@
 
           .row.mt-3
             - unless user_admin? || @community&.channel_feed?
-              .col-md-6
+              .col-md-8
                 %label{ for: "customFileAvatar", class: "form-label" } Logo
                 .row.avatar-image-upload-container.gap-1
                   .logo-upload-container
-                    .rounded-circle.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
+                    .rounded.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 256px; height: 144px; border: dotted; overflow: hidden;" }
                       - logo_image_url = @community_form.logo_image.present? && @community_form.logo_image.respond_to?(:url) ? @community_form.logo_image.url : ''
 
                       %img{ id: "currentlogo", src: logo_image_url, alt: "logo Preview", style: "display: #{logo_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
@@ -65,10 +65,10 @@
 
                   .logo-image-upload
                     %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFilelogo').click();" } Upload image
-                    %p.mt-4.text-muted.small SVG, PNG, JPG (max: 800x800px)
+                    %p.mt-4.text-muted.small SVG, PNG, JPG (max: 400x100px)
                 .logo-upload-errors.text-danger.mt-2{ id: "logoUploadErrors" }
 
-            .col-md-6
+            .col-md-4
               %label{ for: "customFileAvatar", class: "form-label" } Avatar
               .row.avatar-image-upload-container.gap-1
                 .avatar-upload-container
