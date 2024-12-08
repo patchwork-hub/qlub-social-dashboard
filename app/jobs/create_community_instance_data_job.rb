@@ -15,6 +15,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @additional_information = prepare_additional_information(community)
     @links = prepare_links(community)
     @header_image = community.banner_image.url
+    @logo_image = community.logo_image.url
     @contact_email = CommunityAdmin.where(patchwork_community_id: community_id).pluck(:email).first
     @channel_type = get_channel_type(community)
     payload = build_payload(community_id, community_slug)
@@ -89,6 +90,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       INFORMATION: @additional_information,
       LINKS: @links,
       HEADER_IMAGE: @header_image,
+      LOGO_IMAGE: @logo_image,
       SITE_CONTACT_EMAIL: @contact_email,
       DISPLAY_NAME: @display_name,
       MAIN_CHANNEL: "false",
