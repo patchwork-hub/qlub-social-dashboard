@@ -9,7 +9,7 @@ class CommunitiesController < BaseController
   PER_PAGE = 10
 
   def index
-    @channel_type = params[:channel_type] || 'channel'
+    @channel_type = params[:channel_type] || current_user.user_admin? ? 'channel_feed' : 'channel'
     @records = records_filter.get.where(channel_type: @channel_type)
     @search = records_filter.build_search
   end
