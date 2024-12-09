@@ -19,7 +19,12 @@ class CollectionsController < ApplicationController
       if @collection.save
         redirect_to collections_path, notice: 'Collection was successfully created.'
       else
-        #Rails.logger.error("Error creating collection: #{e.message}")
+        
+        if @collection.errors[:base].any? { |msg| msg.include?('aspect ratio') }
+          @collection.avatar_image = nil
+          @collection.banner_image = nil
+        end
+        
         flash.now[:error] = @collection.errors.full_messages
         render :new
       end
