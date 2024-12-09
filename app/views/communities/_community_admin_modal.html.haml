@@ -12,23 +12,23 @@
           = f.hidden_field :role, id: 'community_admin_role', value: @community_admin.role || ''
           .mb-3
             = f.label :display_name, class: "form-label"
-            = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, disabled: true
+            = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, readonly: true
           .mb-3
             = f.label :username, class: "form-label"
-            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.underscore, disabled: true
+            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.underscore, readonly: true
           - if @community.channel?
             .row.mb-3
               .col
                 .form-check
-                  = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', disabled: is_disable, onchange: "updateRoleField(this)"
+                  = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', readonly: is_disable, onchange: "updateRoleField(this)"
                   = f.label :role, "Organisation Admin", class: "form-check-label", for: 'is_organisation_admin'
               .col
                 .form-check
-                  = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot', disabled: is_disable
+                  = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot', readonly: is_disable
                   = f.label :is_boost_bot, "Boost Bot", class: "form-check-label", for: 'community_admin_is_boost_bot'
           .mb-3
             = f.label :email, class: "form-label"
-            = f.email_field :email, class: "form-control", id: "community_admin_email", disabled: is_disable
+            = f.email_field :email, class: "form-control", id: "community_admin_email", readonly: is_disable
           - if @community.channel?
             .mb-3.form-group.position-relative.password
               = f.label :password, class: "form-label"
