@@ -15,6 +15,14 @@ class User < ApplicationRecord
     role.name == 'MasterAdmin'
   end
 
+  def organisation_admin?
+    role.name == 'OrganisationAdmin'
+  end
+
+  def user_admin?
+    role.name == 'UserAdmin'
+  end
+
   def primary_community
     if community_users.any?
       cu = community_users.find_by(is_primary: true)
