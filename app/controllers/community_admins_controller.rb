@@ -14,7 +14,7 @@ class CommunityAdminsController < ApplicationController
       redirect_to step2_community_path(@community)
     else
       flash[:notice] = @community_admin.errors.full_messages.join(', ')
-      render :step2_community_path, status: :unprocessable_entity
+      render "communities/step2", status: :unprocessable_entity
     end
   end
 
@@ -30,7 +30,7 @@ class CommunityAdminsController < ApplicationController
       redirect_to step2_community_path(@community)
     else
       flash[:error] = @community_admin.errors.full_messages.join(', ')
-      render :step2_community_path, status: :unprocessable_entity
+      render "communities/step2", status: :unprocessable_entity
     end
   end
 
