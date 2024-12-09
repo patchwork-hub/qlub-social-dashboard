@@ -9,7 +9,7 @@ class CommunitiesController < BaseController
   PER_PAGE = 10
 
   def index
-    @channel_type = params[:channel_type] || current_user.user_admin? ? 'channel_feed' : 'channel'
+    @channel_type = params[:channel_type] || default_channel_type
     @records = records_filter.get.where(channel_type: @channel_type)
     @search = records_filter.build_search
   end
@@ -391,6 +391,10 @@ class CommunitiesController < BaseController
     service_class = action == :follow ? FollowHashtagService : UnfollowHashtagService
     result = service_class.new(@api_base_url, @token, hashtag[:name]).call
     puts result ? "Successfully #{action}ed ##{hashtag[:name]}" : "Failed to #{action} ##{hashtag[:name]}"
+  end
+
+  def default_channel_type
+    current_user.user_admin? ? 'channel_feed' : 'channel'
   end
 
   def set_current_step
