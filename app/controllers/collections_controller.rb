@@ -15,12 +15,14 @@ class CollectionsController < ApplicationController
   end
 
   def create
-    @collection = Collection.new(collection_params)
-    if @collection.save
-      redirect_to collections_path, notice: 'Collection was successfully created.'
-    else
-      render :new
-    end
+      @collection = Collection.new(collection_params)
+      if @collection.save
+        redirect_to collections_path, notice: 'Collection was successfully created.'
+      else
+        #Rails.logger.error("Error creating collection: #{e.message}")
+        flash.now[:error] = @collection.errors.full_messages
+        render :new
+      end
   end
 
   def edit
@@ -41,7 +43,7 @@ class CollectionsController < ApplicationController
   end
 
   def collection_params
-    params.require(:collection).permit(:name, :slug, :sorting_index)
+    params.require(:collection).permit(:name, :slug, :sorting_index, :banner_image, :avatar_image)
   end
 
   def authorize_master_admin!
