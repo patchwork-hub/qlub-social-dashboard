@@ -118,7 +118,7 @@ class Community < ApplicationRecord
   end
 
   def validate_logo_aspect_ratio
-    validate_image_aspect_ratio(logo_image, 4, 1, 'Logo image')
+    validate_image_aspect_ratio(logo_image, 3.6, 1, 'Logo image')
   end
 
   def validate_avatar_aspect_ratio
@@ -126,7 +126,7 @@ class Community < ApplicationRecord
   end
 
   def validate_banner_aspect_ratio
-    validate_image_aspect_ratio(banner_image, 9, 3, 'Banner image')
+    validate_image_aspect_ratio(banner_image, 3.6, 1, 'Banner image')
   end
 
   def validate_image_aspect_ratio(image, width_ratio, height_ratio, image_name)
