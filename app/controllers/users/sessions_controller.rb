@@ -40,8 +40,10 @@ class Users::SessionsController < Devise::SessionsController
   def after_sign_in_path_for(resource)
     if resource.master_admin?
       root_path
+    elsif resource.organisation_admin?
+      communities_path(channel_type: 'channel')
     else
-      communities_path
+      communities_path(channel_type: 'channel_feed')
     end
   end
 
@@ -56,7 +58,7 @@ class Users::SessionsController < Devise::SessionsController
 
       HTTParty.post(
         url,
-        body: { 
+        body: {
           token: token,
           client_id: "7Xn_TbJq9D5uWhT_sL9Te9yXAJ26UrxSlXtBoKT7rt0",
           client_secret: "5yf68rGhPsxPuSQd2RMHZ8tHV02GPIYOV5fT88V07o8"
