@@ -56,6 +56,7 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
+      p "IS CURRENT_USER USER_ADMIN: #{@current_user.user_admin?}"
       update_account_attributes if @current_user.user_admin?
       @community
     end
@@ -104,7 +105,9 @@ class CommunityPostService < BaseService
   end
 
   def update_account_attributes
-    @account.update(
+    p "START_UPDATING_ACCOUNT #{@community.slug.underscore}"
+
+    @account.update!(
       username: @community.slug.underscore,
       avatar: @community.avatar_image || '',
       header: @community.banner_image || ''
