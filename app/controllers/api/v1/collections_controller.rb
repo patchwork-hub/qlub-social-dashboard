@@ -3,7 +3,7 @@
 module Api
   module V1
     class CollectionsController < ApiController
-      skip_before_action :verify_key!, only: [:index]
+      skip_before_action :verify_key!, only: [:index, :show]
       before_action :set_collection, only: [:show]
 
       def index
@@ -27,7 +27,7 @@ module Api
       private
 
         def set_collection 
-          @collection = Collection.find_by(slug: params[:id])
+          @collection = Collection.find_by(id: params[:id])
         end
 
         def add_all_collection
