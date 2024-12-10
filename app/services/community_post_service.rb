@@ -58,6 +58,7 @@ class CommunityPostService < BaseService
       @community.update!(community_attributes)
       p "IS CURRENT_USER USER_ADMIN: #{@current_user.user_admin?}"
       update_account_attributes if @current_user.user_admin?
+      p "AFTER_UPDATING_ACCOUNT #{@account.username}"
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -108,6 +109,7 @@ class CommunityPostService < BaseService
     p "START_UPDATING_ACCOUNT #{@community.slug.underscore}"
 
     @account.update!(
+      display_name: @community.name,
       username: @community.slug.underscore,
       avatar: @community.avatar_image || '',
       header: @community.banner_image || ''
