@@ -32,7 +32,7 @@ class CommunityAdminPostService < BaseService
       approved: true
     }
 
-    unless @current_user&.role&.name.in?(%w[UserAdmin])
+    unless @current_user.user_admin?
       user_attributes[:password] = @community_admin.password
       user_attributes[:password_confirmation] = @community_admin.password
     end
