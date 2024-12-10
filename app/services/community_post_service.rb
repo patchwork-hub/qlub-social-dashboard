@@ -56,8 +56,8 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
-      p "IS CURRENT_USER USER_ADMIN: #{@current_user.user_admin?}"
-      update_account_attributes if @current_user.user_admin?
+      p "IS CURRENT_CHANNEL CHANNEL_FEED: #{@community.channel_feed?}"
+      update_account_attributes if @community.channel_feed?
       p "AFTER_UPDATING_ACCOUNT #{@account.username}"
       @community
     end
