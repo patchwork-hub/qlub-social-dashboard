@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_09_073701) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_10_031002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -984,6 +984,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_073701) do
     t.index ["patchwork_community_id"], name: "index_patchwork_joined_communities_on_patchwork_community_id"
   end
 
+  create_table "patchwork_notification_tokens", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "notification_token"
+    t.string "platform_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_patchwork_notification_tokens_on_account_id"
+  end
+
   create_table "patchwork_rules", force: :cascade do |t|
     t.text "description"
     t.datetime "created_at", null: false
@@ -1583,6 +1592,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_09_073701) do
   add_foreign_key "patchwork_content_types", "patchwork_communities", on_delete: :cascade
   add_foreign_key "patchwork_joined_communities", "accounts"
   add_foreign_key "patchwork_joined_communities", "patchwork_communities"
+  add_foreign_key "patchwork_notification_tokens", "accounts"
   add_foreign_key "poll_votes", "accounts", on_delete: :cascade
   add_foreign_key "poll_votes", "polls", on_delete: :cascade
   add_foreign_key "polls", "accounts", on_delete: :cascade
