@@ -37,13 +37,7 @@ class CommunityPostService < BaseService
       @community = @account.communities.new(community_attributes)
       @community.save!
       set_default_additional_information
-
-      if @current_user&.role&.name.in?(%w[UserAdmin])
-        assign_admin_and_create_content_type
-        @community.update(channel_type: 'channel_feed')
-      else
-        @community.update(channel_type: 'channel')
-      end
+      assign_roles_and_content_type
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -62,7 +56,7 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
-
+      update_account_attributes if @current_user.user_admin?
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -98,10 +92,43 @@ class CommunityPostService < BaseService
     end
   end
 
-  def assign_admin_and_create_content_type
-    @account.update(username: @community.slug.underscore)
-    @community.community_admins.create(account_id: @account.id, username: @account.username, display_name: @community.name, email: @current_user.email, role: @current_user&.role&.name, is_boost_bot: true)
-    @community.create_content_type(channel_type: 'custom_channel', custom_condition: 'OR') unless @community.content_type
+  def assign_roles_and_content_type
+    if @current_user.user_admin?
+      update_account_attributes
+      create_community_admin
+      create_default_content_type
+      @community.update(channel_type: 'channel_feed')
+    else
+      @community.update(channel_type: 'channel')
+    end
+  end
+
+  def update_account_attributes
+    @account.update(
+      username: @community.slug.underscore,
+      avatar: @community.avatar_image || '',
+      header: @community.banner_image || ''
+    )
+  end
+
+  def create_community_admin
+    @community.community_admins.create(
+      account_id: @account.id,
+      username: @account.username,
+      display_name: @community.name,
+      email: @current_user.email,
+      role: @current_user&.role&.name,
+      is_boost_bot: true
+    )
+  end
+
+  def create_default_content_type
+    return if @community.content_type.present?
+
+    @community.create_content_type(
+      channel_type: 'custom_channel',
+      custom_condition: 'OR'
+    )
   end
 
   def community_attributes
@@ -119,7 +146,7 @@ class CommunityPostService < BaseService
       patchwork_community_type_id: @community_type.id
     }
 
-    if @options[:id].nil? || !@community&.visibility&.present?
+    if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)
       attributes[:name] = @options[:name]
       attributes[:slug] = @options[:slug]
     end

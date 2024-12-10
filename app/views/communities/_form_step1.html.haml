@@ -12,7 +12,7 @@
               %h5.card-title Step 1 - Channel Information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme. Inline tooltips will help guide you through each field.
-          - is_read_only = params[:id].present? && Community.find_by_id(params[:id])&.visibility.present?
+          - is_read_only = params[:id].present? && (!current_user.user_admin? ? Community.find_by_id(params[:id])&.visibility.present? : true)
           .row
             .col-md-6.col-sm-12
               = f.input :name, label: "Display Name", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
