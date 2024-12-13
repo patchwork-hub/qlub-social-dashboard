@@ -58,23 +58,34 @@ class CommunitiesController < BaseController
   end
 
   def step3_save
-    perform_hashtag_action(community_hashtag_params[:hashtag].gsub('#', ''), community_hashtag_params[:community_id], :follow)
-    flash[:notice] = "Hashtag saved successfully!"
-    redirect_to step3_community_path
-  rescue CommunityHashtagPostService::InvalidHashtagError => e
-    flash[:error] = e.message
+    begin
+      perform_hashtag_action(community_hashtag_params[:hashtag].gsub('#', ''), community_hashtag_params[:community_id], :follow)
+      flash[:notice] = "Hashtag saved successfully!"
+    rescue CommunityHashtagPostService::InvalidHashtagError => e
+      flash[:error] = e.message
+    rescue ActiveRecord::RecordNotUnique => e
+      flash[:error] = "Duplicate entry: Hashtag already exists."
+    end
+
     redirect_to step3_community_path
   end
 
   def step3_update_hashtag
-    community_hashtag = CommunityHashtag.find(params[:form_community_hashtag][:hashtag_id])
+    begin
+      community_hashtag = CommunityHashtag.find(params[:form_community_hashtag][:hashtag_id])
 
-    perform_hashtag_action(community_hashtag.hashtag, nil, :unfollow)
+      perform_hashtag_action(community_hashtag.hashtag, nil, :unfollow)
 
-    community_hashtag.update!(hashtag: params[:form_community_hashtag][:hashtag].gsub('#', ''))
-    perform_hashtag_action(community_hashtag.hashtag, nil, :follow)
+      community_hashtag.update!(hashtag: params[:form_community_hashtag][:hashtag].gsub('#', ''))
+      perform_hashtag_action(community_hashtag.hashtag, nil, :follow)
 
-    flash[:notice] = "Hashtag updated successfully!"
+      flash[:notice] = "Hashtag updated successfully!"
+    rescue CommunityHashtagPostService::InvalidHashtagError => e
+      flash[:error] = e.message
+    rescue ActiveRecord::RecordNotUnique => e
+      flash[:error] = "Duplicate entry: Hashtag already exists."
+    end
+
     redirect_to step3_community_path
   end
 
