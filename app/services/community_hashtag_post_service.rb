@@ -19,7 +19,8 @@ class CommunityHashtagPostService < BaseService
   end
 
   def community_create_hashtag!
-    CommunityHashtag.find_or_create_by(community_hashtag_attribute)
+    hashtag = CommunityHashtag.find_or_initialize_by(community_hashtag_attribute)
+    hashtag.save!
   end
 
   def prepare_params!
