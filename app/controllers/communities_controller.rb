@@ -55,6 +55,12 @@ class CommunitiesController < BaseController
     @search = commu_hashtag_records_filter.build_search
     @community_hashtag_form = Form::CommunityHashtag.new
     @follow_records = load_follow_records
+    @filter_keywords = get_community_filter_keyword('filter_in')
+    @community_filter_keyword = CommunityFilterKeyword.new(
+      patchwork_community_id: @community.id,
+      account_id: get_community_admin_id,
+      filter_type: 'filter_in'
+    )
   end
 
   def step3_save
@@ -102,13 +108,14 @@ class CommunitiesController < BaseController
   end
 
   def step4
-    @filter_keywords = get_community_filter_keyword
-    admin_id = get_community_admin_id
     @muted_accounts = get_muted_accounts
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
+
+    @filter_keywords = get_community_filter_keyword('filter_out')
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: @community.id,
-      account_id: admin_id
+      account_id: get_community_admin_id,
+      filter_type: 'filter_out'
     )
   end
 
@@ -235,16 +242,14 @@ class CommunitiesController < BaseController
 
   def unmute_contributor
     target_account_id = params[:account_id]
-    admin_account_id = get_community_admin_id
-    Mute.find_by(account_id: admin_account_id, target_account_id: target_account_id)&.destroy
+    Mute.find_by(account_id: get_community_admin_id, target_account_id: target_account_id)&.destroy
 
     redirect_to step4_community_path
   end
 
   def is_muted
     target_account_id = params[:account_id]
-    admin_account_id = get_community_admin_id
-    is_muted = Mute.exists?(account_id: admin_account_id, target_account_id: target_account_id)
+    is_muted = Mute.exists?(account_id: get_community_admin_id, target_account_id: target_account_id)
 
     render json: { is_muted: is_muted }
   end
@@ -354,8 +359,8 @@ class CommunitiesController < BaseController
     Filter::CommunityHashtag.new(params)
   end
 
-  def get_community_filter_keyword
-    CommunityFilterKeyword.where(patchwork_community_id: @community.id).page(params[:page]).per(PER_PAGE)
+  def get_community_filter_keyword(filter_type)
+    CommunityFilterKeyword.where(patchwork_community_id: @community.id, filter_type: filter_type).page(params[:page]).per(PER_PAGE)
   end
 
   def get_community_admin_id

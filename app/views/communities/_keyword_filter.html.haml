@@ -11,6 +11,7 @@
         = simple_form_for @community_filter_keyword, url: '#', html: { method: '#', id: 'filter-form' } do |f|
           = f.hidden_field :patchwork_community_id
           = f.hidden_field :account_id
+          = f.hidden_field :filter_type
           .form-group.row
             .col-12
               = f.input :keyword, label: "Keyword", input_html: { placeholder: "Enter keyword here", id: 'keyword-input' }

@@ -75,22 +75,29 @@
         .card-body
           .row.d-flex.justify-content-between
             .col-md-9-auto
-              %label Keyword filtering
+              %label Keyword filtering (filter out)
               %p.text-muted.small Add keyword filters to prevent posts from the wider network which contain this keyword from appearing in the channel.
             .col-md-3-auto.mt-auto
               %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add New
           .table-responsive
-            %table.table.mt-3.table-striped
+            %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
+              %thead
+                %tr
+                  %th{ style: 'width: 45%;' } Name
+                  %th{ style: 'width: 45%;' } Is_hashtag
+                  %th
               %tbody
                 - if @filter_keywords.size == 0
                   %tr
-                    %td.text-center
+                    %td.text-center.text-center{ colspan: 3 }
                       %p.text-muted.small You haven’t added any keywords to this channel yet
                       %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal' }
                         Click here to add one
                 - @filter_keywords.each do |keyword|
                   %tr
-                    %td{ style: 'width: 90%;' }= keyword.keyword
+                    %td{ style: 'width: 45%;' }= keyword.keyword
+                    %td{ style: 'width: 45%;' }
+                      %i{ class: "fa-solid #{keyword.is_filter_hashtag ? 'fa-check' : 'fa-xmark'}", style: "color: #{keyword.is_filter_hashtag ? 'green' : 'red'}" }
                     %td
                       %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
                         %i.fas.fa-edit

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_10_031002) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_16_063620) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -874,7 +874,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_10_031002) do
     t.boolean "is_filter_hashtag", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "filter_type", default: "filter_out", null: false
     t.index ["account_id"], name: "index_patchwork_communities_filter_keywords_on_account_id"
+    t.index ["keyword", "is_filter_hashtag"], name: "idx_on_keyword_is_filter_hashtag_de4b77f0f4", unique: true
+    t.index ["keyword", "is_filter_hashtag"], name: "index_on_keyword_and_is_filter_hashtag", unique: true
     t.index ["patchwork_community_id"], name: "idx_on_patchwork_community_id_eadde3c87b"
   end
 
