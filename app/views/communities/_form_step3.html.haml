@@ -45,7 +45,7 @@
                   %span.ml-2
                     Group Channel
                   %span
-                    = render 'shared/tooltip_custom', tooltip_text: 'Group Channel', tooltip_position: 'left'
+                    = render 'shared/tooltip_custom', tooltip_text: 'The channel admin account will switch to follow-request mode.', tooltip_position: 'left'
           %hr
           .row
             .d-flex.align-items-center.justify-content-between.mb-2
@@ -171,6 +171,42 @@
                         %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
             .pagination.pagination-sm.m-0.float-right
               = paginate @follow_records, theme: 'bootstrap4'
+      #keyword-filters-section{ style: "display: none;" }
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col-md-9-auto
+                %label Keyword filtering (filter in)
+                %p.text-muted.small Add keyword filters to allow posts from the wider network which contain this keyword from appearing in the channel.
+              .col-md-3-auto.mt-auto
+                %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add New
+            .table-responsive
+              %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
+                %thead
+                  %tr
+                    %th{ style: 'width: 45%;' } Name
+                    %th{ style: 'width: 45%;' } Is_hashtag
+                    %th
+                %tbody
+                  - if @filter_keywords.size == 0
+                    %tr
+                      %td.text-center{ colspan: 3 }
+                        %p.text-muted.small You haven’t added any keywords to this channel yet
+                        %a.text-danger.small{ href: '#', title: 'Click here to add one', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal' }
+                          Click here to add one
+                  - @filter_keywords.each do |keyword|
+                    %tr
+                      %td{ style: 'width: 45%;' }= keyword.keyword
+                      %td{ style: 'width: 45%;' }
+                        %i{ class: "fa-solid #{keyword.is_filter_hashtag ? 'fa-check' : 'fa-xmark'}", style: "color: #{keyword.is_filter_hashtag ? 'green' : 'red'}" }
+                      %td
+                        %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
+                          %i.fas.fa-edit
+                      %td
+                        %a.text-danger{ href: community_filter_keyword_path(keyword, patchwork_community_id: @community.id, filter_type: keyword.filter_type), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
+                          %i.far.fa-trash-alt
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
           %a.btn.btn-outline-secondary{ href: step2_community_path } Back
@@ -182,3 +218,4 @@
 = render 'add_contributor'
 = render 'edit_hashtag'
 = render 'add_hashtag'
+= render 'keyword_filter'

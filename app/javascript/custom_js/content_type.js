@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nestedOptions: document.getElementById("nested-options"),
     hashtagsSection: document.getElementById("hashtags-section"),
     contributorsSection: document.getElementById("contributors-section"),
+    keywordFilterSection: document.getElementById("keyword-filters-section"),
     communityId: document.getElementById("community_id"),
   };
 
@@ -49,11 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const toggleVisibility = () => {
-    const { contributorOr, contributorAnd, hashtagsSection, contributorsSection } = elements;
+    const { contributorOr, contributorAnd, hashtagsSection, contributorsSection, keywordFilterSection } = elements;
     if (contributorOr && contributorAnd) {
       const isAnyChecked = contributorOr.checked || contributorAnd.checked;
       hashtagsSection.style.display = isAnyChecked ? "block" : "none";
       contributorsSection.style.display = isAnyChecked ? "block" : "none";
+      keywordFilterSection.style.display = isAnyChecked ? "block" : "none";
     }
   };
 
