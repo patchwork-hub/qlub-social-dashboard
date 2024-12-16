@@ -118,7 +118,7 @@ class Community < ApplicationRecord
   end
 
   def validate_logo_aspect_ratio
-    validate_image_aspect_ratio(logo_image, 3.6, 1, 'Logo image')
+    validate_image_aspect_ratio(logo_image, 3.6, 1, 'Logo image', allow_less_than_or_equal: true)
   end
 
   def validate_avatar_aspect_ratio
@@ -126,18 +126,24 @@ class Community < ApplicationRecord
   end
 
   def validate_banner_aspect_ratio
-    validate_image_aspect_ratio(banner_image, 3.6, 1, 'Banner image')
+    validate_image_aspect_ratio(banner_image, 3.6, 1, 'Banner image', allow_less_than_or_equal: true)
   end
 
-  def validate_image_aspect_ratio(image, width_ratio, height_ratio, image_name)
+  def validate_image_aspect_ratio(image, width_ratio, height_ratio, image_name, allow_less_than_or_equal: false)
     return unless image.present? && image.queued_for_write[:original].present?
 
     dimensions = Paperclip::Geometry.from_file(image.queued_for_write[:original])
     actual_ratio = dimensions.width.to_f / dimensions.height
     expected_ratio = width_ratio.to_f / height_ratio
 
-    unless (actual_ratio - expected_ratio).abs < 0.01
-      errors.add(:base, "#{image_name} must have an aspect ratio of #{width_ratio}:#{height_ratio}")
+    if allow_less_than_or_equal
+      if actual_ratio > expected_ratio
+        errors.add(:base, "#{image_name} must have an aspect ratio less than or equal to #{width_ratio}:#{height_ratio}")
+      end
+    else
+      unless (actual_ratio - expected_ratio).abs < 0.01
+        errors.add(:base, "#{image_name} must have an aspect ratio of #{width_ratio}:#{height_ratio}")
+      end
     end
   end
 end
