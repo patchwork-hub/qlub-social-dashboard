@@ -190,9 +190,6 @@ class CommunitiesController < BaseController
           format.js
         end
       end
-    else
-      flash[:error] = "No information to save!"
-      redirect_to step6_community_path and return
     end
   end
 
