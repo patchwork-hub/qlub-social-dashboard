@@ -15,7 +15,7 @@ class SearchHashtagService
 
     if response.success?
       hashtag = response['hashtags'].first
-      hashtag ? { name: hashtag['name'] } : nil
+      hashtag ? { name: hashtag['name'] } : Tag.create(name: @query, display_name: @query)
     else
       nil
     end
