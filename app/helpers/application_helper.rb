@@ -44,7 +44,8 @@ module ApplicationHelper
   end
 
   def carousel_indicators(current_step, community)
-    total_steps = @community&.channel_feed? ? 4 : 6
+    # total_steps = @community&.channel_feed? ? 4 : 6
+    total_steps = @community&.channel_feed? ? 4 : 5
     content_tag(:ol, class: 'carousel-indicators') do
       (1..total_steps).map do |step|
         css_class = step <= current_step ? 'bg-danger active' : 'bg-secondary'

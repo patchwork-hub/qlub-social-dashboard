@@ -28,7 +28,8 @@
     .col-md-12
       .card
         .card-header
-          %h3.card-title Step 6 - Additional information
+          -# %h3.card-title Step 6 - Additional information
+          %h3.card-title Step 5 - Additional information
         .card-body
           .row
             .col
@@ -76,7 +77,7 @@
               .col.text-right
                 = link_to_add_association 'Add Information', form, :patchwork_community_additional_informations, data: { association_insertion_node: '.patchwork_community_additional_informations', association_insertion_method: :append }, class: 'text-danger small'
 
-    .row.mt-3
+    .row
       .col-md-12
         .card
           .card-body
@@ -102,7 +103,8 @@
 
     .row.d-flex.justify-content-between
       .col
-        %a.btn.btn-outline-secondary{ href: step5_community_path } Back
+        -# %a.btn.btn-outline-secondary{ href: step5_community_path } Back
+        %a.btn.btn-outline-secondary{ href: step4_community_path } Back
       .col-auto
         %button.btn.btn-danger#save-and-preview-btn Save & Preview
 
