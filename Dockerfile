@@ -57,7 +57,7 @@ WORKDIR $app_path
 
 RUN echo "install: --no-document" > $HOME/.gemrc && echo "update: --no-document" >> $HOME/.gemrc
 COPY Gemfile* ./
-RUN gem install bundler
+RUN gem install bundler -v 2.3.25 
 RUN bundle config set --local deployment 'true'
 RUN bundle config set --local without 'development test'
 RUN bundle install --jobs 4
