@@ -71,4 +71,5 @@
 
             .modal-footer
               %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
-              = form.submit 'Create channel', id: 'create-community-submit', class: 'btn btn-danger'
+              - button_label = @community.visibility.present? ? 'Update Channel' : 'Create Channel'
+              = form.submit button_label, id: 'create-community-submit', class: 'btn btn-danger'

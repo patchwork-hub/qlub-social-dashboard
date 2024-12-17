@@ -56,9 +56,7 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
-      p "IS CURRENT_CHANNEL CHANNEL_FEED: #{@community.channel_feed?}"
       update_account_attributes if @community.channel_feed?
-      p "AFTER_UPDATING_ACCOUNT #{@account.username}"
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -80,15 +78,16 @@ class CommunityPostService < BaseService
     additional_info = @community.patchwork_community_additional_informations.first
 
     if @options[:bio].present?
+      bio = strip_tags(@options[:bio])
       if additional_info.nil?
         @community.patchwork_community_additional_informations.create(
           heading: "Additional Information",
-          text: @options[:bio]
+          text: bio
         )
-      elsif additional_info.text != @options[:bio]
+      elsif additional_info.text != bio
         additional_info.update(
           heading: "Additional Information",
-          text: @options[:bio]
+          text: bio
         )
       end
     end

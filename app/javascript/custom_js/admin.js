@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         methodInput.setAttribute('value', 'patch');
 
-        document.querySelector('.modal-title').innerHTML = 'Edit Community Admin';
+        document.querySelector('.modal-title').innerHTML = 'Edit channel admin';
       } else {
         // Create mode
         form.setAttribute('action', '/community_admins');
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let methodInput = document.querySelector('input[name="_method"]');
         if (methodInput) methodInput.remove();
 
-        document.querySelector('.modal-title').innerHTML = 'Create Community Admin';
+        document.querySelector('.modal-title').innerHTML = 'Create channel admin';
       }
     });
   });
