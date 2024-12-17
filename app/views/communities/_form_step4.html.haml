@@ -114,7 +114,8 @@
             %button.btn.btn-block.btn-danger{type: "button", "data-target" => "#previewCommunityModal", "data-toggle" => "modal"} Save & Preview
         - else
           .col-auto
-            %a.btn.btn-danger{ href: step5_community_path } Continue
+            -# %a.btn.btn-danger{ href: step5_community_path } Continue
+            %a.btn.btn-danger{ href: step6_community_path } Continue
 
 = render 'mute_contributor'
 = render 'keyword_filter'
