@@ -36,15 +36,6 @@ $(document).ready(function () {
     });
   });
 
-  const element = document.getElementById("community_bio");
-  if (element) {
-    ClassicEditor.create(element, {
-      toolbar: ["bold", "italic", "link"],
-    }).catch((error) => {
-      console.error(error);
-    });
-  }
-
   const admin_note = document.getElementById("master_admin_note");
   if (admin_note) {
     ClassicEditor.create(admin_note, {
