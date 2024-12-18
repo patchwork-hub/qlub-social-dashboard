@@ -28,4 +28,4 @@
                 %td= UserRole.find_by(id: master_admin&.role_id).name
                 %td
                   %a{ href: edit_master_admin_path(master_admin.user_id), title: 'Edit' }
-                    %i.fa-solid.fa-edit.ml-2{ style: "color: red;" }
+                    = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
