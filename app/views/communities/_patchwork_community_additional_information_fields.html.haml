@@ -5,4 +5,4 @@
     = f.text_field :text, class: 'form-control', placeholder: "Enter text"
   %td{ style: 'width: 5%;' }
     = link_to_remove_association f, class: 'text-danger', title: "Remove" do
-      %i.far.fa-trash-alt
+      = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")

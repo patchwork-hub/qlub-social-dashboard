@@ -7,6 +7,10 @@
           = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
         %p.text-muted.small Add a new keyword filter for this channel using the form below. This will prevent posts from the wider network which contain this keyword as a hashtag or plain text from appearing in the channel.
+        - if @token.nil?
+          %p.small.red
+            = image_tag("icons/exclamation-triangle.svg", class: "ml-2", width: "16", height: "16")
+            To create keyword, please enable boost bot.
         = simple_form_for @community_filter_keyword, url: '#', html: { method: '#', id: 'filter-form' } do |f|
           = f.hidden_field :patchwork_community_id
           = f.hidden_field :account_id

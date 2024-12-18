@@ -91,11 +91,11 @@
                     %td{ style: 'width: 90%;' }
                       %p= record.hashtag
                     %td
-                      %a.text-danger{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'}
-                        %i.fas.fa-edit
+                      %a{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'}
+                        = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
                     %td
                       = link_to step5_delete_community_path(@community, post_hashtag_id: record.id), method: :post, class: 'text-danger', data: { confirm: 'Are you sure?' } do
-                        %i.far.fa-trash-alt
+                        = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
 
           .btn-group
             %button.btn.btn-default{type: "button"} Action

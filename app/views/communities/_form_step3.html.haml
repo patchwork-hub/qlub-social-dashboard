@@ -127,11 +127,11 @@
                       %td{ style: 'width: 90%;' }
                         = "##{community_hashtag.hashtag}"
                         %td
-                          %a.text-danger{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
-                            %i.fas.fa-edit
+                          %a{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
+                            = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
                         %td
                           = link_to step3_delete_hashtag_community_path(id: @community.id, community_hashtag_id: community_hashtag.id), method: :post, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow' do
-                            %i.far.fa-trash-alt
+                            = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
             .pagination.pagination-sm.m-0.float-right
               = paginate @records, theme: 'bootstrap4'
       #contributors-section{ style: "display: none;" }
@@ -197,11 +197,11 @@
                     %tr
                       %td{ style: 'width: 90%;' }= keyword.keyword
                       %td
-                        %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
-                          %i.fas.fa-edit
+                        %a{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
+                          = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
                       %td
                         %a.text-danger{ href: community_filter_keyword_path(keyword, patchwork_community_id: @community.id, filter_type: keyword.filter_type), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
-                          %i.far.fa-trash-alt
+                          = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
             .pagination.pagination-sm.m-0.float-right
               = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
