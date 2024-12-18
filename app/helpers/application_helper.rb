@@ -54,6 +54,15 @@ module ApplicationHelper
     end
   end
 
+  def get_my_server
+    if master_admin?
+      ENV.fetch('MASTODON_INSTANCE_URL', '#')
+    else
+      username = current_user&.account&.username
+      username ? "https://#{username.dasherize}.channel.org" : '#'
+    end
+  end
+
   def master_admin?
     current_user && policy(current_user).master_admin?
   end

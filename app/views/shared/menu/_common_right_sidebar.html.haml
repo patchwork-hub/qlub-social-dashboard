@@ -10,7 +10,10 @@
     %br/
     %i.fa-solid.fa-check.text-red
     %span.text-light Install plug-in patches
-    %a.btn.btn-danger.mt-3{ href: (ENV['MASTODON_INSTANCE_URL'].present? ? ENV['MASTODON_INSTANCE_URL'] : '#'), target: '_blank' } Go to your server
+    - if user_admin?
+      %a.btn.btn-danger.mt-3{ href: "#"} Go to your server
+    - else
+      %a.btn.btn-danger.mt-3{ href: "#{get_my_server}", target: '_blank' } Go to your server
 - if master_admin?
   .card.mt-3
     .card-header
