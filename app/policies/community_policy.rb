@@ -79,10 +79,6 @@ class CommunityPolicy < ApplicationPolicy
     step5?
   end
 
-  def set_visibility?
-    step5?
-  end
-
   private
 
   def user_has_access_to_community?
