@@ -95,6 +95,8 @@ class Community < ApplicationRecord
       .order('patchwork_community_types.sorting_index ASC')
   }
 
+  scope :ordered_pos_name, -> { order('patchwork_communities.position ASC, patchwork_communities.name ASC') }
+
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed' }
