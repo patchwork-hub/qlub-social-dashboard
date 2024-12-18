@@ -10,9 +10,7 @@
     %br/
     %i.fa-solid.fa-check.text-red
     %span.text-light Install plug-in patches
-    - if user_admin?
-      %a.btn.btn-danger.mt-3{ href: "#"} Go to your server
-    - else
+    - unless user_admin?
       %a.btn.btn-danger.mt-3{ href: "#{get_my_server}", target: '_blank' } Go to your server
 - if master_admin?
   .card.mt-3
