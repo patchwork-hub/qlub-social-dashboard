@@ -29,8 +29,14 @@ document.addEventListener('DOMContentLoaded', function () {
       roleField.value = role || '';
 
       // Handle checkboxes based on attributes
-      document.querySelector('#is_organisation_admin').checked = role === 'OrganisationAdmin';
-      document.querySelector('#community_admin_is_boost_bot').checked = isBoostBot;
+      const isOrganisationAdminExists = document.querySelector('#is_organisation_admin') !== null;
+      if (isOrganisationAdminExists) {
+        document.querySelector('#is_organisation_admin').checked = role === 'OrganisationAdmin';
+      }
+      const isBoostBotExists =  document.querySelector('#community_admin_is_boost_bot') !== null;
+      if (isBoostBotExists) {
+        document.querySelector('#community_admin_is_boost_bot').checked = isBoostBot;
+      }
 
       if (adminId) {
         // Edit mode
