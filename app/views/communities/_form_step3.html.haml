@@ -28,9 +28,9 @@
                       %span.slider-cross
                         %i.fa-solid.fa-xmark
                   %span.ml-2
-                    Broadcast Channel
+                    Broadcast channel
                   %span
-                    = render 'shared/tooltip_custom', tooltip_text: 'Broadcast Channel', tooltip_position: 'left'
+                    = render 'shared/tooltip_custom', tooltip_text: 'Broadcast channel', tooltip_position: 'left'
             %hr
             .row
               .d-flex.align-items-center.justify-content-between.mb-2
@@ -43,7 +43,7 @@
                       %span.slider-cross
                         %i.fa-solid.fa-xmark
                   %span.ml-2
-                    Group Channel
+                    Group channel
                   %span
                     = render 'shared/tooltip_custom', tooltip_text: 'The channel admin account will switch to follow-request mode.', tooltip_position: 'left'
           %hr
@@ -58,16 +58,16 @@
                     %span.slider-cross
                       %i.fa-solid.fa-xmark
                 %span.ml-2
-                  Custom Channel
+                  Custom channel
                 %span
-                  = render 'shared/tooltip_custom', tooltip_text: 'Custom Channel', tooltip_position: 'left'
+                  = render 'shared/tooltip_custom', tooltip_text: 'Custom channel', tooltip_position: 'left'
 
           .collapse#nested-options
             .nested-options.mt-2.ml-2
               .row
                 .col
                   .form-check
-                    = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
+                    = image_tag("icons/diagram-nested.svg", alt: "Nested diagram icon", class: "mr-2", width: "16", height: "16")
                     %label.form-check-label.switch
                       %input.form-check-input.switch-input#contributor_or{ type: 'checkbox', checked: @content_type&.or_condition? }
                       %span.switch-slider.round
@@ -76,12 +76,12 @@
                         %span.slider-cross
                           %i.fa-solid.fa-xmark
                     %span.ml-2
-                      Contributors OR Hashtags
+                      Contributors or hashtags
               %hr
               .row.mt-2
                 .col
                   .form-check
-                    = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
+                    = image_tag("icons/diagram-nested.svg", alt: "nested diagram icon", class: "mr-2", width: "16", height: "16")
                     %label.form-check-label.switch
                       %input.form-check-input.switch-input#contributor_and{ type: 'checkbox', checked: @content_type&.and_condition? }
                       %span.switch-slider.round
@@ -90,7 +90,7 @@
                         %span.slider-cross
                           %i.fa-solid.fa-xmark
                     %span.ml-2
-                      Contributors AND Hashtags
+                      Contributors and hashtags
 
       #hashtags-section{ style: "display: none;" }
         .card
@@ -104,7 +104,7 @@
                     %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your channel.
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add New
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add new
             .table-responsive
               %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
                 %thead
@@ -150,7 +150,7 @@
                   = "Your channel contributors (#{@follow_records.present? ? @follow_records.size : 0})"
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-outline-secondary{title: 'Add a contributor', "data-toggle" => "modal", "data-target" => "#addContributorModal"} Add New
+                  %button.btn.btn-outline-secondary{title: 'Add a contributor', "data-toggle" => "modal", "data-target" => "#addContributorModal"} Add new
             .table-responsive
               %table.table.mt-3.table-striped
                 %tbody
@@ -179,7 +179,7 @@
                 %label Keyword filtering (filter in)
                 %p.text-muted.small Add keyword filters to allow posts from the wider network which contain this keyword from appearing in the channel.
               .col-md-3-auto.mt-auto
-                %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add New
+                %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add new
             .table-responsive
               %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
                 %thead
