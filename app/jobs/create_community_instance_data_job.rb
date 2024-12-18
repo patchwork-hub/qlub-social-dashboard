@@ -47,8 +47,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   end
 
   def prepare_rules(community)
-    Rule.where(id: community.patchwork_community_rules.pluck(:patchwork_rules_id)).each_with_object({}) do |rule, hash|
-      hash[rule.id] = rule.description
+    CommunityRule.where(patchwork_community_id: community.id).each_with_object({}) do |rule, hash|
+      hash[rule.id] = rule.rule
     end
   end
 

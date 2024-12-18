@@ -1,0 +1,17 @@
+- f.options[:child_index] ||= 0
+- @index_counter ||= -1
+- @index_counter += 1
+
+%tr.nested-fields
+  %td{ style: 'width: 5%;', class: 'text-center' }
+    .position-relative.d-inline-block
+      %i.fas.fa-circle.fa-2x.text-blue
+      - if f.object.new_record?
+        %span.position-absolute.index-text New
+      - else
+        %span.position-absolute.index-text= @index_counter + 1
+  %td{ style: 'width: 90%;' }
+    = f.input :rule, label: false, wrapper: false, input_html: { class: 'form-control' }
+  %td{ style: 'width: 5%;', class: 'text-center' }
+    = link_to_remove_association f, class: 'text-danger', title: "Remove" do
+      %i.far.fa-trash-alt

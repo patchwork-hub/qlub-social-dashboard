@@ -166,15 +166,7 @@ class CommunitiesController < BaseController
 
   def step6
     authorize @community, :step6?
-    @rule_from = Form::CommunityRule.new
-    @rule_records = CommunityRule.where(patchwork_community_id: @community.id)
     @admin = Account.where(id: get_community_admin_id).first
-  end
-
-  def step6_rule_create
-    authorize @community, :step6_rule_create?
-    CommunityRuleService.new.call(params[:form_community_rule])
-    redirect_to step6_community_path
   end
 
   def manage_additional_information
@@ -301,7 +293,8 @@ class CommunitiesController < BaseController
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
-      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy]
+      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy],
+      patchwork_community_rules_attributes: [:id, :rule, :_destroy]
     )
   end
 
