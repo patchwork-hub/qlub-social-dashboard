@@ -48,7 +48,8 @@
                   %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this channel as collections help users find channels their interested in more easily.
           .row
             .col-md-12
-              = f.text_area :bio, as: :text, label: 'Bio', input_html: { class: "form-control" }
+              = f.label :bio, 'Bio'
+              = f.text_area :bio, class: "form-control"
 
           .row.mt-3.pl-1
             - unless user_admin? || @community&.channel_feed?

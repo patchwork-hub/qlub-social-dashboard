@@ -9,7 +9,7 @@
         %p.small Use the search functionality below to add contributors to your channel.
         - if @token.nil?
           %p.small.red
-            %i.fa-solid.fa-triangle-exclamation
+            = image_tag("icons/exclamation-triangle.svg", class: "ml-2", width: "16", height: "16")
             To proceed with the search and follow action, please enable boost bot.
         %button.btn.btn-outline-secondary{ type: "button" }
           Add from shared list

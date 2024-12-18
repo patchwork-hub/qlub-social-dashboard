@@ -45,7 +45,7 @@
                   %td= community_admin.email
                   %td= community_admin.role.present? ? "#{community_admin.role}#{' | BoostBot' if community_admin.is_boost_bot?}" : community_admin.is_boost_bot? ? 'BoostBot' : ''
                   %td
-                    %a.text-danger{
+                    %a{
                       href: "#",
                       "data-target" => "#communityAdminModal",
                       "data-toggle" => "modal",
@@ -57,7 +57,7 @@
                       "data-role": community_admin.role,
                       "data-is-boost-bot": community_admin.is_boost_bot.to_s
                     }
-                      %i.fas.fa-edit
+                      = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
           .pagination.pagination-sm.m-0.float-right.mt-1
             = paginate @records, theme: 'bootstrap4'
       .row.d-flex.justify-content-between

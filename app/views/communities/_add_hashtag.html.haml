@@ -9,7 +9,7 @@
         %p.text-muted.small Add a channel hashtag using the form below. Every post on this hashtag will appear in the channel. This allows channel members to post to the channel even when they’re somewhere else in the network.
         - if @token.nil?
           %p.small.red
-            %i.fa-solid.fa-triangle-exclamation
+            = image_tag("icons/exclamation-triangle.svg", class: "ml-2", width: "16", height: "16")
             To create hashtag, please enable boost bot.
         = simple_form_for @community_hashtag_form, url: step3_community_path do |form|
           = form.hidden_field :community_id, value: @community.id, id: 'community_id'

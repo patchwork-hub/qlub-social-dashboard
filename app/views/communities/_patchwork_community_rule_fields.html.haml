@@ -14,4 +14,4 @@
     = f.input :rule, label: false, wrapper: false, input_html: { class: 'form-control' }
   %td{ style: 'width: 5%;', class: 'text-center' }
     = link_to_remove_association f, class: 'text-danger', title: "Remove" do
-      %i.far.fa-trash-alt
+      = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
