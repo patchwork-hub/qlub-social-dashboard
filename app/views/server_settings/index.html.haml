@@ -82,10 +82,10 @@
                                 = sub_option[:name]
                             %div
                               %a{ href: keyword_filter_group_path(sub_option[:id]), title: 'Edit' }
-                                %i.fa-solid.fa-edit.ml-2{ style: "color: red;" }
+                                = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
                               - if sub_option[:is_custom]
                                 %a{ href: keyword_filter_group_path(sub_option[:id]), method: :delete, data: { confirm: 'Are you sure?' }, title: 'Delete', rel: 'nofollow', 'data-method': 'delete' }
-                                  %i.fa-solid.fa-trash.ml-2{ style: "color: red;" }
+                                  = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
                           - unless sub_option_index == option[:keyword_filter_groups].size - 1
                             %hr
                 - else
@@ -131,7 +131,7 @@
                             Maximum Characters:
                             = option[:optional_value].presence || "Not Set"
                             %a{ href: '#', title: 'Long posts and Markdown', 'data-toggle': 'modal', 'data-setting-id': option[:id], 'data-optional-value': option[:optional_value], 'data-target': '#maxCharsModal', onclick: "handleEditClick(this)" }
-                              %i.fa-solid.fa-edit.ml-2{ style: "color: grey;" }
+                              = image_tag("icons/edit-btn.svg", class: "mb-1", width: "13", height: "13")
                       %br
                       - case option[:name]
                       - when 'Sign up challenge'
