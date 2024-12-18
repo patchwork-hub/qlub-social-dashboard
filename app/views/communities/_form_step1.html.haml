@@ -9,20 +9,20 @@
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step 1 - Channel Information
+              %h5.card-title Step 1 - Channel information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme. Inline tooltips will help guide you through each field.
           - is_read_only = params[:id].present? && (!current_user.user_admin? ? Community.find_by_id(params[:id])&.visibility.present? : true)
           .row
             .col-md-6.col-sm-12
-              = f.input :name, label: "Display Name", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
+              = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
               %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
             .col-md-6.col-sm-12
               = f.input :slug, label: "Slug", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
               %p.text-muted.small This will be the channel’s slug. Once your channel is created, you will not be able to change this.
           .row
             .col-md-6.col-sm-12
-              = f.input :community_type_id, label: 'Community Type', as: :select, collection: CommunityType.all.collect { |type| [type.name, type.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a community type" } }
+              = f.input :community_type_id, label: 'Community type', as: :select, collection: CommunityType.all.collect { |type| [type.name, type.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a community type" } }
               %p.text-muted.small Use this field to select the community type that this channel will belong to.
             .col-md-6.col-sm-12
               = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
@@ -86,7 +86,7 @@
 
           .row.mt-3
             .col-md-12
-              %label{ for: "customFile", class: "form-label" } Banner Image
+              %label{ for: "customFile", class: "form-label" } Banner image
               .dropzone.p-5.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;", id: "bannerDropzone" }
                 = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentBanner", 'data-error-id': "bannerUploadErrors", 'data-max-size': 5 }
                 - banner_image_url = @community_form.banner_image.present? && @community_form.banner_image.respond_to?(:url) ? @community_form.banner_image.url : ''

@@ -6,7 +6,7 @@
     .col-md-12
       .card
         .card-header
-          %h3.card-title Step 2 - Admin Details
+          %h3.card-title Step 2 - Admin details
         .card-body
           .row.d-flex.justify-content-between
             .col-auto
@@ -18,7 +18,7 @@
             - if @community.channel? && @records.size == 0
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add New
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add new
           %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
             %thead
               %tr

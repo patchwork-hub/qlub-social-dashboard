@@ -29,14 +29,14 @@
 
             .row
               .col.text-right
-                = link_to_add_association 'Add Rule', form, :patchwork_community_rules, class: 'text-danger small', data: { association_insertion_node: '.patchwork_community_rules', association_insertion_method: :append }
+                = link_to_add_association 'Add another', form, :patchwork_community_rules, class: 'text-danger small', data: { association_insertion_node: '.patchwork_community_rules', association_insertion_method: :append }
     .row
       .col-md-12
         .card
           .card-body
             .row.d-flex.justify-content-between
               .col-md-9-auto
-                %label Additional Information
+                %label Additional information
                 %p.text-muted.small Provide any additional information relevant to this channel.
 
             .table-responsive
@@ -52,7 +52,7 @@
 
             .row
               .col.text-right
-                = link_to_add_association 'Add Information', form, :patchwork_community_additional_informations, data: { association_insertion_node: '.patchwork_community_additional_informations', association_insertion_method: :append }, class: 'text-danger small'
+                = link_to_add_association 'Add another', form, :patchwork_community_additional_informations, data: { association_insertion_node: '.patchwork_community_additional_informations', association_insertion_method: :append }, class: 'text-danger small'
 
     .row
       .col-md-12
@@ -76,7 +76,7 @@
 
             .row
               .col.text-right
-                = link_to_add_association 'Add Link', form, :patchwork_community_links, data: { association_insertion_node: '.patchwork_community_links', association_insertion_method: :append }, class: 'text-danger small'
+                = link_to_add_association 'Add another', form, :patchwork_community_links, data: { association_insertion_node: '.patchwork_community_links', association_insertion_method: :append }, class: 'text-danger small'
 
     .row.d-flex.justify-content-between
       .col
