@@ -4,5 +4,5 @@ class CommunityFilterKeyword < ApplicationRecord
   validates :keyword, presence: true
   FILTER_TYPES = %w[filter_in filter_out].freeze
   validates :filter_type, presence: true, inclusion: { in: FILTER_TYPES }
-  validates_uniqueness_of :keyword, scope: :is_filter_hashtag, message: "already exists."
+  validates_uniqueness_of :keyword, scope: [:is_filter_hashtag, :patchwork_community_id], message: "already exists."
 end

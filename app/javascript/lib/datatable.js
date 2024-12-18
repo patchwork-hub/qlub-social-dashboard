@@ -208,14 +208,18 @@ jQuery(function() {
       form.find('input[name="_method"]').val('patch');
       form.attr('action', `/community_filter_keywords/${keywordId}`);
       keywordInput.val(keyword);
-      isFilterHashtagInput.prop('checked', isFilterHashtag == true);
+      if (isFilterHashtagInput) {
+        isFilterHashtagInput.prop('checked', isFilterHashtag == true);
+      }
     } else {
       // Adding new keyword filter
       modalTitle.text('Add keyword filtering');
       form.attr('action', '/community_filter_keywords');
       form.find('input[name="_method"]').val('post');
       keywordInput.val('');
-      isFilterHashtagInput.prop('checked', false);
+      if (isFilterHashtagInput) {
+        isFilterHashtagInput.prop('checked', false);
+      }
     }
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
     form.append(`<input type="hidden" name="authenticity_token" value="${csrfToken}">`);

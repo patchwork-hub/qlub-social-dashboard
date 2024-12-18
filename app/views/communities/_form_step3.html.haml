@@ -185,7 +185,6 @@
                 %thead
                   %tr
                     %th{ style: 'width: 45%;' } Name
-                    %th{ style: 'width: 45%;' } Is_hashtag
                     %th
                 %tbody
                   - if @filter_keywords.size == 0
@@ -196,9 +195,7 @@
                           Click here to add one
                   - @filter_keywords.each do |keyword|
                     %tr
-                      %td{ style: 'width: 45%;' }= keyword.keyword
-                      %td{ style: 'width: 45%;' }
-                        %i{ class: "fa-solid #{keyword.is_filter_hashtag ? 'fa-check' : 'fa-xmark'}", style: "color: #{keyword.is_filter_hashtag ? 'green' : 'red'}" }
+                      %td{ style: 'width: 90%;' }= keyword.keyword
                       %td
                         %a.text-danger{ href: '#', title: 'Edit keyword filtering', 'data-toggle': 'modal', 'data-target': '#CommunityFilterModal', 'data-id': keyword.id, 'data-is-filter-hashtag': keyword.is_filter_hashtag.to_s, 'data-keyword': keyword.keyword }
                           %i.fas.fa-edit
