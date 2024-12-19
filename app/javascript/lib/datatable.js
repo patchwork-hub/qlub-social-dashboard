@@ -2,7 +2,6 @@ import $ from 'jquery';
 import DataTable from 'datatables.net-bs4';
 import 'datatables.net-select-bs4';
 import { sendPatchRequest } from 'custom_js/api_util';
-import Cropper from "cropperjs";
 
 const COLUMNS = {
   keyword_filter_group_list: [
