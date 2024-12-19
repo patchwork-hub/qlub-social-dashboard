@@ -24,21 +24,23 @@ module Api
 
       def search
         query = params[:q].present? ? "%#{params[:q].downcase}%" : nil
-        communities = Community.where(
-          "channel_type = 'channel' AND lower(name) LIKE :q OR lower(slug) LIKE :q",
-          q: query
-        )
+        communities = Community
+                      .filter_channels
+                      .where(
+                        "lower(name) LIKE :q OR lower(slug) LIKE :q",
+                        q: query
+                      )
         render json: Api::V1::ChannelSerializer.new(communities).serializable_hash.to_json
       end
 
       def my_channel
         attached_community = fetch_community_admin&.community
-        return render_my_channel_response(channel: main_channel, channel_type: nil )if attached_community.nil?
+        return render_my_channel_response(channel: main_channel, channel_feed: nil )if attached_community.nil?
 
         if attached_community.channel_type == Community.channel_types[:channel]
-          render_my_channel_response(channel: attached_community, channel_type: nil )
+          render_my_channel_response(channel: attached_community, channel_feed: nil )
         else
-          render_my_channel_response(channel: nil, channel_type: fetch_community_admin&.account )
+          render_my_channel_response(channel: nil, channel_feed: fetch_community_admin&.account )
         end
       end
 
@@ -72,10 +74,10 @@ module Api
         CommunityAdmin.find_by(account_id: user&.account_id, role: user&.role&.name)
       end
 
-      def render_my_channel_response(channel: nil, channel_type: nil)
+      def render_my_channel_response(channel: nil, channel_feed: nil)
         render json: {
           channel: channel ? Api::V1::ChannelSerializer.new(channel, {}) : {},
-          channel_type: channel_type ? Api::V1::AccountSerializer.new(channel_type, {}) : {},
+          channel_feed: channel_feed ? Api::V1::AccountSerializer.new(channel_feed, {}) : {},
         }
       end
 
