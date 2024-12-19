@@ -30,6 +30,8 @@
               .col-8
                 %h6.mb-0= community_admin.display_name
                 %p.text-muted.mb-0= "@#{community_admin.username}"
+
+              -# temporary hide from view
               -#.col-3.d-flex
                   .row.ml-auto.p-2
                     = image_tag("icons/primary.svg", class: "mt-1 mr-2", width: "16", height: "16")
@@ -59,19 +61,19 @@
                 .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "public_access")}
                   = form.radio_button :visibility, 'public_access', autocomplete: 'off'
                   %p.small.mb-0 Public
-                  %p.text-muted.text-smaller.mt-1 Allow users on any Patchwork-enabled server to discover and participate in your channel through the discovery hub.
+                  %p.text-muted.text-smaller Allow users on any Patchwork-enabled server to discover and participate in your channel through the discovery hub.
                   %div.small.selected-indicator.mt-auto Selected
 
                 .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "guest_access")}
-                  = form.radio_button :visibility, 'guest_access', autocomplete: 'off'
+                  -#= form.radio_button :visibility, 'guest_access', autocomplete: 'off'
                   %p.small.mb-0 Share/guest access
-                  %p.text-muted.text-smaller.mt-1 Allow users who have signed into the server as guests to access this channel. Please ensure "Guest accounts" are enabled in the server settings.
+                  %p.text-muted.text-smaller Allow users who have signed into the server as guests to access this channel. Please ensure "Guest accounts" are enabled in the server settings.
                   %div.small.selected-indicator.mt-auto Selected
 
                 .btn.btn-light.btn-lg.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "private_local")}
-                  = form.radio_button :visibility, 'private_local', autocomplete: 'off'
+                  -#= form.radio_button :visibility, 'private_local', autocomplete: 'off'
                   %p.small.mb-0 Private/local
-                  %p.text-muted.text-smaller.mt-1 Only allow users on your server to participate in this channel.
+                  %p.text-muted.text-smaller Only allow users on your server to participate in this channel.
                   %div.small.selected-indicator.mt-auto Selected
 
 
