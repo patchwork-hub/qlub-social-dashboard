@@ -1,6 +1,7 @@
 class CommunityAdmin < ApplicationRecord
   self.table_name = 'patchwork_communities_admins'
   belongs_to :community, foreign_key: 'patchwork_community_id'
+  belongs_to :account, foreign_key: 'account_id'
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP, message: "must be a valid email address" }
   validates :username, presence: true

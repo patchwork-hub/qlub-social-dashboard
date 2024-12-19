@@ -3,6 +3,8 @@ require "application_responder"
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
 
+  helper_method :current_account
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   
   require 'httparty'
@@ -56,7 +58,13 @@ class ApplicationController < ActionController::Base
     flash[:error] = "You are not authorized to perform this action."
     redirect_back_or_to(communities_path)
   end
-  
+
+  def current_account
+    return @current_account if defined?(@current_account)
+
+    @current_account = current_user&.account
+  end
+
   private
 
   def authenticate_user_from_cookie
