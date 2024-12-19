@@ -93,11 +93,14 @@ class Community < ApplicationRecord
   scope :recommended, -> {
     joins(:patchwork_community_type)
       .where(patchwork_communities: { is_recommended: true })
+      .filter_channels
       .where.not(patchwork_communities: { visibility: nil })
       .order('patchwork_community_types.sorting_index ASC')
   }
 
   scope :ordered_pos_name, -> { order('patchwork_communities.position ASC, patchwork_communities.name ASC') }
+
+  scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 

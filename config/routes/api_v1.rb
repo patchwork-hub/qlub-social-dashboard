@@ -11,6 +11,7 @@ namespace :api, defaults: { format: :json } do
         get :group_recommended_channels
         get :search
         get :channel_detail
+        get :my_channel
       end
     end
 

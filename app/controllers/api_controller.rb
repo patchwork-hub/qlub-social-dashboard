@@ -30,4 +30,31 @@ class ApiController < ApplicationController
       total_count: collection.total_count
     }
   end
+
+  def authenticate_user_from_header
+    token = bearer_token
+    return render json: { error: 'The access token is invalid' }, status: :unauthorized unless token
+
+    user_info = validate_token(token)
+
+    if user_info
+      user = User.find_by(id: user_info["resource_owner_id"])
+      if user
+        sign_in(user)
+      else
+        render json: { error: 'User not found' }, status: :unauthorized
+      end
+    else
+      render json: { error: 'Invalid token' }, status: :unauthorized
+    end
+  end
+
+  private
+
+  def bearer_token
+    pattern = /^Bearer /
+    header  = request.headers['Authorization']
+    header.gsub(pattern, '') if header && header.match(pattern)
+  end
+
 end

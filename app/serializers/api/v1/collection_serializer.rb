@@ -13,9 +13,9 @@ class Api::V1::CollectionSerializer
 
   attribute :community_count do |object|
     if object.slug == "all-collection"
-      Community.all.size
+      Community.filter_channels.size
     else
-      object.patchwork_communities.size
+      object.patchwork_communities.filter_channels.size
     end
   end
 
@@ -28,7 +28,7 @@ class Api::V1::CollectionSerializer
   end
 
   attribute :channels do |object, params|
-    communities = params[:recommended] ? object.patchwork_communities.recommended : object.patchwork_communities.order('patchwork_communities.position ASC, patchwork_communities.name ASC')
+    communities = params[:recommended] ? object.patchwork_communities.recommended : object.patchwork_communities.filter_channels.ordered_pos_name
     Api::V1::ChannelSerializer.new(communities).serializable_hash
   end
 
