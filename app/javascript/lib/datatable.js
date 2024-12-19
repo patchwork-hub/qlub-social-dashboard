@@ -2,6 +2,7 @@ import $ from 'jquery';
 import DataTable from 'datatables.net-bs4';
 import 'datatables.net-select-bs4';
 import { sendPatchRequest } from 'custom_js/api_util';
+import Cropper from "cropperjs";
 
 const COLUMNS = {
   keyword_filter_group_list: [
@@ -245,6 +246,88 @@ jQuery(function() {
       form.submit();
 
       $('#previewCommunityModal').modal('show');
+    });
+  }
+
+  const uploadInputs = document.querySelectorAll(".upload-input");
+
+  if (uploadInputs) {
+    uploadInputs.forEach((input) => {
+      const previewId = input.getAttribute("data-preview-id");
+      const aspectRatio = parseFloat(input.getAttribute("data-aspect-ratio"));
+      setupFileUpload(input.id, previewId, aspectRatio);
+    });
+  }
+
+  function setupFileUpload(inputId, previewId, aspectRatio) {
+    const input = document.getElementById(inputId);
+    const previewImg = document.getElementById(previewId);
+
+    if (!input) {
+      console.error(`Input element with ID '${inputId}' not found.`);
+      return;
+    }
+
+    if (!previewImg) {
+      console.error(`Preview element with ID '${previewId}' not found.`);
+      return;
+    }
+
+    input.addEventListener("change", function () {
+      const file = this.files[0];
+      if (!file) {
+          return;
+      }
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const image = new Image();
+        image.onload = function () {
+          const canvas = document.createElement("canvas");
+          let width, height;
+            if(aspectRatio == 1){
+                width = Math.min(image.width, image.height);
+                height = width;
+            }else{
+                width = image.width;
+                height = image.width / aspectRatio;
+                if(height > image.height){
+                    height = image.height;
+                    width = image.height * aspectRatio;
+                }
+            }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext("2d");
+            const offsetX = (image.width - width) / 2;
+            const offsetY = (image.height - height) / 2;
+          ctx.drawImage(image, offsetX, offsetY, width, height, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (previewImg.src.startsWith("blob:")) {
+                URL.revokeObjectURL(previewImg.src);
+              }
+              const url = URL.createObjectURL(blob);
+            previewImg.src = url;
+            previewImg.style.display = "block";
+
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(
+              new File([blob], "cropped-image.jpg", { type: "image/jpeg" })
+            );
+            input.files = dataTransfer.files;
+          });
+        };
+        image.src = e.target.result;
+      };
+
+      reader.onerror = function () {
+        console.error("Error reading the file.");
+        alert("Failed to read the file. Please try again.");
+      };
+
+      reader.readAsDataURL(file);
     });
   }
 });
