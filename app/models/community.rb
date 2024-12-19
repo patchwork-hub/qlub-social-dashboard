@@ -37,9 +37,9 @@ class Community < ApplicationRecord
                        content_type: { content_type: IMAGE_MIME_TYPES },
                        size: { less_than: LIMIT }
 
-  validate :validate_logo_aspect_ratio
-  validate :validate_avatar_aspect_ratio
-  validate :validate_banner_aspect_ratio
+  # validate :validate_logo_aspect_ratio
+  # validate :validate_avatar_aspect_ratio
+  # validate :validate_banner_aspect_ratio
 
   has_many :community_admins,
             foreign_key: 'patchwork_community_id',

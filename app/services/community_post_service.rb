@@ -56,7 +56,10 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
-      update_account_attributes if @community.channel_feed?
+      if @community.channel_feed?
+        update_account_attributes
+        set_clean_up_policy
+      end
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -98,6 +101,7 @@ class CommunityPostService < BaseService
       update_account_attributes
       create_community_admin
       create_default_content_type
+      set_clean_up_policy
       @community.update(channel_type: 'channel_feed')
     else
       @community.update(channel_type: 'channel')
@@ -133,6 +137,12 @@ class CommunityPostService < BaseService
       channel_type: 'custom_channel',
       custom_condition: 'OR'
     )
+  end
+
+  def set_clean_up_policy
+    policy = AccountStatusesCleanupPolicy.find_or_initialize_by(account_id: @account.id)
+    policy.assign_attributes(enabled: true, min_status_age: 1.week.seconds)
+    policy.save!
   end
 
   def community_attributes
