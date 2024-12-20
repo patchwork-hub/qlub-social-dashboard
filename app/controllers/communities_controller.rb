@@ -58,7 +58,6 @@ class CommunitiesController < BaseController
     @filter_keywords = get_community_filter_keyword('filter_in')
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: @community.id,
-      account_id: get_community_admin_id,
       filter_type: 'filter_in',
       is_filter_hashtag: false
     )
@@ -115,7 +114,6 @@ class CommunitiesController < BaseController
     @filter_keywords = get_community_filter_keyword('filter_out')
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: @community.id,
-      account_id: get_community_admin_id,
       filter_type: 'filter_out'
     )
   end

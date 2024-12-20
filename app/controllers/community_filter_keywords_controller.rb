@@ -40,7 +40,7 @@ class CommunityFilterKeywordsController < ApplicationController
   end
 
   def community_filter_keyword_params
-    params.require(:community_filter_keyword).permit(:account_id, :patchwork_community_id, :keyword, :is_filter_hashtag, :filter_type)
+    params.require(:community_filter_keyword).permit(:patchwork_community_id, :keyword, :is_filter_hashtag, :filter_type)
   end
 
   def determine_redirect_path(patchwork_community_id, filter_type)

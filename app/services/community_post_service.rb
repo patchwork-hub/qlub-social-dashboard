@@ -34,7 +34,7 @@ class CommunityPostService < BaseService
       validate_uniqueness(:slug)
       return @community if @community&.errors&.any?
 
-      @community = @account.communities.new(community_attributes)
+      @community = Community.new(community_attributes)
       @community.save!
       set_default_additional_information
       assign_roles_and_content_type
@@ -156,7 +156,6 @@ class CommunityPostService < BaseService
       logo_image: @options[:logo_image],
       avatar_image: @options[:avatar_image],
       banner_image: @options[:banner_image],
-      account_id: @account.id,
       patchwork_community_type_id: @community_type.id
     }
 
