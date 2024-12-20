@@ -42,7 +42,7 @@ module Api
         if attached_community.channel_type == Community.channel_types[:channel]
           render_my_channel_response(channel: attached_community, channel_feed: nil )
         else
-          render_my_channel_response(channel: nil, channel_feed: fetch_community_admin&.account )
+          render_my_channel_response(channel: nil, channel_feed: { account: fetch_community_admin&.account, community:  attached_community } )
         end
       end
 
@@ -78,9 +78,21 @@ module Api
 
       def render_my_channel_response(channel: nil, channel_feed: nil)
         render json: {
-          channel: channel ? Api::V1::ChannelSerializer.new(channel, {}) : {},
-          channel_feed: channel_feed ? Api::V1::ChannelFeedSerializer.new(channel_feed, {}) : {},
+          channel: serialized_channel(channel),
+          channel_feed: serialized_channel_feed(channel_feed)
         }
+      end
+            
+      def serialized_channel(channel)
+        channel ? Api::V1::ChannelSerializer.new(channel, {}) : {}
+      end
+      
+      def serialized_channel_feed(channel_feed)
+        if channel_feed[:account].present? && channel_feed[:community].present?
+          Api::V1::ChannelFeedSerializer.new(channel_feed[:account], { params: { community: channel_feed[:community] } })
+        else
+          {}
+        end
       end
 
     end
