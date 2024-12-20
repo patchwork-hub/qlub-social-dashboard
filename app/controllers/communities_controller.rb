@@ -3,7 +3,7 @@ class CommunitiesController < BaseController
   before_action :set_community, except: %i[step1 step1_save index new is_muted]
   before_action :initialize_form, only: %i[step1]
   before_action :set_current_step
-  before_action :set_content_type, only: %i[step3 step4 step5]
+  before_action :set_content_type, only: %i[step3 step4 step5 step6]
   before_action :set_api_credentials, only: %i[search_contributor step3 step3_save step3_update_hashtag step3_delete_hashtag step4]
   before_action :fetch_community_admins, only: %i[step4 step6]
   PER_PAGE = 10
