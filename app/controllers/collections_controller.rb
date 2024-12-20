@@ -15,19 +15,12 @@ class CollectionsController < ApplicationController
   end
 
   def create
-      @collection = Collection.new(collection_params)
-      if @collection.save
-        redirect_to collections_path, notice: 'Collection was successfully created.'
-      else
-        
-        if @collection.errors[:base].any? { |msg| msg.include?('aspect ratio') }
-          @collection.avatar_image = nil
-          @collection.banner_image = nil
-        end
-        
-        flash.now[:error] = @collection.errors.full_messages
-        render :new
-      end
+    @collection = Collection.new(collection_params)
+    if @collection.save
+      redirect_to collections_path, notice: 'Collection was successfully created.'
+    else
+      render :new
+    end
   end
 
   def edit

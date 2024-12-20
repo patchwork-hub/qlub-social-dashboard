@@ -14,7 +14,7 @@ class Collection < ApplicationRecord
 
 
   validates :name, presence: true, uniqueness: true
-  validates :slug, presence: true, uniqueness: true
+  validates :slug, presence: true
   validates :sorting_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: true
 
   validates_attachment :avatar_image,
@@ -25,9 +25,6 @@ class Collection < ApplicationRecord
   content_type: { content_type: IMAGE_MIME_TYPES },
   size: { less_than: LIMIT }
 
-  validate :validate_avatar_aspect_ratio
-  validate :validate_banner_aspect_ratio
-
   scope :recommended_group_channels, -> {
     joins(:patchwork_communities)
       .where(patchwork_communities: { is_recommended: true })
@@ -36,27 +33,4 @@ class Collection < ApplicationRecord
       .group('patchwork_collections.id')
       .order('patchwork_collections.sorting_index ASC')
   }
-
-  private
-
-  def validate_avatar_aspect_ratio
-    validate_image_aspect_ratio(avatar_image, 1, 1, 'Avatar image')
-  end
-
-  def validate_banner_aspect_ratio
-    validate_image_aspect_ratio(banner_image, 3.6, 1, 'Banner image')
-  end
-
-  def validate_image_aspect_ratio(image, width_ratio, height_ratio, image_name)
-    return unless image.present? && image.queued_for_write[:original].present?
-
-    dimensions = Paperclip::Geometry.from_file(image.queued_for_write[:original])
-    actual_ratio = dimensions.width.to_f / dimensions.height
-    expected_ratio = width_ratio.to_f / height_ratio
-
-    unless (actual_ratio - expected_ratio).abs < 0.01
-      errors.add(:base, "#{image_name} must have an aspect ratio of #{width_ratio}:#{height_ratio}")
-    end
-  end
-
 end
