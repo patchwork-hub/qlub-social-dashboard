@@ -32,6 +32,7 @@ class Users::SessionsController < Devise::SessionsController
 
     # Clear the access token cookie
     cookies.delete(:access_token, domain: Rails.env.development? ? :all : '.channel.org')
+    puts params[:authenticity_token]
     super
   end
 
@@ -48,7 +49,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   private
-
 
   def revoke_access_token(token)
     return unless token

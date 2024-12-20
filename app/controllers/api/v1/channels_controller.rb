@@ -9,7 +9,7 @@ module Api
       before_action :set_channel, only: [:channel_detail]
       
       def recommend_channels
-        @recommended_channels = Community.recommended
+        @recommended_channels = Community.recommended.exclude_array_ids
         render json: Api::V1::ChannelSerializer.new(@recommended_channels).serializable_hash.to_json
       end
 
@@ -26,6 +26,8 @@ module Api
         query = params[:q].present? ? "%#{params[:q].downcase}%" : nil
         communities = Community
                       .filter_channels
+                      .exclude_array_ids
+                      .exlude_incomplete_channels
                       .where(
                         "lower(name) LIKE :q OR lower(slug) LIKE :q",
                         q: query
@@ -77,7 +79,7 @@ module Api
       def render_my_channel_response(channel: nil, channel_feed: nil)
         render json: {
           channel: channel ? Api::V1::ChannelSerializer.new(channel, {}) : {},
-          channel_feed: channel_feed ? Api::V1::AccountSerializer.new(channel_feed, {}) : {},
+          channel_feed: channel_feed ? Api::V1::ChannelFeedSerializer.new(channel_feed, {}) : {},
         }
       end
 

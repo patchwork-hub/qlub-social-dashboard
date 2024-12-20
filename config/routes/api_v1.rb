@@ -20,5 +20,12 @@ namespace :api, defaults: { format: :json } do
         get :fetch_channels
       end
     end
+
+    resources :sessions, only: [] do
+      collection do
+        post :log_out
+      end
+    end
+    
   end
 end
