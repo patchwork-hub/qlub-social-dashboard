@@ -5,7 +5,6 @@ class Account < ApplicationRecord
   NAME_LENGTH_LIMIT = 30
 
   has_one :user, inverse_of: :account
-  has_many :communities
 
   before_create :generate_keys
 

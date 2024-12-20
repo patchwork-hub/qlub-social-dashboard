@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_18_083819) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_20_111302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -823,7 +823,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_083819) do
     t.string "description"
     t.boolean "is_recommended", default: false, null: false
     t.integer "admin_following_count", default: 0
-    t.bigint "account_id", null: false
     t.bigint "patchwork_collection_id", null: false
     t.integer "position", default: 0
     t.jsonb "guides", default: {}
@@ -845,7 +844,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_083819) do
     t.bigint "logo_image_file_size"
     t.datetime "logo_image_updated_at"
     t.string "channel_type", default: "channel", null: false
-    t.index ["account_id"], name: "index_patchwork_communities_on_account_id"
     t.index ["name"], name: "index_patchwork_communities_on_name", unique: true
     t.index ["patchwork_collection_id"], name: "index_patchwork_communities_on_patchwork_collection_id"
     t.index ["patchwork_community_type_id"], name: "index_patchwork_communities_on_patchwork_community_type_id"
@@ -863,19 +861,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_083819) do
     t.bigint "account_id"
     t.string "role"
     t.boolean "is_boost_bot", default: false, null: false
+    t.index ["account_id", "patchwork_community_id"], name: "unique_community_admin_index", unique: true
     t.index ["account_id"], name: "index_patchwork_communities_admins_on_account_id"
     t.index ["patchwork_community_id"], name: "index_patchwork_communities_admins_on_patchwork_community_id"
   end
 
   create_table "patchwork_communities_filter_keywords", force: :cascade do |t|
-    t.bigint "account_id", null: false
     t.bigint "patchwork_community_id", null: false
     t.string "keyword", null: false
     t.boolean "is_filter_hashtag", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "filter_type", default: "filter_out", null: false
-    t.index ["account_id"], name: "index_patchwork_communities_filter_keywords_on_account_id"
     t.index ["keyword", "is_filter_hashtag", "patchwork_community_id"], name: "index_on_keyword_is_filter_hashtag_and_patchwork_community_id", unique: true
     t.index ["keyword", "is_filter_hashtag"], name: "idx_on_keyword_is_filter_hashtag_de4b77f0f4", unique: true
     t.index ["patchwork_community_id"], name: "idx_on_patchwork_community_id_eadde3c87b"
@@ -1568,13 +1565,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_083819) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id", name: "fk_f5fc4c1ee3", on_delete: :cascade
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id", name: "fk_e84df68546", on_delete: :cascade
   add_foreign_key "oauth_applications", "users", column: "owner_id", name: "fk_b0988c7c0a", on_delete: :cascade
-  add_foreign_key "patchwork_communities", "accounts"
   add_foreign_key "patchwork_communities", "patchwork_collections"
   add_foreign_key "patchwork_communities_admins", "accounts", on_delete: :cascade
   add_foreign_key "patchwork_communities_admins", "patchwork_communities"
-  add_foreign_key "patchwork_communities_filter_keywords", "accounts"
-  add_foreign_key "patchwork_communities_filter_keywords", "patchwork_communities"
-  add_foreign_key "patchwork_communities_hashtags", "patchwork_communities"
+  add_foreign_key "patchwork_communities_filter_keywords", "patchwork_communities", on_delete: :cascade
+  add_foreign_key "patchwork_communities_hashtags", "patchwork_communities", on_delete: :cascade
   add_foreign_key "patchwork_communities_statuses", "patchwork_communities"
   add_foreign_key "patchwork_communities_statuses", "statuses"
   add_foreign_key "patchwork_community_additional_informations", "patchwork_communities", on_delete: :cascade
@@ -1592,7 +1587,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_18_083819) do
   add_foreign_key "poll_votes", "polls", on_delete: :cascade
   add_foreign_key "polls", "accounts", on_delete: :cascade
   add_foreign_key "polls", "statuses", on_delete: :cascade
-  add_foreign_key "post_hashtags_communities", "patchwork_communities"
+  add_foreign_key "post_hashtags_communities", "patchwork_communities", on_delete: :cascade
   add_foreign_key "preview_card_trends", "preview_cards", on_delete: :cascade
   add_foreign_key "preview_cards", "accounts", column: "author_account_id", on_delete: :nullify
   add_foreign_key "report_notes", "accounts", on_delete: :cascade
