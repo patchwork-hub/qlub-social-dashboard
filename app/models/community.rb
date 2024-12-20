@@ -7,6 +7,7 @@ class Community < ApplicationRecord
   NAME_LENGTH_LIMIT = 30
   SLUG_LENGTH_LIMIT = 15
   DESCRIPTION_LENGTH_LIMIT = 500
+  EXCLUDE_ARRAY_IDS = [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,62]
 
   has_attached_file :logo_image
   has_attached_file :avatar_image
@@ -94,7 +95,8 @@ class Community < ApplicationRecord
     joins(:patchwork_community_type)
       .where(patchwork_communities: { is_recommended: true })
       .filter_channels
-      .where.not(patchwork_communities: { visibility: nil })
+      .exclude_array_ids
+      .exlude_incomplete_channels
       .order('patchwork_community_types.sorting_index ASC')
   }
 
@@ -102,7 +104,11 @@ class Community < ApplicationRecord
 
   scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
 
+  scope :exlude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
+
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
+
+  scope :exclude_array_ids, -> { where.not(id: EXCLUDE_ARRAY_IDS) }
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed' }
 

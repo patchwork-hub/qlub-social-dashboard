@@ -23,7 +23,4 @@ class Api::V1::AccountSerializer
     object.domain.presence || ENV['MASTODON_INSTANCE_URL']
   end
 
-  attribute :avatar_image_url do |object|
-    object.avatar_url
-  end
 end
