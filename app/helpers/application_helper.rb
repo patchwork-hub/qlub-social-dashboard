@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def sidebar_menu_items
-    channel_active = params[:channel_type] == 'channel' || @community&.channel? || @community.nil? ? 'communities' : nil
+    channel_active = params[:channel_type] == 'channel' || @community&.channel? ? 'communities' : nil
     channel_feed_active = params[:channel_type] == 'channel_feed' || @community&.channel_feed? ? 'communities' : nil
 
     if master_admin?
