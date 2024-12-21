@@ -7,7 +7,7 @@ class Api::V1::ChannelSerializer
   set_type :channel
 
   attributes :id, :name, :slug, :description, :is_recommended, :admin_following_count,
-             :account_id, :patchwork_collection_id, :guides, :participants_count,
+             :patchwork_collection_id, :guides, :participants_count,
              :visibility, :position, :channel_type
 
   attribute :community_type do |object|
