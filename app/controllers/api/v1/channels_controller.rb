@@ -88,7 +88,7 @@ module Api
       end
       
       def serialized_channel_feed(channel_feed)
-        if channel_feed[:account].present? && channel_feed[:community].present?
+        if !channel_feed.nil? && channel_feed[:account].present? && channel_feed[:community].present?
           Api::V1::ChannelFeedSerializer.new(channel_feed[:account], { params: { community: channel_feed[:community] } })
         else
           {}
