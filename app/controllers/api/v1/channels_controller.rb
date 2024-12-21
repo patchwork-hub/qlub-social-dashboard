@@ -60,7 +60,6 @@ module Api
           description: "",
           is_recommended: true,
           admin_following_count: 0,
-          account_id: nil,
           patchwork_collection_id: nil,
           position: 0,
           guides: {},
