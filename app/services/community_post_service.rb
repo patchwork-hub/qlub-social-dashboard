@@ -115,7 +115,8 @@ class CommunityPostService < BaseService
       display_name: @community.name,
       username: @community.slug.underscore,
       avatar: @community.avatar_image || '',
-      header: @community.banner_image || ''
+      header: @community.banner_image || '',
+      actor_type: "Service"
     )
   end
 

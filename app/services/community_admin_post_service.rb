@@ -12,13 +12,21 @@ class CommunityAdminPostService < BaseService
   private
 
   def create_admin!
-    admin = Account.find_or_initialize_by(username: @community_admin.username)
-    admin.assign_attributes(
+    account_attributes = {
       display_name: @community_admin.display_name,
       avatar: @community.avatar_image || '',
       header: @community.banner_image || '',
       note: @community.description
-    )
+    }
+
+    if @community_admin.is_boost_bot
+      account_attributes[:actor_type] = 'Service'
+    else
+      account_attributes[:actor_type] = 'Person'
+    end
+
+    admin = Account.find_or_initialize_by(username: @community_admin.username)
+    admin.assign_attributes(account_attributes.compact)
     admin.save!
 
     @community_admin.update(account_id: admin.id)
