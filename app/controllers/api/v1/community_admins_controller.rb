@@ -2,12 +2,22 @@ module Api
   module V1
     class CommunityAdminsController < ApiController
       skip_before_action :verify_key!
+      before_action :authenticate_with_token!
 
       def boost_bot_accounts
        render json: boost_bot_accounts_list
       end
 
       private
+
+      def authenticate_with_token!
+        provided_token = request.headers['Authorization']&.split(' ')&.last
+        static_token = ENV['STATIC_TOKEN']
+
+        unless provided_token == static_token
+          render json: { error: 'Unauthorized: Invalid or missing API token.' }, status: :unauthorized
+        end
+      end
 
       def boost_bot_accounts_list
         community_admins = CommunityAdmin.where(is_boost_bot: true)
@@ -28,7 +38,7 @@ module Api
           result[name] = {
             account_id: account_id,
             channel_type: channel_type,
-            url:  url
+            url: url
           }
         end
 
