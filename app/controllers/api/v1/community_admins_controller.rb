@@ -11,11 +11,9 @@ module Api
       private
 
       def authenticate_with_token!
-        provided_token = request.headers['Authorization']&.split(' ')&.last
-        static_token = ENV['STATIC_TOKEN']
-
-        unless provided_token == static_token
-          render json: { error: 'Unauthorized: Invalid or missing API token.' }, status: :unauthorized
+        authenticate_or_request_with_http_token do |token, _options|
+          static_token = ENV['STATIC_TOKEN']
+          ActiveSupport::SecurityUtils.secure_compare(token, static_token)
         end
       end
 
