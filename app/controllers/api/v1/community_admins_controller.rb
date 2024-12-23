@@ -12,7 +12,7 @@ module Api
 
       def authenticate_with_token!
         authenticate_or_request_with_http_token do |token, _options|
-          static_token = ENV['STATIC_TOKEN']
+          static_token = ENV.fetch('STATIC_TOKEN', nil).to_s
           ActiveSupport::SecurityUtils.secure_compare(token, static_token)
         end
       end
