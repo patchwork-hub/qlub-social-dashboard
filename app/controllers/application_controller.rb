@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_account
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
-  
+
   require 'httparty'
 
   self.responder = ApplicationResponder
@@ -56,7 +56,14 @@ class ApplicationController < ActionController::Base
 
   def user_not_authorized
     flash[:error] = "You are not authorized to perform this action."
-    redirect_back_or_to(communities_path)
+
+    if current_user.organisation_admin?
+      redirect_back_or_to(communities_path(channel_type: 'channel'))
+    elsif current_user.user_admin?
+      redirect_back_or_to(communities_path(channel_type: 'channel_feed'))
+    else
+      redirect_back_or_to(root_path)
+    end
   end
 
   def current_account
