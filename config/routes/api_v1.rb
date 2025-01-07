@@ -33,5 +33,11 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
+    resources :communities, path: 'channels' do
+      collection do
+        get 'community_types'
+        get 'collections'
+      end
+    end
   end
 end
