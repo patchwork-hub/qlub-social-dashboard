@@ -7,6 +7,10 @@ class CommunityPolicy < ApplicationPolicy
     initialize_form?
   end
 
+  def show?
+    related_user_admin?
+  end
+
   def step1?
     initialize_form?
   end
