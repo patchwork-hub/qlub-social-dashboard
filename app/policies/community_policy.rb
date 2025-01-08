@@ -11,6 +11,10 @@ class CommunityPolicy < ApplicationPolicy
     related_user_admin?
   end
 
+  def update?
+    show?
+  end
+
   def step1?
     initialize_form?
   end

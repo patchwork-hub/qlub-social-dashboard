@@ -4,7 +4,6 @@ module Api
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update]
-      before_action :authorize_community
 
       def index
         communities = records_filter.get.where(channel_type: 'channel_feed')
@@ -25,10 +24,12 @@ module Api
       end
 
       def show
+        authorize @community, :show?
         render json: Api::V1::ChannelSerializer.new(@community).serializable_hash.to_json
       end
 
       def update
+        authorize @community, :update?
         @community = CommunityPostService.new.call(
           current_user,
           community_params.merge(id: @community.id)
@@ -73,10 +74,6 @@ module Api
         @community = Community.find(params[:id]) if params[:id].present?
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Community not found' }, status: :not_found
-      end
-
-      def authorize_community
-        authorize @community, policy_class: CommunityPolicy if @community.present?
       end
     end
   end
