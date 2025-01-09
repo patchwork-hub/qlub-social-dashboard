@@ -7,7 +7,6 @@ class AccountRelationshipsService < BaseService
   def call(admin_account, target_account_id)
     @admin_account = admin_account
     follow_bluesky_bot?(target_account_id)
-    # fetch_did_value if follow_bluesky_bot?(target_account_id) && Rails.env.production?
   end
 
   private

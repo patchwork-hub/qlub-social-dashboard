@@ -38,6 +38,7 @@ class CommunityPostService < BaseService
       @community.save!
       set_default_additional_information
       assign_roles_and_content_type
+      FollowBlueskyBotJob.perform_now(@community.id) if @community&.community_admins&.last&.is_boost_bot
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
