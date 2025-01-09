@@ -30,7 +30,7 @@ class FollowBlueskyBotJob < ApplicationJob
   private
 
   def search_target_account
-    @query = '@bsky.brid.gy@bsky.brid.gy'
+    query = '@bsky.brid.gy@bsky.brid.gy'
 
     result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
 
