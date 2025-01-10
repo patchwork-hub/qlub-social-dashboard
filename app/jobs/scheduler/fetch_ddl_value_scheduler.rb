@@ -1,5 +1,5 @@
 module Scheduler
-  class FetchDdlValuecheduler
+  class FetchDdlValueScheduler
     include Sidekiq::Worker
     sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 30.minutes.to_i, queue: :scheduler
 
