@@ -3,6 +3,7 @@
 namespace :api, defaults: { format: :json } do
   namespace :v1 do
     resources :accounts
+
     patch 'api_key/rotate', to: 'api_keys#rotate'
 
     resources :channels, only: [  ] do
@@ -37,7 +38,10 @@ namespace :api, defaults: { format: :json } do
       collection do
         get 'community_types'
         get 'collections'
+        get 'contributor_list'
       end
     end
+
+    resources :content_types, only: [:index, :create]
   end
 end

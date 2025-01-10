@@ -4,6 +4,7 @@ module Api
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update]
+      PER_PAGE = 5
 
       def index
         communities = records_filter.get.where(channel_type: 'channel_feed')
@@ -52,6 +53,19 @@ module Api
         render json: { collections: collections }, status: :ok
       end
 
+      def contributor_list
+        if params[:patchwork_community_id].blank?
+          render json: { error: 'patchwork_community_id is required' }, status: :bad_request
+          return
+        end
+
+        contributors = get_contributer_list
+        render json: {
+          contributors: contributors,
+          meta: pagination_meta(contributors)
+        }
+      end
+
       private
 
       def community_params
@@ -74,6 +88,25 @@ module Api
         @community = Community.find(params[:id]) if params[:id].present?
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Community not found' }, status: :not_found
+      end
+
+      def get_contributer_list
+        account_id = CommunityAdmin.where(patchwork_community_id: params[:patchwork_community_id]).pluck(:account_id)
+        follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
+        follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
+        total_follows_ids = (follow_ids + follow_request_ids).uniq
+
+        Account.where(id: total_follows_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+      end
+
+      def pagination_meta(object)
+        {
+          current_page: object.current_page,
+          next_page: object.next_page,
+          prev_page: object.prev_page,
+          total_pages: object.total_pages,
+          total_count: object.total_count
+        }
       end
     end
   end
