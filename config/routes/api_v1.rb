@@ -41,6 +41,7 @@ namespace :api, defaults: { format: :json } do
         get 'contributor_list'
         get 'search_contributor'
       end
+      resources :community_filter_keywords, only: %i[index create update destroy]
     end
 
     resources :content_types, only: [:index, :create]
