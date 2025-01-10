@@ -35,7 +35,6 @@ class CommunityAdminPostService < BaseService
       email: @community_admin.email,
       confirmed_at: Time.now.utc,
       role: UserRole.find_by(name: @community_admin.role),
-      account: admin,
       agreement: true,
       approved: true
     }
@@ -45,7 +44,7 @@ class CommunityAdminPostService < BaseService
       user_attributes[:password_confirmation] = @community_admin.password
     end
 
-    user = User.find_or_initialize_by(email: @community_admin.email)
+    user = User.find_or_initialize_by(account_id: admin.id)
     user.assign_attributes(user_attributes.compact)
     user.save!
 
