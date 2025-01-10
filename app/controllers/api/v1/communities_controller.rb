@@ -56,7 +56,7 @@ module Api
       def search_contributor
          query = params[:query]
          url = params[:url]
-         token = params[:token]
+         token = bearer_token
 
          if query.blank? || url.blank? || token.blank?
            render json: { error: 'query, url and token parameters are required' }, status: :bad_request
@@ -68,7 +68,7 @@ module Api
         if result.any?
           render json: { 'accounts' => result }
         else
-           render json: { message: 'No saved accounts found', 'accounts' => [] }, status: :not_found
+           render json: { message: 'No saved accounts found', 'accounts' => [] }, status: :ok
         end
       end
 
