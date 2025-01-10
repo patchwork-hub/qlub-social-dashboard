@@ -3,8 +3,8 @@ module Api
     class CommunityAdminsController < ApiController
       skip_before_action :verify_key!
       before_action :authenticate_with_token!, only: %i[boost_bot_accounts]
-      before_action :authenticate_user_from_header
-      before_action :set_community
+      before_action :authenticate_user_from_header, except: :boost_bot_accounts
+      before_action :set_community, except: :boost_bot_accounts
       before_action :set_community_admin, only: %i[show update]
 
       def boost_bot_accounts
