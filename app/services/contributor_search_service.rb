@@ -41,7 +41,8 @@ class ContributorSearchService
         'username' => account.username,
         'display_name' => account.display_name,
         'domain' => account.domain,
-        'note' => account.note
+        'note' => account.note,
+        'avatar_url' => account.avatar_url
       }
     end
   end
