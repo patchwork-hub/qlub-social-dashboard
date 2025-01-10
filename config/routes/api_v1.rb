@@ -39,6 +39,7 @@ namespace :api, defaults: { format: :json } do
         get 'community_types'
         get 'collections'
         get 'contributor_list'
+        get 'search_contributor'
       end
     end
 
