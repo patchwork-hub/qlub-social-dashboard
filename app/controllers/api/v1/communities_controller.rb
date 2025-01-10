@@ -53,13 +53,34 @@ module Api
         render json: { collections: collections }, status: :ok
       end
 
+      def search_contributor
+         query = params[:query]
+         url = params[:url]
+         token = params[:token]
+
+         if query.blank? || url.blank? || token.blank?
+           render json: { error: 'query, url and token parameters are required' }, status: :bad_request
+           return
+         end
+
+        result = ContributorSearchService.new(query, url: url, token: token).call
+
+        if result.any?
+          render json: { 'accounts' => result }
+        else
+           render json: { message: 'No saved accounts found', 'accounts' => [] }, status: :not_found
+        end
+      end
+
       def contributor_list
-        if params[:patchwork_community_id].blank?
-          render json: { error: 'patchwork_community_id is required' }, status: :bad_request
-          return
+       patchwork_community_id = params[:patchwork_community_id]
+
+         if patchwork_community_id.blank?
+            render json: { error: 'patchwork_community_id is required' }, status: :bad_request
+           return
         end
 
-        contributors = get_contributer_list
+        contributors = get_contributer_list(patchwork_community_id)
         render json: {
           contributors: contributors,
           meta: pagination_meta(contributors)
@@ -90,13 +111,13 @@ module Api
         render json: { error: 'Community not found' }, status: :not_found
       end
 
-      def get_contributer_list
-        account_id = CommunityAdmin.where(patchwork_community_id: params[:patchwork_community_id]).pluck(:account_id)
+      def get_contributer_list(patchwork_community_id)
+        account_id = CommunityAdmin.where(patchwork_community_id: patchwork_community_id).pluck(:account_id)
         follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
         follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
         total_follows_ids = (follow_ids + follow_request_ids).uniq
 
-        Account.where(id: total_follows_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+         Account.where(id: total_follows_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
       end
 
       def pagination_meta(object)
