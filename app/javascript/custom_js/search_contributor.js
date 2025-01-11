@@ -102,8 +102,12 @@ function displaySearchResults(accounts) {
           <img src="${account.avatar_url}" alt="" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
         </div>
         <div class="col">
-          <p class="mb-0">${account.display_name || account.username}</p>
-          <small class="text-muted">@${account.username}@${account.domain}</small>
+          <p class="mb-0">
+            <a href="https://${account.domain}/@${account.username}" target="_blank">${account.display_name || account.username}</a>
+          </p>
+          <small class="text-muted">
+            <a href="https://${account.domain}/@${account.username}" target="_blank">@${account.username}@${account.domain}</a>
+          </small>
           ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
