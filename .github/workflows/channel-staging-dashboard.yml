@@ -8,7 +8,7 @@ on:
 
 env:
   DEFINITION:
-    .aws/patchwork_staging.json
+    .aws/channel-staging-dashbaord.json
 
 permissions:
   contents: read
