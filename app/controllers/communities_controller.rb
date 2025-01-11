@@ -108,6 +108,11 @@ class CommunitiesController < BaseController
   end
 
   def step4
+    hashtag = load_commu_hashtag_records
+    if hashtag.empty?
+      flash[:error] = "Please add at least one hashtag in the 'Hashtags' section above before proceeding, as hashtags are required to retrieve content."
+      redirect_to step3_community_path
+    end
     @muted_accounts = get_muted_accounts
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
 
