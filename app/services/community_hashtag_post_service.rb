@@ -3,8 +3,7 @@
 class CommunityHashtagPostService < BaseService
   class InvalidHashtagError < StandardError; end
 
-  def call(account, options = {})
-    @account = account
+  def call(options = {})
     @options = options
     prepare_params!
     community_create_hashtag!

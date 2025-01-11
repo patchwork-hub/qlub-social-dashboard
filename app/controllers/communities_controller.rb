@@ -394,7 +394,7 @@ class CommunitiesController < BaseController
 
   def perform_hashtag_action(hashtag_name, community_id = nil, action)
     if action == :follow && community_id
-      CommunityHashtagPostService.new.call(get_community_admin_id, hashtag: hashtag_name, community_id: community_id)
+      CommunityHashtagPostService.new.call(hashtag: hashtag_name, community_id: community_id)
     end
 
     hashtag = SearchHashtagService.new(@api_base_url, @token, hashtag_name).call
