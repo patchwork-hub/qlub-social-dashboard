@@ -57,10 +57,12 @@ module Api
       def search_contributor
         query = params[:query]
         url = params[:url]
-        token = Doorkeeper::AccessToken.find_by(token: bearer_token)
-        if token.present? && token.scopes != ACCESS_TOKEN_SCOPES
-          token.update(scopes: ACCESS_TOKEN_SCOPES)
+        access_token = Doorkeeper::AccessToken.find_by(token: bearer_token)
+        if access_token.present? && access_token.scopes != ACCESS_TOKEN_SCOPES
+          access_token.update(scopes: ACCESS_TOKEN_SCOPES)
         end
+
+        token = access_token&.token
 
         if query.blank? || url.blank? || token.blank?
           render json: { error: 'query, url and token parameters are required' }, status: :bad_request
