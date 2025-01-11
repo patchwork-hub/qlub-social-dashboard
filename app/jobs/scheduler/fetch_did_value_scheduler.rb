@@ -1,10 +1,10 @@
 module Scheduler
-  class FetchDdlValueScheduler
+  class FetchDidValueScheduler
     include Sidekiq::Worker
     sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 30.minutes.to_i, queue: :scheduler
 
     def perform
-      communities = Community.where(ddl_value: nil)
+      communities = Community.where(did_value: nil)
       return unless communities.any?
 
       communities.each do |community|
@@ -25,10 +25,10 @@ module Scheduler
         return if target_account.nil?
 
         check_relationship = AccountRelationshipsService.new.call(user&.account, target_account.id)
-        ddl_value = FetchDidValueService.new.call(target_account, community) if check_relationship
+        did_value = FetchDidValueService.new.call(target_account, community) if check_relationship
           
-        community.update(ddl_value: ddl_value) if ddl_value
-        Rails.logger.info("community: #{community.id} | #{community.name} | #{community.slug}, ddl_value: #{ddl_value}")
+        community.update(did_value: did_value) if did_value
+        Rails.logger.info("community: #{community.id} | #{community.name} | #{community.slug}, did_value: #{did_value}")
       end
     end
 

@@ -89,6 +89,9 @@ GEM
     aws-sdk-kms (1.87.0)
       aws-sdk-core (~> 3, >= 3.199.0)
       aws-sigv4 (~> 1.1)
+    aws-sdk-route53 (1.93.0)
+      aws-sdk-core (~> 3, >= 3.199.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-s3 (1.155.0)
       aws-sdk-core (~> 3, >= 3.199.0)
       aws-sdk-kms (~> 1)
@@ -155,7 +158,10 @@ GEM
       logger
     faraday-net_http (3.1.1)
       net-http
-    ffi (1.17.0)
+    ffi (1.17.0-aarch64-linux-gnu)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
     fugit (1.11.0)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
@@ -242,6 +248,8 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
+    nokogiri (1.16.6-aarch64-linux)
+      racc (~> 1.4)
     nokogiri (1.16.6-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.16.6-x86_64-darwin)
@@ -394,12 +402,13 @@ GEM
     zeitwerk (2.6.16)
 
 PLATFORMS
+  aarch64-linux
   arm64-darwin-23
   x86_64-darwin-23
   x86_64-linux
-  aarch64-linux
 
 DEPENDENCIES
+  aws-sdk-route53
   aws-sdk-s3 (~> 1.117)
   bcrypt
   better_errors
