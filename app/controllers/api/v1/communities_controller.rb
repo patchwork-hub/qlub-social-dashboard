@@ -5,6 +5,7 @@ module Api
       before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update]
       PER_PAGE = 5
+      ACCESS_TOKEN_SCOPES = "read write follow push".freeze
 
       def index
         communities = records_filter.get.where(channel_type: 'channel_feed')
@@ -54,14 +55,15 @@ module Api
       end
 
       def search_contributor
-         query = params[:query]
-         url = params[:url]
-         token = bearer_token
+        query = params[:query]
+        url = params[:url]
+        token = Doorkeeper::AccessToken.find_by(token: bearer_token)
+        token.update(scopes: ACCESS_TOKEN_SCOPES) if token.present?
 
-         if query.blank? || url.blank? || token.blank?
-           render json: { error: 'query, url and token parameters are required' }, status: :bad_request
-           return
-         end
+        if query.blank? || url.blank? || token.blank?
+          render json: { error: 'query, url and token parameters are required' }, status: :bad_request
+          return
+        end
 
         result = ContributorSearchService.new(query, url: url, token: token).call
 
