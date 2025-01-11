@@ -58,7 +58,9 @@ module Api
         query = params[:query]
         url = params[:url]
         token = Doorkeeper::AccessToken.find_by(token: bearer_token)
-        token.update(scopes: ACCESS_TOKEN_SCOPES) if token.present?
+        if token.present? && token.scopes != ACCESS_TOKEN_SCOPES
+          token.update(scopes: ACCESS_TOKEN_SCOPES)
+        end
 
         if query.blank? || url.blank? || token.blank?
           render json: { error: 'query, url and token parameters are required' }, status: :bad_request
