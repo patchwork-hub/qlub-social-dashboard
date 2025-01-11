@@ -1,5 +1,5 @@
 class GenerateAdminAccessTokenService < BaseService
-  ACCESS_TOKEN_SCOPES = 'read write follow'
+  ACCESS_TOKEN_SCOPES = "read write follow push"
 
   def initialize(user_id)
     @user_id = user_id
