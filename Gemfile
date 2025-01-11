@@ -62,3 +62,4 @@ gem 'jsonapi-serializer', '~> 2.2'
 gem 'doorkeeper'
 
 gem 'rack-cors'
+gem 'aws-sdk-route53'

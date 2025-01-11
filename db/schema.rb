@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_10_073700) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_11_073700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -822,7 +822,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_10_073700) do
     t.bigint "logo_image_file_size"
     t.datetime "logo_image_updated_at"
     t.string "channel_type", default: "channel", null: false
-    t.string "ddl_value"
+    t.string "did_value"
     t.index ["name"], name: "index_patchwork_communities_on_name", unique: true
     t.index ["patchwork_collection_id"], name: "index_patchwork_communities_on_patchwork_collection_id"
     t.index ["patchwork_community_type_id"], name: "index_patchwork_communities_on_patchwork_community_type_id"
