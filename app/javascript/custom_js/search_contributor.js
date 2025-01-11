@@ -103,10 +103,14 @@ function displaySearchResults(accounts) {
         </div>
         <div class="col">
           <p class="mb-0">
-            <a href="https://${account.domain}/@${account.username}" target="_blank">${account.display_name || account.username}</a>
+            <a href="${account.profile_url}" target="_blank">
+              ${account.display_name ? account.display_name : account.username}
+            </a>
           </p>
           <small class="text-muted">
-            <a href="https://${account.domain}/@${account.username}" target="_blank">@${account.username}@${account.domain}</a>
+            <a href="${account.profile_url}" target="_blank">
+              @${account.username}@${account.domain}
+            </a>
           </small>
           ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
