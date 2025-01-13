@@ -56,7 +56,7 @@ module Api
 
       def search_contributor
         query = params[:query]
-        url = params[:url]
+        url = ENV.fetch('MASTODON_INSTANCE_URL')
         access_token = Doorkeeper::AccessToken.find_by(token: bearer_token)
         if access_token.present? && access_token.scopes != ACCESS_TOKEN_SCOPES
           access_token.update(scopes: ACCESS_TOKEN_SCOPES)
@@ -81,9 +81,9 @@ module Api
       def contributor_list
        patchwork_community_id = params[:patchwork_community_id]
 
-         if patchwork_community_id.blank?
-            render json: { error: 'patchwork_community_id is required' }, status: :bad_request
-           return
+        if patchwork_community_id.blank?
+          render json: { error: 'patchwork_community_id is required' }, status: :bad_request
+          return
         end
 
         contributors = get_contributer_list(patchwork_community_id)
