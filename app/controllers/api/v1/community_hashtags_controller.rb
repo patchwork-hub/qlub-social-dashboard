@@ -24,7 +24,7 @@ module Api
           hashtag = params.require(:community_hashtag).require(:hashtag).gsub('#', '')
           perform_hashtag_action(hashtag, @community.id, :follow)
 
-          render json: { data: @community_hashtag, message: "Hashtag saved successfully!" }, status: :created
+          render json: { message: "Hashtag saved successfully!" }, status: :created
         rescue CommunityHashtagPostService::InvalidHashtagError => e
           render json: { error: e.message }, status: :unprocessable_entity
         rescue ActiveRecord::RecordNotUnique => e
@@ -43,7 +43,7 @@ module Api
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :unfollow)
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :follow)
 
-          render json: { data: @community_hashtag, message: "Hashtag updated successfully!" }, status: :ok
+          render json: { message: "Hashtag updated successfully!" }, status: :ok
         rescue CommunityHashtagPostService::InvalidHashtagError => e
           render json: { error: e.message }, status: :unprocessable_entity
         rescue ActiveRecord::RecordNotUnique => e
