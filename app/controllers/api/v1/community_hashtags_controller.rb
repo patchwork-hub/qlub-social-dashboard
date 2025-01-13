@@ -41,6 +41,7 @@ module Api
           return if performed?
 
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :unfollow)
+          @community_hashtag.update!(hashtag: hashtag, name: hashtag)
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :follow)
 
           render json: { message: "Hashtag updated successfully!" }, status: :ok
