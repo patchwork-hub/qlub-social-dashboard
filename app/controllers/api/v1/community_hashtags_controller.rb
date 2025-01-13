@@ -37,7 +37,9 @@ module Api
       def update
         begin
           hashtag = params.require(:community_hashtag).require(:hashtag).gsub('#', '')
-
+          if hashtag.include?(' ')
+            render json: { error: 'Hashtag cannot contain spaces.' }, status: :unprocessable_entity
+          end
           return if performed?
 
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :unfollow)
