@@ -44,6 +44,7 @@ namespace :api, defaults: { format: :json } do
       end
       resources :community_filter_keywords, only: %i[index create update destroy]
       resources :community_hashtags, only: %i[index create update destroy]
+      resources :community_post_types, only: [:show, :update]
     end
 
     resources :content_types, only: [:index, :create]
