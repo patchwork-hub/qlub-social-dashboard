@@ -69,7 +69,7 @@ module Api
           return
         end
 
-        result = ContributorSearchService.new(query, url: url, token: token).call
+        result = ContributorSearchService.new(query, url: url, token: token, account_id: current_user.account_id).call
 
         if result.any?
           render json: { 'accounts' => result }
@@ -79,7 +79,7 @@ module Api
       end
 
       def contributor_list
-       patchwork_community_id = params[:patchwork_community_id]
+        patchwork_community_id = params[:patchwork_community_id]
 
         if patchwork_community_id.blank?
           render json: { error: 'patchwork_community_id is required' }, status: :bad_request
@@ -87,8 +87,13 @@ module Api
         end
 
         contributors = get_contributer_list(patchwork_community_id)
+        serialized_contributors = Api::V1::ContributorSerializer.new(
+          contributors,
+          { params: { account_id: current_user.account_id } }
+        ).serializable_hash
+
         render json: {
-          contributors: contributors,
+          contributors: serialized_contributors[:data],
           meta: pagination_meta(contributors)
         }
       end
@@ -123,7 +128,7 @@ module Api
         follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
         total_follows_ids = (follow_ids + follow_request_ids).uniq
 
-         Account.where(id: total_follows_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+        Account.where(id: total_follows_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
       end
 
       def pagination_meta(object)

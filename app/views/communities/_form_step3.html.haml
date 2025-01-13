@@ -165,8 +165,9 @@
                       %td{ style: 'width: 10%;' }
                         %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
                       %td{ style: 'width: 80%;' }
-                        %h6.mb-0= record.username
-                        %p.text-muted.mb-0= raw(record.note)
+                        = record.display_name
+                        %br
+                        %a{ href: "https://#{record.domain}/@#{record.username}", target: "_blank" }= "@#{record.username}@#{record.domain}"
                       %td{style: "width: 60px;"}
                         %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
             .pagination.pagination-sm.m-0.float-right

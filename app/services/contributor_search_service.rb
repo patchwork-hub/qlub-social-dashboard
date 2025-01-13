@@ -3,6 +3,7 @@ class ContributorSearchService
     @query = query
     @api_base_url = options[:url]
     @token = options[:token]
+    @account_id = options[:account_id]
   end
 
   def call
