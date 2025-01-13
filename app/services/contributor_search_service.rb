@@ -44,8 +44,22 @@ class ContributorSearchService
         'domain' => account.domain,
         'note' => account.note,
         'avatar_url' => account.avatar_url,
-        'profile_url' => "https://#{account.domain}/@#{account.username}"
+        'profile_url' => "https://#{account.domain}/@#{account.username}",
+        'following' => following_status(account)
       }
+    end
+  end
+
+  def following_status(account)
+    follow_ids = Follow.where(account_id: @account_id).pluck(:target_account_id)
+    follow_request_ids = FollowRequest.where(account_id: @account_id).pluck(:target_account_id)
+
+    if follow_ids.include?(account.id)
+      'following'
+    elsif follow_request_ids.include?(account.id)
+      'requested'
+    else
+      'not_followed'
     end
   end
 end
