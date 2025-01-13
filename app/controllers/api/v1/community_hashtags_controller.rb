@@ -72,14 +72,10 @@ module Api
         @community = Community.find(params[:community_id])
         @api_base_url = ENV.fetch('MASTODON_INSTANCE_URL')
         @token = bearer_token
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Community not found' }, status: :not_found
       end
 
       def set_community_hashtag
         @community_hashtag = @community.patchwork_community_hashtags.find(params[:id])
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: 'Hashtag not found' }, status: :not_found
       end
 
       def community_hashtag_params
