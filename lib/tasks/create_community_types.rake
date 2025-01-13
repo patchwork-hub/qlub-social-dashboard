@@ -9,9 +9,12 @@ namespace :community_types do
       ["Curated", "curated"]
     ]
 
-    types.each do |name, slug|
-      CommunityType.create(name: name, slug: slug)
-      puts "Community types created name: #{name}, slug: #{slug}"
+    types.each_with_index do |(name, slug), index|
+      CommunityType.find_or_create_by(name: name, slug: slug) do |community_type|
+      community_type.sorting_index = index + 1
+      end
+
+      puts "Community type created or found => name: #{name}, slug: #{slug}"
     end
 
     puts "Community types created successfully."
