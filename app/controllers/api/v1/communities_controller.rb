@@ -4,6 +4,7 @@ module Api
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update]
+      before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       PER_PAGE = 5
       ACCESS_TOKEN_SCOPES = "read write follow push".freeze
 
@@ -69,7 +70,7 @@ module Api
           return
         end
 
-        result = ContributorSearchService.new(query, url: url, token: token).call
+        result = ContributorSearchService.new(query, url: url, token: token, account_id: current_user.account_id).call
 
         if result.any?
           render json: { 'accounts' => result }
@@ -79,18 +80,13 @@ module Api
       end
 
       def contributor_list
-       patchwork_community_id = params[:patchwork_community_id]
+        contributors = fetch_contributors(:followed)
+        render_contributors(contributors)
+      end
 
-        if patchwork_community_id.blank?
-          render json: { error: 'patchwork_community_id is required' }, status: :bad_request
-          return
-        end
-
-        contributors = get_contributer_list(patchwork_community_id)
-        render json: {
-          contributors: contributors,
-          meta: pagination_meta(contributors)
-        }
+      def mute_contributor_list
+        contributors = fetch_contributors(:muted)
+        render_contributors(contributors)
       end
 
       private
@@ -117,13 +113,41 @@ module Api
         render json: { error: 'Community not found' }, status: :not_found
       end
 
-      def get_contributer_list(patchwork_community_id)
-        account_id = CommunityAdmin.where(patchwork_community_id: patchwork_community_id).pluck(:account_id)
-        follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
-        follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
-        total_follows_ids = (follow_ids + follow_request_ids).uniq
+      def validate_patchwork_community_id
+        @patchwork_community_id = params[:patchwork_community_id]
+        if @patchwork_community_id.blank?
+          render json: { error: 'patchwork_community_id is required' }, status: :bad_request
+        end
+      end
 
-         Account.where(id: total_follows_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+      def fetch_contributors(type)
+        account_ids = CommunityAdmin.where(patchwork_community_id: @patchwork_community_id).pluck(:account_id)
+
+        account_ids =
+          case type
+          when :followed
+            follow_ids = Follow.where(account_id: account_ids).pluck(:target_account_id)
+            follow_request_ids = FollowRequest.where(account_id: account_ids).pluck(:target_account_id)
+            (follow_ids + follow_request_ids).uniq
+          when :muted
+            Mute.where(account_id: account_ids).pluck(:target_account_id)
+          else
+            []
+          end
+
+        Account.where(id: account_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+      end
+
+      def render_contributors(contributors)
+        serialized_contributors = Api::V1::ContributorSerializer.new(
+          contributors,
+          { params: { account_id: current_user.account_id } }
+        ).serializable_hash
+
+        render json: {
+          contributors: serialized_contributors[:data],
+          meta: pagination_meta(contributors)
+        }
       end
 
       def pagination_meta(object)

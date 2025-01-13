@@ -218,7 +218,7 @@ class CommunitiesController < BaseController
   def search_contributor
     query = params[:query]
 
-    result = ContributorSearchService.new(query, url: @api_base_url, token: @token).call
+    result = ContributorSearchService.new(query, url: @api_base_url, token: @token, account_id: get_community_admin_id).call
 
     if result.any?
       render json: { 'accounts' => result }

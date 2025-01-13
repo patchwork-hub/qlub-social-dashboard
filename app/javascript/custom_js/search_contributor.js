@@ -112,7 +112,6 @@ function displaySearchResults(accounts) {
               @${account.username}@${account.domain}
             </a>
           </small>
-          ${account.note ? `<small class="small">${account.note}</small>` : ''}
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
           <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}')" style="float: right;">
