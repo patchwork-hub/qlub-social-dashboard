@@ -40,6 +40,7 @@ namespace :api, defaults: { format: :json } do
         get 'collections'
         get 'contributor_list'
         get 'search_contributor'
+        get 'mute_contributor_list'
       end
       resources :community_filter_keywords, only: %i[index create update destroy]
       resources :community_hashtags, only: %i[index create update destroy]
