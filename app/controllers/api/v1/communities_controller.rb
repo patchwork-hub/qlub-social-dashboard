@@ -15,7 +15,7 @@ module Api
 
       def create
         if CommunityAdmin.exists?(account_id: current_user.account_id)
-          render json: { error: "You are not authorized to perform this action." }, status: :forbidden and return
+          render json: { error: "You can only create one channel." }, status: :forbidden and return
         end
 
         community = CommunityPostService.new.call(
