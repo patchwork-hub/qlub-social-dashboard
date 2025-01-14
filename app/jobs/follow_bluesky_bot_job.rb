@@ -23,6 +23,7 @@ class FollowBlueskyBotJob < ApplicationJob
     target_account = search_target_account
     return if target_account.nil?
 
+    puts "[FollowBlueskyBotJob] target_account: #{target_account}"
     # Follow the bluesky bot account
     FollowService.new.call(community_admin&.account, target_account)
   end
