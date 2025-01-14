@@ -386,15 +386,15 @@ class CommunitiesController < BaseController
 
   def set_api_credentials
     @api_base_url = ENV['MASTODON_INSTANCE_URL']
-    @token = fetch_oauth_token
-  end
-
-  def fetch_oauth_token
     admin = Account.where(id: get_community_admin_id).first
     if admin
-      token_service = GenerateAdminAccessTokenService.new(admin.user.id)
-      token_service.call
+      @token = fetch_oauth_token(admin.user.id)
     end
+  end
+
+  def fetch_oauth_token(user_id)
+    token_service = GenerateAdminAccessTokenService.new(user_id)
+    token_service.call
   end
 
   def perform_hashtag_action(hashtag_name, community_id = nil, action)
@@ -408,6 +408,17 @@ class CommunitiesController < BaseController
     service_class = action == :follow ? FollowHashtagService : UnfollowHashtagService
     result = service_class.new(@api_base_url, @token, hashtag[:name]).call
     puts result ? "Successfully #{action}ed ##{hashtag[:name]}" : "Failed to #{action} ##{hashtag[:name]}"
+
+    perform_relay_action(hashtag_name, action)
+  end
+
+  def perform_relay_action(hashtag_name, action)
+    # Owner account's user id
+    user_id = 1
+    token = fetch_oauth_token(user_id)    
+    if action == :follow
+      create_relay(hashtag_name, token)
+    end
   end
 
   def default_channel_type
@@ -416,5 +427,12 @@ class CommunitiesController < BaseController
 
   def set_current_step
     @current_step = action_name.match(/\d+/).to_s.to_i || 1
+  end
+
+  def create_relay(hashtag_name, token)
+    inbox_url = "https://relay.fedi.buzz/tag/#{hashtag_name}"
+    unless Relay.exists?(inbox_url: inbox_url)
+      CreateRelayService.new(@api_base_url, token, hashtag_name).call
+    end
   end
 end
