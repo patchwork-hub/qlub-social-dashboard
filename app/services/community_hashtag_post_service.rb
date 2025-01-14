@@ -25,8 +25,8 @@ class CommunityHashtagPostService < BaseService
   def prepare_params!
     validate_hashtag!(@options[:hashtag])
 
-    @hashtag = @options[:hashtag].gsub('#', '').downcase
-    @name = @options[:hashtag].gsub('#', '')
+    @hashtag = @options[:hashtag].gsub('#', '')
+    @name = @hashtag
     @community_id = @options[:community_id]
   end
 
