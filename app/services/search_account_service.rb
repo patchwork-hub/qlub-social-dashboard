@@ -11,7 +11,11 @@ class SearchAccountService
 
   def call
     response = search_mastodon
+    puts "[SearchAccountService] response: #{response}"
+
     accounts = response.parsed_response['accounts']
+    puts "[SearchAccountService] accounts: #{accounts}"
+    puts "[SearchAccountService] find_saved_accounts_with_retry: #{find_saved_accounts_with_retry(accounts)}"
     find_saved_accounts_with_retry(accounts)
   end
 
