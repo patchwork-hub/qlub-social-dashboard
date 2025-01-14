@@ -99,7 +99,41 @@ module Api
 
         service_class = action == :follow ? FollowHashtagService : UnfollowHashtagService
         service_class.new(@api_base_url, @token, hashtag[:name]).call
+
+        perform_relay_action(hashtag_name, community_id, action)
       end
+
+      def perform_relay_action(hashtag_name, community_id, action)
+        # Owner account's user id
+        user_id = 1
+        token = fetch_oauth_token(user_id)    
+    
+        if action == :follow
+          create_relay(hashtag_name, token)
+        end
+    
+        if action == :unfollow
+          unless CommunityHashtag.where(name: hashtag_name).where.not(patchwork_community_id: community_id).exists?
+            delete_relay(hashtag_name, token)
+          end
+        end
+      end
+
+      def create_relay(hashtag_name, token)
+        inbox_url = "https://relay.fedi.buzz/tag/#{hashtag_name}"
+        unless Relay.exists?(inbox_url: inbox_url)
+          CreateRelayService.new(@api_base_url, token, hashtag_name).call
+        end
+      end
+    
+      def delete_relay(hashtag_name, token)
+        inbox_url = "https://relay.fedi.buzz/tag/#{hashtag_name}"
+        relay = Relay.find_by(inbox_url: inbox_url)
+        if relay
+          DeleteRelayService.new(@api_base_url, token, relay.id).call
+        end
+      end
+
     end
   end
 end

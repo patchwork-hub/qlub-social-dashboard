@@ -41,6 +41,7 @@ namespace :api, defaults: { format: :json } do
         get 'contributor_list'
         get 'search_contributor'
         get 'mute_contributor_list'
+        post 'set_visibility'
       end
       resources :community_filter_keywords, only: %i[index create update destroy]
       resources :community_hashtags, only: %i[index create update destroy]

@@ -3,7 +3,7 @@ module Api
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
-      before_action :set_community, only: %i[show update]
+      before_action :set_community, only: %i[show update set_visibility]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       PER_PAGE = 5
       ACCESS_TOKEN_SCOPES = "read write follow push".freeze
@@ -89,6 +89,15 @@ module Api
       def mute_contributor_list
         contributors = fetch_contributors(:muted)
         render_contributors(contributors)
+      end
+
+      def set_visibility
+        if @community.visibility.nil?
+          @community.update(visibility: 'public_access')
+          render json: { message: "Channel created successfully" }, status: :ok
+        else
+          render json: { message: "Channel updated successfully" }, status: :ok
+        end
       end
 
       private
