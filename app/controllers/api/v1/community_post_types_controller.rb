@@ -1,9 +1,11 @@
 module Api
   module V1
-    class CommunityPostTypesController < ApplicationController
+    class CommunityPostTypesController < ApiController
+      skip_before_action :verify_key!
+      before_action :authenticate_user_from_header
       before_action :set_community
 
-      def show
+      def index
         @community_post_type = @community.community_post_type
         if @community_post_type
           render json: {
@@ -16,7 +18,7 @@ module Api
         end
       end
 
-      def update
+      def create
         @community_post_type = @community.community_post_type || @community.build_community_post_type
         @community_post_type.assign_attributes(community_post_type_params)
         if @community_post_type.save
