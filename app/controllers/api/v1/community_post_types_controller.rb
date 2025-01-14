@@ -14,7 +14,11 @@ module Api
             replies: @community_post_type.replies
           }
         else
-          render json: { error: "Community post type preferences not found for this community" }, status: :not_found
+          render json: {
+            posts: false,
+            reposts: false,
+            replies: false
+          }
         end
       end
 
