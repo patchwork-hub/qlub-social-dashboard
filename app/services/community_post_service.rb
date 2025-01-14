@@ -170,15 +170,15 @@ class CommunityPostService < BaseService
     end
 
     if @options[:avatar_image].nil?
-      @community.avatar_image = nil
-      @community.avatar_image_file_name = nil
+      @community&.avatar_image = nil
+      @community&.avatar_image_file_name = nil
     else
       attributes[:avatar_image] = @options[:avatar_image]
     end
 
     if @options[:banner_image].nil?
-      @community.banner_image = nil
-      @community.banner_image_file_name = nil
+      @community&.banner_image = nil
+      @community&.banner_image_file_name = nil
     else
       attributes[:banner_image] = @options[:banner_image]
     end
