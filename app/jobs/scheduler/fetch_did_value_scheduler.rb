@@ -29,6 +29,9 @@ module Scheduler
           
         community.update(did_value: did_value) if did_value
         Rails.logger.info("community: #{community.id} | #{community.name} | #{community.slug}, did_value: #{did_value}")
+        
+        # DM to @bsky.brid.gy@bsky.brid.gy
+        PostStatusService.new.call(token: @token, options: status_json(user&.account&.username))
       end
     end
 
@@ -49,6 +52,30 @@ module Scheduler
     def fetch_oauth_token(user)
       token_service = GenerateAdminAccessTokenService.new(user&.id)
       token_service.call
+    end
+
+    def status_json(username)
+      env = ENV.fetch('RAILS_ENV', nil)
+      domain = case env
+      when 'staging'
+        'staging.patchwork.online'
+      when 'production'
+        'channel.org'
+      else
+        'localhost:3000'
+      end
+
+      status = "@bsky.brid.gy@bsky.brid.gy #{username} [#{domain}]"
+      {
+        "in_reply_to_id": nil,
+        "language": "en",
+        "media_ids": [],
+        "poll": nil,
+        "sensitive": false,
+        "spoiler_text": "",
+        "status": status,
+        "visibility": "direct"
+      }
     end
   end
 end
