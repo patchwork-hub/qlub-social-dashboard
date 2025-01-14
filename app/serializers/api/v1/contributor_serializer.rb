@@ -9,7 +9,8 @@ class Api::V1::ContributorSerializer
             :note,
             :avatar_url,
             :profile_url,
-            :following
+            :following,
+            :is_muted
 
   attribute :id do |object|
     object.id.to_s
@@ -32,5 +33,11 @@ class Api::V1::ContributorSerializer
     else
       'not_followed'
     end
+  end
+
+  attribute :is_muted do |object, params|
+    account_id = params[:account_id]
+
+    Mute.where(account_id: account_id, target_account_id: object.id).exists?
   end
 end

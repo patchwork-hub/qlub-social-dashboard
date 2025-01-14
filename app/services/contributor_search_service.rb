@@ -47,14 +47,15 @@ class ContributorSearchService
         'note' => account.note,
         'avatar_url' => account.avatar_url,
         'profile_url' => profile_url,
-        'following' => following_status(account)
+        'following' => following_status(account),
+        'is_muted' => is_muted(account)
       }
     end
   end
 
   def generate_profile_url(account)
     return "https://#{account.domain}/@#{account.username}" if account&.domain.present?
-  
+
     env = ENV.fetch('RAILS_ENV', nil)
     case env
     when 'staging'
@@ -77,5 +78,9 @@ class ContributorSearchService
     else
       'not_followed'
     end
+  end
+
+  def is_muted(account)
+    Mute.where(account_id: @account_id, target_account_id: account.id).exists?
   end
 end
