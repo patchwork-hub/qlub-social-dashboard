@@ -53,18 +53,13 @@ class Community < ApplicationRecord
 
   accepts_nested_attributes_for :patchwork_community_additional_informations, allow_destroy: true
 
-  has_many :community_post_types,
+  has_one :community_post_type,
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
   belongs_to :patchwork_collection,
             class_name: 'Collection',
             foreign_key: 'patchwork_collection_id'
-
-  has_many :community_post_types,
-            foreign_key: 'patchwork_community_id',
-            dependent: :destroy
-
 
   belongs_to :patchwork_community_type,
               class_name: 'CommunityType',
