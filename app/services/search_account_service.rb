@@ -38,9 +38,7 @@ class SearchAccountService
     return [] unless accounts.present?
 
     saved_accounts = []
-    while saved_accounts.empty?
-      saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
-    end
+    saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
 
     saved_accounts.map do |account|
       profile_url = generate_profile_url(account)
