@@ -413,6 +413,8 @@ class CommunitiesController < BaseController
   end
 
   def perform_relay_action(hashtag_name, action)
+    # Owner account's user id
+    user_id = 1
     token = fetch_oauth_token(user_id)    
     if action == :follow
       create_relay(hashtag_name, token)
