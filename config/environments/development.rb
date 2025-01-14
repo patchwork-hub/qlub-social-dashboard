@@ -77,7 +77,7 @@ Rails.application.configure do
   }
 
   # Configure AWS
-  # require_relative '../../app/services/aws_service'
+  require_relative '../../app/services/aws_service'
   AwsService.configure_aws
 
 end

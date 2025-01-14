@@ -23,9 +23,9 @@ class PostStatusService < BaseService
                              headers: headers)
 
     if response.code == 200
-      puts "Created status: #{response.body}"
+      Rails.logger.info("Created status: #{response.body}")
     else
-      puts "Failed to create status: #{response.body}"
+      Rails.logger.error("Failed to create status: #{response.body}")
     end
 
     response
