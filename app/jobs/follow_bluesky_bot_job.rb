@@ -41,6 +41,7 @@ class FollowBlueskyBotJob < ApplicationJob
 
     result = SearchAccountService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
 
+     puts "[FollowBlueskyBotJob] result: #{result}"
     if result.any?
       Rails.logger.info("[FollowBlueskyBotJob - search_target_account] Found the bluesky bot account. #{result}")
       return Account.find_by(id: result.last['id'])
