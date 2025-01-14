@@ -58,7 +58,6 @@ class CommunityPostService < BaseService
 
       @community.update!(community_attributes)
       if @community.channel_feed?
-        update_account_attributes
         set_clean_up_policy
       end
       @community
@@ -111,15 +110,21 @@ class CommunityPostService < BaseService
 
   def update_account_attributes
     p "START_UPDATING_ACCOUNT #{@community.slug.underscore}"
-
-    @account.update!(
-      display_name: @community.name,
-      username: @community.slug.underscore,
-      avatar: @community.avatar_image || '',
-      header: @community.banner_image || '',
-      actor_type: "Service",
-      discoverable: true
-    )
+    if @options[:id].present?
+      @account.update!(
+        avatar: @community.avatar_image || '',
+        header: @community.banner_image || ''
+      )
+    else
+      @account.update!(
+        display_name: @community.name,
+        username: @community.slug.underscore,
+        avatar: @community.avatar_image || '',
+        header: @community.banner_image || '',
+        actor_type: "Service",
+        discoverable: true
+      )
+    end
   end
 
   def create_community_admin
@@ -165,24 +170,24 @@ class CommunityPostService < BaseService
     end
 
     if @options[:logo_image].nil?
-      attributes[:logo_image] = nil
-      attributes[:logo_image_file_name] = nil
+      @community.logo_image = nil
+      @community.logo_image_file_name = nil
     else
       attributes[:logo_image] = @options[:logo_image]
     end
 
     if @options[:avatar_image].nil?
-       attributes[:avatar_image] = nil
-       attributes[:avatar_image_file_name] = nil
+      @community.avatar_image = nil
+      @community.avatar_image_file_name = nil
     else
-        attributes[:avatar_image] = @options[:avatar_image]
+      attributes[:avatar_image] = @options[:avatar_image]
     end
 
-   if @options[:banner_image].nil?
-       attributes[:banner_image] = nil
-       attributes[:banner_image_file_name] = nil
-     else
-       attributes[:banner_image] = @options[:banner_image]
+    if @options[:banner_image].nil?
+      @community.banner_image = nil
+      @community.banner_image_file_name = nil
+    else
+      attributes[:banner_image] = @options[:banner_image]
     end
 
     attributes.compact
