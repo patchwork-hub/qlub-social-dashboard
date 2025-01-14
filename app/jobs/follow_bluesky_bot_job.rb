@@ -5,19 +5,25 @@ class FollowBlueskyBotJob < ApplicationJob
 
   def perform(community_id)
     return if community_id.nil?
+    puts "[FollowBlueskyBotJob] community_id: #{community_id}"
 
     community = Community.find_by(id: community_id)
     return if community.nil?
+    puts "[FollowBlueskyBotJob] community: #{community}"
 
     community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
     return if community_admin.nil?
+    puts "[FollowBlueskyBotJob] community_admin: #{community_admin}"
 
     user = User.find_by(email: community_admin&.email, account_id: community_admin&.account_id)
     return if user.nil?
+    puts "[FollowBlueskyBotJob] user: #{user}"
 
     # Generate access token for community bot account
     @token = fetch_oauth_token(user)
     return if @token.nil?
+    puts "[FollowBlueskyBotJob] @token: #{@token}"
+
 
     # Search for the bluesky bot account
     target_account = search_target_account
@@ -40,6 +46,7 @@ class FollowBlueskyBotJob < ApplicationJob
       return Account.find_by(id: result.last['id'])
     else
       Rails.logger.error("[FollowBlueskyBotJob - search_target_account] Failed to find the bluesky bot account.")
+      nil
     end
   end
 

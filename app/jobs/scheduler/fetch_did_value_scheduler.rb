@@ -94,7 +94,7 @@ module Scheduler
       when 'production'
         hosted_zones.hosted_zones.find { |zone| zone.name == 'channel.org.' }
       else
-        hosted_zones.hosted_zones.find { |zone| zone.name == 'channel.org.' }
+        hosted_zones.hosted_zones.find { |zone| zone.name == 'localhost.3000.' }
       end
 
       if channel_zone
