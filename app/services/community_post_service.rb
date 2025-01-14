@@ -156,9 +156,6 @@ class CommunityPostService < BaseService
       patchwork_collection_id: @collection.id,
       position: get_position,
       admin_following_count: 0,
-      logo_image: @options[:logo_image],
-      avatar_image: @options[:avatar_image],
-      banner_image: @options[:banner_image],
       patchwork_community_type_id: @community_type.id
     }
 
@@ -166,6 +163,28 @@ class CommunityPostService < BaseService
       attributes[:name] = @options[:name]
       attributes[:slug] = @options[:slug]
     end
+
+    if @options[:logo_image].nil?
+      attributes[:logo_image] = nil
+      attributes[:logo_image_file_name] = nil
+    else
+      attributes[:logo_image] = @options[:logo_image]
+    end
+
+    if @options[:avatar_image].nil?
+       attributes[:avatar_image] = nil
+       attributes[:avatar_image_file_name] = nil
+    else
+        attributes[:avatar_image] = @options[:avatar_image]
+    end
+
+   if @options[:banner_image].nil?
+       attributes[:banner_image] = nil
+       attributes[:banner_image_file_name] = nil
+     else
+       attributes[:banner_image] = @options[:banner_image]
+    end
+
     attributes.compact
   end
 
