@@ -142,7 +142,7 @@ module Api
             []
           end
 
-        Account.where(id: account_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+        Account.where(id: account_ids).where.not(username: "bsky.brid.gy").page(params[:page]).per(params[:per_page] || PER_PAGE)
       end
 
       def render_contributors(contributors)
