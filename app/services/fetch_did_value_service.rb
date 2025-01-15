@@ -16,18 +16,21 @@ class FetchDidValueService < BaseService
 
   def target_account_url
     return unless @target_account&.username
+    puts "[FetchDidValueService] url: https://fed.brid.gy/ap/@#{@target_account.username}@channel.org"
 
     "https://fed.brid.gy/ap/@#{@target_account.username}@channel.org"
   end
 
   def community_slug_url
     return unless @community&.slug
+    puts "[FetchDidValueService] url: https://fed.brid.gy/ap/@#{@community.slug}@channel.org"
 
     "https://fed.brid.gy/ap/@#{@community.slug}@channel.org"
   end
 
   def community_name_url
     return unless @community&.name
+    puts "[FetchDidValueService] url: https://fed.brid.gy/ap/@#{@community.name}@channel.org"
 
     "https://fed.brid.gy/ap/@#{@community.name}@channel.org"
   end

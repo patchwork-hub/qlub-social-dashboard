@@ -10,7 +10,6 @@ class CommunityAdminsController < ApplicationController
     authorize @community_admin, :create?
     if @community_admin.save
       CommunityAdminPostService.new(@community_admin, current_user, @community).call
-      FollowBlueskyBotJob.perform_now(@community.id) if @community_admin.is_boost_bot
       flash[:notice] = 'Community admin created successfully.'
       redirect_to step2_community_path(@community)
     else

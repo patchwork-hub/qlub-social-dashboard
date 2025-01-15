@@ -4,12 +4,13 @@ module Scheduler
     sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 30.minutes.to_i, queue: :scheduler
 
     def perform
-      communities = Community.where(did_value: nil)
+      communities = Community.where(did_value: nil).exlude_incomplete_channels
       return unless communities.any?
 
       communities.each do |community|
         return if community.nil?
-  
+        puts "[FetchDidValueScheduler] community: #{community.inspect}"
+
         community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
         return if community_admin.nil?
   
@@ -35,6 +36,7 @@ module Scheduler
           create_dns_record(did_value)
 
           # DM to @bsky.brid.gy@bsky.brid.gy
+          puts "[FetchDidValueScheduler] status json: #{status_json(user&.account&.username)}"
           PostStatusService.new.call(token: @token, options: status_json(user&.account&.username))
         end
       end
@@ -43,16 +45,26 @@ module Scheduler
     private
     def search_target_account
       query = '@bsky.brid.gy@bsky.brid.gy'
-  
-      result = SearchAccountService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
-  
-      if result.any?
-        Rails.logger.info("[FollowBlueskyBotJob - search_target_account] Found the bluesky bot account. #{result}")
-        return Account.find_by(id: result.last['id'])
-      else
-        Rails.logger.error("[FollowBlueskyBotJob - search_target_account] Failed to find the bluesky bot account.")
+      retries = 5
+      result = nil
+    
+      while retries >= 0
+        result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
+        puts "[FetchDidValueScheduler] result: #{result}"
+    
+        if result.any?
+          Rails.logger.info("[FetchDidValueScheduler - search_target_account] Found the Bluesky bot account. #{result}")
+          return Account.find_by(id: result.last['id'])
+        else
+          Rails.logger.warn("[FetchDidValueScheduler - search_target_account] Attempt failed. Retrying...") if retries > 0
+        end
+    
+        retries -= 1
       end
-    end
+    
+      Rails.logger.error("[FetchDidValueScheduler - search_target_account] Failed to find the Bluesky bot account after [#{retries}] multiple attempts.")
+      nil
+    end  
   
     def fetch_oauth_token(user)
       token_service = GenerateAdminAccessTokenService.new(user&.id)

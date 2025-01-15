@@ -192,6 +192,7 @@ class CommunitiesController < BaseController
   def set_visibility
     visibility = params.dig(:community, :visibility).presence || 'public_access'
     if @community.update(visibility: visibility)
+      FollowBlueskyBotJob.perform_now(@community.id) if @community&.community_admins&.last&.is_boost_bot
       # admin_email = User.where(account_id: get_community_admin_id)
       # DashboardMailer.channel_created(@community, admin_email).deliver_now
       if @community.channel?
