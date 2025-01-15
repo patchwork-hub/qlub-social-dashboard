@@ -105,13 +105,14 @@ module Api
 
       def perform_relay_action(hashtag_name, community_id, action)
         # Owner account's user id
-        user_id = 1
-        token = fetch_oauth_token(user_id)    
-    
+        owner_role = UserRole.find_by(name: 'Owner')
+        owner_user = User.find_by(role: owner_role)
+        token = fetch_oauth_token(owner_user.id)
+
         if action == :follow
           create_relay(hashtag_name, token)
         end
-    
+
         if action == :unfollow
           unless CommunityHashtag.where(name: hashtag_name).where.not(patchwork_community_id: community_id).exists?
             delete_relay(hashtag_name, token)
@@ -125,13 +126,18 @@ module Api
           CreateRelayService.new(@api_base_url, token, hashtag_name).call
         end
       end
-    
+
       def delete_relay(hashtag_name, token)
         inbox_url = "https://relay.fedi.buzz/tag/#{hashtag_name}"
         relay = Relay.find_by(inbox_url: inbox_url)
         if relay
           DeleteRelayService.new(@api_base_url, token, relay.id).call
         end
+      end
+
+      def fetch_oauth_token(user_id)
+        token_service = GenerateAdminAccessTokenService.new(user_id)
+        token_service.call
       end
 
     end
