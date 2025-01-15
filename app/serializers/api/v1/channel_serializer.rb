@@ -8,7 +8,7 @@ class Api::V1::ChannelSerializer
 
   attributes :id, :name, :slug, :description, :is_recommended, :admin_following_count,
              :patchwork_collection_id, :guides, :participants_count,
-             :visibility, :position, :channel_type, :created_at
+             :visibility, :position, :channel_type, :created_at, :no_of_admins
 
   attribute :community_type do |object|
     Api::V1::PatchworkCommunityTypeSerializer.new(object.patchwork_community_type).serializable_hash
@@ -28,6 +28,10 @@ class Api::V1::ChannelSerializer
 
   attribute :follower do |object|
     0
+  end
+
+  attribute :no_of_admins do |object|
+    object.community_admins.count
   end
 
 end
