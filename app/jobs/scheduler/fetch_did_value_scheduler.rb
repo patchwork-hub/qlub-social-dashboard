@@ -1,7 +1,7 @@
 module Scheduler
   class FetchDidValueScheduler
     include Sidekiq::Worker
-    sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 30.minutes.to_i, queue: :scheduler
+    sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 15.minutes.to_i, queue: :scheduler
 
     def perform
       communities = Community.where(did_value: nil).exlude_incomplete_channels
