@@ -4,7 +4,8 @@ class FollowBlueskyBotJob < ApplicationJob
   queue_as :default
 
   def perform(community_id)
-    return if community_id.nil?
+    env = ENV.fetch('RAILS_ENV', nil)
+    return if community_id.nil? && env == 'staging'
 
     community = Community.find_by(id: community_id)
     return if community.nil?

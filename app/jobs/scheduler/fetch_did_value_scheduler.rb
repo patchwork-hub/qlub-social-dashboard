@@ -4,6 +4,9 @@ module Scheduler
     sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 15.minutes.to_i, queue: :scheduler
 
     def perform
+      env = ENV.fetch('RAILS_ENV', nil)
+      return if env == 'staging'
+
       communities = Community.where(did_value: nil).exlude_incomplete_channels
       return unless communities.any?
 
