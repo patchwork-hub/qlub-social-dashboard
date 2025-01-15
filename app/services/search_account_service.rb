@@ -1,4 +1,7 @@
-class ContributorSearchService
+# frozen_string_literal: true
+require 'httparty'
+
+class SearchAccountService
   def initialize(query, options = {})
     @query = query
     @api_base_url = options[:url]
@@ -35,10 +38,7 @@ class ContributorSearchService
     return [] unless accounts.present?
 
     saved_accounts = []
-    while saved_accounts.empty?
-      saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
-      sleep(2) if saved_accounts.empty?
-    end
+    saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
 
     saved_accounts.map do |account|
       profile_url = generate_profile_url(account)

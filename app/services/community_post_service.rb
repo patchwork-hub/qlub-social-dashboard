@@ -57,6 +57,7 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
+      FollowBlueskyBotJob.perform_now(@community.id) if @community&.community_admins&.last&.is_boost_bot
       if @community.channel_feed?
         set_clean_up_policy
       end

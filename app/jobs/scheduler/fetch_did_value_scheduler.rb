@@ -44,7 +44,7 @@ module Scheduler
     def search_target_account
       query = '@bsky.brid.gy@bsky.brid.gy'
   
-      result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
+      result = SearchAccountService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
   
       if result.any?
         Rails.logger.info("[FollowBlueskyBotJob - search_target_account] Found the bluesky bot account. #{result}")
@@ -94,7 +94,7 @@ module Scheduler
       when 'production'
         hosted_zones.hosted_zones.find { |zone| zone.name == 'channel.org.' }
       else
-        hosted_zones.hosted_zones.find { |zone| zone.name == 'channel.org.' }
+        hosted_zones.hosted_zones.find { |zone| zone.name == 'localhost.3000.' }
       end
 
       if channel_zone

@@ -31,16 +31,26 @@ class FollowBlueskyBotJob < ApplicationJob
 
   def search_target_account
     query = '@bsky.brid.gy@bsky.brid.gy'
-
-    result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
-
-    if result.any?
-      Rails.logger.info("[FollowBlueskyBotJob - search_target_account] Found the bluesky bot account. #{result}")
-      return Account.find_by(id: result.last['id'])
-    else
-      Rails.logger.error("[FollowBlueskyBotJob - search_target_account] Failed to find the bluesky bot account.")
+    retries = 5
+    result = nil
+  
+    while retries >= 0
+      result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: @token).call
+      puts "[FollowBlueskyBotJob] result: #{result}"
+  
+      if result.any?
+        Rails.logger.info("[FollowBlueskyBotJob - search_target_account] Found the Bluesky bot account. #{result}")
+        return Account.find_by(id: result.last['id'])
+      else
+        Rails.logger.warn("[FollowBlueskyBotJob - search_target_account] Attempt failed. Retrying...") if retries > 0
+      end
+  
+      retries -= 1
     end
-  end
+  
+    Rails.logger.error("[FollowBlueskyBotJob - search_target_account] Failed to find the Bluesky bot account after [#{retries}] multiple attempts.")
+    nil
+  end  
 
   def fetch_oauth_token(user)
     token_service = GenerateAdminAccessTokenService.new(user&.id)
