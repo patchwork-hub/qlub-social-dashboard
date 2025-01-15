@@ -60,12 +60,7 @@ module Api
       def search_contributor
         query = params[:query]
         url = ENV.fetch('MASTODON_INSTANCE_URL')
-        access_token = Doorkeeper::AccessToken.find_by(token: bearer_token)
-        if access_token.present? && access_token.scopes != ACCESS_TOKEN_SCOPES
-          access_token.update(scopes: ACCESS_TOKEN_SCOPES)
-        end
-
-        token = access_token&.token
+        token = bearer_token
 
         if query.blank? || url.blank? || token.blank?
           render json: { error: 'query, url and token parameters are required' }, status: :bad_request
@@ -94,6 +89,7 @@ module Api
       def set_visibility
         if @community.visibility.nil?
           @community.update(visibility: 'public_access')
+          FollowBlueskyBotJob.perform_now(@community.id) if @community&.community_admins&.last&.is_boost_bot
           render json: { message: "Channel created successfully" }, status: :ok
         else
           render json: { message: "Channel updated successfully" }, status: :ok
@@ -146,7 +142,7 @@ module Api
             []
           end
 
-        Account.where(id: account_ids).page(params[:page]).per(params[:per_page] || PER_PAGE)
+        Account.where(id: account_ids).where.not(username: "bsky.brid.gy").page(params[:page]).per(params[:per_page] || PER_PAGE)
       end
 
       def render_contributors(contributors)
