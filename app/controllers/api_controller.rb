@@ -57,23 +57,4 @@ class ApiController < ApplicationController
     header.gsub(pattern, '') if header && header.match(pattern)
   end
 
-  def validate_token(token)
-    begin
-      env = ENV.fetch('RAILS_ENV', nil)
-      url = case env
-        when 'staging'
-          'https://staging.patchwork.online/oauth/token/info'
-        when 'production'
-          'https://channel.org/oauth/token/info'
-        else
-          'http://localhost:3000/oauth/token/info'
-        end
-      response = HTTParty.get(url, headers: { 'Authorization' => "Bearer #{token}" })
-      JSON.parse(response.body)
-    rescue HTTParty::Error => e
-      Rails.logger.error "Error fetching user info: #{e.message}"
-      nil
-    end
-  end
-
 end
