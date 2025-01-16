@@ -81,8 +81,9 @@ class CommunitiesController < BaseController
       community_hashtag = CommunityHashtag.find(params[:form_community_hashtag][:hashtag_id])
 
       perform_hashtag_action(community_hashtag.hashtag, nil, :unfollow)
-
-      community_hashtag.update!(hashtag: params[:form_community_hashtag][:hashtag].gsub('#', ''))
+      hashtag = params[:form_community_hashtag][:hashtag].gsub('#', '')
+      community_hashtag.assign_attributes(hashtag: hashtag, name: hashtag)
+      community_hashtag.save!
       perform_hashtag_action(community_hashtag.hashtag, nil, :follow)
 
       flash[:notice] = "Hashtag updated successfully!"
