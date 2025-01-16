@@ -43,7 +43,8 @@ module Api
           return if performed?
 
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :unfollow)
-          @community_hashtag.update!(hashtag: hashtag, name: hashtag)
+          @community_hashtag.assign_attributes(hashtag: hashtag, name: hashtag, patchwork_community_id: @community.id)
+          @community_hashtag.save!
           perform_hashtag_action(@community_hashtag.hashtag, @community.id, :follow)
 
           render json: { message: "Hashtag updated successfully!" }, status: :ok
@@ -86,11 +87,14 @@ module Api
       end
 
       def load_commu_hashtag_records
-        @community.patchwork_community_hashtags.page(params[:page]).per(params[:per_page] || PER_PAGE)
+        @community.patchwork_community_hashtags
+          .order(created_at: :desc)
+          .page(params[:page])
+          .per(params[:per_page] || PER_PAGE)
       end
 
       def perform_hashtag_action(hashtag_name, community_id = nil, action)
-        if action == :follow && community_id
+        if action == :follow && community_id && !@community_hashtag.present?
           CommunityHashtagPostService.new.call(hashtag: hashtag_name, community_id: community_id)
         end
 
