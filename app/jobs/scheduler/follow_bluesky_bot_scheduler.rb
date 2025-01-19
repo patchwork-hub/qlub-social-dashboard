@@ -4,7 +4,7 @@ module Scheduler
 
   class FollowBlueskyBotScheduler
     include Sidekiq::Worker
-    sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 30.minutes.to_i, queue: :scheduler
+    sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 10.minutes.to_i, queue: :scheduler
 
     def perform
       return if ENV.fetch('RAILS_ENV', nil).eql?('staging')
@@ -13,13 +13,17 @@ module Scheduler
       return unless communities.any?
 
       communities.each do |community|
+        Rails.logger.info("[FollowBlueskyBotScheduler] community: #{community.inspect}")
 
         community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
         next if community_admin.nil?
 
         account = community_admin&.account
         next if account.nil?
+        Rails.logger.info("[FollowBlueskyBotScheduler] account: #{account.inspect}")
 
+
+        Rails.logger.info("[FollowBlueskyBotScheduler] enable_bride_bluesky?: #{enable_bride_bluesky?(account)}")
         next unless enable_bride_bluesky?(account)
 
         user = User.find_by(email: community_admin&.email, account_id: account&.id)
@@ -33,7 +37,7 @@ module Scheduler
 
         account_relationship_array = handle_relationship(account, target_account.id)
         next unless account_relationship_array.present? && account_relationship_array&.last
-        
+
         if account_relationship_array&.last['requested']
           UnfollowService.new.call(account, target_account)
         end
@@ -121,7 +125,7 @@ module Scheduler
           },
         })
 
-        Rails.logger.info("Change ID: #{response.change_info.id}")
+        Rails.logger.info("[FollowBlueskyBotScheduler] Change ID: #{response.change_info.id}")
       else
         Rails.logger.error("Hosted zone for #{ENV.fetch('RAILS_ENV', nil)} not found.")
       end
