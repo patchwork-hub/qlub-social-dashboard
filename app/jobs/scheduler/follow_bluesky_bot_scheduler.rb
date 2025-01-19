@@ -77,12 +77,12 @@ module Scheduler
 
       if did_value
         community.update!(did_value: did_value)      
-        create_dns_record(did_value)
-        create_direct_message(token)
+        create_dns_record(did_value, community)
+        create_direct_message(token, community)
       end
     end
 
-    def create_dns_record(did_value)
+    def create_dns_record(did_value, community)
       route53 = Aws::Route53::Client.new
       hosted_zones = route53.list_hosted_zones
 
@@ -104,7 +104,7 @@ module Scheduler
               {
           action: 'UPSERT',
           resource_record_set: {
-            name: '_atproto.channel.org', # Fully Qualified Domain Name
+            name: "_atproto.#{community&.slug}", # Fully Qualified Domain Name
             type: 'TXT',
             ttl: 300,
             resource_records: [
@@ -122,17 +122,7 @@ module Scheduler
       end
     end
 
-    def create_direct_message(token)
-
-      env = ENV.fetch('RAILS_ENV', nil)
-      domain = case env
-      when 'staging'
-        'staging.patchwork.online'
-      when 'production'
-        'channel.org'
-      else
-        'localhost:3000'
-      end
+    def create_direct_message(token, community)
 
       status_params = {
         "in_reply_to_id": nil,
@@ -141,7 +131,7 @@ module Scheduler
         "poll": nil,
         "sensitive": false,
         "spoiler_text": "",
-        "status": "@bsky.brid.gy@bsky.brid.gy username #{domain}",
+        "status": "@bsky.brid.gy@bsky.brid.gy username #{community&.slug}.channel.org",
         "visibility": "direct"
       }
 
