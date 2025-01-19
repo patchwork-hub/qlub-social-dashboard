@@ -31,15 +31,20 @@ module Scheduler
         target_account = search_target_account(token)
         next if target_account.nil?
 
-        # Case 1.) if => handle_relationship = true if bride bot was follow by community bot.
-        # Case 2.) else => handle_relationship = false if bride bot was not follow by community bot yet.
-        if handle_relationship(account, target_account.id)
+        account_relationship_array = handle_relationship(account, target_account.id)
+        next unless account_relationship_array.present? && account_relationship_array&.last
+        
+        if account_relationship_array&.last['requested']
+          UnfollowService.new.call(account, target_account)
+        end
+
+        if account_relationship_array&.last['following']
           process_did_value(target_account, community, token, account)
         else
           FollowService.new.call(account, target_account)
-          process_did_value(target_account, community, token, account) if handle_relationship(account, target_account.id)
+          account_relationship_array = handle_relationship(account, target_account.id)
+          process_did_value(target_account, community, token, account) if account_relationship_array.present? && account_relationship_array&.last && account_relationship_array&.last['following']
         end
-
       end
     end
 
@@ -76,9 +81,9 @@ module Scheduler
       did_value = FetchDidValueService.new.call(target_account, community)
 
       if did_value
-        community.update!(did_value: did_value)      
         create_dns_record(did_value, community)
         create_direct_message(token, community)
+        community.update!(did_value: did_value)
       end
     end
 
@@ -104,11 +109,11 @@ module Scheduler
               {
           action: 'UPSERT',
           resource_record_set: {
-            name: "_atproto.#{community&.slug}", # Fully Qualified Domain Name
+            name: "_atproto.#{community&.slug}.channel.org",
             type: 'TXT',
             ttl: 300,
             resource_records: [
-              { value: "did=#{did_value}" },
+              { value: "\"did=#{did_value}\"" },
             ],
           },
               },
