@@ -89,7 +89,6 @@ module Api
       def set_visibility
         if @community.visibility.nil?
           @community.update(visibility: 'public_access')
-          FollowBlueskyBotJob.perform_now(@community.id) if @community&.community_admins&.last&.is_boost_bot
           render json: { message: "Channel created successfully" }, status: :ok
         else
           render json: { message: "Channel updated successfully" }, status: :ok
