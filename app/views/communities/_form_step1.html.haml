@@ -63,7 +63,6 @@
 
                       %img{ id: "currentlogo", src: logo_image_url, alt: "logo Preview", style: "display: #{logo_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
                       %i.fa-solid.fa-image
-                      - logo
                       = f.input :logo_image, as: :file, label: false, value: logo_image_url, input_html: { id: "customFilelogo", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentlogo", 'data-aspect-ratio': "3.6" }
 
                   .logo-image-upload
