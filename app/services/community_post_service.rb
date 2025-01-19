@@ -169,21 +169,21 @@ class CommunityPostService < BaseService
       attributes[:slug] = @options[:slug]
     end
 
-    if @options[:logo_image].nil?
+    if @options[:logo_image].nil? && !@community&.logo_image.present?
       @community&.logo_image = nil
       @community&.logo_image_file_name = nil
     else
       attributes[:logo_image] = @options[:logo_image]
     end
 
-    if @options[:avatar_image].nil?
+    if @options[:avatar_image].nil? && !@community&.avatar_image.present?
       @community&.avatar_image = nil
       @community&.avatar_image_file_name = nil
     else
       attributes[:avatar_image] = @options[:avatar_image]
     end
 
-    if @options[:banner_image].nil?
+    if @options[:banner_image].nil? && !@community&.banner_image.present?
       @community&.banner_image = nil
       @community&.banner_image_file_name = nil
     else
