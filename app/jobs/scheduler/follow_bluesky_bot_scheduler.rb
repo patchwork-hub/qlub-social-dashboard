@@ -4,7 +4,7 @@ module Scheduler
 
   class FollowBlueskyBotScheduler
     include Sidekiq::Worker
-    sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 10.minutes.to_i, queue: :scheduler
+    sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 15.minutes.to_i, queue: :scheduler
 
     def perform
       return if ENV.fetch('RAILS_ENV', nil).eql?('staging')
@@ -13,18 +13,14 @@ module Scheduler
       return unless communities.any?
 
       communities.each do |community|
-        Rails.logger.info("[FollowBlueskyBotScheduler] community: #{community.inspect}")
+        Rails.logger.info("[FollowBlueskyBotScheduler] community: id = #{community.id} | name =  #{community.name} | slug = #{community.slug}")
 
         community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
         next if community_admin.nil?
 
         account = community_admin&.account
         next if account.nil?
-        Rails.logger.info("[FollowBlueskyBotScheduler] account: #{account.inspect}")
-
-
-        Rails.logger.info("[FollowBlueskyBotScheduler] enable_bride_bluesky?: #{enable_bride_bluesky?(account)}")
-        next unless enable_bride_bluesky?(account)
+        Rails.logger.info("[FollowBlueskyBotScheduler] account: id = #{account.id} | username = #{account.username}")
 
         user = User.find_by(email: community_admin&.email, account_id: account&.id)
         next if user.nil?
@@ -42,7 +38,10 @@ module Scheduler
           UnfollowService.new.call(account, target_account)
         end
 
-        if account_relationship_array&.last['following']
+        Rails.logger.info("[FollowBlueskyBotScheduler] enable_bride_bluesky?: #{enable_bride_bluesky?(account)}")
+        next unless enable_bride_bluesky?(account)
+
+        if account_relationship_array&.last['following'] == true && account_relationship_array&.last['requested'] == false
           process_did_value(target_account, community, token, account)
         else
           FollowService.new.call(account, target_account)
@@ -85,9 +84,14 @@ module Scheduler
       did_value = FetchDidValueService.new.call(target_account, community)
 
       if did_value
-        create_dns_record(did_value, community)
-        create_direct_message(token, community)
-        community.update!(did_value: did_value)
+        begin
+          create_dns_record(did_value, community)
+          sleep 1.minutes
+          create_direct_message(token, community)
+          community.update!(did_value: did_value)
+        rescue StandardError => e
+          Rails.logger.error("Error processing did_value for community #{community.id}: #{e.message}")
+        end
       end
     end
 
@@ -115,7 +119,7 @@ module Scheduler
           resource_record_set: {
             name: "_atproto.#{community&.slug}.channel.org",
             type: 'TXT',
-            ttl: 300,
+            ttl: 60,
             resource_records: [
               { value: "\"did=#{did_value}\"" },
             ],
