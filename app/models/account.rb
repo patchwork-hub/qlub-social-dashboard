@@ -12,6 +12,10 @@ class Account < ApplicationRecord
 
   has_attached_file :header
 
+  has_many :followers, class_name: 'Follow', foreign_key: :target_account_id
+  has_many :follows, foreign_key: :account_id
+  has_many :follow_requests, foreign_key: :account_id
+
   validates_attachment_content_type :avatar, content_type: IMAGE_MIME_TYPES
   validates_attachment_content_type :header, content_type: IMAGE_MIME_TYPES
 
@@ -56,6 +60,17 @@ class Account < ApplicationRecord
 
   def local?
     domain.nil?
+  end
+
+  def follower_count
+    followers.count
+  end
+
+  def following_ids(account_id = nil)
+    account_id = self.id if account_id.nil?
+    follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)
+    follow_request_ids = FollowRequest.where(account_id: account_id).pluck(:target_account_id)
+    (follow_ids + follow_request_ids).uniq
   end
 
 end
