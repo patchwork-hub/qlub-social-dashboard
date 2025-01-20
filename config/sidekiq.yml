@@ -15,9 +15,9 @@ development:
         every: '5m'
         class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_development_scheduler
-      FetchDidValueScheduler:
-        every: '15m'
-        class: Scheduler::FetchDidValueScheduler
+      FollowBlueskyBotScheduler:
+        every: '10m'
+        class: Scheduler::FollowBlueskyBotScheduler
         queue: dashboard_development_scheduler
 
 staging:
@@ -37,9 +37,9 @@ staging:
         every: '5m'
         class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_staging_scheduler
-      FetchDidValueScheduler:
-        every: '15m'
-        class: Scheduler::FetchDidValueScheduler
+      FollowBlueskyBotScheduler:
+        every: '10m'
+        class: Scheduler::FollowBlueskyBotScheduler
         queue: dashboard_staging_scheduler
 
 production:
@@ -59,7 +59,7 @@ production:
         every: '5m'
         class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_production_scheduler
-      FetchDidValueScheduler:
-        every: '15m'
-        class: Scheduler::FetchDidValueScheduler
+      FollowBlueskyBotScheduler:
+        every: '10m'
+        class: Scheduler::FollowBlueskyBotScheduler
         queue: dashboard_production_scheduler

@@ -56,7 +56,6 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
-      FollowBlueskyBotJob.perform_now(@community.id) if @community&.community_admins&.last&.is_boost_bot
       if @community.channel_feed?
         set_clean_up_policy
       end
@@ -113,12 +112,14 @@ class CommunityPostService < BaseService
     if @options[:id].present?
       @account.update!(
         avatar: @community.avatar_image || '',
-        header: @community.banner_image || ''
+        header: @community.banner_image || '',
+        note: @community.description || ''
       )
     else
       @account.update!(
         display_name: @community.name,
         username: @community.slug.underscore,
+        note: @community.description,
         avatar: @community.avatar_image || '',
         header: @community.banner_image || '',
         actor_type: "Service",
@@ -169,14 +170,21 @@ class CommunityPostService < BaseService
       attributes[:slug] = @options[:slug]
     end
 
-    if @options[:avatar_image].nil?
+    if @options[:logo_image].nil? && !@community&.logo_image.present?
+      @community&.logo_image = nil
+      @community&.logo_image_file_name = nil
+    else
+      attributes[:logo_image] = @options[:logo_image]
+    end
+
+    if @options[:avatar_image].nil? && !@community&.avatar_image.present?
       @community&.avatar_image = nil
       @community&.avatar_image_file_name = nil
     else
       attributes[:avatar_image] = @options[:avatar_image]
     end
 
-    if @options[:banner_image].nil?
+    if @options[:banner_image].nil? && !@community&.banner_image.present?
       @community&.banner_image = nil
       @community&.banner_image_file_name = nil
     else

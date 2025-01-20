@@ -36,7 +36,7 @@ class FetchDidValueService < BaseService
   end
 
   def fetch_did_value(url)
-    return if url.nil?
+    return nil if url.nil?
 
     response = HTTParty.get(url)
     if response.code == 200
