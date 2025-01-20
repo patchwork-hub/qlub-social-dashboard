@@ -132,9 +132,8 @@ module Api
         account_ids =
           case type
           when :followed
-            follow_ids = Follow.where(account_id: account_ids).pluck(:target_account_id)
-            follow_request_ids = FollowRequest.where(account_id: account_ids).pluck(:target_account_id)
-            (follow_ids + follow_request_ids).uniq
+            accounts = Account.where(id: account_ids)
+            accounts.map{ |account| account.following_ids }.flatten.uniq
           when :muted
             Mute.where(account_id: account_ids).pluck(:target_account_id)
           else

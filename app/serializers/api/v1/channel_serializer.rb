@@ -27,7 +27,11 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :follower do |object|
-    0
+    object.community_admins.last.account.follower_count
+  end
+
+  attribute :admin_following_count do |object|
+    object.community_admins.last.account.following_ids.count
   end
 
   attribute :no_of_admins do |object|
