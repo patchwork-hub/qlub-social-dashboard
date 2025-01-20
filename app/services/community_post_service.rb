@@ -112,12 +112,14 @@ class CommunityPostService < BaseService
     if @options[:id].present?
       @account.update!(
         avatar: @community.avatar_image || '',
-        header: @community.banner_image || ''
+        header: @community.banner_image || '',
+        note: @community.description || ''
       )
     else
       @account.update!(
         display_name: @community.name,
         username: @community.slug.underscore,
+        note: @community.description,
         avatar: @community.avatar_image || '',
         header: @community.banner_image || '',
         actor_type: "Service",
