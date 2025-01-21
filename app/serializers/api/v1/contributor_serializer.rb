@@ -18,7 +18,7 @@ class Api::V1::ContributorSerializer
 
   attribute :profile_url do |object|
     if object.local?
-      "https://#{ENV['LOCAL_DOMAIN']}/@#{object.username}"
+      "https://#{ENV['MASTODON_INSTANCE_URL']}/@#{object.username}"
     else
       "https://#{object.domain}/@#{object.username}"
     end
