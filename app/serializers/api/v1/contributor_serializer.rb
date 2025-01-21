@@ -17,7 +17,11 @@ class Api::V1::ContributorSerializer
   end
 
   attribute :profile_url do |object|
-    "https://#{object.domain}/@#{object.username}"
+    if object.local?
+      "https://#{ENV['LOCAL_DOMAIN']}/@#{object.username}"
+    else
+      "https://#{object.domain}/@#{object.username}"
+    end
   end
 
   attribute :following do |object, params|
