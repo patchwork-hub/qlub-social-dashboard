@@ -32,11 +32,7 @@ class ContributorSearchService
 
     saved_accounts = []
     while saved_accounts.empty?
-      conditions = accounts.map do |account|
-        { username: account['username'], domain: account['domain'] }
-      end
-
-      saved_accounts = Account.where(conditions)
+      saved_accounts = Account.where(username: accounts.map { |account| account['username'] })
       sleep(2) if saved_accounts.empty?
     end
 
