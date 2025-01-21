@@ -44,7 +44,7 @@ class Account < ApplicationRecord
     if avatar_remote_url.present?
       avatar_remote_url
     elsif avatar_file_name.present?
-      id_path = id.scan(/.{3}/).join('/')
+      id_path = id.to_s.scan(/.{3}/).join('/')
       "https://#{ENV['S3_BUCKET']}/accounts/avatars/#{id_path}/original/#{avatar_file_name}"
     else
       ActionController::Base.helpers.asset_path('patchwork-logo.svg')
