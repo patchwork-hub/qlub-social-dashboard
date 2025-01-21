@@ -48,7 +48,8 @@ class ContributorSearchService
         'avatar_url' => account.avatar_url,
         'profile_url' => profile_url,
         'following' => following_status(account),
-        'is_muted' => is_muted(account)
+        'is_muted' => is_muted(account),
+        'is_own_account' => account.id == @account_id
       }
     end
   end
