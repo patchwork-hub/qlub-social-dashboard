@@ -7,6 +7,11 @@
           = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
         %p.small Use the search functionality below to mute contributors from your channel.
+        %p.small.text-info.d-flex
+          = image_tag("icons/circle-info.svg", class: "mt-1 mr-2", width: "14", height: "14", alt: "Info")
+          To search for local accounts, use the name or username.
+          %br/
+          To search for accounts from the Fediverse, use the format @username@domain.
         - if @token.nil?
           %p.small.red
             = image_tag("icons/exclamation-triangle.svg", class: "ml-2", width: "16", height: "16")
