@@ -657,3 +657,71 @@ ul.pagination {
   font-size: 0.8em;
   color: white;
 }
+
+/* Parent Container */
+.bluesky-bridge-progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* Space between steps */
+  margin-top: 20px;
+}
+
+/* Step Container */
+.bluesky-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1; /* Keeps circles above the line */
+}
+
+/* Step Content */
+.bluesky-step-content {
+  margin-top: 10px;
+}
+
+.bluesky-step-content h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+}
+
+.bluesky-step-content p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+}
+
+/* Circle Style */
+.blue-sky-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.blue-sky-circle.completed {
+  background-color: #dc3545; /* Red for completed steps */
+}
+
+.blue-sky-circle.grey {
+  background-color: #ccc; /* Grey for pending steps */
+}
+
+/* Line Between Steps */
+.blue-sky-line {
+  flex-grow: 1;
+  height: 4px;
+  background-color: #ccc; /* Default grey line */
+  margin: 0 -18px; /* Overlap circles slightly for seamless design */
+  z-index: 0; /* Keeps the line behind the circles */
+}

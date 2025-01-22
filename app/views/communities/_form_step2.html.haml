@@ -60,6 +60,33 @@
                       = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
           .pagination.pagination-sm.m-0.float-right.mt-1
             = paginate @records, theme: 'bootstrap4'
+          .col-auto.mt-3
+            .row
+              %label Progress of Bluesky bridging
+            .row
+              .mt-auto
+                - if @account.nil?
+                  %p.text-muted.small Channel admin dosen't exists
+                - else 
+                  .bluesky-bridge-progress-bar
+                    .bluesky-step
+                      .blue-sky-circle{class: check_account_info(@community, @account).nil? ? 'completed' : 'grey'} 1
+                      .bluesky-step-content
+                        %h3 Step 1
+                        %p Account info:
+                        %p #{check_account_info(@community, @account).nil? ? "Your account is complete." : "#{check_account_info(@community, @account)}"}
+                    .blue-sky-line
+                    .bluesky-step
+                      .blue-sky-circle{class: bridged_completely?(@community, @bluesky_info) ? 'completed' : 'grey'} 2
+                      .bluesky-step-content
+                        %h3 Step 2
+                        %p Bridged info:
+                        %p
+                          - if bridged_completely?(@community, @bluesky_info)
+                            = link_to bridged_handle(@community, @bridge_info), bridged_account_url(@community, @bridge_info), target: '_blank'
+                          - else
+                            %p #{check_account_info(@community, @account).nil? ? "Your account is complete." : "#{check_account_info(@community, @account)}"}
+
       .row.d-flex.justify-content-between
         .col-auto
           %a.btn.btn-outline-secondary{ href: step1_communities_path(id: @community.id) } Back
