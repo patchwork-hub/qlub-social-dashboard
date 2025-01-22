@@ -48,6 +48,7 @@ class CommunitiesController < BaseController
   def step2
     @records = load_commu_admin_records
     @community_admin = CommunityAdmin.new
+    invoke_bridged
   end
 
   def step3
@@ -450,6 +451,24 @@ class CommunitiesController < BaseController
     relay = Relay.find_by(inbox_url: inbox_url)
     if relay
       DeleteRelayService.new(@api_base_url, token, relay.id).call
+    end
+  end
+
+  def invoke_bridged 
+    @account = CommunityAdmin.find_by(patchwork_community_id: @community.id)&.account
+    @bluesky_info = fetch_bluesky_account
+  end
+
+  def fetch_bluesky_account
+    url = "https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor=#{@community&.slug}.channel.org"
+    response = HTTParty.get(url)
+    if response.code == 200
+      results = JSON.parse(response.body)
+      Rails.logger.info("Fetched bluesky account: #{results}")
+      results
+    else
+      Rails.logger.error("Failed to fetch bluesky account: #{@community&.slug} => #{response.body}")
+      {}
     end
   end
 end

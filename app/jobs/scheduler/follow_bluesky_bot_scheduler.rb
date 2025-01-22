@@ -28,7 +28,10 @@ module Scheduler
         token = fetch_oauth_token(user)
         next if token.nil?
 
-        target_account = search_target_account(token)
+        target_account_id = Rails.cache.fetch('bluesky_bridge_bot_account_id', expires_in: 24.hours) do
+          search_target_account_id(token)
+        end
+        target_account = Account.find_by(id: target_account_id)
         next if target_account.nil?
 
         account_relationship_array = handle_relationship(account, target_account.id)
@@ -59,18 +62,16 @@ module Scheduler
       account&.created_at <= 2.weeks.ago
     end
 
-    def search_target_account(token)
+    def search_target_account_id(token)
       query = '@bsky.brid.gy@bsky.brid.gy'
       retries = 5
       result = nil
     
       while retries >= 0
         result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: token).call
-    
         if result.any?
-          return Account.find_by(id: result.last['id'])
+          return result.last['id']
         end
-    
         retries -= 1
       end
       nil
