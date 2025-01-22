@@ -83,7 +83,7 @@
                         %p Bridged info:
                         %p
                           - if bridged_completely?(@community, @bluesky_info)
-                            = link_to bridged_handle(@community, @bridge_info), bridged_account_url(@community, @bridge_info), target: '_blank'
+                            = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
                           - else
                             %p #{check_account_info(@community, @account).nil? ? "Your account is complete." : "#{check_account_info(@community, @account)}"}
 
