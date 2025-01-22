@@ -39,13 +39,13 @@ module BlueskyAccountBridgeHleper
   end
 
   def bridged_account_url(community, bridge_info)
-    return false if community.nil? || bridge_info.present?
+    return false if community.nil? || !bridge_info.present?
 
     "https://bsky.app/profile/#{bridge_info['handle']}"
   end
 
   def bridged_handle(community, bridge_info)
-    return false if community.nil? || bridge_info.present?
+    return false if community.nil? || !bridge_info.present?
 
     bridge_info['handle']
   end
