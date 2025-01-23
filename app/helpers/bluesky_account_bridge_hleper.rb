@@ -19,14 +19,14 @@ module BlueskyAccountBridgeHleper
       error_messages << "header"
     end
 
-    if account&.created_at.nil? || account.created_at <= 2.weeks.ago
+    if !(account.created_at <= 2.weeks.ago)
       if error_messages.any?
-        error_message = "Your account is missing #{error_messages.join(', ')} and is not 2 weeks old yet."
+        error_message = "Your account is missing #{error_messages.join(', ')} and needs to be 2 weeks old."
       else
-        error_message = "Your account is not 2 weeks old yet."
+        error_message = "Your account needs to be 2 weeks old."
       end
     elsif error_messages.any?
-      error_message = "Your account is missing #{error_messages.join(', ')}"
+      error_message = "Your account is missing #{error_messages.join(', ')}."
     end
     
     error_message
@@ -39,13 +39,13 @@ module BlueskyAccountBridgeHleper
   end
 
   def bridged_account_url(community, bridge_info)
-    return false if community.nil? || bridge_info.present?
+    return false if community.nil? || !bridge_info.present?
 
     "https://bsky.app/profile/#{bridge_info['handle']}"
   end
 
   def bridged_handle(community, bridge_info)
-    return false if community.nil? || bridge_info.present?
+    return false if community.nil? || !bridge_info.present?
 
     bridge_info['handle']
   end

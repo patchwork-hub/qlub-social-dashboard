@@ -674,8 +674,6 @@ ul.pagination {
   align-items: center;
   text-align: center;
   position: relative;
-  z-index: 1; /* Keeps circles above the line */
-  width: 50%;
 }
 
 /* Step Content */
@@ -711,18 +709,9 @@ ul.pagination {
 }
 
 .blue-sky-circle.completed {
-  background-color: #dc3545; /* Red for completed steps */
+  background-color: #007bff; /* Red for completed steps */
 }
 
 .blue-sky-circle.grey {
   background-color: #ccc; /* Grey for pending steps */
-}
-
-/* Line Between Steps */
-.blue-sky-line {
-  flex-grow: 1;
-  height: 4px;
-  background-color: #ccc; /* Default grey line */
-  margin: 0 -18px; /* Overlap circles slightly for seamless design */
-  z-index: 0; /* Keeps the line behind the circles */
 }

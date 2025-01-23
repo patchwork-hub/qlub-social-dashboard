@@ -73,19 +73,21 @@
                       .blue-sky-circle{class: check_account_info(@community, @account).nil? ? 'completed' : 'grey'} 1
                       .bluesky-step-content
                         %h3 Step 1
-                        %p Account info:
-                        %p #{check_account_info(@community, @account).nil? ? "Your account is complete." : "#{check_account_info(@community, @account)}"}
-                    .blue-sky-line
+                        %p Account information:
+                        - if check_account_info(@community, @account).nil?
+                          %p.text-success Your account is complete.
+                        - else
+                          %p.text-danger #{check_account_info(@community, @account)}
                     .bluesky-step
                       .blue-sky-circle{class: bridged_completely?(@community, @bluesky_info) ? 'completed' : 'grey'} 2
                       .bluesky-step-content
                         %h3 Step 2
-                        %p Bridged info:
-                        %p
-                          - if bridged_completely?(@community, @bluesky_info)
-                            = link_to bridged_handle(@community, @bridge_info), bridged_account_url(@community, @bridge_info), target: '_blank'
-                          - else
-                            %p #{check_account_info(@community, @account).nil? ? "Your account is complete." : "#{check_account_info(@community, @account)}"}
+                        %p Bluesky bridged information:
+                        - if bridged_completely?(@community, @bluesky_info)
+                          %p
+                            = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
+                        - else
+                          %p.text-danger Please complete step 1.
 
       .row.d-flex.justify-content-between
         .col-auto
