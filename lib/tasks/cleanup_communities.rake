@@ -9,26 +9,6 @@ namespace :cleanup do
 
       begin
         ActiveRecord::Base.transaction do
-          community.community_admins.each do |community_admin|
-            if community_admin.account
-              account = community_admin.account
-              puts "Deleting account with ID: #{account.id} and associated user"
-
-              user = account.user # this assumes you have a belongs_to :user in the Account model
-
-              if user
-                puts "Deleting user with ID: #{user.id} if they have one..."
-                user.destroy
-              else
-                puts "Could not find a user associated with account ID: #{account.id}"
-              end
-              account.destroy
-
-            else
-              puts "Could not find a account associated with this community_admin with ID: #{community_admin.id}"
-
-            end
-          end
           puts "Deleting community with ID: #{community.id}..."
           community.destroy
         end
