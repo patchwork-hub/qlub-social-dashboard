@@ -28,7 +28,7 @@
                   = f.label :is_boost_bot, "Boost Bot", class: "form-check-label", for: 'community_admin_is_boost_bot'
           .mb-3
             = f.label :email, class: "form-label"
-            = f.email_field :email, class: "form-control", id: "community_admin_email", readonly: is_disable
+            = f.email_field :email, class: "form-control", id: "community_admin_email"
           - if @community.channel?
             .mb-3.form-group.position-relative.password
               = f.label :password, class: "form-label"
