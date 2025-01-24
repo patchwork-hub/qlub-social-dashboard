@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   var editButtons = document.querySelectorAll('[data-target="#communityAdminModal"]');
   var form = document.querySelector('#new_admin_form');
+  const emailField = document.querySelector('#community_admin_email');
 
   window.updateRoleField = function (checkbox) {
     const roleField = document.querySelector('#community_admin_role');
@@ -20,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
       var isBoostBot = this.getAttribute('data-is-boost-bot') === 'true';
 
       // Populate the form fields
-      document.querySelector('#community_admin_email').value = email || '';
+      emailField.value = email || '';
+
+
       const passwordField = document.querySelector('#community_admin_password');
       if (passwordField) {
         passwordField.value = password || '';
@@ -42,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Edit mode
         form.setAttribute('action', '/community_admins/' + adminId);
         form.setAttribute('method', 'post');
-
+        emailField.readOnly = true;
         // Add or update the hidden _method field for PATCH
         let methodInput = document.querySelector('input[name="_method"]');
         if (!methodInput) {
@@ -58,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Create mode
         form.setAttribute('action', '/community_admins');
         form.setAttribute('method', 'post');
+        emailField.readOnly = false;
 
         // Remove the _method field if it exists
         let methodInput = document.querySelector('input[name="_method"]');
