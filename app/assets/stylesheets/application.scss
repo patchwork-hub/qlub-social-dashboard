@@ -715,3 +715,15 @@ ul.pagination {
 .blue-sky-circle.grey {
   background-color: #ccc; /* Grey for pending steps */
 }
+
+.dropzone {
+  max-height: 370px;
+  overflow: hidden;
+  position: relative;
+}
+.dropzone-preview {
+  object-fit: contain;
+  display:block;
+  width:100%;
+  height:auto;
+}
