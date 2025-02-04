@@ -19,13 +19,7 @@ module BlueskyAccountBridgeHleper
       error_messages << "header"
     end
 
-    if !(account.created_at <= 2.weeks.ago)
-      if error_messages.any?
-        error_message = "Your account is missing #{error_messages.join(', ')} and needs to be 2 weeks old."
-      else
-        error_message = "Your account needs to be 2 weeks old."
-      end
-    elsif error_messages.any?
+    if error_messages.any?
       error_message = "Your account is missing #{error_messages.join(', ')}."
     end
     
