@@ -177,19 +177,22 @@ class CommunitiesController < BaseController
 
   def manage_additional_information
     authorize @community, :manage_additional_information?
+
     if params[:community].present?
       if @community.update(community_params)
         respond_to do |format|
           format.html
         end
       else
-        respond_to do |format|
-          format.html { redirect_to step6_community_path, alert: 'Failed to save information.' }
-          format.js
-        end
+        flash[:error] = @community.errors.full_messages.join(", ")
+        redirect_to step6_community_path
       end
+    else
+      flash[:error] = "No community data provided."
+      redirect_to step6_community_path
     end
   end
+
 
   def set_visibility
     visibility = params.dig(:community, :visibility).presence || 'public_access'
@@ -454,7 +457,7 @@ class CommunitiesController < BaseController
     end
   end
 
-  def invoke_bridged 
+  def invoke_bridged
     @account = CommunityAdmin.find_by(patchwork_community_id: @community.id)&.account
     @bluesky_info = fetch_bluesky_account
   end
