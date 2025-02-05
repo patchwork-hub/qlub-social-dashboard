@@ -78,8 +78,6 @@ class Community < ApplicationRecord
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
-  accepts_nested_attributes_for :patchwork_community_links, allow_destroy: true
-
   validate :unique_patchwork_community_links
 
   has_many :patchwork_community_rules,
@@ -98,6 +96,12 @@ class Community < ApplicationRecord
             dependent: :destroy
 
   accepts_nested_attributes_for :patchwork_community_rules, allow_destroy: true
+
+  has_many :social_links, -> { social }, class_name: 'CommunityLink', foreign_key: 'patchwork_community_id'
+  has_many :general_links, -> { general }, class_name: 'CommunityLink', foreign_key: 'patchwork_community_id'
+
+  accepts_nested_attributes_for :social_links, allow_destroy: true
+  accepts_nested_attributes_for :general_links, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
 
