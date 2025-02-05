@@ -35,11 +35,13 @@
                   - unless organisation_admin?
                     %a.text-danger.small{ href: step1_new_communities_path(new_community: 'true') } Click here to add one
             - @records.each do |community|
+            - domian = community&.community_admins&.first&.account&.domain? ? community&.community_admins&.first&.account&.domain : ENV['MASTODON_INSTANCE_URL']
+            - username = community&.community_admins&.first&.account&.username
               %tr
                 %td.text-center
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
-                %td= community.slug
+                %td= "@#{username}@#{domian}"
                 %td= community&.patchwork_community_type&.name
                 %td
                   - if community.visibility.present?
