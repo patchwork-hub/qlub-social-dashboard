@@ -45,6 +45,27 @@ $(document).ready(function () {
     });
   }
 
+  function initializeSelect2() {
+    $('.select2-icon').select2({
+      templateResult: formatIcon,
+      templateSelection: formatIcon,
+      width: '100%',
+      escapeMarkup: function(m) { return m; }
+    });
+  }
+
+  $(document).on('ready cocoon:after-insert', function() {
+    initializeSelect2();
+  });
+
+  function formatIcon(icon) {
+    if (!icon.id) return icon.text;
+    const iconPath = $(icon.element).data('icon');
+    return $(
+      `<span><img src="${iconPath}" class="select2-icon-image mr-2" />${icon.text}</span>`
+    );
+  }
+
   $(".select2").select2({
     dropdownParent: $("#keyFilterModal"),
     tags: true,

@@ -309,7 +309,8 @@ class CommunitiesController < BaseController
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
-      patchwork_community_links_attributes: [:id, :icon, :name, :url, :_destroy],
+      social_links_attributes: [:id, :icon, :name, :url, :_destroy],
+      general_links_attributes: [:id, :icon, :name, :url, :_destroy],
       patchwork_community_rules_attributes: [:id, :rule, :_destroy]
     )
   end

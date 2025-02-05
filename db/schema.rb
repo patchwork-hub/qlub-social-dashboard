@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_03_092849) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_04_110455) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -940,6 +940,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_03_092849) do
     t.bigint "patchwork_community_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_social", default: false
     t.index ["patchwork_community_id"], name: "index_patchwork_community_links_on_patchwork_community_id"
     t.index ["url", "patchwork_community_id"], name: "index_community_links_on_url_and_patchwork_id", unique: true
   end
