@@ -41,8 +41,8 @@
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
                 %td
-                  %button.btn.btn-sm.btn-outline-secondary{onclick: "copyToClipboard('@#{username(account)}@#{domain(account)}')"}
-                    %span.copyable-text{title: "Click to copy", style: "cursor: pointer;"}= "@#{username(account)}@#{domain(account)}"
+                  %button.btn.btn-sm.btn-secondary{title: "Click to copy", onclick: "copyToClipboard('@#{username(account)}@#{domain(account)}')"}
+                    %span.copyable-text{style: "cursor: pointer;"}= "@#{username(account)}@#{domain(account)}"
                 %td= community&.patchwork_community_type&.name
                 %td
                   - if community.visibility.present?
