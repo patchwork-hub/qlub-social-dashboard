@@ -229,7 +229,27 @@ $(document).ready(function () {
       window.location.reload();
     });
   });
+
+  // Function to copy text to clipboard
+  function copyToClipboard(text) {
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+  }
+
+  // Attach the function to the window object to make it globally accessible
+  window.copyToClipboard = copyToClipboard;
+
+  // Event listener for click on text
+  $(document).on('click', '.copyable-text', function() {
+    const text = $(this).text();
+    copyToClipboard(text);
+  });
 });
+
 
 const togglePassword = (e) => {
   let input = e.closest('div').querySelector("input[type='password'], input[type='text']");

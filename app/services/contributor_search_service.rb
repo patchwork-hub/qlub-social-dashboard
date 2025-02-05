@@ -37,7 +37,6 @@ class ContributorSearchService
     end
 
     saved_accounts.map do |account|
-      profile_url = generate_profile_url(account)
 
       {
         'id' => account.id.to_s,
@@ -46,25 +45,11 @@ class ContributorSearchService
         'domain' => account.domain,
         'note' => account.note,
         'avatar_url' => account.avatar_url,
-        'profile_url' => profile_url,
+        'profile_url' => account.url,
         'following' => following_status(account),
         'is_muted' => is_muted(account),
         'is_own_account' => account.id == @account_id
       }
-    end
-  end
-
-  def generate_profile_url(account)
-    return "https://#{account.domain}/@#{account.username}" if account&.domain.present?
-
-    env = ENV.fetch('RAILS_ENV', nil)
-    case env
-    when 'staging'
-      "https://staging.patchwork.online/@#{account.username}"
-    when 'production'
-      "https://channel.org/@#{account.username}"
-    else
-      "https://localhost:3000/@#{account.username}"
     end
   end
 
