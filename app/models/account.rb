@@ -15,6 +15,8 @@ class Account < ApplicationRecord
   has_many :followers, class_name: 'Follow', foreign_key: :target_account_id
   has_many :follows, foreign_key: :account_id
   has_many :follow_requests, foreign_key: :account_id
+  has_many :joined_communities, class_name: 'JoinedCommunity', foreign_key: :account_id, dependent: :destroy
+  has_many :communities, through: :joined_communities
 
   validates_attachment_content_type :avatar, content_type: IMAGE_MIME_TYPES
   validates_attachment_content_type :header, content_type: IMAGE_MIME_TYPES

@@ -66,7 +66,7 @@ class ApiController < ApplicationController
         when 'production'
           'https://channel.org/oauth/token/info'
         else
-          'http://localhost:3000/oauth/token/info'
+          'http://localhost:3001/oauth/token/info'
         end
       response = HTTParty.get(url, headers: { 'Authorization' => "Bearer #{token}" })
       JSON.parse(response.body)

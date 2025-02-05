@@ -94,6 +94,11 @@ class Community < ApplicationRecord
             class_name: 'CommunityHashtag',
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
+  
+  has_many :joined_communities,
+            class_name: 'JoinedCommunity',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
 
   accepts_nested_attributes_for :patchwork_community_rules, allow_destroy: true
 
@@ -110,7 +115,7 @@ class Community < ApplicationRecord
       .where(patchwork_communities: { is_recommended: true })
       .filter_channels
       .exclude_array_ids
-      .exlude_incomplete_channels
+      .exclude_incomplete_channels
       .order('patchwork_community_types.sorting_index ASC')
   }
 
@@ -118,7 +123,7 @@ class Community < ApplicationRecord
 
   scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
 
-  scope :exlude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
+  scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
