@@ -3,7 +3,7 @@ module Api
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
-      before_action :set_community, only: %i[show update set_visibility]
+      before_action :set_community, only: %i[update set_visibility]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       PER_PAGE = 5
       ACCESS_TOKEN_SCOPES = "read write follow push".freeze
@@ -31,7 +31,13 @@ module Api
       end
 
       def show
-        render json: Api::V1::ChannelSerializer.new(@community).serializable_hash.to_json
+        community_admin = CommunityAdmin.find_by(account_id: params[:id])
+        return if community_admin.nil?
+
+        community = Community.find_by(id: community_admin.patchwork_community_id)
+        return if community.nil?
+
+        render json: Api::V1::ChannelSerializer.new(community).serializable_hash.to_json
       end
 
       def update
