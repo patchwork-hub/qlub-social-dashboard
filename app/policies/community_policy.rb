@@ -4,7 +4,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def index?
-    related_user_admin?
+    user_has_access_to_community?
   end
 
   def show?
