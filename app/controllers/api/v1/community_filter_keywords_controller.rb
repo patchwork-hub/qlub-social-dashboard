@@ -5,6 +5,7 @@ class Api::V1::CommunityFilterKeywordsController < ApiController
   before_action :set_community_filter_keyword, only: [:update, :destroy]
 
   def index
+    authorize @community, :index?
     filter_type = params[:filter_type]
 
     if filter_type.blank? || !['filter_in', 'filter_out'].include?(filter_type)
