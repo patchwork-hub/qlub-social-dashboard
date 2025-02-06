@@ -24,7 +24,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step2?
-    initialize_form?
+    master_admin?
   end
 
   def step2_save?
