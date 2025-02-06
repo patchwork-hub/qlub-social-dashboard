@@ -6,6 +6,7 @@ module Api
       before_action :authenticate_user_from_header
 
       def index
+        authorize @community, :index?
         content_types = ContentType.where(patchwork_community_id: params[:patchwork_community_id])
         render json: Api::V1::ContentTypeSerializer.new(content_types).serializable_hash.to_json
       end
