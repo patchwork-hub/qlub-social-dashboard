@@ -23,10 +23,10 @@
               %th.align-left
                 = check_box_tag :select_all, '', false, id: 'select_all'
               %th Channels
-              %th Name
-              %th No. of admins
+              %th Username
+              %th Channel type
               %th Status
-              %th Action
+              %th Edit
           %tbody
             - if @records.size == 0
               %tr
@@ -35,15 +35,15 @@
                   - unless organisation_admin?
                     %a.text-danger.small{ href: step1_new_communities_path(new_community: 'true') } Click here to add one
             - @records.each do |community|
+            - account = community&.community_admins&.first&.account
               %tr
                 %td.text-center
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
-                %td= community.slug
                 %td
-                  %span.badge.badge-pill.badge-light
-                    = image_tag("icons/user.svg", class: "mr-2", width: "11", height: "16")
-                    = community.community_admins.size
+                  %button.btn.btn-sm.btn-secondary{title: "Click to copy", onclick: "copyToClipboard('@#{username(account)}@#{domain(account)}')"}
+                    %span.copyable-text{style: "cursor: pointer;"}= "@#{username(account)}@#{domain(account)}"
+                %td= community&.patchwork_community_type&.name
                 %td
                   - if community.visibility.present?
                     %span.badge.badge-pill.badge-success Complete

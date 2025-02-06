@@ -11,6 +11,9 @@ class Filter::Community < Filter::Common
   def get
     scope = build_search.result.order(id: :desc)
     scope = scope.where(channel_type: @channel_type) if @channel_type.present?
+    # Omit the following line if you don't want to filter by channel_type
+    exclude_community_types = CommunityType.where(slug: ['multi-platform', 'multi-contributor']).pluck(:id)
+    scope = scope.where.not(patchwork_community_type_id: exclude_community_types) if exclude_community_types.present?
     scope.page(@current_page).per(@per_page)
   end
 

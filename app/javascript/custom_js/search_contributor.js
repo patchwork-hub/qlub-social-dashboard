@@ -96,31 +96,35 @@ function displaySearchResults(accounts) {
   accounts.forEach(account => {
     const resultItem = document.createElement('div');
     resultItem.className = 'list-group-item align-items-center';
-    resultItem.innerHTML = `
-      <div class="profile-info row">
-        <div class="col-auto">
-          <img src="${account.avatar_url}" alt="" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
-        </div>
-        <div class="col">
-          <p class="mb-0">
-            <a href="${account.profile_url}" target="_blank">
-              ${account.display_name ? account.display_name : account.username}
-            </a>
-          </p>
-          <small class="text-muted">
-            <a href="${account.profile_url}" target="_blank">
-              @${account.username}@${account.domain}
-            </a>
-          </small>
-        </div>
-        <div class="col-auto ml-5 pl-5 mt-5">
-          <button class="btn btn-outline-dark follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="followContributor('${account.id}', '${communityID}')" style="float: right;">
-            Follow
-          </button>
-        </div>
-      </div>
-    `;
 
+    const buttonClass = account.following === 'not_followed' ? 'btn-outline-dark' : 'btn-outline-danger';
+
+    const profileInfo = `
+    <div class="profile-info row">
+      <div class="col-auto">
+        <img src="${account.avatar_url}" alt="" class="rounded-circle mr-2" style="width: 70px; height: 70px;">
+      </div>
+      <div class="col">
+        <p class="mb-0">
+          <a href="${account.profile_url}" target="_blank">
+            ${account.display_name || account.username}
+          </a>
+        </p>
+        <small class="text-muted">
+          <a href="${account.profile_url}" target="_blank">
+            @${account.username}@${account.domain}
+          </a>
+        </small>
+      </div>
+      <div class="col-auto ml-5 pl-5 mt-5">
+        <button class="btn ${buttonClass} follow-button" id="follow_btn_${account.id}" data-account-id="${account.id}" onclick="${account.following === 'not_followed' ? `followContributor('${account.id}', '${communityID}')` : `unfollowContributor('${account.id}', '${communityID}')`}" style="float: right;">
+          ${account.following === 'not_followed' ? 'Follow' : 'Unfollow'}
+        </button>
+      </div>
+    </div>
+  `;
+
+    resultItem.innerHTML = profileInfo;
     resultsContainer.appendChild(resultItem);
   });
 }
