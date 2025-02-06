@@ -1,7 +1,10 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step, @community)
+      - if current_user.organisation_admin?
+        = carousel_indicators(4, @community)
+      - else
+        = carousel_indicators(@current_step, @community)
 
   = simple_form_for @community, url: manage_additional_information_community_path, method: :post, html: { id: 'additionalForm' } do |form|
     .row

@@ -41,11 +41,16 @@ class CommunitiesController < BaseController
       flash.now[:error] = @community.errors.full_messages
       render :step1
     else
-      redirect_to step2_community_path(@community)
+      if current_user.master_admin?
+        redirect_to step2_community_path(@community)
+      else
+        redirect_to step3_community_path(@community)
+      end
     end
   end
 
   def step2
+    authorize @community, :step2?
     @records = load_commu_admin_records
     @community_admin = CommunityAdmin.new
     invoke_bridged
@@ -265,8 +270,8 @@ class CommunitiesController < BaseController
     if params[:id].present? || (params[:form_community] && params[:form_community][:id].present?)
       id = params[:id] || params[:form_community][:id]
       @community = Community.find_by(id: id)
-      authorize @community, :initialize_form?
       if @community.present?
+        authorize @community, :initialize_form?
 
         form_data = {
           id: @community.id,
@@ -281,6 +286,7 @@ class CommunitiesController < BaseController
           is_recommended: @community.is_recommended
         }
       else
+        authorize current_user, :user_is_not_community_admin?
         form_data = {}
       end
     else
