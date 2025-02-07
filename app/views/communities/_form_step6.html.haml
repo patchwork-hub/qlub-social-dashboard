@@ -30,6 +30,7 @@
             .row
               .col.text-right
                 = link_to_add_association 'Add another', form, :patchwork_community_rules, class: 'text-danger small', data: { association_insertion_node: '.patchwork_community_rules', association_insertion_method: :append }
+
     .row
       .col-md-12
         .card
@@ -56,12 +57,12 @@
 
     .row
       .col-md-12
-        .card
+        .card.mb-3
           .card-body
             .row.d-flex.justify-content-between
               .col-md-9-auto
                 %label Add links
-                %p.text-muted.small These are the links that will appear in the left hand side bar of your channel page. These are useful for linking to any other pages you may wish to promote such as socials, blogs, podcasts etc.
+                %p.text-muted.small These are the links that will appear in the left hand side bar of your channel page. These are useful for linking to any other pages you may wish to promote such as blogs, podcasts etc.
 
             .table-responsive
               %table.table.mt-3
@@ -70,13 +71,35 @@
                     %th{ style: 'width: 20%;' } Icon
                     %th{ style: 'width: 30%;' } Name
                     %th{ colspan: 2, style: 'width: 50%;' } URL
-                %tbody.patchwork_community_links
-                  = form.simple_fields_for :patchwork_community_links, allow_destroy: true do |f|
-                    = render 'communities/patchwork_community_link_fields', f: f
+                %tbody.patchwork_community_general_links
+                  = form.simple_fields_for :general_links do |f|
+                    = render 'communities/general_link_fields', f: f
 
             .row
               .col.text-right
-                = link_to_add_association 'Add another', form, :patchwork_community_links, data: { association_insertion_node: '.patchwork_community_links', association_insertion_method: :append }, class: 'text-danger small'
+                = link_to_add_association 'Add another', form, :general_links, data: { association_insertion_node: '.patchwork_community_general_links', association_insertion_method: :append }, class: 'text-danger small'
+
+        .card
+          .card-body
+            .row.d-flex.justify-content-between
+              .col-md-9-auto
+                %label Add Links
+                %p.text-muted.small These are the links that will appear in the left hand side bar of your channel page. These are useful for linking to any other pages you may wish to promote such as socials.
+
+            .table-responsive
+              %table.table.mt-3
+                %thead
+                  %tr
+                    %th{ style: 'width: 20%;' } Icon
+                    %th{ style: 'width: 30%;' } Name
+                    %th{ colspan: 2, style: 'width: 50%;' } URL
+                %tbody.patchwork_community_social_links
+                  = form.simple_fields_for :social_links do |f|
+                    = render 'communities/social_link_fields', f: f
+
+            .row
+              .col.text-right
+                = link_to_add_association 'Add another', form, :social_links, data: { association_insertion_node: '.patchwork_community_social_links', association_insertion_method: :append }, class: 'text-danger small'
 
     .row.d-flex.justify-content-between
       .col

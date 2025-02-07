@@ -78,7 +78,7 @@ class Community < ApplicationRecord
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
-  accepts_nested_attributes_for :patchwork_community_links, allow_destroy: true
+  validate :unique_patchwork_community_links
 
   has_many :patchwork_community_rules,
             class_name: 'CommunityRule',
@@ -94,8 +94,19 @@ class Community < ApplicationRecord
             class_name: 'CommunityHashtag',
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
+  
+  has_many :joined_communities,
+            class_name: 'JoinedCommunity',
+            foreign_key: 'patchwork_community_id',
+            dependent: :destroy
 
   accepts_nested_attributes_for :patchwork_community_rules, allow_destroy: true
+
+  has_many :social_links, -> { social }, class_name: 'CommunityLink', foreign_key: 'patchwork_community_id'
+  has_many :general_links, -> { general }, class_name: 'CommunityLink', foreign_key: 'patchwork_community_id'
+
+  accepts_nested_attributes_for :social_links, allow_destroy: true
+  accepts_nested_attributes_for :general_links, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
 
@@ -104,7 +115,7 @@ class Community < ApplicationRecord
       .where(patchwork_communities: { is_recommended: true })
       .filter_channels
       .exclude_array_ids
-      .exlude_incomplete_channels
+      .exclude_incomplete_channels
       .order('patchwork_community_types.sorting_index ASC')
   }
 
@@ -112,7 +123,7 @@ class Community < ApplicationRecord
 
   scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
 
-  scope :exlude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
+  scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
@@ -158,6 +169,15 @@ class Community < ApplicationRecord
     expected_ratio = width_ratio.to_f / height_ratio
     unless (actual_ratio - expected_ratio).abs < 0.01
       errors.add(:base, "#{image_name} must have an aspect ratio of #{width_ratio}:#{height_ratio}")
+    end
+  end
+
+  def unique_patchwork_community_links
+    urls = patchwork_community_links.reject(&:marked_for_destruction?).map(&:url)
+    duplicate_urls = urls.select { |url| urls.count(url) > 1 }.uniq
+
+    if duplicate_urls.any?
+      errors.add(:base, "Links contains duplicate URLs: #{duplicate_urls.join(', ')}")
     end
   end
 end

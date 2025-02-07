@@ -38,4 +38,8 @@ class Api::V1::ChannelSerializer
     object.community_admins.count
   end
 
+  attribute :favourited do |object, params|
+    params[:current_account] ? JoinedCommunity.exists?(patchwork_community_id: object.id, account_id: params[:current_account]['id']) : false
+  end
+
 end

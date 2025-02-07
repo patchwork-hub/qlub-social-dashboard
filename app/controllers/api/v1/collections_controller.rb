@@ -25,9 +25,9 @@ module Api
       def fetch_channel_details
         return nil unless params[:slug].present?
         if  params[:slug] === 'all-collection'
-          @channels = Community.filter_channels.exclude_array_ids.exlude_incomplete_channels.ordered_pos_name
+          @channels = Community.filter_channels.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
         else
-          @channels = Collection.find_by(slug: params[:slug])&.patchwork_communities&.filter_channels.exclude_array_ids.exlude_incomplete_channels.ordered_pos_name
+          @channels = Collection.find_by(slug: params[:slug])&.patchwork_communities&.filter_channels.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
         end
         @channels
       end
