@@ -55,6 +55,7 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
+      update_account_attributes
       if @community.channel_feed?
         set_clean_up_policy
       end
@@ -110,6 +111,7 @@ class CommunityPostService < BaseService
     p "START_UPDATING_ACCOUNT #{@community.slug.underscore}"
     if @options[:id].present?
       @account.update!(
+        display_name: @community.name,
         avatar: @community.avatar_image || '',
         header: @community.banner_image || '',
         note: @community.description || ''
