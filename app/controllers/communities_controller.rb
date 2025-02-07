@@ -41,7 +41,7 @@ class CommunitiesController < BaseController
       flash.now[:error] = @community.errors.full_messages
       render :step1
     else
-      if current_user.master_admin?
+      if current_user.master_admin? || current_user.user_admin?
         redirect_to step2_community_path(@community)
       else
         redirect_to step3_community_path(@community)

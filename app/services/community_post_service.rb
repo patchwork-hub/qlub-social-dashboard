@@ -51,7 +51,6 @@ class CommunityPostService < BaseService
       validate_collection
       validate_community_type
       validate_uniqueness(:name)
-      validate_uniqueness(:slug)
       return @community if @community&.errors&.any?
       set_default_additional_information
 
@@ -156,6 +155,7 @@ class CommunityPostService < BaseService
 
   def community_attributes
     attributes = {
+      name: @options[:name],
       description: @options[:bio],
       is_recommended: @options[:is_recommended],
       guides: nil,
@@ -166,7 +166,6 @@ class CommunityPostService < BaseService
     }
 
     if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)
-      attributes[:name] = @options[:name]
       attributes[:slug] = @options[:slug]
     end
 
