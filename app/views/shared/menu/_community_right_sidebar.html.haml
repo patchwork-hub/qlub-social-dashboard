@@ -1,40 +1,22 @@
 .container.mt-4.pt-4
   .stepper.right-sidebar
-    .step.step-1{ class: (@current_step == 1 ? 'active' : (@current_step >= 1 ? 'done' : '')) }
-      .circle
-        %span.smal{ class: (@current_step > 1 ? 'step-no' : '') } 1
-      .label
-        %strong Channel information
-        %p.desc.small Set up the basic details of your channel.
-    .step.step-2{ class: (@current_step == 2 ? 'active' : (@current_step >= 2 ? 'done' : '')) }
-      .circle
-        %span.small{ class: (@current_step > 2 ? 'step-no' : '') } 2
-      .label
-        %strong Admin details
-        %p.desc.small Create admin accounts for your channel.
-    .step.step-3{ class: (@current_step == 3 ? 'active' : (@current_step >= 3 ? 'done' : '')) }
-      .circle
-        %span.small{ class: (@current_step > 3 ? 'step-no' : '') } 3
-      .label
-        %strong Add content
-        %p.desc.small Choose hashtags and key contributors from the wider federated network to populate your channel.
-    .step.step-4{ class: (@current_step == 4 ? 'active' : (@current_step >= 4 ? 'done' : '')) }
-      .circle
-        %span.small{ class: (@current_step > 4 ? 'step-no' : '') } 4
-      .label
-        %strong Filter content
-        %p.desc.small Filter content from the wider federated network to ensure your channel stays relevant.
-    - unless user_admin? || @community&.channel_feed?
-      -#  .step.step-5{ class: (@current_step == 5 ? 'active' : (@current_step >= 5 ? 'done' : '')) }
-            .circle
-              %span.small{ class: (@current_step > 5 ? 'step-no' : '') } 5
-            .label
-              %strong Share content
-              %p.desc.small Select default hashtags to help posts reach audiences beyond your channel.
-      .step.step-6{ class: (@current_step == 6 ? 'active' : (@current_step >= 6 ? 'done' : '')) }
-        .circle
-          -# %span.small{ class: (@current_step > 6 ? 'step-no' : '') } 6
-          %span.small{ class: (@current_step > 6 ? 'step-no' : '') } 5
-        .label
-          %strong Additional information
-          %p.desc.small Add your channel guidelines and any additional information to support the channel.
+    = render_step(1, 1, 'Channel information', 'Set up the basic details of your channel.')
+
+    - if organisation_admin?
+      = render_step(3, 2, 'Add content', 'Choose hashtags and key contributors from the wider federated network to populate your channel.')
+      = render_step(4, 3, 'Filter content', 'Filter content from the wider network to ensure your channel stays relevant.')
+      = render_step(6, 4, 'Additional information', 'Add your channel guidelines and any additional information to support the channel.')
+    - else
+      = render_step(2, 2, 'Admin details', 'Create admin accounts for your channel.')
+      = render_step(3, 3, 'Add content', 'Choose hashtags and key contributors from the wider federated network to populate your channel.')
+      = render_step(4, 4, 'Filter content', 'Filter content from the wider network to ensure your channel stays relevant.')
+
+      - unless user_admin? || @community&.channel_feed?
+        / .step.step-5{class: step_class(5)}
+        /   .circle
+        /     %span.small{class: (@current_step > 5 ? 'step-no' : '')} 5
+        /   .label
+        /     %strong Share content
+        /     %p.desc.small Select default hashtags to help posts reach audiences beyond your channel.
+
+        = render_step(6, 5, 'Additional information', 'Add your channel guidelines and any additional information to support the channel.')

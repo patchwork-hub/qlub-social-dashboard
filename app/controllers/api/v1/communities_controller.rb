@@ -31,10 +31,12 @@ module Api
       end
 
       def show
+        authorize @community, :show?
         render json: Api::V1::ChannelSerializer.new(@community).serializable_hash.to_json
       end
 
       def update
+        authorize @community, :update?
         @community = CommunityPostService.new.call(
           current_user,
           community_params.merge(id: @community.id)
@@ -58,6 +60,7 @@ module Api
       end
 
       def search_contributor
+
         query = params[:query]
         url = ENV.fetch('MASTODON_INSTANCE_URL')
         token = bearer_token
@@ -87,6 +90,7 @@ module Api
       end
 
       def set_visibility
+        authorize @community, :set_visibility?
         if @community.visibility.nil?
           @community.update(visibility: 'public_access')
           render json: { message: "Channel created successfully" }, status: :ok

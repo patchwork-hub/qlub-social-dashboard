@@ -4,15 +4,15 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def index?
-    initialize_form?
+    user_has_access_to_community?
   end
 
   def show?
-    related_user_admin?
+    index?
   end
 
   def update?
-    show?
+    index?
   end
 
   def step1?
@@ -24,7 +24,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step2?
-    initialize_form?
+    master_admin?
   end
 
   def step2_save?
@@ -85,6 +85,10 @@ class CommunityPolicy < ApplicationPolicy
 
   def manage_additional_information?
     step5?
+  end
+
+  def set_visibility?
+    index?
   end
 
   private

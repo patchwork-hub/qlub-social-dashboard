@@ -12,6 +12,7 @@ module Api
       end
 
       def index
+        authorize @community, :index?
         community_admins = records_filter.get.order(created_at: :desc)
         render json: Api::V1::CommunityAdminSerializer.new(community_admins).serializable_hash.to_json
       end

@@ -6,6 +6,7 @@ module Api
       before_action :set_community
 
       def index
+        authorize @community, :index?
         @community_post_type = @community.community_post_type
         if @community_post_type
           render json: {

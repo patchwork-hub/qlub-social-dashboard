@@ -1,7 +1,10 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step, @community)
+      - if current_user.organisation_admin?
+        = carousel_indicators(3, @community)
+      - else
+        = carousel_indicators(@current_step, @community)
 
   - is_not_custom_channel = !@content_type&.custom_channel?
   .row
@@ -14,7 +17,7 @@
             .col
               = simple_form_for @community_post_type, url: step4_community_path, method: :post do |f|
                 %label Type of posts
-                %p.text-muted.small Select which types of content from hashtags and key contributors are excluded from this channel.
+                %p.text-muted.small Select which types of content are included in this channel.
 
                 .row
                   .col.card.list-group-item
@@ -75,7 +78,7 @@
         .card-body
           .row.d-flex.justify-content-between
             .col-md-9-auto
-              %label Keyword filtering (filter out)
+              %label Mute keywords
               %p.text-muted.small Add keyword filters to prevent posts from the wider network which contain this keyword from appearing in the channel.
             .col-md-3-auto.mt-auto
               %button.btn.btn-outline-secondary{title: 'Add keyword filtering', "data-toggle" => "modal", "data-target" => "#CommunityFilterModal"} Add new

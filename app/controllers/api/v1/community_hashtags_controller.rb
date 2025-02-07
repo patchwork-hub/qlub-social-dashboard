@@ -7,6 +7,7 @@ module Api
       before_action :set_community_hashtag, only: %i[update destroy]
 
       def index
+        authorize @community, :index?
         @records = load_commu_hashtag_records
         render json: {
           data: @records,

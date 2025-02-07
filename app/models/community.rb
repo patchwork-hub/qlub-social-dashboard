@@ -78,7 +78,7 @@ class Community < ApplicationRecord
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
 
-  accepts_nested_attributes_for :patchwork_community_links, allow_destroy: true
+  validate :unique_patchwork_community_links
 
   has_many :patchwork_community_rules,
             class_name: 'CommunityRule',
@@ -96,6 +96,12 @@ class Community < ApplicationRecord
             dependent: :destroy
 
   accepts_nested_attributes_for :patchwork_community_rules, allow_destroy: true
+
+  has_many :social_links, -> { social }, class_name: 'CommunityLink', foreign_key: 'patchwork_community_id'
+  has_many :general_links, -> { general }, class_name: 'CommunityLink', foreign_key: 'patchwork_community_id'
+
+  accepts_nested_attributes_for :social_links, allow_destroy: true
+  accepts_nested_attributes_for :general_links, allow_destroy: true
 
   validates :name, presence: true, uniqueness: true
 
@@ -158,6 +164,15 @@ class Community < ApplicationRecord
     expected_ratio = width_ratio.to_f / height_ratio
     unless (actual_ratio - expected_ratio).abs < 0.01
       errors.add(:base, "#{image_name} must have an aspect ratio of #{width_ratio}:#{height_ratio}")
+    end
+  end
+
+  def unique_patchwork_community_links
+    urls = patchwork_community_links.reject(&:marked_for_destruction?).map(&:url)
+    duplicate_urls = urls.select { |url| urls.count(url) > 1 }.uniq
+
+    if duplicate_urls.any?
+      errors.add(:base, "Links contains duplicate URLs: #{duplicate_urls.join(', ')}")
     end
   end
 end

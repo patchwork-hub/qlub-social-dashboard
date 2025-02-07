@@ -54,14 +54,18 @@ class ApplicationController < ActionController::Base
 
 
   def user_not_authorized
-    flash[:error] = "You are not authorized to perform this action."
-
-    if current_user.organisation_admin?
-      redirect_back_or_to(communities_path(channel_type: 'channel'))
-    elsif current_user.user_admin?
-      redirect_back_or_to(communities_path(channel_type: 'channel_feed'))
+    if request.format.json?
+      render json: { error: "You are not authorized to perform this action." }, status: :forbidden
     else
-      redirect_back_or_to(root_path)
+      flash[:error] = "You are not authorized to perform this action."
+
+      if current_user.organisation_admin?
+        redirect_back_or_to(communities_path(channel_type: 'channel'))
+      elsif current_user.user_admin?
+        redirect_back_or_to(communities_path(channel_type: 'channel_feed'))
+      else
+        redirect_back_or_to(root_path)
+      end
     end
   end
 

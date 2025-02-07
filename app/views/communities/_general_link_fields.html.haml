@@ -1,0 +1,11 @@
+%tr.nested-fields
+  %td
+    = f.hidden_field :is_social, value: false
+    = f.select :icon, options_for_select(CommunityLink::GENERAL_ICONS.map { |icon| [icon.to_s.titleize, icon, data: { icon: image_path("icons/#{icon.to_s.dasherize}.svg") }] }, f.object.icon), {}, class: 'form-control select2-icon'
+  %td
+    = f.text_field :name, class: 'form-control', placeholder: "Enter name"
+  %td{ colspan: 2 }
+    = f.text_field :url, class: 'form-control', placeholder: "Enter URL"
+  %td
+    = link_to_remove_association f, class: 'text-danger' do
+      = image_tag("icons/trash-can.svg", width: "16", height: "16")
