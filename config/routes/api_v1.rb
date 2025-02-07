@@ -49,5 +49,7 @@ namespace :api, defaults: { format: :json } do
     end
 
     resources :content_types, only: [:index, :create]
+
+    resources :joined_communities, only: %i[index create destroy]
   end
 end

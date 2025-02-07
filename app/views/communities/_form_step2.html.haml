@@ -67,7 +67,7 @@
               .mt-auto
                 - if @account.nil?
                   %p.text-muted.small Channel admin doesn't exist.
-                - else
+                - else 
                   .bluesky-bridge-progress-bar
                     .bluesky-step
                       .blue-sky-circle{class: check_account_info(@community, @account).nil? ? 'completed' : 'grey'} 1

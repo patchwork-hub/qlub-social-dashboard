@@ -1,4 +1,4 @@
-run-name: Deploy to Patchwork Dashboard by @${{ github.actor }}
+run-name: Deploy to Staging Patchwork Dashboard by @${{ github.actor }}
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 
 env:
   DEFINITION:
-    .aws/patchwork_staging.json
+    .aws/channel-staging-dashboard.json
 
 permissions:
   contents: read
@@ -63,7 +63,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       
   Deploy:
-    name: Updated code and Deploy to server
+    name: Deploy to Staging
     needs: Build
     runs-on: ubuntu-latest
     steps:
@@ -106,7 +106,7 @@ jobs:
           image:  ${{ secrets.DASHBOARD_STAGING_IMAGE }}
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ secrets.DASHBOARD_STAGING_SERVICE_NAME }}

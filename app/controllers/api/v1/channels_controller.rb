@@ -4,8 +4,8 @@ module Api
   module V1
     class ChannelsController < ApiController
       skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels, :search, :channel_detail, :my_channel]
-
       before_action :authenticate_user_from_header, only: [:my_channel]
+      before_action :check_authorization_header, only: [:channel_detail]
       before_action :set_channel, only: [:channel_detail]
       
       def recommend_channels
@@ -14,7 +14,7 @@ module Api
       end
 
       def channel_detail
-        render json: Api::V1::ChannelSerializer.new(@channel).serializable_hash.to_json
+        render json: Api::V1::ChannelSerializer.new(@channel, { params: { current_account: current_account } }).serializable_hash.to_json
       end
 
       def group_recommended_channels
@@ -27,7 +27,7 @@ module Api
         communities = Community
                       .filter_channels
                       .exclude_array_ids
-                      .exlude_incomplete_channels
+                      .exclude_incomplete_channels
                       .where(
                         "lower(name) LIKE :q OR lower(slug) LIKE :q",
                         q: query
@@ -94,6 +94,11 @@ module Api
         end
       end
 
+      def check_authorization_header
+        if request.headers['Authorization'].present?
+          authenticate_user_from_header
+        end
+      end
     end
   end
 end
