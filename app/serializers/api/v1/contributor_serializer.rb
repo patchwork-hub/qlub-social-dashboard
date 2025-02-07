@@ -17,11 +17,7 @@ class Api::V1::ContributorSerializer
   end
 
   attribute :profile_url do |object|
-    if object.local?
-      "#{ENV['MASTODON_INSTANCE_URL']}/@#{object.username}"
-    else
-      "https://#{object.domain}/@#{object.username}"
-    end
+    object.local? ? "#{ENV['MASTODON_INSTANCE_URL']}/@#{object.username}" : object.url
   end
 
   attribute :following do |object, params|
