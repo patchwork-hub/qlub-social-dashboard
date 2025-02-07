@@ -15,7 +15,7 @@
           - is_read_only = params[:id].present? && (!current_user.user_admin? ? Community.find_by_id(params[:id])&.visibility.present? : true)
           .row
             .col-md-6.col-sm-12
-              = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
+              = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control" }, required: true
               %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
             .col-md-6.col-sm-12
               = f.input :slug, label: "Channel username", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true

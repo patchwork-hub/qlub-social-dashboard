@@ -55,8 +55,13 @@
             .d-flex.align-items-center.justify-content-between.mb-2
               %div
                 %label.form-check-label.switch
-                  %input.form-check-input.switch-input#custom_channel_switch{ type: 'checkbox', checked: @content_type&.custom_channel?, data: { toggle: 'collapse', target: '#nested-options' }, disabled: @community.channel_feed? }
-                  %span.switch-slider.round
+                  %input.form-check-input.switch-input#custom_channel_switch{
+                    type: 'checkbox',
+                    checked: @content_type&.custom_channel?,
+                    data: { toggle: 'collapse', target: '#nested-options' },
+                    disabled: @community.channel_feed?
+                  }
+                  %span{ class: "switch-slider round #{@community.channel_feed? ? 'd-none' : ''}" }
                     %span.slider-tick
                       %i.fa-solid.fa-check
                     %span.slider-cross

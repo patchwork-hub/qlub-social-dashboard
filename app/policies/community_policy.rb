@@ -24,7 +24,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step2?
-    master_admin?
+    master_admin? || user_admin?
   end
 
   def step2_save?
