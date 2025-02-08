@@ -30,5 +30,5 @@
 
           .row
             .col-md-12.d-flex.justify-content-center
-              = f.submit (@master_admin.id ? 'Update Community Admin' : 'Create Community Admin'), class: 'btn btn-primary mx-2 btn-custom'
+              = f.submit (@master_admin.id ? 'Update master admin' : 'Create master admin'), class: 'btn btn-primary mx-2 btn-custom'
               = link_to 'Cancel', master_admins_path, class: 'btn btn-secondary mx-2 btn-custom'
