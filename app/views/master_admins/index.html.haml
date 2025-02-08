@@ -3,10 +3,10 @@
     .card
       .card-header
         %h3.card-title
-          Master Admins
+          Master admins
         .card-tools
           %button.btn.btn-sm.btn-danger.ml-3{ onclick: "window.location='#{new_master_admin_path}'" }
-            Create a Master Admin
+            Create a master admin
             = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
 
       .card-body
@@ -14,7 +14,7 @@
         %table.table.no-side-borders.top-bottom-border{data: {url: master_admins_url, type: 'master_admin'}}
           %thead
             %tr
-              %th Display Name
+              %th Display name
               %th Username
               %th Email
               %th Role
@@ -25,7 +25,7 @@
                 %td= master_admin&.display_name
                 %td= master_admin&.username
                 %td= master_admin&.email
-                %td= UserRole.find_by(id: master_admin&.role_id).name
+                %td= UserRole.find_by(id: master_admin&.role_id).name.titleize.gsub('Admin', 'admin')
                 %td
                   %a{ href: edit_master_admin_path(master_admin.user_id), title: 'Edit' }
                     = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")

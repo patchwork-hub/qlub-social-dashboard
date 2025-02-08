@@ -55,7 +55,11 @@ class CommunityPostService < BaseService
       set_default_additional_information
 
       @community.update!(community_attributes)
-      update_account_attributes
+      if @community.community_admins.present?
+        @account = Account.find_by(id: @community.community_admins.first.account_id) if @current_user.master_admin?
+        update_account_attributes
+        update_community_admin
+      end
       if @community.channel_feed?
         set_clean_up_policy
       end
@@ -137,6 +141,12 @@ class CommunityPostService < BaseService
       email: @current_user.email,
       role: @current_user&.role&.name,
       is_boost_bot: true
+    )
+  end
+
+  def update_community_admin
+    @community.community_admins.update(
+      display_name: @community.name
     )
   end
 

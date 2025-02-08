@@ -23,7 +23,7 @@ class MasterAdminsController < ApplicationController
     @master_admin = Form::MasterAdmin.new(master_admin_params)
 
     if @master_admin.save
-      redirect_to master_admins_path, notice: 'Master Admin created successfully.'
+      redirect_to master_admins_path, notice: 'Master admin created successfully.'
     else
       flash.now[:error] = @master_admin.errors.full_messages.join(', ')
       render :new, status: :unprocessable_entity
@@ -34,7 +34,7 @@ class MasterAdminsController < ApplicationController
 
   def update
     if @master_admin.update(master_admin_params)
-      redirect_to master_admins_path, notice: 'Master Admin updated successfully.'
+      redirect_to master_admins_path, notice: 'Master admin updated successfully.'
     else
       flash.now[:error] = @master_admin.errors.full_messages.join(', ')
       render :edit, status: :unprocessable_entity
