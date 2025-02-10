@@ -61,7 +61,7 @@
                 .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "public_access")}
                   = form.radio_button :visibility, 'public_access', autocomplete: 'off'
                   %p.small.mb-0 Public
-                  %p.text-muted.text-smaller Allow users on any Patchwork-enabled server to discover and participate in your channel through the discovery hub.
+                  %p.text-muted.text-smaller.pb-3 Allow users on any Patchwork-enabled server to discover and participate in your channel through the discovery hub.
                   %div.small.selected-indicator.mt-auto Selected
 
                 -# .btn.btn-light.btn-lg.mr-2.w-100.d-flex.flex-column.align-items-start{class: ("selected" if default_visibility == "guest_access")}
