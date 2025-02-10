@@ -171,7 +171,7 @@
                           Click here to add one
                   - @follow_records.each do |record|
                     - exclude_bluesky_bot = record.username.eql?('bsky.brid.gy') ? true : false
-                    - if exclude_bluesky_bot
+                    - unless exclude_bluesky_bot
                       %tr
                         %td{ style: 'width: 10%;' }
                           %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
