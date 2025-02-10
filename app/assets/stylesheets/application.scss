@@ -204,10 +204,21 @@ ul.pagination {
   display: flex;
   align-items: center;
 }
+
+.content-wrapper {
+  margin-top: 57px;
+}
+
+.sidebar {
+  position: fixed;
+  height: calc(100% - 57px);
+}
 // header
 
 // right sidebar
 .top-card {
+  height: calc(100% - 57px);
+  margin-top: 57px;
   background-color: #2E363B;
   color: #ffffff;
   position: relative;
@@ -246,6 +257,8 @@ ul.pagination {
 .right-sidebar {
   position: fixed;
   overflow: hidden;
+  height: calc(100% - 57px);
+  margin-top: 57px;
 }
 // right sidebar
 
