@@ -744,3 +744,12 @@ ul.pagination {
   height: 20px;
   vertical-align: middle;
 }
+
+.copyable-text {
+  color: #6c757d;
+  cursor: pointer;
+
+  &:hover {
+    color: #212529;
+  }
+}

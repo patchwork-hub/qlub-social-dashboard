@@ -15,12 +15,6 @@ module CommunityHelper
     account&.username
   end
 
-  def account_url(account)
-    return nil unless account&.present?
-
-    account&.url
-  end
-
   private
 
   def default_domain
