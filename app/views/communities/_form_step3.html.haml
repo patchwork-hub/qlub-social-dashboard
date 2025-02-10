@@ -61,7 +61,7 @@
                     data: { toggle: 'collapse', target: '#nested-options' },
                     disabled: @community.channel_feed?
                   }
-                  %span{ class: "switch-slider round" }
+                  %span{ class: "switch-slider round #{@community.channel_feed? ? 'd-none' : ''}" }
                     %span.slider-tick
                       %i.fa-solid.fa-check
                     %span.slider-cross
