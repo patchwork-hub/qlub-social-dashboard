@@ -40,8 +40,9 @@
                 %td.text-center
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
                 %td= community.name
+                %td= account_url(account)
                 %td
-                  %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account.url}')"}= "@#{username(account)}@#{domain(account)}"
+                  %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
                 %td= community&.patchwork_community_type&.name
                 %td
                   - if community.visibility.present?
