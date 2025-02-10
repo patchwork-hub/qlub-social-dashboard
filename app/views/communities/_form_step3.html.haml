@@ -170,16 +170,18 @@
                         %a.text-danger.small{ href: '#', title: 'Add a contributor', 'data-toggle': 'modal', 'data-target': '#addContributorModal' }
                           Click here to add one
                   - @follow_records.each do |record|
-                    %tr
-                      %td{ style: 'width: 10%;' }
-                        %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
-                      %td{ style: 'width: 80%;' }
-                        = record.display_name
-                        - domain = record&.domain.present? ? "https://#{record.domain}" : ENV.fetch('MASTODON_INSTANCE_URL', nil)
-                        %br
-                        %a{ href: "#{record.url}", target: "_blank" }= "@#{record.username}@#{record.domain}"
-                      %td{style: "width: 60px;"}
-                        %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
+                    - exclude_bluesky_bot = record.username.eql?('bsky.brid.gy') ? true : false
+                    - if exclude_bluesky_bot
+                      %tr
+                        %td{ style: 'width: 10%;' }
+                          %img{ alt: "", src: record.avatar_url, class: "rounded-circle mr-2", style: "width: 70px; height: 70px; border: 2px solid white;" }
+                        %td{ style: 'width: 80%;' }
+                          = record.display_name
+                          - domain = record&.domain.present? ? "https://#{record.domain}" : ENV.fetch('MASTODON_INSTANCE_URL', nil)
+                          %br
+                          %a{ href: "#{record.url}", target: "_blank" }= "@#{record.username}@#{record.domain}"
+                        %td{style: "width: 60px;"}
+                          %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
             .pagination.pagination-sm.m-0.float-right
               = paginate @follow_records, theme: 'bootstrap4'
       #keyword-filters-section{ style: "display: none;" }

@@ -51,13 +51,12 @@ window.unfollowContributor = function(account_id, community_id=null) {
 
 // Function to search for contributors
 function searchContributors(query, communityId) {
-  if (query.length === 0) {
+  if (query.length === 0 || query == '@bsky.brid.gy@bsky.brid.gy') {
     clearSearchResults();
     return;
   }
-
   showLoadingSpinner();
-
+  
   fetch(`/channels/${communityId}/search_contributor?query=${encodeURIComponent(query)}`)
     .then(response => response.json())
     .then(data => {
