@@ -232,22 +232,16 @@ $(document).ready(function () {
 
   // Function to copy text to clipboard
   function copyToClipboard(text) {
-    const tempInput = document.createElement('input');
-    tempInput.value = text;
-    document.body.appendChild(tempInput);
-    tempInput.select();
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
     document.execCommand('copy');
-    document.body.removeChild(tempInput);
+    document.body.removeChild(textarea);
   }
 
   // Attach the function to the window object to make it globally accessible
   window.copyToClipboard = copyToClipboard;
-
-  // Event listener for click on text
-  $(document).on('click', '.copyable-text', function() {
-    const text = $(this).text();
-    copyToClipboard(text);
-  });
 });
 
 
