@@ -9,6 +9,10 @@ class CommunitiesController < BaseController
   PER_PAGE = 10
 
   def index
+    unless params[:channel_type].present?
+      redirect_to communities_path(request.query_parameters.merge(channel_type: default_channel_type))
+      return
+    end
     @channel_type = params[:channel_type] || default_channel_type
     @records = records_filter.get.where(channel_type: @channel_type)
     @search = records_filter.build_search
