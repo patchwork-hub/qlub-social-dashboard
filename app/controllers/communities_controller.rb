@@ -132,12 +132,15 @@ class CommunitiesController < BaseController
 
   def step4_save
     @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
+
     if @community_post_type.update(community_post_type_params)
-      flash[:notice] = "Community post type preferences saved successfully!"
-      redirect_to step4_community_path
-    else
-      flash[:error] = "Failed to save post type preferences."
-      render :step4
+      respond_to do |format|
+        if params[:community_post_type][:continue] == "true"
+          format.js { render js: "window.location = '#{step6_community_path}'" }
+        else
+          format.js
+        end
+      end
     end
   end
 

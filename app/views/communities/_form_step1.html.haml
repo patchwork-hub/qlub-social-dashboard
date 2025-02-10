@@ -99,6 +99,6 @@
 
       .row.d-flex.justify-content-between
         .col-auto
-          %a.btn.btn-outline-secondary{ href: communities_path } Back
+          %a.btn.btn-outline-secondary{ href: communities_path(channel_type: @community&.channel_type) } Back
         .col-auto
           = f.button :submit, "Continue", class: 'btn btn-danger'

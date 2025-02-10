@@ -15,7 +15,8 @@
         .card-body
           .row
             .col
-              = simple_form_for @community_post_type, url: step4_community_path, method: :post do |f|
+              = simple_form_for @community_post_type, url: step4_community_path, method: :post, remote: true, html: { id: 'community_post_type_form' } do |f|
+                = f.hidden_field :continue, value: "true", id: "continue_field" if @community.channel?
                 %label Type of posts
                 %p.text-muted.small Select which types of content are <strong>included</strong> in this channel.
 
@@ -36,8 +37,6 @@
                     .form-check
                       = f.check_box :replies, class: 'form-check-input red-check-box mr-2 my-2'
                       = f.label :replies, 'Replies', class: 'form-check-label my-1'
-
-                = f.submit 'Save Changes', class: 'btn btn-sm btn-outline-secondary'
 
       .card{ class: ("d-none" if is_not_custom_channel) }
         .card-body
@@ -114,12 +113,23 @@
           %a.btn.btn-outline-secondary{ href: step3_community_path } Back
         - if @community.channel_feed?
           .col-auto
-            %button.btn.btn-block.btn-danger{type: "button", "data-target" => "#previewCommunityModal", "data-toggle" => "modal"} Preview
+            = button_tag 'Save & Preview', type: 'submit', form: 'community_post_type_form', class: 'btn btn-block btn-danger', data: { toggle: 'modal', target: '#previewCommunityModal' }
         - else
           .col-auto
             -# %a.btn.btn-danger{ href: step5_community_path } Continue
-            %a.btn.btn-danger{ href: step6_community_path } Continue
+            = button_tag 'Continue', type: 'submit', form: 'community_post_type_form', class: 'btn btn-danger', onclick: "$('#continue_field').val('true');"
 
 = render 'mute_contributor'
 = render 'keyword_filter'
 = render 'preview_community'
+
+:javascript
+  document.addEventListener('ajax:success', function(event) {
+    const [data, status, xhr] = event.detail;
+
+    if (xhr.responseText.includes("window.location")) {
+      eval(xhr.responseText);
+    } else {
+      $('#previewCommunityModal').modal('show');
+    }
+  });
