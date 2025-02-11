@@ -90,15 +90,15 @@
           .row.mt-3
             .col-md-12
               %label{ for: "customFile", class: "form-label" } Banner image
-              .dropzone.p-1.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;", id: "bannerDropzone" }
+              .dropzone.p-1.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;", id: "bannerDropzone", onclick: "document.getElementById('customFile').click();" }
                 - banner_image_url = @community_form.banner_image.present? && @community_form.banner_image.respond_to?(:url) ? @community_form.banner_image.url : ''
-                = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentBanner", 'data-aspect-ratio': "3.6" }
+                = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentBanner", 'data-aspect-ratio': "2.1" }
 
                 %img{ src: banner_image_url, alt: "Current Banner", class: "img-fluid dropzone-preview", id: "currentBanner", style: "display: #{banner_image_url.present? ? 'block' : 'none'};" }
-                %div.dropzone-placeholder{ onclick: "document.getElementById('customFile').click();" }
+                %div.dropzone-placeholder
                   %i.fa-solid.fa-upload
                   %p.mb-1 Drag & drop an image here or click to select a file
-                  %p.mb-0.text-muted.small 1080 x 300 recommended dimensions, up to 2MB
+                  %p.mb-0.text-muted.small 1080 x 540 recommended dimensions, up to 2MB
 
       .row.d-flex.justify-content-between
         .col-auto
