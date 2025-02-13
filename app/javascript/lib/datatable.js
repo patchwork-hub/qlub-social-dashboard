@@ -274,13 +274,15 @@ jQuery(function() {
       }
 
       const reader = new FileReader();
-
       reader.onload = function (e) {
         const image = new Image();
         image.onload = function () {
           const modal = document.createElement("div");
           modal.style.cssText = `
             position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
             top: 0;
             left: 0;
             width: 100%;
@@ -295,12 +297,11 @@ jQuery(function() {
           const cropperContainer = document.createElement("div");
           cropperContainer.style.cssText = `
             background-color: #fff;
-            border-radius: 6px;
+            border-radius: 6px 6px 0 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            position: relative;
             overflow: hidden;
             max-width: 60vw;
-            max-height: 70vh;
+            max-height: 60vh;
           `;
 
           const cropperImage = document.createElement("img");
@@ -315,16 +316,16 @@ jQuery(function() {
 
           const buttonContainer = document.createElement("div");
           buttonContainer.style.cssText = `
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             gap: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
             padding: 10px;
-            z-index: 10;
+            background-color: #fff;
+            border-radius: 0 0 6px 6px;
+            border-top: 1px solid #ddd;
+            max-width: 60vw;
+            margin: 0 auto;
+            width: auto;
           `;
 
           const closeButton = document.createElement("button");
@@ -339,8 +340,8 @@ jQuery(function() {
           buttonContainer.appendChild(cropButton);
 
           cropperContainer.appendChild(cropperImage);
-          cropperContainer.appendChild(buttonContainer);
           modal.appendChild(cropperContainer);
+          modal.appendChild(buttonContainer);
           document.body.appendChild(modal);
 
           const cropper = new Cropper(cropperImage, {
@@ -357,6 +358,9 @@ jQuery(function() {
             restore: false,
             checkCrossOrigin: false,
             checkOrientation: false,
+            ready: function() {
+              buttonContainer.style.width = cropperContainer.offsetWidth + "px";
+            }
           });
 
           cropButton.addEventListener("click", () => {
