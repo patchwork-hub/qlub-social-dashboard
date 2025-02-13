@@ -262,61 +262,135 @@ jQuery(function() {
     const input = document.getElementById(inputId);
     const previewImg = document.getElementById(previewId);
 
-    if (!input) {
-      console.error(`Input element with ID '${inputId}' not found.`);
-      return;
-    }
-
-    if (!previewImg) {
-      console.error(`Preview element with ID '${previewId}' not found.`);
+    if (!input || !previewImg) {
+      console.error(`Input or Preview element not found.`);
       return;
     }
 
     input.addEventListener("change", function () {
       const file = this.files[0];
       if (!file) {
-          return;
+        return;
       }
-      const reader = new FileReader();
 
+      const reader = new FileReader();
       reader.onload = function (e) {
         const image = new Image();
         image.onload = function () {
-          const canvas = document.createElement("canvas");
-          let width, height;
-            if(aspectRatio == 1){
-                width = Math.min(image.width, image.height);
-                height = width;
-            }else{
-                width = image.width;
-                height = image.width / aspectRatio;
-                if(height > image.height){
-                    height = image.height;
-                    width = image.height * aspectRatio;
-                }
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          `;
+
+          const cropperContainer = document.createElement("div");
+          cropperContainer.style.cssText = `
+            background-color: #fff;
+            border-radius: 6px 6px 0 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            max-width: 60vw;
+            max-height: 60vh;
+          `;
+
+          const cropperImage = document.createElement("img");
+          cropperImage.src = image.src;
+          cropperImage.style.cssText = `
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+          `;
+
+          const buttonContainer = document.createElement("div");
+          buttonContainer.style.cssText = `
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 0 0 6px 6px;
+            border-top: 1px solid #ddd;
+            max-width: 60vw;
+            margin: 0 auto;
+            width: auto;
+          `;
+
+          const closeButton = document.createElement("button");
+          closeButton.textContent = "Close";
+          applyButtonStyle(closeButton, "#6c757d");
+
+          const cropButton = document.createElement("button");
+          cropButton.textContent = "Crop";
+          applyButtonStyle(cropButton, "#DC3545");
+
+          buttonContainer.appendChild(closeButton);
+          buttonContainer.appendChild(cropButton);
+
+          cropperContainer.appendChild(cropperImage);
+          modal.appendChild(cropperContainer);
+          modal.appendChild(buttonContainer);
+          document.body.appendChild(modal);
+
+          const cropper = new Cropper(cropperImage, {
+            aspectRatio: aspectRatio,
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 1,
+            responsive: true,
+            guides: true,
+            background: false,
+            zoomable: true,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            restore: false,
+            checkCrossOrigin: false,
+            checkOrientation: false,
+            ready: function() {
+              buttonContainer.style.width = cropperContainer.offsetWidth + "px";
             }
+          });
 
-          canvas.width = width;
-          canvas.height = height;
-
-          const ctx = canvas.getContext("2d");
-            const offsetX = (image.width - width) / 2;
-            const offsetY = (image.height - height) / 2;
-          ctx.drawImage(image, offsetX, offsetY, width, height, 0, 0, width, height);
-          canvas.toBlob((blob) => {
-            if (previewImg.src.startsWith("blob:")) {
+          cropButton.addEventListener("click", () => {
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob((blob) => {
+              if (previewImg.src.startsWith("blob:")) {
                 URL.revokeObjectURL(previewImg.src);
               }
               const url = URL.createObjectURL(blob);
-            previewImg.src = url;
-            previewImg.style.display = "block";
+              previewImg.src = url;
+              previewImg.style.display = "block";
 
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(
-              new File([blob], "cropped-image.jpg", { type: "image/jpeg" })
-            );
-            input.files = dataTransfer.files;
+              const dataTransfer = new DataTransfer();
+              dataTransfer.items.add(new File([blob], "cropped-image.jpg", { type: "image/jpeg" }));
+              input.files = dataTransfer.files;
+              document.body.removeChild(modal);
+            }, "image/jpeg");
           });
+
+          closeButton.addEventListener("click", () => {
+            document.body.removeChild(modal);
+          });
+        };
+
+        image.onerror = function () {
+          console.error("Error loading the image.");
+          alert("Failed to load the image. Please try again.");
+          if (modal.parentNode) {
+            document.body.removeChild(modal);
+          }
         };
         image.src = e.target.result;
       };
@@ -328,5 +402,19 @@ jQuery(function() {
 
       reader.readAsDataURL(file);
     });
+  }
+
+  function applyButtonStyle(button, backgroundColor) {
+    button.style.cssText = `
+      padding: 10px 20px;
+      background-color: ${backgroundColor};
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      flex: 1;
+    `;
   }
 });
