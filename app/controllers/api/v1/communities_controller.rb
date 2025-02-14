@@ -102,7 +102,9 @@ module Api
       private
 
       def community_params
-        params.permit(
+        default_community_type_id = CommunityType.first&.id
+
+        params_hash = params.permit(
          :name,
          :slug,
          :bio,
@@ -110,7 +112,13 @@ module Api
          :banner_image,
          :avatar_image,
          :community_type_id
-        )
+        ).to_h
+
+        if default_community_type_id.present?
+          params_hash[:community_type_id] = default_community_type_id
+        end
+
+        params_hash
       end
 
       def records_filter
