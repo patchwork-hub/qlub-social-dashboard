@@ -4,7 +4,7 @@ class CommunityLink < ApplicationRecord
   validates :url, presence: true, uniqueness: { scope: :patchwork_community_id }
 
   enum icon: {
-    pen: 'PenIcon',
+    blog: 'BlogIcon',
     podcast: 'PodcastIcon',
     chat: 'ChatIcon',
     website: 'WebsiteIcon',
