@@ -36,7 +36,7 @@ class CommunitiesController < BaseController
       banner_image: form_params[:banner_image],
       avatar_image: form_params[:avatar_image],
       logo_image: form_params[:logo_image],
-      community_type_id: form_params[:community_type_id],
+      community_type_id: CommunityType.first.id,
       is_recommended: form_params[:is_recommended]
     )
 
