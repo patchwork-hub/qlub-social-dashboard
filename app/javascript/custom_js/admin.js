@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Create mode: set checkboxes to default true
         if (isOrganisationAdminCheckbox) {
           isOrganisationAdminCheckbox.checked = true; // Default to true for "Create"
+          document.querySelector('#community_admin_role').value = 'OrganisationAdmin';
         }
         if (isBoostBotCheckbox) {
           isBoostBotCheckbox.checked = true; // Default to true for "Create"
