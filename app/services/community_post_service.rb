@@ -17,21 +17,13 @@ class CommunityPostService < BaseService
     @community
   end
 
-  def validate_uniqueness(attribute)
-    existing_community = Community.find_by(attribute => @options[attribute])
-    if existing_community && existing_community.id != @options[:id].to_i
-      @community ||= Community.new(community_attributes)
-      @community.errors.add(attribute, "has already been taken")
-      @community
-    end
-  end
-
   def create_community
     ActiveRecord::Base.transaction do
       validate_collection
       validate_community_type
       validate_uniqueness(:name)
       validate_uniqueness(:slug)
+      slug_uniqueness_within_accounts
       return @community if @community&.errors&.any?
 
       @community = Community.new(community_attributes)
@@ -78,6 +70,27 @@ class CommunityPostService < BaseService
   def validate_community_type
     @community_type = CommunityType.find_by(id: @options[:community_type_id])
     handle_not_found('Community Type') if @community_type.nil?
+  end
+
+  def validate_uniqueness(attribute)
+    existing_community = Community.find_by(attribute => @options[attribute])
+    if existing_community && existing_community.id != @options[:id].to_i
+      @community ||= Community.new(community_attributes)
+      @community.errors.add(attribute, "has already been taken")
+      @community
+    end
+  end
+
+  def slug_uniqueness_within_accounts
+    return unless @options[:slug].present?
+
+    if Account.where(username: @options[:slug].underscore).exists?
+      unless @current_user.user_admin? && @current_user&.account&.username == @options[:slug].underscore
+        @community ||= Community.new(community_attributes)
+        @community.errors.add(:slug, "is already taken by an existing account username")
+        @community
+      end
+    end
   end
 
   def set_default_additional_information
