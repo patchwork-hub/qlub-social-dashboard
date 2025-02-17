@@ -23,8 +23,6 @@ class Community < ApplicationRecord
               too_short: "must be at least %{count} characters",
               too_long: "cannot be longer than %{count} characters" }
 
-  validate :slug_uniqueness_within_accounts, on: :create
-
   normalizes :slug, with: ->(slug) { slug.squish.parameterize }
 
   validates :description, length: { maximum: DESCRIPTION_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
@@ -40,10 +38,6 @@ class Community < ApplicationRecord
   validates_attachment :banner_image,
                        content_type: { content_type: IMAGE_MIME_TYPES },
                        size: { less_than: LIMIT }
-
-  # validate :validate_logo_aspect_ratio
-  # validate :validate_avatar_aspect_ratio
-  # validate :validate_banner_aspect_ratio
 
   has_many :community_admins,
             foreign_key: 'patchwork_community_id',
@@ -94,7 +88,7 @@ class Community < ApplicationRecord
             class_name: 'CommunityHashtag',
             foreign_key: 'patchwork_community_id',
             dependent: :destroy
-  
+
   has_many :joined_communities,
             class_name: 'JoinedCommunity',
             foreign_key: 'patchwork_community_id',
@@ -140,37 +134,6 @@ class Community < ApplicationRecord
   end
 
   private
-
-  def slug_uniqueness_within_accounts
-    return unless slug.present?
-
-    if Account.where(username: slug.underscore).exists?
-      errors.add(:slug, "is already taken by an existing account username")
-    end
-  end
-
-  def validate_logo_aspect_ratio
-    validate_image_aspect_ratio(logo_image, 3.6, 1, 'Logo image')
-  end
-
-  def validate_avatar_aspect_ratio
-    validate_image_aspect_ratio(avatar_image, 1, 1, 'Avatar image')
-  end
-
-  def validate_banner_aspect_ratio
-    validate_image_aspect_ratio(banner_image, 3.6, 1, 'Banner image')
-  end
-
-  def validate_image_aspect_ratio(image, width_ratio, height_ratio, image_name)
-    return unless image.present? && image.queued_for_write[:original].present?
-
-    dimensions = Paperclip::Geometry.from_file(image.queued_for_write[:original])
-    actual_ratio = dimensions.width.to_f / dimensions.height
-    expected_ratio = width_ratio.to_f / height_ratio
-    unless (actual_ratio - expected_ratio).abs < 0.01
-      errors.add(:base, "#{image_name} must have an aspect ratio of #{width_ratio}:#{height_ratio}")
-    end
-  end
 
   def unique_patchwork_community_links
     urls = patchwork_community_links.reject(&:marked_for_destruction?).map(&:url)
