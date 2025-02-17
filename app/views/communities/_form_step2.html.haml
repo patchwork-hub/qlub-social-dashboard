@@ -63,17 +63,17 @@
           - if user_admin? || @community&.channel_feed?
             .col-auto.mt-3.bg-light
               .row
-                %label.small Boost bot role
+                %label.small Public feed role
               .row
                 .mt-auto
-                  %p.text-muted.small If the Boost bot role is assigned, it will boost posts and the account can be used to login to the mobile app.
+                  %p.text-muted.small If the public feed role is assigned, it will boost posts and the account can be used to login to the mobile app.
           - else
             .col-auto.mt-3.bg-light
               .row
-                %label.small Organization admin role
+                %label.small Organisation admin role
               .row
                 .mt-auto
-                  %p.text-muted.small If the organization admin role is assigned, the account be be used to access the dashboard system to edit the assigned Channel.
+                  %p.text-muted.small If the organisation admin role is assigned, the account be used to access the dashboard system to edit the assigned Channel.
           .col-auto.mt-3
             .row
               %label Progress of Bluesky bridging

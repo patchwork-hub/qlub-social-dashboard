@@ -13,7 +13,7 @@
         - if @token.nil?
           %p.small.red
             = image_tag("icons/exclamation-triangle.svg", class: "ml-2", width: "16", height: "16")
-            To create keyword, please enable boost bot.
+            To create keyword, please enable public feed.
         = simple_form_for @community_filter_keyword, url: '#', html: { method: '#', id: 'filter-form' } do |f|
           = f.hidden_field :patchwork_community_id
           = f.hidden_field :filter_type

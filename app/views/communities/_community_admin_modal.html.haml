@@ -21,11 +21,11 @@
               .col
                 .form-check
                   = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', readonly: is_disable, onchange: "updateRoleField(this)"
-                  = f.label :role, "Organisation Admin", class: "form-check-label", for: 'is_organisation_admin'
+                  = f.label :role, "Organisation admin", class: "form-check-label", for: 'is_organisation_admin'
               .col
                 .form-check
                   = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot', readonly: is_disable
-                  = f.label :is_boost_bot, "Boost Bot", class: "form-check-label", for: 'community_admin_is_boost_bot'
+                  = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
           .mb-3
             = f.label :email, class: "form-label"
             = f.email_field :email, class: "form-control", id: "community_admin_email"
