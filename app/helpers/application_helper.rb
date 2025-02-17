@@ -14,8 +14,8 @@ module ApplicationHelper
         { path: '/homepage', id: 'homepage-link', header: 'Homepage', icon: 'home.svg', text: 'Home', active_if: 'homepage' },
         { path: server_settings_path, id: 'server-settings-link', header: 'Server settings', icon: 'sliders.svg', text: 'Server settings', active_if: ['server_settings', 'keyword_filter_groups', 'keyword_filters'] },
         { path: '/installation', id: 'installation-link', header: 'Installation', icon: 'screwdriver-wrench.svg', text: 'Installation', active_if: 'installation' },
-        { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Channels', icon: 'speech.svg', text: 'Channels', active_if: channel_active },
-        { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channel feeds', icon: 'channel-feed.svg', text: 'Channel feeds', active_if: channel_feed_active },
+        { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Communities', icon: 'speech.svg', text: 'Communities', active_if: channel_active },
+        { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channels', icon: 'channel-feed.svg', text: 'Channels', active_if: channel_feed_active },
         { path: collections_path, id: 'collections-link', header: 'Collections', icon: 'collection.svg', text: 'Collections', active_if: 'collections' },
         { path: master_admins_path, id: 'master_admins-link', header: 'Master admin', icon: 'administrator.svg', text: 'Master admins', active_if: 'master_admins' },
         { path: accounts_path, id: 'accounts-link', header: 'Users', icon: 'users.svg', text: 'Users', active_if: 'accounts' },
@@ -26,12 +26,12 @@ module ApplicationHelper
       ]
     elsif organisation_admin?
       [
-        { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Channels', icon: 'speech.svg', text: 'Channels', active_if: channel_active },
+        { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Communities', icon: 'speech.svg', text: 'Communities', active_if: channel_active },
         { path: '#', id: 'help-support-link', header: 'Help & Support', icon: 'question.svg', text: 'Help & Support', active_if: 'help_support' }
       ]
     else
       [
-        { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channel feeds', icon: 'channel-feed.svg', text: 'Channel feeds', active_if: channel_feed_active },
+        { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channels', icon: 'channel-feed.svg', text: 'Channels', active_if: channel_feed_active },
         { path: '#', id: 'help-support-link', header: 'Help & Support', icon: 'question.svg', text: 'Help & Support', active_if: 'help_support' }
       ]
     end

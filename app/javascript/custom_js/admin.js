@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
       // Populate the form fields
       emailField.value = email || '';
 
-
       const passwordField = document.querySelector('#community_admin_password');
       if (passwordField) {
         passwordField.value = password || '';
@@ -32,17 +31,27 @@ document.addEventListener('DOMContentLoaded', function () {
       roleField.value = role || '';
 
       // Handle checkboxes based on attributes
-      const isOrganisationAdminExists = document.querySelector('#is_organisation_admin') !== null;
-      if (isOrganisationAdminExists) {
-        document.querySelector('#is_organisation_admin').checked = role === 'OrganisationAdmin';
-      }
-      const isBoostBotExists =  document.querySelector('#community_admin_is_boost_bot') !== null;
-      if (isBoostBotExists) {
-        document.querySelector('#community_admin_is_boost_bot').checked = isBoostBot;
-      }
+      // const isOrganisationAdminExists = document.querySelector('#is_organisation_admin') !== null;
+      // if (isOrganisationAdminExists) {
+      //   document.querySelector('#is_organisation_admin').checked = role === 'OrganisationAdmin';
+      // }
+      // const isBoostBotExists =  document.querySelector('#community_admin_is_boost_bot') !== null;
+      // if (isBoostBotExists) {
+      //   document.querySelector('#community_admin_is_boost_bot').checked = isBoostBot;
+      // }
+      const isOrganisationAdminCheckbox = document.querySelector('#is_organisation_admin');
+      const isBoostBotCheckbox = document.querySelector('#community_admin_is_boost_bot');
+
 
       if (adminId) {
-        // Edit mode
+        // Edit mode: set checkboxes based on existing admin data
+        if (isOrganisationAdminCheckbox) {
+          isOrganisationAdminCheckbox.checked = role === 'OrganisationAdmin';
+        }
+        if (isBoostBotCheckbox) {
+          isBoostBotCheckbox.checked = isBoostBot;
+        }
+
         form.setAttribute('action', '/community_admins/' + adminId);
         form.setAttribute('method', 'post');
         emailField.readOnly = true;
@@ -58,7 +67,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.querySelector('.modal-title').innerHTML = 'Edit channel admin';
       } else {
-        // Create mode
+        // Create mode: set checkboxes to default true
+        if (isOrganisationAdminCheckbox) {
+          isOrganisationAdminCheckbox.checked = true; // Default to true for "Create"
+        }
+        if (isBoostBotCheckbox) {
+          isBoostBotCheckbox.checked = true; // Default to true for "Create"
+        }
+
+
         form.setAttribute('action', '/community_admins');
         form.setAttribute('method', 'post');
         emailField.readOnly = false;

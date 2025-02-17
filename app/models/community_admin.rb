@@ -18,4 +18,23 @@ class CommunityAdmin < ApplicationRecord
   def self.ransackable_attributes(auth_object = nil)
     ["account_id", "created_at", "id", "id_value", "patchwork_community_id", "updated_at"]
   end
+
+  validate :require_admin_role_or_boost_bot, if: :community_is_channel?
+
+  private
+
+  def require_admin_role_or_boost_bot
+    if !organisation_admin_role? && !is_boost_bot
+      errors.add(:base, "Please check 'Organisation Admin' and 'Boost Bot'.")
+    end
+  end
+
+  def community_is_channel?
+    community&.channel?
+  end
+
+  def organisation_admin_role?
+    role == 'OrganisationAdmin'
+  end
+
 end

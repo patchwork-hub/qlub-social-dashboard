@@ -18,7 +18,7 @@
               = simple_form_for @community_post_type, url: step4_community_path, method: :post, remote: true, html: { id: 'community_post_type_form' } do |f|
                 = f.hidden_field :continue, value: "true", id: "continue_field" if @community.channel?
                 %label Type of posts
-                %p.text-muted.small Select which types of content are <strong>included</strong> in this channel.
+                %p.text-muted.small Select which types of content are <strong>excluded</strong> in this channel.
 
                 .row
                   .col.card.list-group-item
