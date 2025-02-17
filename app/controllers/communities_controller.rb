@@ -199,9 +199,6 @@ class CommunitiesController < BaseController
         flash[:error] = @community.errors.full_messages.join(", ")
         redirect_to step6_community_path
       end
-    else
-      flash[:error] = "No community data provided."
-      redirect_to step6_community_path
     end
   end
 
