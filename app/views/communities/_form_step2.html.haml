@@ -73,7 +73,7 @@
                 %label.small Organisation admin role
               .row
                 .mt-auto
-                  %p.text-muted.small If the organisation admin role is assigned, the account be used to access the dashboard system to edit the assigned Channel.
+                  %p.text-muted.small If the organisation admin role is assigned, the account can be used to access the dashboard system to edit the assigned Channel.
           .col-auto.mt-3
             .row
               %label Progress of Bluesky bridging
@@ -101,7 +101,7 @@
                           %p
                             = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
                         - else
-                          %p.text-danger Please complete step 1.
+                          %p.text-warning In progress...
 
       .row.d-flex.justify-content-between
         .col-auto

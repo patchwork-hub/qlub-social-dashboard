@@ -41,7 +41,7 @@ module BlueskyAccountBridgeHleper
   def bridged_handle(community, bridge_info)
     return false if community.nil? || !bridge_info.present?
 
-    bridge_info['handle']
+    "@#{bridge_info['handle']}"
   end
 
 end
