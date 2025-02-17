@@ -45,7 +45,7 @@ module Scheduler
         next unless enable_bride_bluesky?(account)
 
         if account_relationship_array&.last['following'] == true && account_relationship_array&.last['requested'] == false
-          process_did_value(target_account, community, token, account)
+          process_did_value(community, token, account)
         else
           FollowService.new.call(account, target_account)
           account_relationship_array = handle_relationship(account, target_account.id)
@@ -80,8 +80,8 @@ module Scheduler
       GenerateAdminAccessTokenService.new(user&.id).call
     end
 
-    def process_did_value(target_account, community, token, account)
-      did_value = FetchDidValueService.new.call(target_account, community)
+    def process_did_value(community, token, account)
+      did_value = FetchDidValueService.new.call(account, community)
 
       if did_value
         begin

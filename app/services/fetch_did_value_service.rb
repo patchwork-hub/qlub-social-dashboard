@@ -4,21 +4,21 @@ require 'httparty'
 require 'nokogiri'
 
 class FetchDidValueService < BaseService
-  def call(target_account, community)
-    @target_account = target_account
+  def call(account, community)
+    @account = account
     @community = community
 
-    did_value = fetch_did_value(target_account_url) || fetch_did_value(community_slug_url) || fetch_did_value(community_name_url)
+    did_value = fetch_did_value(account_url) || fetch_did_value(community_slug_url) || fetch_did_value(community_name_url)
     did_value
   end
 
   private
 
-  def target_account_url
-    return unless @target_account&.username
-    puts "[FetchDidValueService] url: https://fed.brid.gy/ap/@#{@target_account.username}@channel.org"
+  def account_url
+    return unless @account&.username
+    puts "[FetchDidValueService] url: https://fed.brid.gy/ap/@#{@account.username}@channel.org"
 
-    "https://fed.brid.gy/ap/@#{@target_account.username}@channel.org"
+    "https://fed.brid.gy/ap/@#{@account.username}@channel.org"
   end
 
   def community_slug_url
