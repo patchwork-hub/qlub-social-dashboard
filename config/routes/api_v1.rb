@@ -16,6 +16,8 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
+    resources :search, only: [ :index ]
+
     resources :collections, only: [ :index ] do
       collection do
         get :fetch_channels
