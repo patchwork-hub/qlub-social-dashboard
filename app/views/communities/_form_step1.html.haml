@@ -68,7 +68,7 @@
                   .logo-image-upload
                     %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFilelogo').click();" } Upload image
                     %p.mt-4.text-muted.small The logo is the profile photo in top-left corner of  /public page of the sub-channel.
-                    %p.text-muted.small SVG, PNG, JPG (aspect ratio: 360x100px)
+                    %p.text-muted.small SVG, PNG, JPG (aspect ratio: 300x150px)
 
             - col_class = user_admin? || @community&.channel_feed? ? 'col-md-12' : 'col-md-4'
             .col{ class: col_class }
