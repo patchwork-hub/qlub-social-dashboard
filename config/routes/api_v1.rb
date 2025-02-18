@@ -18,6 +18,13 @@ namespace :api, defaults: { format: :json } do
 
     resources :search, only: [ :index ]
 
+    resources :wait_list, only: [ :create ] do
+      collection do
+        post :request_invitation_code
+        get :validate_code
+      end
+    end
+
     resources :collections, only: [ :index ] do
       collection do
         get :fetch_channels
