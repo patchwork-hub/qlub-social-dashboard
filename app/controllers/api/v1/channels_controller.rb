@@ -52,24 +52,6 @@ module Api
         @channel = Community.find_by(slug: params[:id])
       end
 
-      def main_channel
-        Community.new(
-          id: (Community.last&.id || 1) + 1,
-          name: "Main channel",
-          slug: "",
-          description: "",
-          is_recommended: true,
-          admin_following_count: 0,
-          patchwork_collection_id: nil,
-          position: 0,
-          guides: {},
-          participants_count: 0,
-          visibility: 0,
-          created_at: nil,
-          updated_at: nil
-        )
-      end
-
       def fetch_community_admin
         user = current_user
         CommunityAdmin.find_by(account_id: user&.account_id, role: user&.role&.name)
