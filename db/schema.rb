@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_19_090743) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_18_071001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -976,6 +976,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_090743) do
     t.index ["account_id"], name: "index_patchwork_notification_tokens_on_account_id"
   end
 
+  create_table "patchwork_useage_wait_lists", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "wait_list_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "wait_list_id"], name: "idx_on_account_id_wait_list_id_32e458ed39", unique: true
+    t.index ["account_id"], name: "index_patchwork_useage_wait_lists_on_account_id"
+    t.index ["wait_list_id"], name: "index_patchwork_useage_wait_lists_on_wait_list_id"
+  end
+
   create_table "patchwork_wait_lists", force: :cascade do |t|
     t.text "email"
     t.text "description"
@@ -983,9 +993,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_090743) do
     t.boolean "used", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "account_id"
-    t.datetime "confirmed_at"
-    t.index ["account_id"], name: "index_patchwork_wait_lists_on_account_id"
     t.index ["invitation_code"], name: "index_patchwork_wait_lists_on_invitation_code", unique: true
   end
 
@@ -1597,7 +1604,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_19_090743) do
   add_foreign_key "patchwork_joined_communities", "accounts"
   add_foreign_key "patchwork_joined_communities", "patchwork_communities"
   add_foreign_key "patchwork_notification_tokens", "accounts", on_delete: :cascade
-  add_foreign_key "patchwork_wait_lists", "accounts"
+  add_foreign_key "patchwork_useage_wait_lists", "accounts"
+  add_foreign_key "patchwork_useage_wait_lists", "patchwork_wait_lists", column: "wait_list_id"
   add_foreign_key "poll_votes", "accounts", on_delete: :cascade
   add_foreign_key "poll_votes", "polls", on_delete: :cascade
   add_foreign_key "polls", "accounts", on_delete: :cascade
