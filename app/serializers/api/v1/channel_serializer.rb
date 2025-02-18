@@ -27,11 +27,11 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :follower do |object|
-    object.community_admins.last.account.follower_count
+    object&.community_admins&.last&.account&.follower_count
   end
 
   attribute :admin_following_count do |object|
-    object.community_admins.last.account.following_ids.count
+    object&.community_admins&.last&.account&.following_ids&.count
   end
 
   attribute :no_of_admins do |object|
@@ -40,6 +40,27 @@ class Api::V1::ChannelSerializer
 
   attribute :favourited do |object, params|
     params[:current_account] ? JoinedCommunity.exists?(patchwork_community_id: object.id, account_id: params[:current_account]['id']) : false
+  end
+
+  attribute :community_admin do |object|
+    community_admin = object&.community_admins&.first
+    community_admin ? {
+      id: community_admin.id,
+      username: community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : "",
+    } : {}
+  end
+
+  private
+
+  def self.default_domain
+    case ENV.fetch('RAILS_ENV', nil)
+    when 'staging'
+      'staging.patchwork.online'
+    when 'production'
+      'channel.org'
+    else
+      'localhost.3000'
+    end
   end
 
 end
