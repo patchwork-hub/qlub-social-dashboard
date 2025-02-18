@@ -15,8 +15,8 @@
         .card-body
           .row
             .col
-              = simple_form_for @community_post_type, url: step4_community_path, method: :post, remote: true, html: { id: 'community_post_type_form' } do |f|
-                = f.hidden_field :continue, value: "true", id: "continue_field" if @community.channel?
+              = simple_form_for [@community, @community_post_type], url: community_community_post_type_path(@community), remote: true, html: { id: 'community_post_type_form' } do |f|
+                = hidden_field_tag :continue, "true", id: "continue_field" if @community.channel?
                 %label Type of posts
                 %p.text-muted.small Select which types of content are <strong>excluded</strong> in this channel.
 
