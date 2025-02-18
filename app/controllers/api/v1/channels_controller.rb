@@ -37,7 +37,7 @@ module Api
 
       def my_channel
         attached_community = fetch_community_admin&.community
-        return render_my_channel_response(channel: main_channel, channel_feed: nil )if attached_community.nil?
+        return render_my_channel_response(channel: nil, channel_feed: nil )if attached_community.nil?
 
         if attached_community.channel_type == Community.channel_types[:channel]
           render_my_channel_response(channel: attached_community, channel_feed: nil )
