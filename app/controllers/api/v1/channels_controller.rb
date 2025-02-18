@@ -32,15 +32,7 @@ module Api
                         "lower(name) LIKE :q OR lower(slug) LIKE :q",
                         q: query
                       )
-        collections = Collection
-                      .where(
-                        "lower(name) LIKE :q OR lower(slug) LIKE :q",
-                        q: query
-                      )
-        render json: {
-          communities: Api::V1::ChannelSerializer.new(communities).serializable_hash,
-          collections: Api::V1::CollectionSerializer.new(collections, { params: { recommended: false } }).serializable_hash
-        }
+        render json: Api::V1::ChannelSerializer.new(communities).serializable_hash.to_json
       end
 
       def my_channel
@@ -58,24 +50,6 @@ module Api
 
       def set_channel 
         @channel = Community.find_by(slug: params[:id])
-      end
-
-      def main_channel
-        Community.new(
-          id: (Community.last&.id || 1) + 1,
-          name: "Main channel",
-          slug: "",
-          description: "",
-          is_recommended: true,
-          admin_following_count: 0,
-          patchwork_collection_id: nil,
-          position: 0,
-          guides: {},
-          participants_count: 0,
-          visibility: 0,
-          created_at: nil,
-          updated_at: nil
-        )
       end
 
       def fetch_community_admin
