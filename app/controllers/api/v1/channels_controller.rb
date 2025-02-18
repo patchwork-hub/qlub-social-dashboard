@@ -32,7 +32,15 @@ module Api
                         "lower(name) LIKE :q OR lower(slug) LIKE :q",
                         q: query
                       )
-        render json: Api::V1::ChannelSerializer.new(communities).serializable_hash.to_json
+        collections = Collection
+                      .where(
+                        "lower(name) LIKE :q OR lower(slug) LIKE :q",
+                        q: query
+                      )
+        render json: {
+          communities: Api::V1::ChannelSerializer.new(communities).serializable_hash,
+          collections: Api::V1::CollectionSerializer.new(collections, { params: { recommended: false } }).serializable_hash
+        }
       end
 
       def my_channel
