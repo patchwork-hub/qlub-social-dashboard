@@ -4,7 +4,6 @@ module Api
   module V1
     class WaitListController < ApiController
       skip_before_action :verify_key!, only: [:create, :request_invitation_code, :validate_code]
-
       def create
         wait_list = WaitList.new
         wait_list.generate_invitation_code
