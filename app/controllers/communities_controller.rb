@@ -80,27 +80,13 @@ class CommunitiesController < BaseController
       redirect_to step3_community_path
     end
     @muted_accounts = get_muted_accounts
-    @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
-
+    @community_post_type = @community.community_post_type ||
+                          CommunityPostType.new(patchwork_community_id: @community.id)
     @filter_keywords = get_community_filter_keyword('filter_out')
     @community_filter_keyword = CommunityFilterKeyword.new(
       patchwork_community_id: @community.id,
       filter_type: 'filter_out'
     )
-  end
-
-  def step4_save
-    @community_post_type = CommunityPostType.find_or_initialize_by(patchwork_community_id: @community.id)
-
-    if @community_post_type.update(community_post_type_params)
-      respond_to do |format|
-        if params[:community_post_type][:continue] == "true"
-          format.js { render js: "window.location = '#{step6_community_path}'" }
-        else
-          format.js
-        end
-      end
-    end
   end
 
   def step5
@@ -156,7 +142,6 @@ class CommunitiesController < BaseController
       end
     end
   end
-
 
   def set_visibility
     visibility = params.dig(:community, :visibility).presence || 'public_access'
@@ -278,10 +263,6 @@ class CommunitiesController < BaseController
       general_links_attributes: [:id, :icon, :name, :url, :_destroy],
       patchwork_community_rules_attributes: [:id, :rule, :_destroy]
     )
-  end
-
-  def community_post_type_params
-    params.require(:community_post_type).permit(:posts, :reposts, :replies)
   end
 
   def records_filter
