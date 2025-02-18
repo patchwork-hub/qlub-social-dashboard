@@ -18,6 +18,8 @@ module Dashboard
 
     config.time_zone = "London"
 
+    #config.action_mailer.deliver_later_queue_name = 'mailers'
+
     # smtp settings
     config.action_mailer.smtp_settings = {
       address:                  ENV["SMTP_SERVER"],

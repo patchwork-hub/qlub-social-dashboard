@@ -1,0 +1,22 @@
+-# %tr
+-#   %td.email-logo{align: "center", valign: "middle"}
+-#     %img.reset-password.center{alt: "Logo", src: "https://home.channel.org/_next/image?url=%2Fimages%2Fhome%2Fchannel_logo.png&w=256&q=75", alt: "Icon"}/
+
+-# %tr
+-#   %td.email-title{align: "center", valign: "middle"}
+-#     %img{src: "https://newsmast-assets.s3.eu-west-2.amazonaws.com/right-arrow.png", alt: "Rigth Arrow"}
+-#     %span Password Reset Verification OTP
+
+%tr.text
+  %td{align: "center", valign: "middle"}
+    %div
+      = "Dear, #{@email}"
+    
+    %div
+      Your requested invitation code is as below:
+    
+    #code
+      = @invitation_code
+    
+    .note
+      If you didn't request this, please ignore this email.
