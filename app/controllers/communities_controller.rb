@@ -99,30 +99,6 @@ class CommunitiesController < BaseController
     end
   end
 
-  def step5_delete
-    authorize @community, :step5_delete?
-    PostHashtag.find(params[:post_hashtag_id].to_i).destroy
-    @records = load_post_hashtag_records
-    @search = post_hashtag_records_filter.build_search
-    redirect_to step5_community_path
-  end
-
-  def step5_update
-    authorize @community, :step5_update?
-    UpdateHashtagService.new.call(params[:form_post_hashtag])
-    @records = load_post_hashtag_records
-    @search = post_hashtag_records_filter.build_search
-    redirect_to step5_community_path
-  end
-
-  def step5_save
-    authorize @community, :step5_save?
-    PostHashtagService.new.call(post_hashtag_params)
-    @records = load_post_hashtag_records
-    @search = post_hashtag_records_filter.build_search
-    redirect_to step5_community_path
-  end
-
   def step6
     authorize @community, :step6?
     @admin = Account.where(id: get_community_admin_id).first

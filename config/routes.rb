@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     end
     resources :community_hashtags, only: %i[index create update destroy]
     resource :community_post_type, only: [:create, :update]
+    resources :post_hashtags, only: [:create, :update, :destroy]
   end
 
   resources :community_admins
