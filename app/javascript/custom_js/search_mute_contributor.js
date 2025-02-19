@@ -10,11 +10,11 @@ function searchFollowedContributors(query, communityId) {
     .then(response => response.json())
     .then(data => {
       hideLoadingSpinner();
-      displaySearchResults(data.accounts ,communityId);
+      displaySearchResults(data.accounts, communityId);
     })
     .catch(error => {
       hideLoadingSpinner();
-      console.log('Error fetching search results:', error);
+      console.error('Error fetching search results:', error);
     });
 }
 
@@ -50,25 +50,21 @@ function displaySearchResults(accounts, communityId) {
         </div>
         <div class="col-auto ml-5 pl-5 mt-5">
           <button class="btn btn-outline-secondary mute-button" data-account-id="${account.id}" data-community-id="${communityId}" style="float: right;">
-            Loading...
+            ${account.is_muted ? 'Unmute' : 'Mute'}
           </button>
         </div>
       </div>
     `;
 
     resultsContainer.appendChild(resultItem);
-
-    isMuted(account.id, communityId).then(isMutedStatus => {
-      const muteButton = resultItem.querySelector('.mute-button');
-      muteButton.innerText = isMutedStatus ? 'Unmute' : 'Mute';
-    });
   });
 
+  // Add event listeners to mute buttons
   document.querySelectorAll('.mute-button').forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
       const accountId = this.dataset.accountId;
       const communityId = this.dataset.communityId;
-      toggleMute(accountId, communityId);
+      toggleMute(accountId, communityId, this);
     });
   });
 }
@@ -78,47 +74,38 @@ function clearSearchResults() {
   resultsContainer.innerHTML = '';
 }
 
-function isMuted(accountId, communityId) {
-  return fetch(`/channels/${communityId}/is_muted?account_id=${accountId}`)
+function toggleMute(accountId, communityId, buttonElement) {
+  const isCurrentlyMuted = buttonElement.innerText === 'Unmute';
+
+  fetch(`/channels/${communityId}/mute_contributor`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    },
+    body: JSON.stringify({
+      account_id: accountId,
+      mute: !isCurrentlyMuted
+    })
+  })
     .then(response => response.json())
-    .then(data => data.is_muted)
-    .catch(error => {
-      console.log('Error checking mute status:', error);
-      return false;
-    });
+    .then(data => {
+      if (data.success) {
+        buttonElement.innerText = !isCurrentlyMuted ? 'Unmute' : 'Mute';
+      } else {
+        console.error('Failed to mute/unmute the account.');
+      }
+    })
+    .catch(error => console.error('Error toggling mute:', error));
 }
 
+// Attach event listener to search input
 const muteSearchInput = document.getElementById('mute-search-input');
 if (muteSearchInput) {
-  muteSearchInput.addEventListener('keydown', function(event) {
+  muteSearchInput.addEventListener('keydown', function (event) {
     const communityId = this.getAttribute('data-communityId');
     if (event.key === 'Enter' || event.keyCode === 13) {
       searchFollowedContributors(this.value, communityId);
     }
-  });
-}
-
-function toggleMute(accountId, communityId) {
-  isMuted(accountId, communityId).then(isCurrentlyMuted => {
-    fetch(`/channels/${communityId}/mute_contributor`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      },
-      body: JSON.stringify({
-        account_id: accountId,
-        mute: !isCurrentlyMuted
-      })
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        document.querySelector(`.mute-button[data-account-id="${accountId}"]`).innerText = !isCurrentlyMuted ? 'Unmute' : 'Mute';
-      } else {
-        console.log('Failed to mute/unmute the account.');
-      }
-    })
-    .catch(error => console.log('Error toggling mute:', error));
   });
 }
