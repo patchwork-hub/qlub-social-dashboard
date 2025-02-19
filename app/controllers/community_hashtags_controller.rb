@@ -8,31 +8,50 @@ class CommunityHashtagsController < BaseController
   rescue_from CommunityHashtagPostService::InvalidHashtagError, with: :handle_invalid_hashtag
 
   def create
-    hashtag = parsed_hashtag_param
-    CommunityHashtag.transaction do
-      @community_hashtag = @community.patchwork_community_hashtags.create!(hashtag: hashtag, name: hashtag)
-      perform_hashtag_action(hashtag, :follow)
+    begin
+      perform_hashtag_action(community_hashtag_params[:hashtag].gsub('#', ''), community_hashtag_params[:community_id], :follow)
+      flash[:notice] = "Hashtag saved successfully!"
+    rescue CommunityHashtagPostService::InvalidHashtagError => e
+      flash[:error] = e.message
+    rescue ActiveRecord::RecordNotUnique => e
+      flash[:error] = "Duplicate entry: Hashtag already exists."
     end
-    handle_success("Hashtag saved successfully!")
-  rescue ActiveRecord::RecordNotUnique
-    handle_error("Duplicate entry: Hashtag already exists.")
+
+    redirect_to step3_community_path(@community)
   end
 
   def update
-    CommunityHashtag.transaction do
-      perform_hashtag_action(@hashtag.hashtag, :unfollow)
-      @hashtag.update!(hashtag: parsed_hashtag_param, name: parsed_hashtag_param)
-      perform_hashtag_action(parsed_hashtag_param, :follow)
+    begin
+      community_hashtag = CommunityHashtag.find(params[:id])
+      form_community_hashtag_params = params.require(:form_community_hashtag).permit(:hashtag)
+
+      perform_hashtag_action(community_hashtag.hashtag, nil, :unfollow)
+      hashtag = form_community_hashtag_params[:hashtag].gsub('#', '')
+      community_hashtag.assign_attributes(hashtag: hashtag, name: hashtag)
+      community_hashtag.save!
+      perform_hashtag_action(community_hashtag.hashtag, nil, :follow)
+
+      flash[:notice] = "Hashtag updated successfully!"
+    rescue CommunityHashtagPostService::InvalidHashtagError => e
+      flash[:error] = e.message
+    rescue ActiveRecord::RecordNotUnique => e
+      flash[:error] = "Duplicate entry: Hashtag already exists."
     end
-    handle_success("Hashtag updated successfully!")
+
+    redirect_to step3_community_path(@community)
   end
 
   def destroy
-    CommunityHashtag.transaction do
-      perform_hashtag_action(@hashtag.hashtag, :unfollow)
-      @hashtag.destroy!
+    hashtag = CommunityHashtag.find(params[:id])
+    community_id = hashtag.patchwork_community_id
+
+    if hashtag.destroy
+      perform_hashtag_action(hashtag.hashtag, community_id, :unfollow)
+      flash[:notice] = "Hashtag removed successfully!"
+    else
+      flash[:error] = "Failed to remove hashtag."
     end
-    handle_success("Hashtag removed successfully!")
+    redirect_to step3_community_path(@community)
   end
 
   private
@@ -46,72 +65,52 @@ class CommunityHashtagsController < BaseController
   end
 
   def community_hashtag_params
-    params.require(:form_community_hashtag).permit(:hashtag, :hashtag_id)
+    params.require(:form_community_hashtag).permit(:hashtag, :community_id)
   end
 
-  def parsed_hashtag_param
-    community_hashtag_params[:hashtag].to_s.gsub('#', '')
-  end
+  def perform_hashtag_action(hashtag_name, community_id = nil, action)
+    if action == :follow && community_id
+      CommunityHashtagPostService.new.call(hashtag: hashtag_name, community_id: community_id)
+    end
 
-  def perform_hashtag_action(hashtag_name, action)
-    validate_and_search_hashtag(hashtag_name)
-    execute_hashtag_service(action, hashtag_name)
-    perform_relay_action(hashtag_name, action)
-  end
-
-  def validate_and_search_hashtag(hashtag_name)
     hashtag = SearchHashtagService.new(@api_base_url, @token, hashtag_name).call
-    return if hashtag
+    return puts "Hashtag not found" unless hashtag
 
-    raise CommunityHashtagPostService::InvalidHashtagError, "Invalid hashtag: ##{hashtag_name}"
-  end
-
-  def execute_hashtag_service(action, hashtag_name)
     service_class = action == :follow ? FollowHashtagService : UnfollowHashtagService
-    service_class.new(@api_base_url, @token, hashtag_name).call
+    result = service_class.new(@api_base_url, @token, hashtag[:name]).call
+    puts result ? "Successfully #{action}ed ##{hashtag[:name]}" : "Failed to #{action} ##{hashtag[:name]}"
+
+    perform_relay_action(hashtag_name, community_id, action)
   end
 
-  def perform_relay_action(hashtag_name, action)
-    token = fetch_owner_token
-    action == :follow ? create_relay(hashtag_name, token) : delete_relay(hashtag_name, token)
-  end
+  def perform_relay_action(hashtag_name, community_id, action)
+    owner_role = UserRole.find_by(name: 'Owner')
+    owner_user = User.find_by(role: owner_role)
+    token = fetch_oauth_token(owner_user.id)
 
-  def fetch_owner_token
-    owner_user = User.find_by!(role: UserRole.find_by(name: 'Owner'))
-    fetch_oauth_token(owner_user.id)
+    if action == :follow
+      create_relay(hashtag_name, token)
+    end
+
+    if action == :unfollow
+      unless CommunityHashtag.where(name: hashtag_name).where.not(patchwork_community_id: community_id).exists?
+        delete_relay(hashtag_name, token)
+      end
+    end
   end
 
   def create_relay(hashtag_name, token)
     inbox_url = "https://relay.fedi.buzz/tag/#{hashtag_name}"
-    CreateRelayService.new(@api_base_url, token, hashtag_name).call unless Relay.exists?(inbox_url: inbox_url)
+    unless Relay.exists?(inbox_url: inbox_url)
+      CreateRelayService.new(@api_base_url, token, hashtag_name).call
+    end
   end
 
   def delete_relay(hashtag_name, token)
     inbox_url = "https://relay.fedi.buzz/tag/#{hashtag_name}"
-    if (relay = Relay.find_by(inbox_url: inbox_url)) && !other_communities_using_hashtag?(hashtag_name)
+    relay = Relay.find_by(inbox_url: inbox_url)
+    if relay
       DeleteRelayService.new(@api_base_url, token, relay.id).call
     end
-  end
-
-  def other_communities_using_hashtag?(hashtag_name)
-    CommunityHashtag.where(name: hashtag_name).where.not(patchwork_community_id: @community.id).exists?
-  end
-
-  def handle_success(message)
-    flash[:notice] = message
-    redirect_to step3_community_path(@community)
-  end
-
-  def handle_error(message)
-    flash[:error] = message
-    redirect_to step3_community_path(@community)
-  end
-
-  def handle_record_not_found
-    handle_error("The requested resource could not be found")
-  end
-
-  def handle_invalid_hashtag(exception)
-    handle_error(exception.message)
   end
 end
