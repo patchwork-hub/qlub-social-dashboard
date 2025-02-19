@@ -7,7 +7,7 @@
           %span{"aria-hidden" => "true"} ×
       .modal-body
         %p.text-muted.small Add up to three hashtags which will be automatically added to posts made by users on your server when they post to this channel.
-        = simple_form_for @form_post_hashtag, url: step5_community_path do |form|
+        = simple_form_for @form_post_hashtag, url: community_post_hashtags_path(@community) do |form|
           = form.hidden_field :community_id, value: @community.id
           .row
             .col
@@ -36,7 +36,7 @@
           %span{"aria-hidden" => "true"} ×
       .modal-body
         %p.text-muted.small Edit the hashtag for this channel.
-        = simple_form_for @form_post_hashtag, url: step5_update_community_path do |form|
+        = simple_form_for @form_post_hashtag, url: '#', method: :patch, html: { id: 'edit-post-hashtag-form' } do |form|
           = form.hidden_field :community_id, value: @community.id
           = form.hidden_field :id, id: 'post_hashtag_id' # Hidden field for the hashtag ID
           .row
@@ -91,10 +91,10 @@
                     %td{ style: 'width: 90%;' }
                       %p= record.hashtag
                     %td
-                      %a{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, :class => 'edit-link'}
+                      %a{"data-toggle" => "modal", "data-target" => "#postHashtagEditModel", "data-id" => record.id, "data-hashtag" => record.hashtag, "data-community-id" => @community.id, :class => 'edit-link'}
                         = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
                     %td
-                      = link_to step5_delete_community_path(@community, post_hashtag_id: record.id), method: :post, class: 'text-danger', data: { confirm: 'Are you sure?' } do
+                      = link_to community_post_hashtag_path(@community, record), method: :delete, class: 'text-danger', data: { confirm: 'Are you sure?' } do
                         = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
 
           .btn-group
@@ -114,5 +114,3 @@
           %a.btn.btn-outline-secondary{ href: back_path } Back
         .col-auto
           %a.btn.btn-danger{ href: step6_community_path } Continue
-
-= render 'post_hashtag'
