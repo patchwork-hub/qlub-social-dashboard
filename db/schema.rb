@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_02_06_084941) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_19_090743) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -976,6 +976,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_06_084941) do
     t.index ["account_id"], name: "index_patchwork_notification_tokens_on_account_id"
   end
 
+  create_table "patchwork_wait_lists", force: :cascade do |t|
+    t.text "email"
+    t.text "description"
+    t.text "invitation_code", null: false
+    t.boolean "used", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "account_id"
+    t.datetime "confirmed_at"
+    t.index ["account_id"], name: "index_patchwork_wait_lists_on_account_id"
+    t.index ["invitation_code"], name: "index_patchwork_wait_lists_on_invitation_code", unique: true
+  end
+
   create_table "pghero_space_stats", force: :cascade do |t|
     t.text "database"
     t.text "schema"
@@ -1584,6 +1597,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_02_06_084941) do
   add_foreign_key "patchwork_joined_communities", "accounts"
   add_foreign_key "patchwork_joined_communities", "patchwork_communities"
   add_foreign_key "patchwork_notification_tokens", "accounts", on_delete: :cascade
+  add_foreign_key "patchwork_wait_lists", "accounts"
   add_foreign_key "poll_votes", "accounts", on_delete: :cascade
   add_foreign_key "poll_votes", "polls", on_delete: :cascade
   add_foreign_key "polls", "accounts", on_delete: :cascade
