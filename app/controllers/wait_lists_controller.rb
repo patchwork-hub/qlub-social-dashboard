@@ -3,7 +3,7 @@ class WaitListsController < ApplicationController
   before_action :set_wait_list, only: %i[show edit update destroy]
 
   def index
-    @wait_lists = WaitList.all
+    @wait_lists = load_wait_list_records
   end
 
   def show
@@ -38,6 +38,19 @@ class WaitListsController < ApplicationController
   def destroy
     @wait_list.destroy
     redirect_to wait_lists_url, notice: 'Wait list was successfully destroyed.'
+  end
+
+  def load_wait_list_records
+    wait_list_records_filter.get
+  end
+
+  def wait_list_records_filter
+    params[:q] = nil
+    @filter = Filter::WaitList.new(params)
+  end
+
+  def authorize_master_admin!
+    authorize :master_admin, :index?
   end
 
   private

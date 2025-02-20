@@ -9,7 +9,7 @@ module Api
         wait_list = WaitList.new
         wait_list.generate_invitation_code
         if wait_list.save!
-          render json: { message: 'Wait list created successfully' }, status: 200
+          render json: { data: wait_list}, status: 200
         else
           render json: { errors: wait_list.errors.full_messages }, status: 422
         end
