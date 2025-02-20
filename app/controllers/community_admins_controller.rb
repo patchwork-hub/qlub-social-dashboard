@@ -1,6 +1,7 @@
 class CommunityAdminsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_community!, only: %i[create update]
+  before_action :set_community_admin, only: %i[edit update]
 
   def new
   end
@@ -8,30 +9,34 @@ class CommunityAdminsController < ApplicationController
   def create
     @community_admin = @community.community_admins.new(community_admin_params)
     authorize @community_admin, :create?
+
+    if User.exists?(email: params[:community_admin][:email])
+      flash[:error] = 'Email already exists.'
+      return redirect_to_step2
+    end
+
     if @community_admin.save
       CommunityAdminPostService.new(@community_admin, current_user, @community).call
       flash[:notice] = 'Community admin created successfully.'
-      redirect_to step2_community_path(@community)
     else
       flash[:error] = @community_admin.errors.full_messages.join(', ')
-      redirect_to step2_community_path(@community)
     end
+
+    redirect_to_step2
   end
 
   def edit
-    @community_admin = CommunityAdmin.find(params[:id])
   end
 
   def update
-    @community_admin = CommunityAdmin.find(params[:id])
     if @community_admin.update(community_admin_params)
       CommunityAdminPostService.new(@community_admin, current_user, @community).call
       flash[:notice] = 'Community admin updated successfully.'
-      redirect_to step2_community_path(@community)
     else
       flash[:error] = @community_admin.errors.full_messages.join(', ')
-      redirect_to step2_community_path(@community)
     end
+
+    redirect_to_step2
   end
 
   private
@@ -41,6 +46,14 @@ class CommunityAdminsController < ApplicationController
   end
 
   def set_community!
-    @community = Community.find(params[:community_admin][:community_id])
+    @community = Community.find_by(id: params.dig(:community_admin, :community_id))
+  end
+
+  def set_community_admin
+    @community_admin = CommunityAdmin.find(params[:id])
+  end
+
+  def redirect_to_step2
+    redirect_to step2_community_path(@community)
   end
 end
