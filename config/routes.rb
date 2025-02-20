@@ -31,11 +31,10 @@ Rails.application.routes.draw do
       get 'search_contributor', to: 'communities#search_contributor'
       post 'mute_contributor', to: 'communities#mute_contributor'
       post 'unmute_contributor', to: 'communities#unmute_contributor'
-      get 'is_muted', to: 'communities#is_muted'
       post 'set_visibility', to: 'communities#set_visibility'
       post 'manage_additional_information', to: 'communities#manage_additional_information'
     end
-    resources :community_hashtags, only: %i[index create update destroy]
+    resources :community_hashtags, only: %i[create update destroy]
     resource :community_post_type, only: [:create, :update]
     resources :post_hashtags, only: [:create, :update, :destroy]
   end
