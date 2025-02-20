@@ -57,7 +57,6 @@ class CommunitiesController < BaseController
         channel_type: @channel_type
       )
     )
-
     if @community.errors.any?
       handle_step1_error(content_type, @channel_type)
     else
