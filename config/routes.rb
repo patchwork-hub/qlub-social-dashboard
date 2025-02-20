@@ -85,4 +85,6 @@ Rails.application.routes.draw do
   resources :community_admins, except: [:show, :index]
 
   resources :master_admins, except: [:show, :destroy]
+
+  resources :wait_lists
 end

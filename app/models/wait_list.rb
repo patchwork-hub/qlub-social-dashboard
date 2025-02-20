@@ -15,4 +15,8 @@ class WaitList < ApplicationRecord
       break unless WaitList.exists?(invitation_code: self.invitation_code)
     end
   end
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["invitation_code", "email"]
+  end
 end
