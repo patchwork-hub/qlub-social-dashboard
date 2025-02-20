@@ -13,6 +13,7 @@ namespace :api, defaults: { format: :json } do
         get :search
         get :channel_detail
         get :my_channel
+        get :channel_feeds
       end
     end
 

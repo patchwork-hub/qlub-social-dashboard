@@ -117,6 +117,8 @@ class Community < ApplicationRecord
 
   scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
 
+  scope :filter_channel_feeds, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }) }
+
   scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
