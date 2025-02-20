@@ -76,7 +76,7 @@
                   %p.text-muted.small If the organisation admin role is assigned, the account can be used to access the dashboard system to edit the assigned Channel.
           .col-auto.mt-3
             .row
-              %label Progress of Bluesky bridging
+              %label.mb-0 Progress of Bluesky bridging
             .row
               .mt-auto
                 - if @account.nil?
@@ -84,18 +84,9 @@
                 - else
                   .bluesky-bridge-progress-bar
                     .bluesky-step
-                      .blue-sky-circle{class: check_account_info(@community, @account).nil? ? 'completed' : 'grey'} 1
+                      .blue-sky-circle.completed
+                        = image_tag("icons/bluesky.svg", width: "16", height: "16")
                       .bluesky-step-content
-                        %h3 Step 1
-                        %p Account information:
-                        - if check_account_info(@community, @account).nil?
-                          %p.text-success Your account is complete.
-                        - else
-                          %p.text-danger #{check_account_info(@community, @account)}
-                    .bluesky-step
-                      .blue-sky-circle{class: bridged_completely?(@community, @bluesky_info) ? 'completed' : 'grey'} 2
-                      .bluesky-step-content
-                        %h3 Step 2
                         %p Bluesky bridged information:
                         - if bridged_completely?(@community, @bluesky_info)
                           %p
