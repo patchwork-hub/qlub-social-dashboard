@@ -3,10 +3,10 @@
 module Api
   module V1
     class ChannelsController < ApiController
-      skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels, :search, :channel_detail, :my_channel]
+      skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels, :search, :channel_detail, :my_channel, :channel_feeds]
       before_action :authenticate_user_from_header, only: [:my_channel]
-      before_action :check_authorization_header, only: [:channel_detail]
-      before_action :set_channel, only: [:channel_detail]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds]
+      before_action :set_channel, only: [:channel_detail, :channel_feeds]
       
       def recommend_channels
         @recommended_channels = Community.recommended.exclude_array_ids
@@ -44,6 +44,11 @@ module Api
         else
           render_my_channel_response(channel: nil, channel_feed: { account: fetch_community_admin&.account, community:  attached_community } )
         end
+      end
+
+      def channel_feeds
+        channel_feeds = Community.filter_channel_feeds.exclude_incomplete_channels
+        render json: Api::V1::ChannelSerializer.new(channel_feeds , { params: { current_account: current_account } }).serializable_hash.to_json
       end
 
       private 
