@@ -1,0 +1,56 @@
+- title = "Invitation codes"
+
+- content_for :title do
+  = #{title}
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title #{title}
+        .card-tools.w-50
+      .card-body
+        %p.text-muted Here you can see a list of all invitation codes.
+        %table.table.no-side-borders.top-bottom-border{data: {url: wait_lists_url, type: 'wait_list'}}
+          %thead
+            %tr
+              %th Code
+              %th Requested email
+              %th Used
+              %th account
+          %tbody
+            - if @wait_lists.size == 0
+              %tr
+                %td.text-center.info-box-content{colspan: "100%"}
+                  %p.text-muted.small You haven’t added any codes
+                  -# - unless organisation_admin?
+                  -#   %a.text-danger.small{ href: step1_new_communities_path(new_community: 'true') } Click here to add one
+            - @wait_lists.each do |wait_list|
+            - account = wait_list&.account
+              %tr
+                %td
+                  - if wait_list.invitation_code.present?
+                    - if wait_list&.used
+                      %span.text-muted{title: "Unable to copy", style: "cursor: not-allowed;"}= "#{wait_list.invitation_code}"
+                    - else
+                      %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{wait_list.invitation_code}')"}= "#{wait_list.invitation_code}"
+                  - else
+                    %span.text-muted -
+                %td= wait_list&.email.nil? ? " - " : wait_list&.email
+                %td= wait_list&.used
+                %td
+                  - if account.present?
+                    %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
+                  - else
+                    %span.text-muted -
+        - if master_admin?
+          .row.mt-2
+            .col
+              .pagination.pagination-sm.m-0.float-right
+                = paginate @wait_lists, theme: 'bootstrap4'
+          .row.mt-4
+            .col-12.d-flex.justify-content-center
+              %div.btn-group
+                %button.btn.btn-danger.ml-3{ id: "create-invitation-code-btn" }
+                  Create a code
+                  = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
