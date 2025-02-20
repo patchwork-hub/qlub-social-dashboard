@@ -12,11 +12,6 @@ class CommunityAdminPostService < BaseService
   private
 
   def create_admin!
-    if User.exists?(email: @community_admin.email)
-      @community_admin.errors.add(:email, 'already exists')
-      return false
-    end
-
     account_attributes = {
       display_name: @community_admin.display_name,
       avatar: @community.avatar_image || '',
