@@ -13,7 +13,7 @@ class CommunitiesController < BaseController
 
   # Main actions
   def index
-    params[:channel_type] ||= params[:q].delete(:channel_type)
+    params[:channel_type] ||= params[:q]&.delete(:channel_type)
     redirect_to communities_path(request.query_parameters.merge(channel_type: default_channel_type)) unless params[:channel_type].present?
     @channel_type = params[:channel_type] || default_channel_type
     @records = load_filtered_records(commu_records_filter).where(channel_type: @channel_type)
