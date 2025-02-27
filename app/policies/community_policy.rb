@@ -15,6 +15,10 @@ class CommunityPolicy < ApplicationPolicy
     index?
   end
 
+  def step0?
+    record&.channel?
+  end
+
   def step1?
     initialize_form?
   end
@@ -36,27 +40,11 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step3?
-    initialize_form?
-  end
-
-  def step3_save?
-    initialize_form?
-  end
-
-  def step3_update_hashtag?
-    initialize_form?
-  end
-
-  def step3_delete_hashtag?
-    initialize_form?
+    record&.content_type&.custom_channel?
   end
 
   def step4?
-    initialize_form?
-  end
-
-  def step4_save?
-    initialize_form?
+    step3?
   end
 
   def step5?
@@ -76,10 +64,6 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step6?
-    step5?
-  end
-
-  def step6_rule_create?
     step5?
   end
 
