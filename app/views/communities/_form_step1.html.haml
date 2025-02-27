@@ -54,7 +54,7 @@
               = f.text_area :bio, class: "form-control"
 
           .row.mt-3.pl-1
-            - unless user_admin? || @community&.channel_feed? || params[:channel_type]
+            - unless user_admin? || @community&.channel_feed? || params[:channel_type] == 'channel_feed'
               .col-md-8
                 %label{ for: "customFileLogo", class: "form-label" } Logo
                 .row.avatar-image-upload-container.gap-1
