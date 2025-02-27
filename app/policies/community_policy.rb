@@ -48,7 +48,8 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step5?
-    !related_user_admin?
+    # !related_user_admin?
+    false
   end
 
   def step5_save?
@@ -64,11 +65,11 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step6?
-    step5?
+    !related_user_admin?
   end
 
   def manage_additional_information?
-    step5?
+    !related_user_admin?
   end
 
   def set_visibility?
