@@ -378,11 +378,6 @@ class CommunitiesController < BaseController
     @current_step = action_name[/\d+/].to_i || 1
   end
 
-  def fetch_display_step(step)
-    step_data = community_steps.find { |s| s[:step] == step }
-    step_data ? step_data[:display] : 1
-  end
-
   def new_community_post_type
     CommunityPostType.new(patchwork_community_id: @community.id)
   end
