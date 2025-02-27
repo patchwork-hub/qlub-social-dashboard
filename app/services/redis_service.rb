@@ -8,7 +8,8 @@ class RedisService
     @client ||= Redis::Namespace.new(
       namespace,
       redis: Redis.new(
-        url: ENV['REDIS_URL'],
+        host: ENV.fetch('REDIS_HOST', 'localhost'),
+        port: ENV.fetch('REDIS_PORT', 6379),
         password: ENV.fetch('REDIS_PASSWORD', nil)
       )
     )
