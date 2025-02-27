@@ -49,6 +49,7 @@ class KeywordFilterGroupsController < ApplicationController
 
   def update_is_active
     if @keyword_filter_group.update(is_active: params[:keyword_filter_group][:is_active])
+      update_redis_filters
       render json: { success: true }
     else
       render json: { success: false, error: @keyword_filter_group.errors.full_messages.join(', ') }, status: :unprocessable_entity
@@ -82,5 +83,18 @@ class KeywordFilterGroupsController < ApplicationController
     }
 
     { draw: params[:draw].to_i, recordsTotal: 1, recordsFiltered: 1, data: [data] }
+  end
+
+  def update_redis_filters
+    redis = RedisService.client(namespace: 'channel')
+    redis_key = KeywordFilterGroup.get_redis_key_name(@keyword_filter_group&.server_setting&.name)
+    filters = redis.hgetall(redis_key).values
+    filters.each do |filter|
+      filter_data = JSON.parse(filter)
+      if filter_data['group_id'] == @keyword_filter_group.id && filter_data['server_setting_id'] == @keyword_filter_group.server_setting_id
+        filter_data['is_active'] = @keyword_filter_group.is_active
+        redis.hset(redis_key, "#{filter_data['keyword'].downcase}:#{filter_data['filter_type']}", filter_data.to_json)
+      end
+    end
   end
 end
