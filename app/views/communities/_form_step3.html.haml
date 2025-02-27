@@ -164,13 +164,12 @@
               = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
-          - previous_path = current_user.organisation_admin? ? step1_communities_path(id: @community.id, channel_type: @community&.channel_type) : step2_community_path(channel_type: @community&.channel_type)
+          - previous_path = previous_path_for_step3(@community)
           %a.btn.btn-outline-secondary{ href: previous_path } Back
         .col-auto
-          - is_not_custom_channel = !@content_type&.custom_channel?
-          -# - continue_path = is_not_custom_channel ? step5_community_path(id: @community.id, channel_type: @community&.channel_type) : step4_community_path(id: @community.id, channel_type: @community&.channel_type)
-          - continue_path = is_not_custom_channel ? step6_community_path(id: @community.id, channel_type: @community&.channel_type) : step4_community_path(id: @community.id, channel_type: @community&.channel_type)
-          %a.btn.btn-danger{ href:continue_path } Continue
+          - continue_path = continue_path_for_step3(@community, @content_type)
+          %a.btn.btn-danger{ href: continue_path } Continue
+
 
 = render 'add_contributor'
 = render 'edit_hashtag'

@@ -104,9 +104,7 @@
     .row.d-flex.justify-content-between
       .col
         -# %a.btn.btn-outline-secondary{ href: step5_community_path } Back
-        - is_not_custom_channel = !@content_type&.custom_channel?
-        - back_path = is_not_custom_channel ? step3_community_path(id: @community.id, channel_type: @community&.channel_type) : step4_community_path(id: @community.id, channel_type: @community&.channel_type)
-        %a.btn.btn-outline-secondary{ href: back_path } Back
+        %a.btn.btn-outline-secondary{ href: previous_path_for_step6(@community, @content_type) } Back
       .col-auto
         %button.btn.btn-danger#save-and-preview-btn Save & Preview
 
