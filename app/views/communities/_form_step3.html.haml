@@ -1,16 +1,12 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      - if current_user.organisation_admin?
-        = carousel_indicators(2, @community)
-      - else
-        = carousel_indicators(@current_step, @community)
+      = carousel_indicators
   .row
     .col-md-12
       .card
         .card-header
-          - step = current_user.organisation_admin? ? 2 : 3
-          %h3.card-title Step #{step} - Add content
+          %h3.card-title Step #{fetch_display_step} Add content
         .card-body
           = hidden_field_tag :community_id, @community.id, id: 'community_id'
           .row.d-flex
@@ -20,58 +16,7 @@
               .row
                 .mt-auto
                   %p.text-muted.small Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your channel.
-          - if @community.channel?
-            .row
-              .d-flex.align-items-center.justify-content-between.mb-2
-                %div
-                  %label.form-check-label.switch
-                    %input.form-check-input.switch-input#broadcast_channel_switch{ type: 'checkbox', checked: @content_type&.broadcast_channel? }
-                    %span.switch-slider.round
-                      %span.slider-tick
-                        %i.fa-solid.fa-check
-                      %span.slider-cross
-                        %i.fa-solid.fa-xmark
-                  %span.ml-2
-                    Broadcast channel
-                  %span
-                    = render 'shared/tooltip_custom', tooltip_text: 'Broadcast channel', tooltip_position: 'left'
-            %hr
-            .row
-              .d-flex.align-items-center.justify-content-between.mb-2
-                %div
-                  %label.form-check-label.switch
-                    %input.form-check-input.switch-input#group_channel_switch{ type: 'checkbox', checked: @content_type&.group_channel? }
-                    %span.switch-slider.round
-                      %span.slider-tick
-                        %i.fa-solid.fa-check
-                      %span.slider-cross
-                        %i.fa-solid.fa-xmark
-                  %span.ml-2
-                    Group channel
-                  %span
-                    = render 'shared/tooltip_custom', tooltip_text: 'The channel admin account will switch to follow-request mode.', tooltip_position: 'left'
-          %hr
-          .row
-            .d-flex.align-items-center.justify-content-between.mb-2
-              %div
-                %label.form-check-label.switch
-                  %input.form-check-input.switch-input#custom_channel_switch{
-                    type: 'checkbox',
-                    checked: @content_type&.custom_channel?,
-                    data: { toggle: 'collapse', target: '#nested-options' },
-                    disabled: @community.channel_feed?
-                  }
-                  %span{ class: "switch-slider round #{@community.channel_feed? ? 'd-none' : ''}" }
-                    %span.slider-tick
-                      %i.fa-solid.fa-check
-                    %span.slider-cross
-                      %i.fa-solid.fa-xmark
-                %span.ml-2
-                  Custom channel
-                %span
-                  = render 'shared/tooltip_custom', tooltip_text: 'Custom channel', tooltip_position: 'left'
-
-          .collapse#nested-options
+          .collapse.show#nested-options
             .nested-options.mt-2.ml-2
               .row
                 .col
@@ -101,7 +46,7 @@
                     %span.ml-2
                       Specified content only
 
-      #hashtags-section{ style: "display: none;" }
+      #hashtags-section
         .card
           .card-body
             .row.d-flex.justify-content-between
@@ -143,7 +88,7 @@
                             = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
             .pagination.pagination-sm.m-0.float-right
               = paginate @records, theme: 'bootstrap4'
-      #contributors-section{ style: "display: none;" }
+      #contributors-section
         .card
           .card-body
             .row.d-flex.justify-content-between
@@ -184,7 +129,7 @@
                           %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
             .pagination.pagination-sm.m-0.float-right
               = paginate @follow_records, theme: 'bootstrap4'
-      #keyword-filters-section{ style: "display: none;" }
+      #keyword-filters-section
         .card
           .card-body
             .row.d-flex.justify-content-between
@@ -219,12 +164,12 @@
               = paginate @filter_keywords, theme: 'bootstrap4'
       .row.d-flex.justify-content-between
         .col
-          - previous_path = current_user.organisation_admin? ? step1_communities_path(id: @community.id) : step2_community_path
+          - previous_path = current_user.organisation_admin? ? step1_communities_path(id: @community.id, channel_type: @community&.channel_type) : step2_community_path(channel_type: @community&.channel_type)
           %a.btn.btn-outline-secondary{ href: previous_path } Back
         .col-auto
           - is_not_custom_channel = !@content_type&.custom_channel?
-          -# - continue_path = is_not_custom_channel ? step5_community_path(id: @community.id) : step4_community_path(id: @community.id)
-          - continue_path = is_not_custom_channel ? step6_community_path(id: @community.id) : step4_community_path(id: @community.id)
+          -# - continue_path = is_not_custom_channel ? step5_community_path(id: @community.id, channel_type: @community&.channel_type) : step4_community_path(id: @community.id, channel_type: @community&.channel_type)
+          - continue_path = is_not_custom_channel ? step6_community_path(id: @community.id, channel_type: @community&.channel_type) : step4_community_path(id: @community.id, channel_type: @community&.channel_type)
           %a.btn.btn-danger{ href:continue_path } Continue
 
 = render 'add_contributor'

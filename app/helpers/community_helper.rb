@@ -22,6 +22,11 @@ module CommunityHelper
     "#{protocol}://#{domain(account)}/@#{username(account)}@#{domain(account)}"
   end
 
+  def get_channel_content_type(community)
+    content_type = @initial_content_types.find { |content_type| content_type[:value] == community&.content_type&.channel_type }
+    channel_content_type = content_type[:name] if content_type.present?
+  end
+
   private
 
   def default_domain
