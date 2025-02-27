@@ -1,21 +1,42 @@
 class CommunitiesController < BaseController
   before_action :authenticate_user!
-  before_action :set_community, except: %i[step1 step1_save index new]
-  before_action :initialize_form, only: %i[step1]
+  before_action :set_community, except: %i[step0 step0_save step1 step1_save index new]
+  before_action :initialize_form, only: %i[step0 step1]
   before_action :set_current_step
   before_action :set_content_type, only: %i[step3 step4 step5 step6]
   before_action :set_api_credentials, only: %i[search_contributor step3 step4]
   before_action :fetch_community_admins, only: %i[step4 step6]
+  before_action :initial_content_type, only: %i[index step0]
 
   PER_PAGE = 10
   COMMUNITY_FILTER_TYPES = { in: 'filter_in', out: 'filter_out' }.freeze
 
   # Main actions
   def index
+    params[:channel_type] ||= params[:q].delete(:channel_type)
     redirect_to communities_path(request.query_parameters.merge(channel_type: default_channel_type)) unless params[:channel_type].present?
     @channel_type = params[:channel_type] || default_channel_type
     @records = load_filtered_records(commu_records_filter).where(channel_type: @channel_type)
     @search = commu_records_filter.build_search
+  end
+
+  def step0
+    id = params[:id]
+    if id.present?
+      @community = Community.find(id)
+      @content_type = @community.content_type
+    else
+      @content_type = params[:content_type]
+    end
+    respond_to(&:html)
+  end
+
+  def step0_save
+    redirect_to step1_new_communities_path(
+      channel_type: params[:channel_type],
+      content_type: params[:content_type],
+      id: params[:id]
+    )
   end
 
   def step1
@@ -23,12 +44,22 @@ class CommunitiesController < BaseController
   end
 
   def step1_save
+    @channel_type = @community&.channel_type || params[:channel_type]
+    content_type = (current_user.user_admin? || @channel_type == "channel_feed") ?
+                    'custom_channel' :
+                    (params[:content_type] || @community&.content_type)
+
     @community = CommunityPostService.new.call(
       current_user,
-      form_params.merge(community_type_id: CommunityType.first.id)
+      form_params.merge(
+        community_type_id: 2,
+        content_type: content_type,
+        channel_type: @channel_type
+      )
     )
+
     if @community.errors.any?
-      handle_step1_error
+      handle_step1_error(content_type, @channel_type)
     else
       redirect_after_step1_save
     end
@@ -148,6 +179,20 @@ class CommunitiesController < BaseController
     @community_form = Form::Community.new(form_data)
   end
 
+  def initial_content_type
+    @initial_content_types = [
+                        { name: "Broadcast",
+                          description: "A broadcast channel is a one-way channel where the account is used to post contents without having the functionality of boosting posts which match the defined hashtag, keywords or followed contributors.",
+                          value: "broadcast_channel" },
+                        { name: "Group",
+                          description: "A group channel is a one-way channel but with the functionality of boosting Following approved users' posts automatically if the post mentions the account of the group channel.",
+                          value: "group_channel" },
+                        { name: "Curated",
+                          description: "A curated channel is a space where content is carefully selected, moderated, or organized by admins before being shared with users.",
+                          value: "custom_channel" }
+                      ]
+  end
+
   def fetch_community_admins
     @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
   end
@@ -157,7 +202,8 @@ class CommunitiesController < BaseController
     params.require(:form_community).permit(
       :id, :name, :slug, :collection_id, :bio,
       :banner_image, :avatar_image, :logo_image,
-      :community_type_id, :is_recommended
+      :community_type_id, :is_recommended,
+      :content_type, :channel_type
     )
   end
 
@@ -174,15 +220,21 @@ class CommunitiesController < BaseController
 
   # Action handlers
 
-  def handle_step1_error
-    @community_form = Form::Community.new(form_params)
+  def handle_step1_error(content_type, channel_type)
+    @community_form = Form::Community.new(
+      form_params.merge(
+        content_type: content_type,
+        channel_type: channel_type,
+        id: params[:id] || @community.id
+      )
+    )
     flash.now[:error] = @community.errors.full_messages
-    render :step1
+    render :step1, status: :unprocessable_entity
   end
 
   def redirect_after_step1_save
-    path = (current_user.master_admin? || current_user.user_admin?) ? :step2 : :step3
-    redirect_to send("#{path}_community_path", @community)
+    path = path = (current_user.master_admin? || current_user.user_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
+    redirect_to send("#{path}_community_path", @community, channel_type: @channel_type)
   end
 
   def update_additional_information
@@ -324,6 +376,11 @@ class CommunitiesController < BaseController
 
   def set_current_step
     @current_step = action_name[/\d+/].to_i || 1
+  end
+
+  def fetch_display_step(step)
+    step_data = community_steps.find { |s| s[:step] == step }
+    step_data ? step_data[:display] : 1
   end
 
   def new_community_post_type

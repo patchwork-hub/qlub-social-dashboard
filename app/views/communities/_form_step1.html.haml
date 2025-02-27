@@ -1,15 +1,19 @@
+//app/views/communities/_form_step1.html.haml
+
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step, @community)
+      = carousel_indicators
   .col-md-12
     = simple_form_for @community_form, url: step1_communities_path, html: { multipart: true } do |f|
       = f.hidden_field :id
+      = hidden_field_tag :content_type, params[:content_type] || @community&.content_type&.channel_type
+      = hidden_field_tag :channel_type, params[:channel_type] || @community&.channel_type
       .card.mt-4
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step 1 - Channel information
+              %h5.card-title Step #{fetch_display_step} Channel information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme.
           - is_read_only = params[:id].present? && (!current_user.user_admin? ? Community.find_by_id(params[:id])&.visibility.present? : true)
@@ -21,9 +25,6 @@
               = f.input :slug, label: "Channel username", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
               %p.text-muted.small This will be the channel’s username and custom URL extension. Once your channel is created, you will not be able to change this.
           .row
-            -#.col-md-6.col-sm-12
-                = f.input :community_type_id, label: 'Channel type', as: :select, collection: CommunityType.where.not(slug: ['multi-platform', 'multi-contributor']).collect { |type| [type.name, type.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a community type" } }
-                %p.text-muted.small Use this field to select the community type that this channel will belong to.
             .col-md-6.col-sm-12
               = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
               %p.text-muted.small Use this field to select the group or category that this channel will belong to.
@@ -53,7 +54,7 @@
               = f.text_area :bio, class: "form-control"
 
           .row.mt-3.pl-1
-            - unless user_admin? || @community&.channel_feed?
+            - unless user_admin? || @community&.channel_feed? || params[:channel_type]
               .col-md-8
                 %label{ for: "customFileLogo", class: "form-label" } Logo
                 .row.avatar-image-upload-container.gap-1
@@ -102,6 +103,7 @@
 
       .row.d-flex.justify-content-between
         .col-auto
-          %a.btn.btn-outline-secondary{ href: communities_path(channel_type: @community&.channel_type) } Back
+          - path = user_admin? ? communities_path(channel_type: @community&.channel_type) : step0_communities_path(channel_type: params[:channel_type], content_type: params[:content_type], id: params[:id])
+          %a.btn.btn-outline-secondary{ href: path } Back
         .col-auto
           = f.button :submit, "Continue", class: 'btn btn-danger'

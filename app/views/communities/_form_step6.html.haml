@@ -1,10 +1,7 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      - if current_user.organisation_admin?
-        = carousel_indicators(4, @community)
-      - else
-        = carousel_indicators(@current_step, @community)
+      = carousel_indicators
 
   = simple_form_for @community, url: manage_additional_information_community_path, method: :post, html: { id: 'additionalForm' } do |form|
     .row
@@ -12,7 +9,7 @@
         .card
           .card-header
             -# %h3.card-title Step 6 - Additional information
-            %h3.card-title Step 5 - Additional information
+            %h3.card-title Step #{fetch_display_step} Additional information
           .card-body
             .row
               .col
@@ -108,7 +105,7 @@
       .col
         -# %a.btn.btn-outline-secondary{ href: step5_community_path } Back
         - is_not_custom_channel = !@content_type&.custom_channel?
-        - back_path = is_not_custom_channel ? step3_community_path(id: @community.id) : step4_community_path(id: @community.id)
+        - back_path = is_not_custom_channel ? step3_community_path(id: @community.id, channel_type: @community&.channel_type) : step4_community_path(id: @community.id, channel_type: @community&.channel_type)
         %a.btn.btn-outline-secondary{ href: back_path } Back
       .col-auto
         %button.btn.btn-danger#save-and-preview-btn Save & Preview

@@ -1,4 +1,8 @@
-- title = user_admin? ? "Channel feeds" : "Channels"
+//app/views/communities/index.html.haml
+
+- title = user_admin? ? "Channels" : "Communities"
+- channel_type_param = params[:channel_type]
+- path = channel_type_param == 'channel' ? step0_new_communities_path(channel_type: channel_type_param) : step1_new_communities_path(channel_type: channel_type_param)
 
 - content_for :title do
   = #{title}
@@ -12,6 +16,7 @@
           = search_form_for @search, url: communities_path, method: :get do |f|
             .input-group.input-group-sm{style: "width: 250px;"}
               = f.search_field :name_cont, class: "form-control float-right", placeholder: "Search"
+              = f.hidden_field :channel_type, value: channel_type_param
               .input-group-append
                 %button.btn.btn-default{type: "submit"}
                   %i.fas.fa-search
@@ -31,9 +36,9 @@
             - if @records.size == 0
               %tr
                 %td.text-center.info-box-content{colspan: "100%"}
-                  %p.text-muted.small You haven’t added any hashtags to this channel yet
+                  %p.text-muted.small You haven’t added any channels yet
                   - unless organisation_admin?
-                    %a.text-danger.small{ href: step1_new_communities_path(new_community: 'true') } Click here to add one
+                    %a.text-danger.small{ href: path } Click here to add one
             - @records.each do |community|
             - account = community&.community_admins&.first&.account
               %tr
@@ -45,14 +50,15 @@
                     %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
                   - else
                     %span.text-muted -
-                %td= community&.patchwork_community_type&.name
+                %td= get_channel_content_type(community)
                 %td
                   - if community.visibility.present?
                     %span.badge.badge-pill.badge-success Complete
                   - else
                     %span.badge.badge-pill.badge-warning Incomplete
                 %td
-                  %a{ href: step1_communities_path(id: community.id) }
+                  - edit_path = channel_type_param == 'channel' ? step0_communities_path(id: community.id, channel_type: channel_type_param) : step1_communities_path(id: community.id, channel_type: channel_type_param)
+                  %a{ href: edit_path }
                     = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
 
         - if master_admin?
@@ -78,6 +84,6 @@
                 %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
                   Import a channel
                   = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
-                %button.btn.btn-danger.ml-3{ onclick: "window.location='#{step1_new_communities_path(new_community: 'true')}'" }
+                %button.btn.btn-danger.ml-3{ onclick: "window.location='#{path}'" }
                   Create a channel
                   = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")

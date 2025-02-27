@@ -46,18 +46,6 @@ module ApplicationHelper
     end
   end
 
-  def carousel_indicators(current_step, community)
-    # total_steps = @community&.channel_feed? ? 4 : 6
-    total_steps = @community&.channel_feed? ? 4 : 5
-    total_steps = current_user.organisation_admin? ? 4 : total_steps
-    content_tag(:ol, class: 'carousel-indicators') do
-      (1..total_steps).map do |step|
-        css_class = step <= current_step ? 'bg-danger active' : 'bg-secondary'
-        content_tag(:li, '', class: css_class, style: 'width: 65px; height: 5px;')
-      end.join.html_safe
-    end
-  end
-
   def get_my_server
     if master_admin?
       ENV.fetch('MASTODON_INSTANCE_URL', '#')
