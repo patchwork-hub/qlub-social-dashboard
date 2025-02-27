@@ -98,9 +98,10 @@
         .col-auto
           %a.btn.btn-outline-secondary{ href: step1_communities_path(id: @community.id, channel_type: @community&.channel_type) } Back
         .col-auto
-          %a.btn.btn-danger{
-            href: @community&.content_type&.custom_channel? ? step3_community_path(id: @community.id, channel_type: @community&.channel_type) : step6_community_path(id: @community.id, channel_type: @community&.channel_type),
-            class: (@records.size == 0 ? 'disabled' : '')
-          } Continue
+        %a.btn.btn-danger{
+          href: continue_path_for_step2(@community),
+          class: continue_button_class(@records)
+        } Continue
+
 
 = render 'community_admin_modal'

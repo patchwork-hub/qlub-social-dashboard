@@ -27,6 +27,46 @@ module CommunityHelper
     channel_content_type = content_type[:name] if content_type.present?
   end
 
+  def continue_path_for_step2(community)
+    if community&.content_type&.custom_channel?
+      step3_community_path(id: community.id, channel_type: community.channel_type)
+    else
+      step6_community_path(id: community.id, channel_type: community.channel_type)
+    end
+  end
+
+  def continue_button_class(records)
+    records.size.zero? ? 'disabled' : ''
+  end
+
+  def previous_path_for_step3(community)
+    if current_user.organisation_admin?
+      step1_communities_path(id: community.id, channel_type: community.channel_type)
+    else
+      step2_community_path(channel_type: community.channel_type)
+    end
+  end
+
+  def continue_path_for_step3(community, content_type)
+    if content_type&.custom_channel?
+      step4_community_path(id: community.id, channel_type: community.channel_type)
+    else
+      step6_community_path(id: community.id, channel_type: community.channel_type)
+    end
+  end
+
+  def previous_path_for_step6(community, content_type)
+    return step4_community_path(id: community.id, channel_type: community.channel_type) if content_type&.custom_channel?
+
+    if organisation_admin?
+      step1_communities_path(id: community.id, channel_type: community.channel_type, content_type: content_type&.channel_type)
+    elsif master_admin?
+      step2_community_path(id: community.id, channel_type: community.channel_type)
+    else
+      step4_community_path(id: community.id, channel_type: community.channel_type)
+    end
+  end
+
   private
 
   def default_domain
