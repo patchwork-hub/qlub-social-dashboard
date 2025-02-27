@@ -21,6 +21,7 @@ class CommunitiesController < BaseController
   end
 
   def step0
+    authorize_step(:step0?)
     id = params[:id]
     if id.present?
       @community = Community.find(id)
@@ -72,6 +73,7 @@ class CommunitiesController < BaseController
   end
 
   def step3
+    authorize_step(:step3?)
     @records = load_filtered_records(commu_hashtag_records_filter)
     @search = commu_hashtag_records_filter.build_search
     @community_hashtag_form = Form::CommunityHashtag.new(community_id: @community.id)
@@ -80,6 +82,7 @@ class CommunitiesController < BaseController
   end
 
   def step4
+    authorize_step(:step4?)
     verify_hashtags_presence
     @muted_accounts = load_muted_accounts
     @community_post_type = @community.community_post_type || new_community_post_type

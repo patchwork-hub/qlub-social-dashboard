@@ -39,6 +39,18 @@ module CommunityHelper
     records.size.zero? ? 'disabled' : ''
   end
 
+  def previous_path_for_step1(community, params)
+    if user_admin? || params[:channel_type] == 'channel_feed' || community&.channel_feed?
+      communities_path(channel_type: community&.channel_type)
+    else
+      step0_communities_path(
+        channel_type: params[:channel_type],
+        content_type: params[:content_type],
+        id: params[:id]
+      )
+    end
+  end
+
   def previous_path_for_step3(community)
     if current_user.organisation_admin?
       step1_communities_path(id: community.id, channel_type: community.channel_type)

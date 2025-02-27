@@ -103,7 +103,6 @@
 
       .row.d-flex.justify-content-between
         .col-auto
-          - path = user_admin? ? communities_path(channel_type: @community&.channel_type) : step0_communities_path(channel_type: params[:channel_type], content_type: params[:content_type], id: params[:id])
-          %a.btn.btn-outline-secondary{ href: path } Back
+          %a.btn.btn-outline-secondary{ href: previous_path_for_step1(@community, params) } Back
         .col-auto
           = f.button :submit, "Continue", class: 'btn btn-danger'
