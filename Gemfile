@@ -49,6 +49,7 @@ gem 'spreadsheet'
 gem 'sidekiq', '~> 6.5'
 gem 'hiredis', '~> 0.6'
 gem 'redis', '~> 4.5', require: ['redis', 'redis/connection/hiredis']
+gem 'redis-namespace', '~> 1.10'
 gem 'httparty'
 gem 'sidekiq-scheduler', '~> 5.0'
 gem "cocoon"

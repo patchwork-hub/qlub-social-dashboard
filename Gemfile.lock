@@ -311,6 +311,8 @@ GEM
     rdoc (6.7.0)
       psych (>= 4.0.0)
     redis (4.8.1)
+    redis-namespace (1.11.0)
+      redis (>= 4)
     regexp_parser (2.9.2)
     reline (0.5.9)
       io-console (~> 0.5)
@@ -437,6 +439,7 @@ DEPENDENCIES
   rails (~> 7.1.0, >= 7.0.4.2)
   ransack
   redis (~> 4.5)
+  redis-namespace (~> 1.10)
   responders
   sassc-rails
   select2-rails
