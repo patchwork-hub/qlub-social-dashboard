@@ -4,13 +4,13 @@ class CommunityPostService < BaseService
     @current_user = current_user
     @account = @current_user.account
     @options = options
-
+    @content_type = options[:content_type]
     if @options[:id].present?
       update_community
     else
       create_community
     end
-
+    create_content_type if @community.persisted?
     @community
   rescue ActiveRecord::RecordNotUnique => e
     Rails.logger.error("Community creation/update failed: #{e.message}")
@@ -116,11 +116,7 @@ class CommunityPostService < BaseService
     if @current_user.user_admin?
       update_account_attributes
       create_community_admin
-      create_default_content_type
       set_clean_up_policy
-      @community.update(channel_type: 'channel_feed')
-    else
-      @community.update(channel_type: 'channel')
     end
   end
 
@@ -163,13 +159,19 @@ class CommunityPostService < BaseService
     )
   end
 
-  def create_default_content_type
-    return if @community.content_type.present?
-
-    @community.create_content_type(
-      channel_type: 'custom_channel',
-      custom_condition: 'OR'
+  def create_content_type
+    content_type = ContentType.find_or_initialize_by(patchwork_community_id: @community.id)
+    content_type.update!(
+      channel_type: @options[:content_type],
+      custom_condition: custom_condition_value
     )
+  end
+
+  def custom_condition_value
+    case @content_type
+    when 'custom_channel' then @community&.content_type&.custom_condition || 'or_condition'
+    else nil
+    end
   end
 
   def set_clean_up_policy
@@ -187,7 +189,8 @@ class CommunityPostService < BaseService
       patchwork_collection_id: @collection.id,
       position: get_position,
       admin_following_count: 0,
-      patchwork_community_type_id: @community_type.id
+      patchwork_community_type_id: @community_type.id,
+      channel_type: @options[:channel_type],
     }
 
     if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)

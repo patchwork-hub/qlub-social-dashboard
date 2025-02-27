@@ -1,17 +1,14 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      - if current_user.organisation_admin?
-        = carousel_indicators(3, @community)
-      - else
-        = carousel_indicators(@current_step, @community)
+      = carousel_indicators
 
   - is_not_custom_channel = !@content_type&.custom_channel?
   .row
     .col-md-12
       .card{ class: ("d-none" if is_not_custom_channel) }
         .card-header
-          %h3.card-title Step 4 - Filter content
+          %h3.card-title Step #{fetch_display_step} Filter content
         .card-body
           .row
             .col

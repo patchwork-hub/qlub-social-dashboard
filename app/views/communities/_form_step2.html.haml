@@ -1,12 +1,12 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step, @community)
+      = carousel_indicators
   .row
     .col-md-12
       .card
         .card-header
-          %h3.card-title Step 2 - Admin and public feed details
+          %h3.card-title Step #{fetch_display_step} Admin and public feed details
         .card-body.overflow-auto
           .row.d-flex.justify-content-between
             .col-auto
@@ -96,10 +96,10 @@
 
       .row.d-flex.justify-content-between
         .col-auto
-          %a.btn.btn-outline-secondary{ href: step1_communities_path(id: @community.id) } Back
+          %a.btn.btn-outline-secondary{ href: step1_communities_path(id: @community.id, channel_type: @community&.channel_type) } Back
         .col-auto
           %a.btn.btn-danger{
-            href: step3_community_path(id: @community.id),
+            href: @community&.content_type&.custom_channel? ? step3_community_path(id: @community.id, channel_type: @community&.channel_type) : step6_community_path(id: @community.id, channel_type: @community&.channel_type),
             class: (@records.size == 0 ? 'disabled' : '')
           } Continue
 

@@ -54,12 +54,12 @@
 .container-fluid
   .row-md-12.my-4
     .col
-      = carousel_indicators(@current_step, @community)
+      = carousel_indicators
   .row
     .col-md-12
       .card
         .card-header
-          %h3.card-title Step 5 - Share content
+          %h3.card-title Step #{fetch_display_step} Share content
         .card-body
           .row.d-flex.justify-content-between
             .col-md-10

@@ -1,0 +1,119 @@
+// app/views/communities/_form_step0.html.haml
+- channel_type_param = params[:channel_type]
+- selected_content_type = params[:content_type] || @community&.content_type&.channel_type || 'broadcast_channel'
+
+.container-fluid
+  .row-md-12.my-4
+    .col
+      = carousel_indicators
+  .col-md-12
+    = form_with url: step0_communities_path, method: :post, id: "channel_form" do |f|
+      = f.hidden_field :content_type, value: selected_content_type, id: 'selected_content_type'
+      = f.hidden_field :channel_type, value: channel_type_param
+      = f.hidden_field :id, value: params[:id]
+
+      .card.mt-4
+        .card-header
+          %div.d-flex.justify-content-between
+            %div
+              %h5.card-title Step #{fetch_display_step} Choose Channel Type
+        .card-body
+          %p.text-muted.small Select the type of channel you want to create. Each type has different features and use cases.
+
+          .card.p-3.mb-3
+            .card-header
+              %h5.mb-0 Channel Type
+            .card-body.d-flex.flex-column.gap-3
+              - @initial_content_types.each do |content_type|
+                .card.mb-2.rounded-lg.radio-card{
+                  class: ("selected" if selected_content_type == content_type[:value]),
+                  onclick: "selectContentType('#{content_type[:value]}')",
+                  'data-content-type' => content_type[:value]
+                }
+                  .card-body
+                    %h6= content_type[:name]
+                    %p.card-text.mb-0.small= content_type[:description]
+
+      / Domain design card
+      .card.p-3.mb-3
+        .card-header
+          %h5.mb-0 Domain
+        .card-body
+          %p.text-muted.small Choose your own domain if you want to use the name of your channel plus channel.org as your subdomain, e.g. universityname.channel.org. Alternatively choose a subdomain if you want to use a custom subdomain chosen by you as your subdomain, e.g. social.universityname.org.
+          .d-flex.flex-column.mb-3
+            .d-flex.align-items-center.gap-2.mb-2
+              %label.switch.mb-0
+                = f.check_box :domain_option, { checked_value: 'own', unchecked_value: 'subdomain', class: "switch-input d-none", id: "domain_switch" }
+                %span.switch-slider.round
+                  %span.slider-tick
+                    %i.fa-solid.fa-check
+                  %span.slider-cross
+                    %i.fa-solid.fa-xmark
+              %span.mx-2 Use own domain
+              = render 'shared/tooltip_custom', tooltip_text: 'Use your own domain name', tooltip_position: 'right'
+          %hr
+            .d-flex.align-items-center.gap-2
+              %label.switch.mb-0
+                = f.check_box :domain_option, { checked_value: 'own', unchecked_value: 'subdomain', class: "switch-input d-none", id: "domain_switch" }
+                %span.switch-slider.round
+                  %span.slider-tick
+                    %i.fa-solid.fa-check
+                  %span.slider-cross
+                    %i.fa-solid.fa-xmark
+              %span.mx-2 Channel.org subdomain
+              = render 'shared/tooltip_custom', tooltip_text: 'Use your own domain name', tooltip_position: 'right'
+              = f.text_field :subdomain, id: 'community_subdomain', placeholder: "Enter your subdomain name", class: "form-control with-icon-placeholder", style: ("width: 70%;" unless f.object&.domain_option == 'subdomain')
+
+      .row.d-flex.justify-content-between.mt-4
+        .col-auto
+          %a.btn.btn-outline-secondary{ href: communities_path(channel_type: channel_type_param) } Back
+        .col-auto
+          = f.submit "Continue", class: 'btn btn-danger'
+
+:javascript
+  function selectContentType(contentType) {
+    // Update hidden input value
+    document.getElementById('selected_content_type').value = contentType;
+
+    // Update visual selection
+    document.querySelectorAll('.radio-card').forEach(card => {
+      card.classList.remove('selected');
+    });
+    document.querySelector(`[data-content-type="${contentType}"]`).classList.add('selected');
+  }
+
+  // Initialize selection
+  document.addEventListener('DOMContentLoaded', () => {
+    const initialType = "#{selected_content_type}";
+    if (initialType) {
+      selectContentType(initialType);
+    }
+  });
+
+:css
+  .radio-card {
+    cursor: pointer;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background-color: #f8f9fa;
+  }
+
+  .radio-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .radio-card.selected {
+    border-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.05);
+    box-shadow: 6px 5px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .with-icon-placeholder {
+    background-image: url('icons/globe.svg');
+    background-repeat: no-repeat;
+    background-position: 12px center;
+    padding-left: 40px;
+    background-size: 18px 18px;
+  }

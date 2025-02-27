@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   resources :communities, path: 'channels' do
     collection do
+      get 'step0', to: 'communities#step0', as: 'step0_new'
+      post 'step0', to: 'communities#step0_save'
       get 'step1', to: 'communities#step1', as: 'step1_new'
       post 'step1', to: 'communities#step1_save'
     end
@@ -23,10 +25,7 @@ Rails.application.routes.draw do
       get 'step2', to: 'communities#step2'
       get 'step3', to: 'communities#step3'
       get 'step4', to: 'communities#step4'
-      post 'step5_update', to: 'communities#step5_update'
-      post 'step5_delete', to: 'communities#step5_delete'
       get 'step5', to: 'communities#step5'
-      post 'step5', to: 'communities#step5_save'
       get 'step6', to: 'communities#step6'
       get 'search_contributor', to: 'communities#search_contributor'
       post 'mute_contributor', to: 'communities#mute_contributor'
