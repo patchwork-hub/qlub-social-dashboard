@@ -20,7 +20,8 @@ module Api
 
         community = CommunityPostService.new.call(
           current_user,
-          community_params
+          community_params,
+          content_type: 'custom_channel'
         )
 
         if community.errors.any?
