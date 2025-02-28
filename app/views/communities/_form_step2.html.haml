@@ -79,7 +79,7 @@
               %label.mb-0 Progress of Bluesky bridging
             .row
               .mt-auto
-                - if @account.nil?
+                - if @records.size == 0
                   %p.text-muted.small Channel admin doesn't exist.
                 - else
                   .bluesky-bridge-progress-bar
