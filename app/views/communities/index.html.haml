@@ -1,5 +1,5 @@
-- title = user_admin? ? "Channels" : "Communities"
 - channel_type_param = params[:channel_type]
+- title = channel_type_param == 'channel' ? 'Communities' : 'Channels'
 - create_path = create_community_path(channel_type_param)
 - keyword = determine_channel_keyword(channel_type_param)
 
@@ -20,22 +20,22 @@
                 %button.btn.btn-default{type: "submit"}
                   %i.fas.fa-search
       .card-body
-        %p.text-muted Here you can see a list of all the channels on your server. From this dashboard, you can easily import channels hosted on other servers, create new ones hosted here or manage your existing channels.
+        %p.text-muted Here you can see a list of all the #{title.downcase} on your server. From this dashboard, you can easily import #{title.downcase} hosted on other servers, create new ones hosted here or manage your existing #{title.downcase}.
         %table.table.no-side-borders.top-bottom-border{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
               %th.align-left
                 = check_box_tag :select_all, '', false, id: 'select_all'
-              %th Channels
+              %th #{title}
               %th Username
-              %th Channel type
+              %th #{keyword.capitalize} type
               %th Status
               %th Edit
           %tbody
             - if @records.size == 0
               %tr
                 %td.text-center.info-box-content{colspan: "100%"}
-                  %p.text-muted.small You haven’t added any channels yet
+                  %p.text-muted.small You haven’t added any #{title.downcase} yet
                   - unless organisation_admin?
                     %a.text-danger.small{ href: create_path } Click here to add one
             - @records.each do |community|
