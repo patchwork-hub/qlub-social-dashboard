@@ -6,7 +6,7 @@ module StepHelper
     is_custom_channel = params[:content_type].present? ? params[:content_type] == 'custom_channel' : @community&.content_type&.custom_channel?
 
     if master_admin? && is_channel
-      steps << { step: 0, display: 1, title: 'Choose Channel Type', description: 'Select the type of channel you want to create.' }
+      steps << { step: 0, display: 1, title: 'Choose channel type', description: 'Select the type of channel you want to create.' }
       steps << { step: 1, display: 2, title: 'Channel information', description: 'Set up the basic details of your channel.' }
       steps << { step: 2, display: 3, title: 'Admin and public feed details', description: 'Create admin accounts for your channel.' }
       if is_custom_channel
