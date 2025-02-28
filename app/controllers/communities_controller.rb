@@ -53,7 +53,7 @@ class CommunitiesController < BaseController
     @community = CommunityPostService.new.call(
       current_user,
       form_params.merge(
-        community_type_id: 2,
+        community_type_id: CommunityType.first&.id,
         content_type: content_type,
         channel_type: @channel_type
       )
