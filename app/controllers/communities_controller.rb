@@ -270,7 +270,8 @@ class CommunitiesController < BaseController
 
   # Authorization and verification
   def authorize_step(policy_method)
-    authorize @community, policy_method
+    community = @community || Community.new
+    authorize community, policy_method
   end
 
   def verify_hashtags_presence

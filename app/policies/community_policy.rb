@@ -16,7 +16,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step0?
-    record&.channel?
+    master_admin? || organisation_admin?
   end
 
   def step1?
