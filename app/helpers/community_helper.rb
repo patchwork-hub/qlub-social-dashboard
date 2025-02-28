@@ -22,6 +22,26 @@ module CommunityHelper
     "#{protocol}://#{domain(account)}/@#{username(account)}@#{domain(account)}"
   end
 
+  def create_community_path(channel_type_param)
+    if channel_type_param == 'channel'
+      step0_new_communities_path(channel_type: channel_type_param)
+    else
+      step1_new_communities_path(channel_type: channel_type_param)
+    end
+  end
+
+  def edit_community_path(channel_type_param, community)
+    if channel_type_param == 'channel'
+      step0_communities_path(id: community.id, channel_type: channel_type_param)
+    else
+      step1_communities_path(id: community.id, channel_type: channel_type_param)
+    end
+  end
+
+  def determine_channel_keyword(channel_type_param)
+    channel_type_param == 'channel' ? 'community' : 'channel'
+  end
+
   def get_channel_content_type(community)
     content_type = @initial_content_types.find { |content_type| content_type[:value] == community&.content_type&.channel_type }
     channel_content_type = content_type[:name] if content_type.present?

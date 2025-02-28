@@ -2,7 +2,8 @@
 
 - title = user_admin? ? "Channels" : "Communities"
 - channel_type_param = params[:channel_type]
-- path = channel_type_param == 'channel' ? step0_new_communities_path(channel_type: channel_type_param) : step1_new_communities_path(channel_type: channel_type_param)
+- create_path = create_community_path(channel_type_param)
+- keyword = determine_channel_keyword(channel_type_param)
 
 - content_for :title do
   = #{title}
@@ -38,7 +39,7 @@
                 %td.text-center.info-box-content{colspan: "100%"}
                   %p.text-muted.small You haven’t added any channels yet
                   - unless organisation_admin?
-                    %a.text-danger.small{ href: path } Click here to add one
+                    %a.text-danger.small{ href: create_path } Click here to add one
             - @records.each do |community|
             - account = community&.community_admins&.first&.account
               %tr
@@ -57,8 +58,7 @@
                   - else
                     %span.badge.badge-pill.badge-warning Incomplete
                 %td
-                  - edit_path = channel_type_param == 'channel' ? step0_communities_path(id: community.id, channel_type: channel_type_param) : step1_communities_path(id: community.id, channel_type: channel_type_param)
-                  %a{ href: edit_path }
+                  %a{ href: edit_community_path(channel_type_param, community) }
                     = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
 
         - if master_admin?
@@ -82,8 +82,8 @@
             .col-12.d-flex.justify-content-center
               %div.btn-group
                 %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
-                  Import a channel
+                  Import a #{keyword}
                   = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
-                %button.btn.btn-danger.ml-3{ onclick: "window.location='#{path}'" }
-                  Create a channel
+                %button.btn.btn-danger.ml-3{ onclick: "window.location='#{create_path}'" }
+                  Create a #{keyword}
                   = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
