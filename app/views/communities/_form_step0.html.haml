@@ -32,36 +32,36 @@
                   .card-body
                     %h6= content_type[:name]
                     %p.card-text.mb-0.small= content_type[:description]
-
-      / Domain design card
-      .card.p-3.mb-3
-        .card-header
-          %h5.mb-0 Domain
-        .card-body
-          %p.text-muted.small Choose your own domain if you want to use the name of your channel plus channel.org as your subdomain, e.g. universityname.channel.org. Alternatively choose a subdomain if you want to use a custom subdomain chosen by you as your subdomain, e.g. social.universityname.org.
-          .d-flex.flex-column.mb-3
-            .d-flex.align-items-center.gap-2.mb-2
-              %label.switch.mb-0
-                = f.check_box :domain_option, { checked_value: 'own', unchecked_value: 'subdomain', class: "switch-input d-none", id: "domain_switch" }
-                %span.switch-slider.round
-                  %span.slider-tick
-                    %i.fa-solid.fa-check
-                  %span.slider-cross
-                    %i.fa-solid.fa-xmark
-              %span.mx-2 Use own domain
-              = render 'shared/tooltip_custom', tooltip_text: 'Use your own domain name', tooltip_position: 'right'
-          %hr
-            .d-flex.align-items-center.gap-2
-              %label.switch.mb-0
-                = f.check_box :domain_option, { checked_value: 'own', unchecked_value: 'subdomain', class: "switch-input d-none", id: "domain_switch" }
-                %span.switch-slider.round
-                  %span.slider-tick
-                    %i.fa-solid.fa-check
-                  %span.slider-cross
-                    %i.fa-solid.fa-xmark
-              %span.mx-2 Channel.org subdomain
-              = render 'shared/tooltip_custom', tooltip_text: 'Use your own domain name', tooltip_position: 'right'
-              = f.text_field :subdomain, id: 'community_subdomain', placeholder: "Enter your subdomain name", class: "form-control with-icon-placeholder", style: ("width: 70%;" unless f.object&.domain_option == 'subdomain')
+      -#
+        / Domain design card
+        .card.p-3.mb-3
+          .card-header
+            %h5.mb-0 Domain
+          .card-body
+            %p.text-muted.small Choose your own domain if you want to use the name of your channel plus channel.org as your subdomain, e.g. universityname.channel.org. Alternatively choose a subdomain if you want to use a custom subdomain chosen by you as your subdomain, e.g. social.universityname.org.
+            .d-flex.flex-column.mb-3
+              .d-flex.align-items-center.gap-2.mb-2
+                %label.switch.mb-0
+                  = f.check_box :domain_option, { checked_value: 'own', unchecked_value: 'subdomain', class: "switch-input d-none", id: "domain_switch" }
+                  %span.switch-slider.round
+                    %span.slider-tick
+                      %i.fa-solid.fa-check
+                    %span.slider-cross
+                      %i.fa-solid.fa-xmark
+                %span.mx-2 Use own domain
+                = render 'shared/tooltip_custom', tooltip_text: 'Use your own domain name', tooltip_position: 'right'
+            %hr
+              .d-flex.align-items-center.gap-2
+                %label.switch.mb-0
+                  = f.check_box :domain_option, { checked_value: 'own', unchecked_value: 'subdomain', class: "switch-input d-none", id: "domain_switch" }
+                  %span.switch-slider.round
+                    %span.slider-tick
+                      %i.fa-solid.fa-check
+                    %span.slider-cross
+                      %i.fa-solid.fa-xmark
+                %span.mx-2 Channel.org subdomain
+                = render 'shared/tooltip_custom', tooltip_text: 'Use your own domain name', tooltip_position: 'right'
+                = f.text_field :subdomain, id: 'community_subdomain', placeholder: "Enter your subdomain name", class: "form-control with-icon-placeholder", style: ("width: 70%;" unless f.object&.domain_option == 'subdomain')
 
       .row.d-flex.justify-content-between.mt-4
         .col-auto
