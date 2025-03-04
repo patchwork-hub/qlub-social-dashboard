@@ -82,9 +82,7 @@ module Api
       end
 
       def check_authorization_header
-        if request.headers['Authorization'].present?
-          authenticate_user_from_header
-        end
+        authenticate_user_from_header if request.headers['Authorization'].present?
       end
     end
   end
