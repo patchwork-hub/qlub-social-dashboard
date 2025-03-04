@@ -40,7 +40,8 @@ module Api
         authorize @community, :update?
         @community = CommunityPostService.new.call(
           current_user,
-          community_params.merge(id: @community.id)
+          community_params.merge(id: @community.id),
+          content_type: 'custom_channel'
         )
 
         if @community.errors.any?
