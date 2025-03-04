@@ -14,16 +14,44 @@ class Community < ApplicationRecord
   has_attached_file :avatar_image
   has_attached_file :banner_image
 
+  attribute :is_custom_domain, :boolean, default: false
+
   validates :name, presence: true,
     length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
+
   validates :slug, presence: true,
-    format: { with: /\A[a-z][a-z0-9-]*[a-z0-9]\z/i, message: "must start with a letter, can include letters, hyphens, and numbers, and not end with a hyphen" },
-    length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
+  length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
               too_short: "must be at least %{count} characters",
               too_long: "cannot be longer than %{count} characters" }
+  validate :conditional_slug_format
 
-  normalizes :slug, with: ->(slug) { slug.squish.parameterize }
+  def conditional_slug_format
+    regex = is_custom_domain? ? /\A[a-z][a-z0-9.-]*[a-z0-9]\z/i : /\A[a-z][a-z0-9-]*[a-z0-9]\z/i
+
+    unless slug =~ regex
+    message = if is_custom_domain?
+      "must start with a letter, can include letters, numbers, hyphens, and dots, but cannot end with a hyphen or dot"
+    else
+      "must start with a letter, can include letters, numbers, and hyphens, but cannot end with a hyphen"
+    end
+    errors.add(:slug, message)
+    end
+  end
+
+  def formatted_error_messages
+    errors.full_messages.map do |msg|
+      if msg.start_with?("Slug")
+        if is_custom_domain?
+          msg.sub("Slug", "Custom domain")
+        else
+          msg.sub("Slug", "Channel username")
+        end
+      else
+        msg
+      end
+    end
+  end
 
   validates :description, length: { maximum: DESCRIPTION_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 

@@ -37,28 +37,29 @@
                 - collapse_id = "collapse_#{option[:id]}"
                 - if is_collapse
                   %div.d-flex.justify-content-between
-                    %div
-                      %label.form-check-label.switch{ for: "setting-input-check-#{option[:id]}" }
-                        %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: "setting-input-check-#{option[:id]}", checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name], 'data-optional-value' => option[:optional_value] }
-                        %span.switch-slider.round
-                          %span.slider-tick
-                            %i.fa-solid.fa-check
-                          %span.slider-cross
-                            %i.fa-solid.fa-xmark
-                      %span.ml-2
-                        = option[:name]
-                        - case option[:name]
-                          - when 'Spam filters'
-                            = render 'shared/tooltip_custom', tooltip_text: 'Block spam posts by applying a preset list of keyword filters or add your own. These are maintained with input from other Patchwork server admins.', tooltip_position: 'top'
-                          - when 'Content filters'
-                            = render 'shared/tooltip_custom', tooltip_text: 'Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin channel.', tooltip_position: 'top'
-                      %br
-                      - if option[:name].casecmp?('Spam filters')
-                        %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Select or create filter list' }
-                          Add spam filter
-                      - if option[:name].casecmp?('Content filters')
-                        %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Custom filter name' }
-                          Add custom filter
+                    %div.d-flex.flex-column
+                      .d-flex.align-items-center
+                        %label.form-check-label.switch.mb-0{ for: "setting-input-check-#{option[:id]}" }
+                          %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: "setting-input-check-#{option[:id]}", checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name], 'data-optional-value' => option[:optional_value] }
+                          %span.switch-slider.round
+                            %span.slider-tick
+                              %i.fa-solid.fa-check
+                            %span.slider-cross
+                              %i.fa-solid.fa-xmark
+                        %span.ml-2
+                          = option[:name]
+                          - case option[:name]
+                            - when 'Spam filters'
+                              = render 'shared/tooltip_custom', tooltip_text: 'Block spam posts by applying a preset list of keyword filters or add your own. These are maintained with input from other Patchwork server admins.', tooltip_position: 'top'
+                            - when 'Content filters'
+                              = render 'shared/tooltip_custom', tooltip_text: 'Apply preset lists of keyword filters or add your own to block specific types of content. Or create your own lists and share them with the admin channel.', tooltip_position: 'top'
+                      %div
+                        - if option[:name].casecmp?('Spam filters')
+                          %a{ href: '#', style: 'color: red;', title: 'Add spam filter', 'data-filter-type': 'spam', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Select or create filter list' }
+                            Add spam filter
+                        - if option[:name].casecmp?('Content filters')
+                          %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Custom filter name' }
+                            Add custom filter
                     %div
                       %a{ href: "##{collapse_id}", role: "button", class: "collapse-toggle arrow-toggle", 'data-toggle': "collapse", 'aria-expanded': "false", 'aria-controls': collapse_id }
                         %i.fa-solid.fa-caret-down.icon-arrow-down
@@ -68,10 +69,10 @@
                       %hr
                       .nested-options.ml-4
                         - option[:keyword_filter_groups].each_with_index do |sub_option, sub_option_index|
-                          .d-flex.align-items-center.justify-content-between.mb-2
-                            %div
+                          .d-flex.justify-content-between.mb-2
+                            .d-flex.align-items-center
                               = image_tag("icons/diagram-nested.svg", alt: "Nested Diagram Icon", class: "mr-2", width: "16", height: "16")
-                              %label.form-check-label.switch{ for: "keyword-group-input-#{sub_option[:id]}" }
+                              %label.form-check-label.switch.mb-0{ for: "keyword-group-input-#{sub_option[:id]}" }
                                 %input.form-check-input.switch-input.keyword-group-input{ type: 'checkbox', id: "keyword-group-input-#{sub_option[:id]}", checked: sub_option[:is_active], 'data-group-id' => sub_option[:id], 'data-is-custom' => sub_option[:is_custom], 'data-server-setting-id' => option[:id] }
                                 %span.switch-slider.round
                                   %span.slider-tick
@@ -89,9 +90,9 @@
                           - unless sub_option_index == option[:keyword_filter_groups].size - 1
                             %hr
                 - else
-                  %div.d-flex
-                    %div
-                      %label.form-check-label.switch{ for: "setting-input-#{option[:id]}" }
+                  %div.d-flex.flex-column
+                    %div.d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0{ for: "setting-input-#{option[:id]}" }
                         %input.form-check-input.switch-input.setting-input{ type: 'checkbox', id: "setting-input-#{option[:id]}", checked: option[:is_operational], 'data-setting-id' => option[:id], 'data-setting-name' => option[:name], 'data-optional-value' => option[:optional_value] }
                         %span.switch-slider.round
                           %span.slider-tick
@@ -127,12 +128,12 @@
                             = render 'shared/tooltip_custom', tooltip_text: 'Understand your channel and optimise your server with non-intrusive analytics.', tooltip_position: 'top'
                         - if option[:name].casecmp?('Long posts and markdown')
                           %br
-                          %span.ml-5.small{ style: 'color: grey;' }
+                          %span.small{ style: 'color: grey;' }
                             Maximum Characters:
                             = option[:optional_value].presence || "Not Set"
                             %a{ href: '#', title: 'Long posts and Markdown', 'data-toggle': 'modal', 'data-setting-id': option[:id], 'data-optional-value': option[:optional_value], 'data-target': '#maxCharsModal', onclick: "handleEditClick(this)" }
                               = image_tag("icons/edit-btn.svg", class: "mb-1", width: "13", height: "13")
-                      %br
+                    %div
                       - case option[:name]
                       - when 'Sign up challenge'
                         %a{ href: '#', style: 'color: red;', title: 'Add challenge' }

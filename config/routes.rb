@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     resources :post_hashtags, only: [:create, :update, :destroy]
   end
 
+  get '/domain/verify', to: 'domains#verify'
+
   resources :community_admins
 
   resources :community_filter_keywords, only: [:create, :update, :destroy]

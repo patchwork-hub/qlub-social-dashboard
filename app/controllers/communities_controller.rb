@@ -168,7 +168,8 @@ class CommunitiesController < BaseController
           avatar_image: @community.avatar_image,
           logo_image: @community.logo_image,
           community_type_id: @community.patchwork_community_type_id,
-          is_recommended: @community.is_recommended
+          is_recommended: @community.is_recommended,
+          is_custom_domain: @community.is_custom_domain
         }
       else
         authorize current_user, :user_is_not_community_admin?
@@ -205,7 +206,7 @@ class CommunitiesController < BaseController
       :id, :name, :slug, :collection_id, :bio,
       :banner_image, :avatar_image, :logo_image,
       :community_type_id, :is_recommended,
-      :content_type, :channel_type
+      :content_type, :channel_type, :is_custom_domain
     )
   end
 
@@ -218,10 +219,7 @@ class CommunitiesController < BaseController
     )
   end
 
-  # Setup methods
-
   # Action handlers
-
   def handle_step1_error(content_type, channel_type)
     @community_form = Form::Community.new(
       form_params.merge(
@@ -230,7 +228,7 @@ class CommunitiesController < BaseController
         id: params[:id] || @community.id
       )
     )
-    flash.now[:error] = @community.errors.full_messages
+    flash.now[:error] = @community.formatted_error_messages.join(', ')
     render :step1, status: :unprocessable_entity
   end
 

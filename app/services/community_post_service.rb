@@ -46,7 +46,12 @@ class CommunityPostService < BaseService
       return @community if @community&.errors&.any?
       set_default_additional_information
 
-      @community.update!(community_attributes)
+      begin
+        @community.update!(community_attributes)
+      rescue ActiveRecord::RecordNotUnique => e
+        @community.errors.add(:slug, "is already taken")
+        return @community
+      end
       if @community.community_admins.present?
         @account = Account.find_by(id: @community.community_admins.first.account_id) if @current_user.master_admin?
         update_account_attributes
@@ -191,6 +196,7 @@ class CommunityPostService < BaseService
       admin_following_count: 0,
       patchwork_community_type_id: @community_type.id,
       channel_type: @options[:channel_type],
+      is_custom_domain: @options[:is_custom_domain],
     }
 
     if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)
