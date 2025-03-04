@@ -129,7 +129,7 @@ $(document).ready(function() {
       container.html(`
         <div class="d-flex align-items-center ${statusClass}">
           <i class="fas ${icon} me-2"></i>
-          <span class="small">${message}</span>
+          <span class="small ml-2">${message}</span>
         </div>
       `);
     }

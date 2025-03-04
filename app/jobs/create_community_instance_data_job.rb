@@ -18,6 +18,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @logo_image = community.logo_image.url
     @contact_email = CommunityAdmin.where(patchwork_community_id: community_id).pluck(:email).first
     @channel_type = get_channel_type(community)
+    @is_custom_domain = community.is_custom_domain
     payload = build_payload(community_id, community_slug)
     puts payload
 
@@ -95,6 +96,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       DISPLAY_NAME: @display_name,
       MAIN_CHANNEL: "false",
       CHANNEL_TYPE: @channel_type,
+      IS_CUSTOM_DOMAIN: @is_custom_domain,
     }.to_json
   end
 
