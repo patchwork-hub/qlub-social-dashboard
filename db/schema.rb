@@ -424,28 +424,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_03_081432) do
     t.index ["account_id"], name: "index_custom_filters_on_account_id"
   end
 
-  create_table "deprecated_preview_cards", force: :cascade do |t|
-    t.bigint "status_id"
-    t.string "url", default: "", null: false
-    t.string "title"
-    t.string "description"
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.bigint "image_file_size"
-    t.datetime "image_updated_at", precision: nil
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
-    t.integer "type", default: 0, null: false
-    t.text "html", default: "", null: false
-    t.string "author_name", default: "", null: false
-    t.string "author_url", default: "", null: false
-    t.string "provider_name", default: "", null: false
-    t.string "provider_url", default: "", null: false
-    t.integer "width", default: 0, null: false
-    t.integer "height", default: 0, null: false
-    t.index ["status_id"], name: "index_deprecated_preview_cards_on_status_id", unique: true
-  end
-
   create_table "domain_allows", force: :cascade do |t|
     t.string "domain", default: "", null: false
     t.datetime "created_at", precision: nil, null: false
@@ -966,10 +944,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_03_081432) do
 
   create_table "patchwork_community_types", force: :cascade do |t|
     t.string "name", null: false
+    t.string "slug", null: false
     t.integer "sorting_index", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "slug"
+    t.index ["slug"], name: "index_patchwork_community_types_on_slug", unique: true
   end
 
   create_table "patchwork_content_types", force: :cascade do |t|
@@ -1557,7 +1536,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_03_081432) do
   add_foreign_key "custom_filter_statuses", "custom_filters", on_delete: :cascade
   add_foreign_key "custom_filter_statuses", "statuses", on_delete: :cascade
   add_foreign_key "custom_filters", "accounts", on_delete: :cascade
-  add_foreign_key "deprecated_preview_cards", "statuses", on_delete: :cascade
   add_foreign_key "email_domain_blocks", "email_domain_blocks", column: "parent_id", on_delete: :cascade
   add_foreign_key "favourites", "accounts", name: "fk_5eb6c2b873", on_delete: :cascade
   add_foreign_key "favourites", "statuses", name: "fk_b0e856845e", on_delete: :cascade
