@@ -49,12 +49,12 @@
                         %span.slider-cross
                           %i.fa-solid.fa-xmark
                     %span.ml-2
-                      Use Custom Domain
+                      Use custom domain
                       = render 'shared/tooltip_custom', tooltip_text: 'Enable to use your own domain instead of our subdomain', tooltip_position: 'right'
 
                 #subdomain_section{ style: "display: #{@community&.is_custom_domain == 'true' ? 'none' : 'block'};" }
                   .mb-3
-                    = f.label :slug, "Channel Username", class: "form-label"
+                    = f.label :slug, "Channel username", class: "form-label"
                     .input-group
                       = f.text_field :slug,
                         class: "form-control",
@@ -65,7 +65,7 @@
 
                 #custom_domain_section{ style: "display: #{@community&.is_custom_domain == 'true' ? 'block' : 'none'};" }
                   .mb-3
-                    = f.label :custom_domain, "Custom Domain", class: "form-label"
+                    = f.label :custom_domain, "Custom domain", class: "form-label"
                     #custom_domain_group.input-group
                       = f.text_field :slug,
                         class: "form-control",
@@ -73,7 +73,7 @@
                         id: "custom_domain_input"
                       .input-group-append
                         %button.btn.btn-danger{ type: "button", id: "add_domain_btn" }
-                          Add Domain
+                          Add domain
                   %p.text-muted.small This will be the channel’s username and domain. Once your channel is created, you will not be able to change this.
                   #add_domain_status.mt-3
 
