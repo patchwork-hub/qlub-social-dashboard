@@ -5,7 +5,7 @@ class Community < ApplicationRecord
   LIMIT = 2.megabytes
 
   NAME_LENGTH_LIMIT = 30
-  SLUG_LENGTH_LIMIT = 15
+  SLUG_LENGTH_LIMIT = 30
   MINIMUM_SLUG_LENGTH = 2
   DESCRIPTION_LENGTH_LIMIT = 500
   EXCLUDE_ARRAY_IDS = []
@@ -19,11 +19,11 @@ class Community < ApplicationRecord
   validates :name, presence: true,
     length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
 
-
   validates :slug, presence: true,
-  length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
+    length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
               too_short: "must be at least %{count} characters",
               too_long: "cannot be longer than %{count} characters" }
+
   validate :conditional_slug_format
 
   def conditional_slug_format
