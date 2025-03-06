@@ -1,5 +1,6 @@
 $(document).ready(function() {
   const CommunitySetup = (function() {
+    // Cache frequently used jQuery elements.
     const $container = $('.container-fluid');
     const $domainSwitch = $('#domain_switch');
     const $subdomainSection = $('#subdomain_section');
@@ -8,6 +9,7 @@ $(document).ready(function() {
     const $continueButton = $('#continue_button');
     const $form = $('form');
 
+    // State to keep track of current mode and verification.
     let state = {
       isChannelFeed: $container.data('is-channel-feed'),
       currentDomain: '',
@@ -15,6 +17,7 @@ $(document).ready(function() {
       isSubdomainMode: !$domainSwitch.is(':checked')
     };
 
+    // Cache additional DOM elements.
     const elements = {
       refreshBtn: $('#refresh_domain_btn'),
       addDomainBtn: $('#add_domain_btn'),
@@ -24,6 +27,7 @@ $(document).ready(function() {
       addDomainStatus: $('#add_domain_status')
     };
 
+    // Initialize the module.
     function init() {
       if (!state.isChannelFeed) {
         bindEvents();
@@ -32,6 +36,7 @@ $(document).ready(function() {
       updateContinueButton();
     }
 
+    // Bind event handlers.
     function bindEvents() {
       $domainSwitch.on('change', handleDomainSwitch);
       $subdomainSection.find('input').on('keyup change', updateContinueButton);
@@ -42,19 +47,35 @@ $(document).ready(function() {
       elements.editDomainBtn.on('click', handleEditDomain);
     }
 
+    // Handle the switch between custom domain and subdomain modes.
     function handleDomainSwitch() {
       const isCustomDomain = $(this).is(':checked');
       state.isSubdomainMode = !isCustomDomain;
-
+      console.log('isCustomDomain', isCustomDomain);
+      console.log('state.isSubdomainMode', state.isSubdomainMode);
       toggleSections(isCustomDomain);
-      syncInputValues(isCustomDomain);
       updateContinueButton();
 
-      if (isCustomDomain && $customDomainInput.val().trim()) {
-        verifyDomain($customDomainInput.val().trim());
+      if (isCustomDomain) {
+        const customVal = $customDomainInput.val().trim();
+        if (customVal !== "") {
+          console.log('customVal', customVal);
+          state.currentDomain = customVal;
+          $('#domain_text').text(customVal);
+          toggleDomainUI(true);
+          verifyDomain(customVal);
+        } else {
+          console.log('customVal', customVal);
+          state.currentDomain = "";
+          toggleDomainUI(false);
+        }
+      } else {
+        toggleDomainUI(false);
       }
+      updateContinueButton();
     }
 
+    // Disable inputs in the hidden section before form submission.
     function handleFormSubmit() {
       const slugInput = state.isSubdomainMode ?
         $subdomainSection.find('input[name="form_community[slug]"]') :
@@ -64,12 +85,14 @@ $(document).ready(function() {
       $customDomainSection.find('input').prop('disabled', state.isSubdomainMode);
     }
 
+    // Re-trigger domain verification.
     function handleDomainRefresh() {
       if (state.currentDomain) {
         verifyDomain(state.currentDomain);
       }
     }
 
+    // "Add Domain" handler: user explicitly enters a custom domain.
     function handleAddDomain() {
       const domain = $customDomainInput.val().trim();
       if (!domain) return showStatus('Please enter a domain', false, elements.addDomainStatus);
@@ -80,12 +103,14 @@ $(document).ready(function() {
       verifyDomain(domain);
     }
 
+    // "Edit Domain" handler: show the input group for editing.
     function handleEditDomain() {
       toggleDomainUI(false);
       $customDomainSection.show();
       $customDomainInput.val(state.currentDomain).trigger('focus');
     }
 
+    // Verify the domain via AJAX.
     async function verifyDomain(domain) {
       try {
         setLoadingState(true);
@@ -93,7 +118,6 @@ $(document).ready(function() {
           url: '/domain/verify',
           data: { domain }
         });
-
         state.domainVerified = response.verified;
         showStatus(response.message, response.verified, elements.domainStatus);
       } catch (error) {
@@ -105,27 +129,30 @@ $(document).ready(function() {
       }
     }
 
+    // Toggle between subdomain and custom domain sections.
     function toggleSections(isCustomDomain) {
       $subdomainSection.toggle(!isCustomDomain);
       $customDomainSection.toggle(isCustomDomain);
       elements.dnsTable.hide();
     }
 
+    // Toggle showing the DNS table vs. the custom domain input group.
     function toggleDomainUI(showDnsTable) {
       $('#custom_domain_group').toggle(!showDnsTable);
       elements.dnsTable.toggle(showDnsTable);
       elements.domainStatus.empty();
     }
 
+    // Update the refresh button UI during AJAX.
     function setLoadingState(isLoading) {
       elements.refreshBtn.prop('disabled', isLoading)
         .html(isLoading ? '<i class="fas fa-spinner fa-spin"></i>' : '<i class="fas fa-sync-alt"></i>');
     }
 
+    // Display status messages.
     function showStatus(message, isSuccess, container) {
       const statusClass = isSuccess ? 'text-success' : 'text-danger';
       const icon = isSuccess ? 'fa-check-circle' : 'fa-times-circle';
-
       container.html(`
         <div class="d-flex align-items-center ${statusClass}">
           <i class="fas ${icon} me-2"></i>
@@ -134,47 +161,31 @@ $(document).ready(function() {
       `);
     }
 
+    // Update the Continue button based on current state.
     function updateContinueButton() {
       if (state.isChannelFeed) {
         $continueButton.prop('disabled', false);
         return;
       }
-
       const isDisabled = state.isSubdomainMode ?
         $subdomainSection.find('input').val().trim() === '' :
         !(state.domainVerified && $customDomainInput.val().trim());
-
       $continueButton.prop('disabled', isDisabled);
     }
 
-    function syncInputValues(isCustomDomain) {
-      const subdomainVal = $subdomainSection.find('input').val().trim();
-      const customVal = $customDomainInput.val().trim();
-
-      if (isCustomDomain && !customVal && subdomainVal) {
-        $customDomainInput.val(subdomainVal);
-      } else if (!isCustomDomain && !subdomainVal && customVal) {
-        $subdomainSection.find('input').val(customVal);
-      }
-    }
-
+    // Set the initial UI state when the page loads.
     function handleInitialState() {
       if ($domainSwitch.length && $domainSwitch.is(':checked')) {
         const domain = $customDomainInput.val().trim();
         if (domain !== "") {
           state.currentDomain = domain;
-          // Set the initial domain text (user sees the chosen domain)
           $('#domain_text').text(domain);
-          // Hide the custom domain input group and show the DNS records table immediately
           toggleDomainUI(true);
-          // Also hide the subdomain section for clarity
           $subdomainSection.hide();
-          // Perform domain verification
           verifyDomain(domain);
-          return; // Exit early; no need to trigger change event.
+          return;
         }
       }
-      // Otherwise, trigger change so that sections update normally
       $domainSwitch.trigger('change');
     }
 
