@@ -46,7 +46,7 @@ class Api::V1::ChannelSerializer
     community_admin = object&.community_admins&.first
     community_admin ? {
       id: community_admin.id,
-      account_id: community_admin&.account&.id,
+      account_id: community_admin&.account&.id.to_s,
       username: community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : "",
     } : {}
   end
