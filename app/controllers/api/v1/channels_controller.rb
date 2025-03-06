@@ -3,11 +3,12 @@
 module Api
   module V1
     class ChannelsController < ApiController
-      skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels, :search, :channel_detail, :my_channel, :channel_feeds]
+      skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels, :search, :channel_detail, :my_channel, :channel_feeds, :newsmast_channels]
       before_action :authenticate_user_from_header, only: [:my_channel]
-      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels]
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
-      
+      require 'json'
+
       def recommend_channels
         @recommended_channels = Community.recommended.exclude_array_ids
         render json: Api::V1::ChannelSerializer.new(@recommended_channels).serializable_hash.to_json
@@ -51,6 +52,11 @@ module Api
         render json: Api::V1::ChannelSerializer.new(channel_feeds , { params: { current_account: current_account } }).serializable_hash.to_json
       end
 
+      def newsmast_channels
+        channel_feeds = fetch_newsmast_channels
+        render json: channel_feeds
+      end
+
       private 
 
       def set_channel 
@@ -79,6 +85,54 @@ module Api
         else
           {}
         end
+      end
+
+      def fetch_newsmast_channels
+        file_path = 'newsmast_communities.txt'
+
+        newsmast_data = []
+      
+        if File.exist?(file_path)
+          count = 0
+          File.foreach(file_path) do |line|
+            record = eval(line.strip)
+            count_increment = count += 1
+            newsmast_data << {
+              id: count_increment,
+              type: "newsmast_channel",
+              attributes: {
+                id: count_increment,
+                name: record[:name],
+                slug: record[:slug],
+                avatar_image_url: record[:image_url],
+                banner_image_url: record[:image_url],
+                description: nil,
+                is_recommended: false,
+                admin_following_count: 0,
+                patchwork_collection_id: nil,
+                guides: nil,
+                participants_count: 0,
+                visibility: 0,
+                position: count_increment,
+                channel_type: nil,
+                created_at: DateTime.now,
+                no_of_admins: 0,
+                channel_content_type: 0,
+                domain_name: 'newsmast.community',
+                follower: 0,
+                favourited: false,
+                community_admin: {
+                  id: count_increment,
+                  account_id: nil,
+                  username: "@#{record[:bot_account]}@newsmast.community"
+                }
+              }
+            }
+          end
+
+        end
+      
+        newsmast_data
       end
 
       def check_authorization_header

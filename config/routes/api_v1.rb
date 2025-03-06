@@ -14,6 +14,7 @@ namespace :api, defaults: { format: :json } do
         get :channel_detail
         get :my_channel
         get :channel_feeds
+        get :newsmast_channels
       end
     end
 
