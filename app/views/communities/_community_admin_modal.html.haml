@@ -15,7 +15,7 @@
             = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, readonly: true
           .mb-3
             = f.label :username, class: "form-label"
-            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.underscore, readonly: true
+            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.parameterize(separator: '_').underscore, readonly: true
           - if @community.channel?
             .row.mb-3
               .col
