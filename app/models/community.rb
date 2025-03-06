@@ -23,6 +23,8 @@ class Community < ApplicationRecord
     length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
               too_short: "must be at least %{count} characters",
               too_long: "cannot be longer than %{count} characters" }
+  
+  validate :slug_cannot_be_changed, on: :update
 
   validate :conditional_slug_format
 
@@ -36,6 +38,12 @@ class Community < ApplicationRecord
       "must start with a letter, can include letters, numbers, and hyphens, but cannot end with a hyphen"
     end
     errors.add(:slug, message)
+    end
+  end
+
+  def slug_cannot_be_changed
+    if slug_changed? && persisted?
+      errors.add(:slug, "cannot be updated")
     end
   end
 

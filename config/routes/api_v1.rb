@@ -33,12 +33,6 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
-    resources :sessions, only: [] do
-      collection do
-        post :log_out
-      end
-    end
-
     resources :community_admins, only: %i[index show update] do
       collection do
         get :boost_bot_accounts
