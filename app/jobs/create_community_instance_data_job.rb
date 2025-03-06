@@ -6,7 +6,9 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
-  def perform(community_id, community_slug)
+  def perform(community)
+    community_id = community.id
+    community_slug = community.slug
     @is_custom_domain = community.is_custom_domain
 
     if @is_custom_domain
@@ -17,7 +19,6 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     end
 
     @admins = prepare_admins(community_id)
-    community = Community.find_by_id(community_id)
     @display_name = community.name
     @rules = prepare_rules(community)
     @additional_information = prepare_additional_information(community)
