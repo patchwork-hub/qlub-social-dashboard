@@ -148,11 +148,11 @@ class CommunitiesController < BaseController
   end
 
   def follower_list
-    @records = load_follower_records.page(params[:page]).per(PER_PAGE)
+    @records = load_follower_records(is_csv: false).page(params[:page]).per(PER_PAGE)
   end
 
   def follower_list_csv
-    @records = load_follower_records
+    @records = load_follower_records(is_csv: true)
 
     csv_data = CSV.generate(headers: true) do |csv|
       csv << ["Display Name", "Username", "Email"]
@@ -286,8 +286,10 @@ class CommunitiesController < BaseController
     paginated_records(Account.where(id: account_ids))
   end
 
-  def load_follower_records
+  def load_follower_records(is_csv: false)
     account_ids = Follow.where(target_account_id: admin_account_id).pluck(:account_id)
+    return Account.where(id: account_ids) if is_csv
+    
     paginated_records(Account.where(id: account_ids))
   end
 
