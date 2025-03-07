@@ -1,3 +1,4 @@
+- channel_type_param = @community&.channel_type || params[:channel_type]
 - title = "#{@community&.name&.capitalize}"
 
 - content_for :title do
@@ -39,3 +40,6 @@
           .col
             .pagination.pagination-sm.m-0.float-right
               = paginate @records, theme: 'bootstrap4'
+    .row.d-flex.justify-content-between.mt-4
+      .col-auto
+        %a.btn.btn-outline-secondary{ href: communities_path(channel_type: channel_type_param) } Back
