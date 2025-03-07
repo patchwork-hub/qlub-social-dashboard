@@ -32,6 +32,8 @@ Rails.application.routes.draw do
       post 'unmute_contributor', to: 'communities#unmute_contributor'
       post 'set_visibility', to: 'communities#set_visibility'
       post 'manage_additional_information', to: 'communities#manage_additional_information'
+      get 'follower_list', to: 'communities#follower_list'
+      get 'follower_list_csv', to: 'communities#follower_list_csv'
     end
     resources :community_hashtags, only: %i[create update destroy]
     resource :community_post_type, only: [:create, :update]

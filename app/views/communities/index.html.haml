@@ -28,6 +28,7 @@
                 = check_box_tag :select_all, '', false, id: 'select_all'
               %th #{title}
               %th Username
+              %th Following
               %th #{keyword.capitalize} type
               %th Status
               %th Edit
@@ -49,6 +50,15 @@
                     %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
                   - else
                     %span.text-muted -
+                %td
+                  - if account&.follower_count && account&.follower_count > 0
+                    %a{ href: follower_list_community_url(id: community), title: "view followers", style: "display: flex; align-items: center;" }
+                      = image_tag("icons/eye.svg", width: "20", height: "20", style: "margin-right: 5px;")
+                      = account&.follower_count
+                  - else
+                    %a{ href: "#", title: "no followers", style: "display: flex; align-items: center;" }
+                      = image_tag("icons/eye.svg", width: "20", height: "20", style: "margin-right: 5px;")
+                      0
                 %td= get_channel_content_type(community)
                 %td
                   - if community.visibility.present?

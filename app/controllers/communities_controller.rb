@@ -8,6 +8,8 @@ class CommunitiesController < BaseController
   before_action :fetch_community_admins, only: %i[step4 step6]
   before_action :initial_content_type, only: %i[index step0]
 
+  include CommunityHelper
+
   PER_PAGE = 10
   COMMUNITY_FILTER_TYPES = { in: 'filter_in', out: 'filter_out' }.freeze
 
@@ -145,6 +147,29 @@ class CommunitiesController < BaseController
     redirect_to step4_community_path
   end
 
+  def follower_list
+    @records = load_follower_records.page(params[:page]).per(PER_PAGE)
+  end
+
+  def follower_list_csv
+    @records = load_follower_records
+
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << ["Display Name", "Username", "Email"]
+      @records.each do |account|
+        csv << [
+          account&.display_name.present? ? account&.display_name : " - " ,
+          "@#{username(account)}@#{domain(account)}",
+          account&.user&.email || " - "
+        ]
+      end
+    end
+
+    respond_to do |format|
+      format.csv { send_data csv_data, filename: "#{@community&.slug}_followers_list_#{@community.id}.csv" }
+    end
+  end
+
   private
 
   # Before actions
@@ -258,6 +283,11 @@ class CommunitiesController < BaseController
   def load_follow_records
     account_ids = Follow.where(account_id: admin_account_id).pluck(:target_account_id) +
                   FollowRequest.where(account_id: admin_account_id).pluck(:target_account_id)
+    paginated_records(Account.where(id: account_ids))
+  end
+
+  def load_follower_records
+    account_ids = Follow.where(target_account_id: admin_account_id).pluck(:account_id)
     paginated_records(Account.where(id: account_ids))
   end
 

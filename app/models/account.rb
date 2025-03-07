@@ -70,6 +70,10 @@ class Account < ApplicationRecord
     followers.count
   end
 
+  def following_count
+    follows.count
+  end
+
   def following_ids(account_id = nil)
     account_id = self.id if account_id.nil?
     follow_ids = Follow.where(account_id: account_id).pluck(:target_account_id)

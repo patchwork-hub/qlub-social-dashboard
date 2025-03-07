@@ -46,7 +46,8 @@
                 .content.container-fluid
                   = yield
           - else
-            .col-md-9
+            -# .col-md-9 {{ Original code comment out }}
+            .col-md-12
               .content-wrapper
                 .mx-2.pt-3.pb-3
                   = render "shared/flash"
