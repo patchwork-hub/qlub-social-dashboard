@@ -279,37 +279,6 @@
     }
   },
   {
-    "id": 10,
-    "type": "newsmast_channel",
-    "attributes": {
-      "id": 10,
-      "name": "Private Community",
-      "slug": "private-community",
-      "avatar_image_url": "/images/original/missing.png",
-      "banner_image_url": "/images/original/missing.png",
-      "description": null,
-      "is_recommended": false,
-      "admin_following_count": 0,
-      "patchwork_collection_id": null,
-      "guides": null,
-      "participants_count": 0,
-      "visibility": 0,
-      "position": 10,
-      "channel_type": null,
-      "created_at": "2025-03-06T15:13:50.983+06:30",
-      "no_of_admins": 0,
-      "channel_content_type": 0,
-      "domain_name": "newsmast.community",
-      "follower": 0,
-      "favourited": false,
-      "community_admin": {
-        "id": 10,
-        "account_id": null,
-        "username": "@@newsmast.community"
-      }
-    }
-  },
-  {
     "id": 11,
     "type": "newsmast_channel",
     "attributes": {
