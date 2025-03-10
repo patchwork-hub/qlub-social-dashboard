@@ -23,7 +23,7 @@ class Community < ApplicationRecord
     length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
               too_short: "must be at least %{count} characters",
               too_long: "cannot be longer than %{count} characters" }
-  
+
   validate :slug_cannot_be_changed, on: :update
 
   validate :conditional_slug_format
@@ -140,6 +140,8 @@ class Community < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
+  validates :registration_mode, inclusion: { in: ['open', 'approved', 'none'] }
+
   scope :recommended, -> {
     joins(:patchwork_community_type)
       .where(patchwork_communities: { is_recommended: true })
@@ -161,7 +163,7 @@ class Community < ApplicationRecord
 
   scope :exclude_array_ids, -> { where.not(id: EXCLUDE_ARRAY_IDS) }
 
-  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed' }
+  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub' }
 
   def self.ransackable_attributes(auth_object = nil)
     ["name"]

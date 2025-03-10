@@ -118,7 +118,7 @@ class CommunityPostService < BaseService
   end
 
   def assign_roles_and_content_type
-    if @current_user.user_admin?
+    if @current_user.user_admin? || @current_user.hub_admin?
       update_account_attributes
       create_community_admin
       set_clean_up_policy

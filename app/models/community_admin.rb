@@ -9,7 +9,7 @@ class CommunityAdmin < ApplicationRecord
 
   validates :username, presence: true
 
-  ROLES = %w[OrganisationAdmin UserAdmin].freeze
+  ROLES = %w[OrganisationAdmin UserAdmin HubAdmin].freeze
 
   validates :role, inclusion: { in: ROLES, message: "%{value} is not a valid role" }, allow_blank: true
 

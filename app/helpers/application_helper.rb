@@ -8,6 +8,7 @@ module ApplicationHelper
   def sidebar_menu_items
     channel_active = params[:channel_type] == 'channel' || @community&.channel? ? 'communities' : nil
     channel_feed_active = params[:channel_type] == 'channel_feed' || @community&.channel_feed? ? 'communities' : nil
+    hub_active = params[:channel_type] == 'hub' || @community&.hub? ? 'communities' : nil
 
     if master_admin?
       [
@@ -16,6 +17,7 @@ module ApplicationHelper
         { path: '/installation', id: 'installation-link', header: 'Installation', icon: 'screwdriver-wrench.svg', text: 'Installation', active_if: 'installation' },
         { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Communities', icon: 'speech.svg', text: 'Communities', active_if: channel_active },
         { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channels', icon: 'channel-feed.svg', text: 'Channels', active_if: channel_feed_active },
+        { path: communities_path(channel_type: 'hub'), id: 'communities-link', header: 'Hubs', icon: 'hub.svg', text: 'Hubs', active_if: hub_active },
         { path: collections_path, id: 'collections-link', header: 'Collections', icon: 'collection.svg', text: 'Collections', active_if: 'collections' },
         { path: master_admins_path, id: 'master_admins-link', header: 'Master admin', icon: 'administrator.svg', text: 'Master admins', active_if: 'master_admins' },
         { path: accounts_path, id: 'accounts-link', header: 'Users', icon: 'users.svg', text: 'Users', active_if: 'accounts' },
@@ -30,9 +32,14 @@ module ApplicationHelper
         { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Communities', icon: 'speech.svg', text: 'Communities', active_if: channel_active },
         { path: '#', id: 'help-support-link', header: 'Help & Support', icon: 'question.svg', text: 'Help & Support', active_if: 'help_support' }
       ]
-    else
+    elsif user_admin?
       [
         { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channels', icon: 'channel-feed.svg', text: 'Channels', active_if: channel_feed_active },
+        { path: '#', id: 'help-support-link', header: 'Help & Support', icon: 'question.svg', text: 'Help & Support', active_if: 'help_support' }
+      ]
+    else
+      [
+        { path: communities_path(channel_type: 'hub'), id: 'communities-link', header: 'Hubs', icon: 'hub.svg', text: 'Hubs', active_if: hub_active },
         { path: '#', id: 'help-support-link', header: 'Help & Support', icon: 'question.svg', text: 'Help & Support', active_if: 'help_support' }
       ]
     end
@@ -65,5 +72,9 @@ module ApplicationHelper
 
   def user_admin?
     current_user && policy(current_user).user_admin?
+  end
+
+  def hub_admin?
+    current_user && policy(current_user).hub_admin?
   end
 end

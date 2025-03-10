@@ -1,7 +1,6 @@
 - channel_type_param = params[:channel_type]
-- title = channel_type_param == 'channel' ? 'Communities' : 'Channels'
+- title = channel_title(channel_type_param)
 - create_path = create_community_path(channel_type_param)
-- keyword = determine_channel_keyword(channel_type_param)
 
 - content_for :title do
   = #{title}
@@ -29,7 +28,7 @@
               %th #{title}
               %th Username
               %th Followers
-              %th #{keyword.capitalize} type
+              %th Channel type
               %th Status
               %th Edit
           %tbody
@@ -37,7 +36,7 @@
               %tr
                 %td.text-center.info-box-content{colspan: "100%"}
                   %p.text-muted.small You haven’t added any #{title.downcase} yet
-                  - unless organisation_admin?
+                  - unless hide_add_button
                     %a.text-danger.small{ href: create_path } Click here to add one
             - @records.each do |community|
             - account = community&.community_admins&.first&.account
@@ -90,8 +89,8 @@
             .col-12.d-flex.justify-content-center
               %div.btn-group
                 %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
-                  Import a #{keyword}
+                  Import a channel
                   = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
                 %button.btn.btn-danger.ml-3{ onclick: "window.location='#{create_path}'" }
-                  Create a #{keyword}
+                  Create a channel
                   = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")

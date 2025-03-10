@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_03_081432) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_10_092025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -829,6 +829,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_03_081432) do
     t.string "channel_type", default: "channel", null: false
     t.string "did_value"
     t.boolean "is_custom_domain", default: false, null: false
+    t.string "registration_mode", default: "none"
     t.index ["name"], name: "index_patchwork_communities_on_name", unique: true
     t.index ["patchwork_collection_id"], name: "index_patchwork_communities_on_patchwork_collection_id"
     t.index ["patchwork_community_type_id"], name: "index_patchwork_communities_on_patchwork_community_type_id"
@@ -943,11 +944,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_03_081432) do
 
   create_table "patchwork_community_types", force: :cascade do |t|
     t.string "name", null: false
-    t.string "slug", null: false
     t.integer "sorting_index", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_patchwork_community_types_on_slug", unique: true
+    t.string "slug"
   end
 
   create_table "patchwork_content_types", force: :cascade do |t|

@@ -1,4 +1,5 @@
 - is_channel_feed = user_admin? || params[:channel_type] == 'channel_feed' || @community&.channel_feed?
+- is_channel = organisation_admin? || params[:channel_type] == 'channel' || @community&.channel?
 
 .container-fluid{ 'data-is-channel-feed' => is_channel_feed }
   .row-md-12.my-4
@@ -138,7 +139,7 @@
               = f.text_area :bio, class: "form-control"
 
           .row.mt-3.pl-1
-            - unless is_channel_feed
+            - if is_channel
               .col-md-8
                 %label{ for: "customFileLogo", class: "form-label" } Logo
                 .row.avatar-image-upload-container.gap-1
