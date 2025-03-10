@@ -38,7 +38,7 @@
         = render "shared/menu/sidebar"
         .container-fluid
         .row
-          - if controller_name == "accounts" || controller_name == "homepage"
+          - unless controller_name == "communities" && action_name != 'index'
             .col-md-12
               .content-wrapper
                 .mx-2.pt-3.pb-3
@@ -46,8 +46,7 @@
                 .content.container-fluid
                   = yield
           - else
-            -# .col-md-9 {{ Original code comment out }}
-            .col-md-12
+            .col-md-9
               .content-wrapper
                 .mx-2.pt-3.pb-3
                   = render "shared/flash"
