@@ -264,7 +264,7 @@ class CommunitiesController < BaseController
   end
 
   def redirect_after_step1_save
-    path = path = (current_user.master_admin? || current_user.user_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
+    path = path = (current_user.master_admin? || current_user.user_admin? || current_user.hub_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
     redirect_to send("#{path}_community_path", @community, channel_type: @channel_type)
   end
 
@@ -413,7 +413,13 @@ class CommunitiesController < BaseController
   end
 
   def default_channel_type
-    current_user.user_admin? ? 'channel_feed' : 'channel'
+    if current_user.user_admin?
+      'channel_feed'
+    elsif current_user.hub_admin?
+      'hub'
+    else
+      'channel'
+    end
   end
 
   def set_current_step

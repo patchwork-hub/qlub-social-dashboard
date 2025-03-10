@@ -32,7 +32,7 @@ module Api
 
       def show
         authorize @community, :show?
-        render json: Api::V1::ChannelSerializer.new(@community).serializable_hash.to_json
+        render json: Api::V1::ChannelSerializer.new(@community, include: [:patchwork_community_additional_informations, :patchwork_community_links, :patchwork_community_rules]).serializable_hash.to_json
       end
 
       def update
@@ -99,6 +99,21 @@ module Api
         end
       end
 
+      def manage_additional_information
+        authorize @community, :manage_additional_information?
+        if params[:community].blank?
+          render json: { error: "Missing additional information" }, status: :bad_request
+          return
+        end
+
+        if @community.update(additional_information_params)
+          @community.update(registration_mode: params[:registration_mode])
+          render json: { message: "Additional information updated successfully" }, status: :ok
+        else
+          render json: { error: @community.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       def community_params
@@ -119,6 +134,16 @@ module Api
         end
 
         params_hash
+      end
+
+      def additional_information_params
+        params.require(:community).permit(
+          patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
+          social_links_attributes: [:id, :icon, :name, :url, :_destroy],
+          general_links_attributes: [:id, :icon, :name, :url, :_destroy],
+          patchwork_community_rules_attributes: [:id, :rule, :_destroy],
+          registration_mode: []
+        )
       end
 
       def records_filter
