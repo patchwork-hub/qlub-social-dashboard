@@ -1,7 +1,7 @@
 module Api
   module V1
     class SearchController < ApiController
-      skip_before_action :verify_key!, only: [:index]
+      skip_before_action :verify_key!
       before_action :check_authorization_header, only: [:index]
 
       def index
@@ -10,7 +10,8 @@ module Api
         render json: {
           communities: serialize_communities(query),
           collections: serialize_collections(query),
-          channel_feeds: serialize_channel_feeds(query)
+          channel_feeds: serialize_channel_feeds(query),
+          newsmast_channels: {data: search_newsmast_channels}
         }
       end
 
@@ -49,6 +50,17 @@ module Api
 
       def check_authorization_header
         authenticate_user_from_header if request.headers['Authorization'].present?
+      end
+
+      def search_newsmast_channels
+        query = params[:q].to_s.downcase.strip
+        results = NEWSMAST_CHANNELS.select do |channel|
+          name = channel.dig('attributes', 'name').to_s.downcase
+          slug = channel.dig('attributes', 'slug').to_s.downcase
+  
+          name.include?(query.strip) || slug.include?(query.strip)
+        end
+        results
       end
     end
   end

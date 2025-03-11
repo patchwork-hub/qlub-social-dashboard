@@ -3,6 +3,7 @@ module StepHelper
     steps = []
     is_channel_feed = params[:channel_type] == "channel_feed" || @community&.channel_feed?
     is_channel = params[:channel_type] == "channel" || @community&.channel?
+    is_hub = params[:channel_type] == "hub" || @community&.hub?
     is_custom_channel = params[:content_type].present? ? params[:content_type] == 'custom_channel' : @community&.content_type&.custom_channel?
 
     if master_admin? && is_channel
@@ -32,6 +33,10 @@ module StepHelper
       else
         steps << { step: 6, display: 3, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the channel.' }
       end
+    elsif hub_admin? || is_hub
+      steps << { step: 1, display: 1, title: 'Channel information', description: 'Set up the basic details of your channel.' }
+      steps << { step: 2, display: 2, title: 'Admin and public feed details', description: 'Create admin accounts for your channel.' }
+      steps << { step: 6, display: 3, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the channel.' }
     end
 
     steps

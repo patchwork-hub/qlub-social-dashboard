@@ -51,7 +51,7 @@ module Api
           channel_type = community.channel_type
           name = community.slug
 
-          url = community.channel? ? "https://#{name}.channel.org" : ""
+          url = community.channel? ? (community.is_custom_domain? ? name : "https://#{name}.channel.org") : ""
 
           account_id = community_admin.account_id
 

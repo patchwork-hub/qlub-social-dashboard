@@ -64,3 +64,5 @@ gem 'doorkeeper'
 
 gem 'rack-cors'
 gem 'aws-sdk-route53'
+
+gem 'resolv'

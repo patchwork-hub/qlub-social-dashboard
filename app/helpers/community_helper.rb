@@ -38,10 +38,6 @@ module CommunityHelper
     end
   end
 
-  def determine_channel_keyword(channel_type_param)
-    channel_type_param == 'channel' ? 'community' : 'channel'
-  end
-
   def get_channel_content_type(community)
     content_type = @initial_content_types.find { |content_type| content_type[:value] == community&.content_type&.channel_type }
     channel_content_type = content_type[:name] if content_type.present?
@@ -60,7 +56,7 @@ module CommunityHelper
   end
 
   def previous_path_for_step1(community, params)
-    if user_admin? || params[:channel_type] == 'channel_feed' || community&.channel_feed?
+    if user_admin? || params[:channel_type] == 'channel_feed' || community&.channel_feed? || hub_admin? || params[:channel_type] == 'hub' || community&.hub?
       communities_path(channel_type: community&.channel_type)
     else
       step0_communities_path(
@@ -97,6 +93,31 @@ module CommunityHelper
     else
       step4_community_path(id: community.id, channel_type: community.channel_type)
     end
+  end
+
+  def channel_title(channel_type_param)
+    case channel_type_param
+    when 'hub'
+      'Hubs'
+    when 'channel'
+      'Communities'
+    else
+      'Channels'
+    end
+  end
+
+  def registration_mode_label(community)
+    if community.channel?
+      "Access settings"
+    elsif community.hub?
+      "Hub users"
+    end
+  end
+
+  def hide_add_button
+    !(params[:channel_type] == 'hub' && hub_admin?) &&
+    !(params[:channel_type] == 'channel_feed' && user_admin?) &&
+    !(params[:channel_type] == 'channel' && organisation_admin?)
   end
 
   private

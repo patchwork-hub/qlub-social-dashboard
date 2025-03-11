@@ -46,7 +46,12 @@ class CommunityPostService < BaseService
       return @community if @community&.errors&.any?
       set_default_additional_information
 
-      @community.update!(community_attributes)
+      begin
+        @community.update!(community_attributes)
+      rescue ActiveRecord::RecordNotUnique => e
+        @community.errors.add(:slug, "is already taken")
+        return @community
+      end
       if @community.community_admins.present?
         @account = Account.find_by(id: @community.community_admins.first.account_id) if @current_user.master_admin?
         update_account_attributes
@@ -84,8 +89,8 @@ class CommunityPostService < BaseService
   def slug_uniqueness_within_accounts
     return unless @options[:slug].present?
 
-    if Account.where(username: @options[:slug].underscore).exists?
-      unless @current_user.user_admin? && @current_user&.account&.username == @options[:slug].underscore
+    if Account.where(username: @options[:slug].parameterize.underscore).exists?
+      unless @current_user.user_admin? && @current_user&.account&.username == @options[:slug].parameterize.underscore
         @community ||= Community.new(community_attributes)
         @community.errors.add(:slug, "is already taken by an existing account username")
         @community
@@ -113,7 +118,7 @@ class CommunityPostService < BaseService
   end
 
   def assign_roles_and_content_type
-    if @current_user.user_admin?
+    if @current_user.user_admin? || @current_user.hub_admin?
       update_account_attributes
       create_community_admin
       set_clean_up_policy
@@ -121,7 +126,7 @@ class CommunityPostService < BaseService
   end
 
   def update_account_attributes
-    p "START_UPDATING_ACCOUNT #{@community.slug.underscore}"
+    p "START_UPDATING_ACCOUNT #{@community.slug.parameterize.underscore}"
     if @options[:id].present?
       @account.update!(
         display_name: @community.name,
@@ -132,7 +137,7 @@ class CommunityPostService < BaseService
     else
       @account.update!(
         display_name: @community.name,
-        username: @community.slug.underscore,
+        username: @community.slug.parameterize.underscore,
         note: @community.description,
         avatar: @community.avatar_image || '',
         header: @community.banner_image || '',
@@ -191,6 +196,7 @@ class CommunityPostService < BaseService
       admin_following_count: 0,
       patchwork_community_type_id: @community_type.id,
       channel_type: @options[:channel_type],
+      is_custom_domain: @options[:is_custom_domain],
     }
 
     if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)

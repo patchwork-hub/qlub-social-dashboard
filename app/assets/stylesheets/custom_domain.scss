@@ -1,0 +1,22 @@
+  /* Domain Section Styles */
+  #dns_records_table table {
+    width: 100%;
+    background: #f8f9fa;
+    border-radius: 8px;
+  }
+  #dns_records_table th {
+    background: #e9ecef;
+    font-weight: 500;
+  }
+  #domain_display {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+  }
+  #add_domain_btn {
+    min-width: 100px;
+  }
+  #refresh_domain_btn, #edit_domain_btn {
+    padding: 4px 12px;
+  }

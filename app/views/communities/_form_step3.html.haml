@@ -17,34 +17,34 @@
                 .mt-auto
                   %p.text-muted.small Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your channel.
           .collapse.show#nested-options
-            .nested-options.mt-2.ml-2
+            .nested-options.mt-2
               .row
                 .col
                   .form-check
-                    = image_tag("icons/diagram-nested.svg", alt: "Nested diagram icon", class: "mr-2", width: "16", height: "16")
-                    %label.form-check-label.switch
-                      %input.form-check-input.switch-input#contributor_or{ type: 'checkbox', checked: @content_type&.or_condition? }
-                      %span.switch-slider.round
-                        %span.slider-tick
-                          %i.fa-solid.fa-check
-                        %span.slider-cross
-                          %i.fa-solid.fa-xmark
-                    %span.ml-2
-                      All content
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#contributor_or{ type: 'checkbox', checked: @content_type&.or_condition? }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2
+                        All content
               %hr
               .row.mt-2
                 .col
                   .form-check
-                    = image_tag("icons/diagram-nested.svg", alt: "nested diagram icon", class: "mr-2", width: "16", height: "16")
-                    %label.form-check-label.switch
-                      %input.form-check-input.switch-input#contributor_and{ type: 'checkbox', checked: @content_type&.and_condition? }
-                      %span.switch-slider.round
-                        %span.slider-tick
-                          %i.fa-solid.fa-check
-                        %span.slider-cross
-                          %i.fa-solid.fa-xmark
-                    %span.ml-2
-                      Specified content only
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#contributor_and{ type: 'checkbox', checked: @content_type&.and_condition? }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2
+                        Specified content only
 
       #hashtags-section
         .card

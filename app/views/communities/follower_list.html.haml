@@ -1,0 +1,45 @@
+- channel_type_param = @community&.channel_type || params[:channel_type]
+- title = "#{@community&.name&.capitalize}"
+
+- content_for :title do
+  = #{title}
+
+.row
+  .col-12
+    .card
+      .card-header
+        .d-flex.justify-content-between.align-items-center
+          %h3.card-title.mb-0 #{title}
+          .card-tools
+            %a{ href: follower_list_csv_community_path(@community, format: :csv), class: "btn btn-danger", title: "export CSV", style: "display: flex; align-items: center; color: #ffffff !important" }
+              = image_tag("icons/download.svg", style: "width: 1em; height: 1em; margin-right: 5px;")
+              Export CSV
+      .card-body
+        %p.text-muted #{title}'s followers list.
+        %table.table.no-side-borders.top-bottom-border{data: {url: follower_list_community_url, type: 'follower_list'}}
+          %thead
+            %tr
+              %th Display name
+              %th Username
+              %th Email
+          %tbody
+            - if @records.size == 0
+              %tr
+                %td.text-center.info-box-content{colspan: "100%"}
+                  %p.text-muted.small There's no follower.
+            - @records.each do |account|
+              %tr
+                %td= account&.display_name.present? ? account&.display_name : " - " 
+                %td
+                  - if account.present?
+                    %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
+                  - else
+                    %span.text-muted -
+                %td= account&.user&.email.nil? ? " - " : account&.user&.email
+        .row.mt-2
+          .col
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @records, theme: 'bootstrap4'
+    .row.d-flex.justify-content-between.mt-4
+      .col-auto
+        %a.btn.btn-outline-secondary{ href: communities_path(channel_type: channel_type_param) } Back

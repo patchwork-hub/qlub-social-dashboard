@@ -3,11 +3,11 @@
 module Api
   module V1
     class ChannelsController < ApiController
-      skip_before_action :verify_key!, only: [:recommend_channels, :group_recommended_channels, :search, :channel_detail, :my_channel, :channel_feeds]
+      skip_before_action :verify_key!
       before_action :authenticate_user_from_header, only: [:my_channel]
-      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels]
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
-      
+
       def recommend_channels
         @recommended_channels = Community.recommended.exclude_array_ids
         render json: Api::V1::ChannelSerializer.new(@recommended_channels).serializable_hash.to_json
@@ -49,6 +49,10 @@ module Api
       def channel_feeds
         channel_feeds = Community.filter_channel_feeds.exclude_incomplete_channels
         render json: Api::V1::ChannelSerializer.new(channel_feeds , { params: { current_account: current_account } }).serializable_hash.to_json
+      end
+
+      def newsmast_channels
+        render json: NEWSMAST_CHANNELS.length > 0 ? { data: NEWSMAST_CHANNELS } : { data: [] }
       end
 
       private 

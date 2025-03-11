@@ -316,6 +316,7 @@ GEM
     regexp_parser (2.9.2)
     reline (0.5.9)
       io-console (~> 0.5)
+    resolv (0.6.0)
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
@@ -440,6 +441,7 @@ DEPENDENCIES
   ransack
   redis (~> 4.5)
   redis-namespace (~> 1.10)
+  resolv
   responders
   sassc-rails
   select2-rails

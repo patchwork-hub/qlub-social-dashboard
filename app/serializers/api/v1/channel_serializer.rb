@@ -8,7 +8,11 @@ class Api::V1::ChannelSerializer
 
   attributes :id, :name, :slug, :description, :is_recommended, :admin_following_count,
              :patchwork_collection_id, :guides, :participants_count,
-             :visibility, :position, :channel_type, :created_at, :no_of_admins, :channel_content_type
+             :visibility, :position, :channel_type, :created_at, :no_of_admins, :channel_content_type, :registration_mode
+
+  has_many :patchwork_community_additional_informations, serializer: Api::V1::CommunityAdditionalInformationSerializer
+  has_many :patchwork_community_links, serializer: Api::V1::CommunityLinkSerializer
+  has_many :patchwork_community_rules, serializer: Api::V1::CommunityRuleSerializer
 
   attribute :community_type do |object|
     Api::V1::PatchworkCommunityTypeSerializer.new(object.patchwork_community_type).serializable_hash
@@ -46,7 +50,7 @@ class Api::V1::ChannelSerializer
     community_admin = object&.community_admins&.first
     community_admin ? {
       id: community_admin.id,
-      account_id: community_admin&.account&.id,
+      account_id: community_admin&.account&.id.to_s,
       username: community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : "",
     } : {}
   end

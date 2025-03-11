@@ -11,6 +11,10 @@ class Api::V1::AccountSerializer
             :suspended_at,
             :domain_name
 
+  attribute :id do |object|
+    object.id.to_s
+  end
+
   attribute :email do |object|
     object.user.email if object.user
   end

@@ -43,8 +43,10 @@ class Users::SessionsController < Devise::SessionsController
       root_path
     elsif resource.organisation_admin?
       communities_path(channel_type: 'channel')
-    else
+    elsif resource.user_admin?
       communities_path(channel_type: 'channel_feed')
+    else
+      communities_path(channel_type: 'hub')
     end
   end
 

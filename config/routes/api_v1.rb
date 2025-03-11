@@ -14,6 +14,7 @@ namespace :api, defaults: { format: :json } do
         get :channel_detail
         get :my_channel
         get :channel_feeds
+        get :newsmast_channels
       end
     end
 
@@ -32,12 +33,6 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
-    resources :sessions, only: [] do
-      collection do
-        post :log_out
-      end
-    end
-
     resources :community_admins, only: %i[index show update] do
       collection do
         get :boost_bot_accounts
@@ -53,6 +48,10 @@ namespace :api, defaults: { format: :json } do
         get 'mute_contributor_list'
         post 'set_visibility'
       end
+      member do
+        patch :manage_additional_information
+        put :manage_additional_information
+      end
       resources :community_filter_keywords, only: %i[index create update destroy]
       resources :community_hashtags, only: %i[index create update destroy]
       resources :community_post_types, only: [:index, :create]
@@ -61,5 +60,9 @@ namespace :api, defaults: { format: :json } do
     resources :content_types, only: [:index, :create]
 
     resources :joined_communities, only: %i[index create destroy]
+
+    get '/domains/verify', to: 'domains#verify'
+    get 'general_icons', to: 'community_links#general'
+    get 'social_icons',  to: 'community_links#social'
   end
 end

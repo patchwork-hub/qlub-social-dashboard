@@ -6,10 +6,19 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   LAMBDA_URL = ENV['CREATE_CHANNEL_LAMBDA_URL']
   LAMBDA_API_KEY = ENV['CREATE_CHANNEL_LAMBDA_API_KEY']
 
-  def perform(community_id, community_slug)
-    @domain = generate_domain(community_slug)
+  def perform(community)
+    community_id = community.id
+    community_slug = community.slug
+    @is_custom_domain = community.is_custom_domain
+
+    if @is_custom_domain
+      @domain = community_slug
+      community_slug = community_slug.parameterize.underscore
+    else
+      @domain = generate_domain(community_slug)
+    end
+
     @admins = prepare_admins(community_id)
-    community = Community.find_by_id(community_id)
     @display_name = community.name
     @rules = prepare_rules(community)
     @additional_information = prepare_additional_information(community)
@@ -18,6 +27,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @logo_image = community.logo_image.url
     @contact_email = CommunityAdmin.where(patchwork_community_id: community_id).pluck(:email).first
     @channel_type = get_channel_type(community)
+    @registration_mode = community.registration_mode
     payload = build_payload(community_id, community_slug)
     puts payload
 
@@ -95,6 +105,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       DISPLAY_NAME: @display_name,
       MAIN_CHANNEL: "false",
       CHANNEL_TYPE: @channel_type,
+      IS_CUSTOM_DOMAIN: @is_custom_domain,
+      REGISTRATION_MODE: @registration_mode
     }.to_json
   end
 

@@ -1,4 +1,7 @@
-.container-fluid
+- is_channel_feed = user_admin? || params[:channel_type] == 'channel_feed' || @community&.channel_feed?
+- is_channel = organisation_admin? || params[:channel_type] == 'channel' || @community&.channel?
+
+.container-fluid{ 'data-is-channel-feed' => is_channel_feed }
   .row-md-12.my-4
     .col
       = carousel_indicators
@@ -7,6 +10,7 @@
       = f.hidden_field :id
       = hidden_field_tag :content_type, params[:content_type] || @community&.content_type&.channel_type
       = hidden_field_tag :channel_type, params[:channel_type] || @community&.channel_type
+
       .card.mt-4
         .card-header
           %div.d-flex.justify-content-between
@@ -14,85 +18,161 @@
               %h5.card-title Step #{fetch_display_step} Channel information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme.
-          - is_read_only = params[:id].present? && (!current_user.user_admin? ? Community.find_by_id(params[:id])&.visibility.present? : true)
-          .row
-            .col-md-6.col-sm-12
-              = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control" }, required: true
-              %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
-            .col-md-6.col-sm-12
-              = f.input :slug, label: "Channel username", input_html: { type: "text", class: "form-control", readonly: is_read_only }, required: true
-              %p.text-muted.small This will be the channel’s username and custom URL extension. Once your channel is created, you will not be able to change this.
-          .row
-            .col-md-6.col-sm-12
-              = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
-              %p.text-muted.small Use this field to select the group or category that this channel will belong to.
-          - unless user_admin? || @community&.channel_feed?
+          - is_read_only = params[:id].present? && (!is_channel_feed ? Community.find_by_id(params[:id])&.visibility.present? : true)
+          - unless is_channel_feed
+            .row
+              .col-md-6.col-sm-12
+                = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control" }
+                %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
+              .col-md-6.col-sm-12
+                = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
+                %p.text-muted.small Use this field to select the group or category that this channel will belong to.
+            .row
+              .col-md-12
+                .alert.alert-light{ role: "alert", style: "background-color: #F6F8FA;" }
+                  .d-flex.align-items-center
+                    %p.mb-0{ style: "font-size: 13px; width: 22px; height: 22px; font-weight: 700;" } Tip
+                    = image_tag("icons/circle_info.svg", class: "m-2", width: "30px", height: "30px", style: "color: #3FA7E8;")
+                    %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this channel as collections help users find channels they’re interested in more easily.
+            .row
+              .col-md-12.col-sm-12
+                .form-group.mb-4
+                  .d-flex.align-items-center.mb-3
+                    %label.form-check-label.switch
+                      = f.check_box :is_custom_domain,
+                                    class: "form-check-input switch-input",
+                                    id: "domain_switch",
+                                    data: { toggle: "domain-type" },
+                                    readonly: is_read_only
+                      %span.switch-slider.round
+                        %span.slider-tick
+                          %i.fa-solid.fa-check
+                        %span.slider-cross
+                          %i.fa-solid.fa-xmark
+                    %span.ml-2
+                      Use custom domain
+                      = render 'shared/tooltip_custom', tooltip_text: 'Enable to use your own domain instead of our subdomain', tooltip_position: 'right'
+
+                #subdomain_section{ style: "display: #{@community&.is_custom_domain == 'true' ? 'none' : 'block'};" }
+                  .mb-3
+                    = f.label :slug, "Channel username", class: "form-label"
+                    .input-group
+                      = f.text_field :slug,
+                        class: "form-control",
+                        readonly: is_read_only
+                      .input-group-append
+                        %span.input-group-text .channel.org
+                  %p.text-muted.small This will be the channel’s username and custom URL extension. Once your channel is created, you will not be able to change this.
+
+                #custom_domain_section{ style: "display: #{@community&.is_custom_domain == 'true' ? 'block' : 'none'};" }
+                  .mb-3
+                    = f.label :custom_domain, "Custom domain", class: "form-label"
+                    #custom_domain_group.input-group
+                      = f.text_field :slug,
+                        class: "form-control",
+                        readonly: is_read_only,
+                        id: "custom_domain_input"
+                      .input-group-append
+                        %button.btn.btn-primary{ type: "button", id: "add_domain_btn" }
+                          Add domain
+                  %p.text-muted.small This will be the channel’s username and domain. Once your channel is created, you will not be able to change this.
+                  #add_domain_status.mt-3
+
+                #dns_records_table.card.mt-3{ style: "display: none;" }
+                  .card-header.d-flex.flex-column.align-items-start
+                    .d-flex.justify-content-between.w-100
+                      %strong#domain_text
+                      .btn-group.d-flex.gap-2
+                        %button.btn.btn-sm.btn-outline-secondary{ type: "button", id: "refresh_domain_btn" }
+                          %i.fas.fa-sync-alt
+                        %button.btn.btn-sm.btn-outline-secondary{ type: "button", id: "edit_domain_btn" }
+                          Edit
+                    #domain_status.mt-3.w-100
+                  .card-body
+                    %h6.mb-3 Set the following record on your DNS provider to continue:
+                    %table.table.table-bordered
+                      %thead
+                        %tr
+                          %th Type
+                          %th Name
+                          %th Value
+                      %tbody
+                        %tr
+                          %td A
+                          %td @
+                          %td= ENV['SERVER_IP'] || 'your-server-ip'
             .row.mb-4
               .col-md-12
-                %label.form-check-label.switch
-                  = f.check_box :is_recommended, { class: "form-check-input switch-input" }
-                  %span.switch-slider.round
-                    %span.slider-tick
-                      %i.fa-solid.fa-check
-                    %span.slider-cross
-                      %i.fa-solid.fa-xmark
-                %span
-                  Recommend this channel to users
-
-          .row
-            .col-md-12
-              .alert.alert-light{ role: "alert", style: "background-color: #F6F8FA;" }
                 .d-flex.align-items-center
-                  %p.mb-0{ style: "font-size: 13px; width: 22px; height: 22px; font-weight: 700;" } Tip
-                  = image_tag("icons/circle_info.svg", class: "m-2", width: "30px", height: "30px", style: "color: #3FA7E8;")
-                  %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this channel as collections help users find channels their interested in more easily.
+                  %label.form-check-label.switch.mb-0
+                    = f.check_box :is_recommended, { class: "form-check-input switch-input" }
+                    %span.switch-slider.round
+                      %span.slider-tick
+                        %i.fa-solid.fa-check
+                      %span.slider-cross
+                        %i.fa-solid.fa-xmark
+                  %span.ml-2
+                    Recommend this channel to users
+          - else
+            .row
+              .col-md-6.col-sm-12
+                = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control" }
+                %p.text-muted.small This will be the channel’s public display name. Once your channel is created, you will not be able to change this.
+              .col-md-6.col-sm-12
+                = f.input :slug, label: "Channel username", input_html: { type: "text", class: "form-control", readonly: is_read_only }
+                %p.text-muted.small This will be the channel’s username and custom URL extension. Once your channel is created, you will not be able to change this.
+            .row
+              .col-md-6.col-sm-12
+                = f.input :collection_id, label: 'Collection', as: :select, collection: Collection.all.collect { |c| [c.name, c.id] }, include_blank: false, input_html: { class: "form-control form-select-lg", aria: { label: "Choose a collection" } }
+                %p.text-muted.small Use this field to select the group or category that this channel will belong to.
+
+            .row
+              .col-md-12
+                .alert.alert-light{ role: "alert", style: "background-color: #F6F8FA;" }
+                  .d-flex.align-items-center
+                    %p.mb-0{ style: "font-size: 13px; width: 22px; height: 22px; font-weight: 700;" } Tip
+                    = image_tag("icons/circle_info.svg", class: "m-2", width: "30px", height: "30px", style: "color: #3FA7E8;")
+                    %p.mb-0{ style: "color: #BEBEBE;" } Be sure to select the most relevant collection for this channel as collections help users find channels they’re interested in more easily.
           .row
             .col-md-12
               = f.label :bio, 'Bio'
               = f.text_area :bio, class: "form-control"
 
           .row.mt-3.pl-1
-            - unless user_admin? || @community&.channel_feed? || params[:channel_type] == 'channel_feed'
+            - if is_channel
               .col-md-8
                 %label{ for: "customFileLogo", class: "form-label" } Logo
                 .row.avatar-image-upload-container.gap-1
                   .logo-upload-container
                     .rounded.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 300px; height: 150px; border: dotted; overflow: hidden;" }
                       - logo_image_url = @community_form.logo_image.present? && @community_form.logo_image.respond_to?(:url) ? @community_form.logo_image.url : ''
-
-                      %img{ id: "currentlogo", src: logo_image_url, alt: "logo Preview", style: "display: #{logo_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
+                      %img{ id: "currentlogo", src: logo_image_url, alt: "Logo Preview", style: "display: #{logo_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
                       %i.fa-solid.fa-image
                       = f.input :logo_image, as: :file, label: false, input_html: { id: "customFilelogo", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentlogo", 'data-aspect-ratio': "2.1" }
-
                   .logo-image-upload
                     %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFilelogo').click();" } Upload image
-                    %p.mt-4.text-muted.small The logo is the profile photo in top-left corner of  /public page of the sub-channel.
+                    %p.mt-4.text-muted.small The logo is the profile photo in the top-left corner of the /public page of the sub-channel.
                     %p.text-muted.small SVG, PNG, JPG (aspect ratio: 300x150px)
-
-            - col_class = user_admin? || @community&.channel_feed? ? 'col-md-12' : 'col-md-4'
+            - col_class = is_channel_feed ? 'col-md-12' : 'col-md-4'
             .col{ class: col_class }
               %label{ for: "customFileAvatar", class: "form-label" } Avatar
               .row.avatar-image-upload-container.gap-1
                 .avatar-upload-container
                   .rounded-circle.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
                     - avatar_image_url = @community_form.avatar_image.present? && @community_form.avatar_image.respond_to?(:url) ? @community_form.avatar_image.url : ''
-
                     %img{ id: "currentAvatar", src: avatar_image_url, alt: "Avatar Preview", style: "display: #{avatar_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: 16px;" }
                     %i.fa-solid.fa-image
                     = f.input :avatar_image, as: :file, label: false, input_html: { id: "customFileAvatar", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentAvatar", 'data-aspect-ratio': "1" }
-
                 .avatar-image-upload
                   %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFileAvatar').click();" } Upload image
                   %p.mt-4.text-muted.small The avatar is the profile picture of the public feed account and the preview card photo of recommended channels in /explore-channels page of the sub-channel.
                   %p.text-muted.small SVG, PNG, JPG (max: 800x800px)
-
           .row.mt-3
             .col-md-12
               %label{ for: "customFile", class: "form-label" } Banner image
               .dropzone.p-1.border.rounded.text-center{ style: "border: dashed; background-color: #f8f9fa;", id: "bannerDropzone", onclick: "document.getElementById('customFile').click();" }
                 - banner_image_url = @community_form.banner_image.present? && @community_form.banner_image.respond_to?(:url) ? @community_form.banner_image.url : ''
                 = f.input :banner_image, as: :file, label: false, input_html: { id: "customFile", class: "form-control-file upload-input", style: "display: none;", accept: "image/*", 'data-preview-id': "currentBanner", 'data-aspect-ratio': "2.1" }
-
                 %img{ src: banner_image_url, alt: "Current Banner", class: "img-fluid dropzone-preview", id: "currentBanner", style: "display: #{banner_image_url.present? ? 'block' : 'none'};" }
                 %div.dropzone-placeholder
                   %i.fa-solid.fa-upload
@@ -103,4 +183,7 @@
         .col-auto
           %a.btn.btn-outline-secondary{ href: previous_path_for_step1(@community, params) } Back
         .col-auto
-          = f.button :submit, "Continue", class: 'btn btn-danger'
+          = f.button :submit, "Continue", class: 'btn btn-danger', id: "continue_button", disabled: !is_channel_feed
+
+= javascript_include_tag "custom_js/custom_domain"
+= stylesheet_link_tag "custom_domain", media: "all"

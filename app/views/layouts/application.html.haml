@@ -38,14 +38,7 @@
         = render "shared/menu/sidebar"
         .container-fluid
         .row
-          - if controller_name == "accounts" || controller_name == "homepage"
-            .col-md-12
-              .content-wrapper
-                .mx-2.pt-3.pb-3
-                  = render "shared/flash"
-                .content.container-fluid
-                  = yield
-          - else
+          - if controller_name == 'communities' && action_name != 'index'
             .col-md-9
               .content-wrapper
                 .mx-2.pt-3.pb-3
@@ -54,6 +47,13 @@
                   = yield
             .col-md-3
               = render "shared/menu/right_sidebar"
+          - else
+            .col-md-12
+              .content-wrapper
+                .mx-2.pt-3.pb-3
+                  = render "shared/flash"
+                .content.container-fluid
+                  = yield
     - else
       .container.mt-5
         .w-25.m-auto

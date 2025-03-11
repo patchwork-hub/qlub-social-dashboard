@@ -3,7 +3,7 @@ module Api
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
-      before_action :set_community, only: %i[show update set_visibility]
+      before_action :set_community, only: %i[show update set_visibility manage_additional_information]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       PER_PAGE = 5
       ACCESS_TOKEN_SCOPES = "read write follow push".freeze
@@ -32,7 +32,7 @@ module Api
 
       def show
         authorize @community, :show?
-        render json: Api::V1::ChannelSerializer.new(@community).serializable_hash.to_json
+        render json: Api::V1::ChannelSerializer.new(@community, include: [:patchwork_community_additional_informations, :patchwork_community_links, :patchwork_community_rules]).serializable_hash.to_json
       end
 
       def update
@@ -99,6 +99,23 @@ module Api
         end
       end
 
+      def manage_additional_information
+        authorize @community, :manage_additional_information?
+
+        if params[:community].blank?
+          @community.errors.add(:base, "Missing additional information")
+          return render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
+        end
+
+        if @community.update(additional_community_params)
+          render json: Api::V1::ChannelSerializer.new(@community, include: [:patchwork_community_additional_informations, :patchwork_community_links, :patchwork_community_rules]).serializable_hash.to_json
+        else
+          render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
+        end
+      rescue ActionController::ParameterMissing => e
+        render json: { error: e.message }, status: :bad_request
+      end
+
       private
 
       def community_params
@@ -119,6 +136,16 @@ module Api
         end
 
         params_hash
+      end
+
+      def additional_community_params
+        params.require(:community).permit(
+          patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
+          social_links_attributes: [:id, :icon, :name, :url, :_destroy],
+          general_links_attributes: [:id, :icon, :name, :url, :_destroy],
+          patchwork_community_rules_attributes: [:id, :rule, :_destroy],
+          registration_mode: []
+        )
       end
 
       def records_filter
