@@ -3,7 +3,7 @@ module Api
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
       before_action :authenticate_user_from_header
-      before_action :set_community, only: %i[show update set_visibility]
+      before_action :set_community, only: %i[show update set_visibility manage_additional_information]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       PER_PAGE = 5
       ACCESS_TOKEN_SCOPES = "read write follow push".freeze
@@ -101,17 +101,19 @@ module Api
 
       def manage_additional_information
         authorize @community, :manage_additional_information?
+
         if params[:community].blank?
-          render json: { error: "Missing additional information" }, status: :bad_request
-          return
+          @community.errors.add(:base, "Missing additional information")
+          return render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
         end
 
-        if @community.update(additional_information_params)
-          @community.update(registration_mode: params[:registration_mode])
-          render json: { message: "Additional information updated successfully" }, status: :ok
+        if @community.update(additional_community_params)
+          render json: Api::V1::ChannelSerializer.new(@community, include: [:patchwork_community_additional_informations, :patchwork_community_links, :patchwork_community_rules]).serializable_hash.to_json
         else
-          render json: { error: @community.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
         end
+      rescue ActionController::ParameterMissing => e
+        render json: { error: e.message }, status: :bad_request
       end
 
       private
@@ -136,7 +138,7 @@ module Api
         params_hash
       end
 
-      def additional_information_params
+      def additional_community_params
         params.require(:community).permit(
           patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
           social_links_attributes: [:id, :icon, :name, :url, :_destroy],
