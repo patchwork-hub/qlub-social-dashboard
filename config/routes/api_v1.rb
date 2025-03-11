@@ -62,5 +62,7 @@ namespace :api, defaults: { format: :json } do
     resources :joined_communities, only: %i[index create destroy]
 
     get '/domains/verify', to: 'domains#verify'
+    get 'general_icons', to: 'community_links#general'
+    get 'social_icons',  to: 'community_links#social'
   end
 end
