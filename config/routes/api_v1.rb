@@ -60,5 +60,7 @@ namespace :api, defaults: { format: :json } do
     resources :content_types, only: [:index, :create]
 
     resources :joined_communities, only: %i[index create destroy]
+
+    get '/domains/verify', to: 'domains#verify'
   end
 end
