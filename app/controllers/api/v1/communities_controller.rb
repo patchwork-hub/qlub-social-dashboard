@@ -5,11 +5,11 @@ module Api
       before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update set_visibility manage_additional_information]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
+      before_action :set_content_and_channel_type, only: %i[index create update]
       PER_PAGE = 5
-      ACCESS_TOKEN_SCOPES = "read write follow push".freeze
 
       def index
-        communities = records_filter.get.where(channel_type: 'channel_feed')
+        communities = records_filter.get.where(channel_type: @channel_type)
         render json: Api::V1::ChannelSerializer.new(communities).serializable_hash.to_json
       end
 
@@ -20,7 +20,7 @@ module Api
 
         community = CommunityPostService.new.call(
           current_user,
-          community_params.merge(content_type: 'custom_channel')
+          community_params.merge(content_type: @content_type)
         )
 
         if community.errors.any?
@@ -39,7 +39,7 @@ module Api
         authorize @community, :update?
         @community = CommunityPostService.new.call(
           current_user,
-          community_params.merge(id: @community.id, content_type: 'custom_channel')
+          community_params.merge(id: @community.id, content_type: @content_type)
         )
 
         if @community.errors.any?
@@ -156,6 +156,16 @@ module Api
         @community = Community.find(params[:id]) if params[:id].present?
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'Community not found' }, status: :not_found
+      end
+
+      def set_content_and_channel_type
+        if current_user.user_admin?
+          @content_type = 'custom_channel'
+          @channel_type = 'channel_feed'
+        elsif current_user.hub_admin?
+          @content_type = 'broadcast_channel'
+          @channel_type = 'hub'
+        end
       end
 
       def validate_patchwork_community_id
