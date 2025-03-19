@@ -27,13 +27,9 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @logo_image = community.logo_image.url
     @contact_email = CommunityAdmin.where(patchwork_community_id: community_id).pluck(:email).first
     @channel_type = get_channel_type(community)
-    if community.hub? && community.registration_mode == 'none'
-      @single_user_mode = true
-      @registration_mode = nil
-    else
-      @single_user_mode = false
-      @registration_mode = community.registration_mode
-    end
+    @single_user_mode = community.hub? && community.registration_mode == 'none'
+    @registration_mode = community.registration_mode
+
     payload = build_payload(community_id, community_slug)
     puts payload
 
