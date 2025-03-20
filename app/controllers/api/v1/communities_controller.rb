@@ -116,6 +116,20 @@ module Api
         render json: { error: e.message }, status: :bad_request
       end
 
+      def fetch_ip_address
+        ip_address = if @community&.ip_address_id.present?
+                       IpAddress.find_by(id: @community.ip_address_id)
+                     else
+                       IpAddress.valid_ip
+                     end
+
+        if ip_address
+          render json: { ip_address: ip_address.ip, id: ip_address.id }, status: :ok
+        else
+          render json: { error: "No valid IP available" }, status: :not_found
+        end
+      end
+
       private
 
       def community_params

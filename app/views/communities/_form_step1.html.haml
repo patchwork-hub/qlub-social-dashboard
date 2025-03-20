@@ -1,5 +1,6 @@
 - is_channel_feed = user_admin? || params[:channel_type] == 'channel_feed' || @community&.channel_feed?
 - is_channel = organisation_admin? || params[:channel_type] == 'channel' || @community&.channel?
+- ip_address = @community&.ip_address_id.present? ? IpAddress.find_by(id: @community.ip_address_id) : IpAddress.valid_ip
 
 .container-fluid{ 'data-is-channel-feed' => is_channel_feed }
   .row-md-12.my-4
@@ -8,6 +9,8 @@
   .col-md-12
     = simple_form_for @community_form, url: step1_communities_path, html: { multipart: true } do |f|
       = f.hidden_field :id
+      = f.hidden_field :ip_address, value: ip_address&.ip
+      = f.hidden_field :ip_address_id, value: ip_address&.id
       = hidden_field_tag :content_type, params[:content_type] || @community&.content_type&.channel_type
       = hidden_field_tag :channel_type, params[:channel_type] || @community&.channel_type
 
@@ -100,7 +103,7 @@
                         %tr
                           %td A
                           %td @
-                          %td= ENV['SERVER_IP'] || 'your-server-ip'
+                          %td= ip_address&.ip
             .row.mb-4
               .col-md-12
                 .d-flex.align-items-center

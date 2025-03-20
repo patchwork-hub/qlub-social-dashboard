@@ -138,6 +138,8 @@ class Community < ApplicationRecord
   accepts_nested_attributes_for :social_links, allow_destroy: true
   accepts_nested_attributes_for :general_links, allow_destroy: true
 
+  belongs_to :ip_address, optional: true
+
   validates :name, presence: true, uniqueness: true
 
   validates :registration_mode, inclusion: { in: ['open', 'approved', 'none'] }
