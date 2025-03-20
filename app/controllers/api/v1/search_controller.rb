@@ -2,14 +2,13 @@ module Api
   module V1
     class SearchController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:index]
+      before_action :check_authorization_header, only: [:search]
 
-      def index
+      def search
         query = build_query(params[:q])
         
         render json: {
           communities: serialize_communities(query),
-          collections: serialize_collections(query),
           channel_feeds: serialize_channel_feeds(query),
           newsmast_channels: {data: search_newsmast_channels}
         }
@@ -31,13 +30,6 @@ module Api
         Api::V1::ChannelSerializer.new(communities).serializable_hash
       end
 
-      def serialize_collections(query)
-        collections = Collection
-                      .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
-
-        Api::V1::CollectionSerializer.new(collections, { params: { recommended: false } }).serializable_hash
-      end
-
       def serialize_channel_feeds(query)
         channel_feeds = Community
                         .filter_channel_feeds
@@ -55,9 +47,8 @@ module Api
       def search_newsmast_channels
         query = params[:q].to_s.downcase.strip
         results = NEWSMAST_CHANNELS.select do |channel|
-          name = channel.dig('attributes', 'name').to_s.downcase
-          slug = channel.dig('attributes', 'slug').to_s.downcase
-  
+          name = channel.dig(:attributes, :name).to_s.downcase
+          slug = channel.dig(:attributes, :slug).to_s.downcase
           name.include?(query.strip) || slug.include?(query.strip)
         end
         results

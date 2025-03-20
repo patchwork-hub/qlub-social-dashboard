@@ -19,7 +19,7 @@ module Api
 
       def group_recommended_channels
         recommended_group_channels = Collection.recommended_group_channels
-        render json: Api::V1::CollectionSerializer.new(recommended_group_channels, { params: { recommended: true } }).serializable_hash.to_json
+        render json: Api::V1::CollectionSerializer.new(recommended_group_channels, { params: { recommended: true, type: 'channel' } }).serializable_hash.to_json
       end
 
       def search
@@ -52,7 +52,7 @@ module Api
       end
 
       def newsmast_channels
-        render json: NEWSMAST_CHANNELS.length > 0 ? { data: NEWSMAST_CHANNELS } : { data: [] }
+        render json: NEWSMAST_CHANNELS.size > 0 ? { data: NEWSMAST_CHANNELS } : { data: [] }
       end
 
       private 

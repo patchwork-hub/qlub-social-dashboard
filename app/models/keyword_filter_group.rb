@@ -34,6 +34,15 @@ class KeywordFilterGroup < ApplicationRecord
   def self.get_redis_key_name(setting_name)
     redis_key_name(setting_name)
   end
+
+  def self.redised_keyword_exists?(keyword, filter_type, setting_name, process_del)
+    filter_exists?(keyword, filter_type, setting_name, process_del)
+  end
+
+  def self.update_create_redis_filter(redis_key, keyword, server_setting_id, filter_type, is_active, id, is_custom)
+    add_or_update_filter(redis_key, keyword, server_setting_id, filter_type, is_active, id, is_custom)
+  end
+
   private
 
   def self.fetch_data_from_api(setting_name)
@@ -62,7 +71,7 @@ class KeywordFilterGroup < ApplicationRecord
       keyword_filter.update(filter_type: keyword_data['filter_type'])
 
       # Store the keyword in Redis
-      add_or_update_filter(redis_key, keyword_filter.keyword, filter_group.server_setting_id, keyword_filter.filter_type, filter_group.is_active, filter_group.id)
+      add_or_update_filter(redis_key, keyword_filter.keyword, filter_group.server_setting_id, keyword_filter.filter_type, filter_group.is_active, filter_group.id, is_custom = false)
       
       keyword_filter.keyword
     end
@@ -75,31 +84,31 @@ class KeywordFilterGroup < ApplicationRecord
                       .destroy_all
   end
 
-  def filter_exists?(keyword, filter_type, is_spam)
-    # Store the keyword in Redis
+  def self.filter_exists?(keyword, filter_type, setting_name, process_del)
     redis = RedisService.client(namespace: 'channel')
-    redis_key = is_spam ? 'spam_filters' : 'content_filters'
+    redis_key = redis_key_name(setting_name)
     composite_key = "#{keyword.downcase}:#{filter_type}"
-    redis.current.hexists(redis_key, composite_key)
+    is_exist = redis.hexists(redis_key, composite_key)
+    if process_del
+      redis.hdel(redis_key, composite_key) if is_exist
+    else
+      is_exist
+    end
   end
 
-  def self.add_or_update_filter(redis_key, keyword, server_setting_id, filter_type, is_active, group_id)
-    # Store the keyword in Redis
+  def self.add_or_update_filter(redis_key, keyword, server_setting_id, filter_type, is_active, group_id, is_custom)
     redis = RedisService.client(namespace: 'channel')
     group_id = group_id
     composite_key = "#{keyword.downcase}:#{filter_type}"
   
-    # Prepare the new value
     new_value = {
       keyword: keyword,
       filter_type: filter_type,
       server_setting_id: server_setting_id,
       group_id: group_id,
       is_active: is_active,
-      custom: false
+      custom: is_custom
     }.to_json
-  
-    # Overwrite or create the entry
     redis.hset(redis_key, composite_key, new_value)
   end
 

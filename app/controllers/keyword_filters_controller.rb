@@ -14,6 +14,7 @@ class KeywordFiltersController < ApplicationController
   def create
     @keyword_filter = @keyword_filter_group.keyword_filters.build(keyword_filter_params)
     if @keyword_filter.save
+      add_update_redis_filter
       redirect_to @keyword_filter_group, notice: 'A filter keyword was successfully created!'
     else
       flash[:error] = @keyword_filter.errors.full_messages
@@ -27,7 +28,9 @@ class KeywordFiltersController < ApplicationController
   def update
     respond_to do |format|
       KeywordFilterGroup.transaction do
+        destroy_redis_filter
         if @keyword_filter_group.update(keyword_filter_group_params) && @keyword_filter.update(keyword_filter_params)
+          add_update_redis_filter
           format.html { redirect_to @keyword_filter_group, notice: 'Keyword filter and group were successfully updated.' }
           format.json { render json: @keyword_filter, status: :ok }
         else
@@ -39,6 +42,7 @@ class KeywordFiltersController < ApplicationController
   end
 
   def destroy
+    destroy_redis_filter
     @keyword_filter.destroy
     respond_to do |format|
       format.html { redirect_to @keyword_filter_group, notice: 'Keyword filter and group were successfully deleted.' }
@@ -66,5 +70,14 @@ class KeywordFiltersController < ApplicationController
 
   def authorize_master_admin!
     authorize :master_admin, :index?
+  end
+
+  def add_update_redis_filter
+    redis_key = KeywordFilterGroup.get_redis_key_name(@keyword_filter_group&.server_setting&.name)
+    KeywordFilterGroup.update_create_redis_filter(redis_key, keyword_filter_params[:keyword], @keyword_filter_group&.server_setting.id, keyword_filter_params[:filter_type], is_active = true, @keyword_filter_group.id, is_custom = true)
+  end
+
+  def destroy_redis_filter
+    KeywordFilterGroup.redised_keyword_exists?(@keyword_filter.keyword, @keyword_filter.filter_type, @keyword_filter_group&.server_setting&.name, true)
   end
 end

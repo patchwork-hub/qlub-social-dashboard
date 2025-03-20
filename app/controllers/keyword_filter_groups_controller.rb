@@ -22,6 +22,7 @@ class KeywordFilterGroupsController < ApplicationController
     @keyword_filter_group.assign_attributes(keyword_filter_group_params)
 
     if @keyword_filter_group.save
+      save_to_redis
       render json: { success: true }
     else
       render json: { success: false, error: @keyword_filter_group.errors.full_messages.join(', ') }, status: :unprocessable_entity
@@ -40,6 +41,7 @@ class KeywordFilterGroupsController < ApplicationController
   end
 
   def destroy
+    delete_redis_hashtags_by_group_id
     @keyword_filter_group.destroy
     respond_to do |format|
       format.html { redirect_back fallback_location: keyword_filter_groups_url, notice: 'Keyword Filter Group deleted successfully' }
@@ -88,13 +90,32 @@ class KeywordFilterGroupsController < ApplicationController
   def update_redis_filters
     redis = RedisService.client(namespace: 'channel')
     redis_key = KeywordFilterGroup.get_redis_key_name(@keyword_filter_group&.server_setting&.name)
-    filters = redis.hgetall(redis_key).values
-    filters.each do |filter|
-      filter_data = JSON.parse(filter)
-      if filter_data['group_id'] == @keyword_filter_group.id && filter_data['server_setting_id'] == @keyword_filter_group.server_setting_id
-        filter_data['is_active'] = @keyword_filter_group.is_active
-        redis.hset(redis_key, "#{filter_data['keyword'].downcase}:#{filter_data['filter_type']}", filter_data.to_json)
+    parsed_entries = redis.hgetall(redis_key).values.map { |entry| JSON.parse(entry) }
+    filtered_entries = parsed_entries.select { |entry| entry['group_id'] == @keyword_filter_group.id }
+
+    filtered_entries.each do |filter|
+      filter['is_active'] = params[:keyword_filter_group][:is_active]
+      redis.hset(redis_key, "#{filter['keyword'].downcase}:#{filter['filter_type']}", filter.to_json)
+    end
+  end
+
+  def delete_redis_hashtags_by_group_id
+    redis = RedisService.client(namespace: 'channel')
+    redis_key = KeywordFilterGroup.get_redis_key_name(@keyword_filter_group&.server_setting&.name)
+    redis_hash = redis.hgetall(redis_key)
+    
+    redis_hash.each do |composite_key, json_entry|
+      entry = JSON.parse(json_entry)
+      if entry['group_id'] == @keyword_filter_group.id
+        redis.hdel(redis_key, composite_key)
       end
+    end
+  end
+
+  def save_to_redis
+    redis_key = KeywordFilterGroup.get_redis_key_name(@keyword_filter_group&.server_setting&.name)
+    @keyword_filter_group.keyword_filters.each do |keyword_filter|
+      KeywordFilterGroup.update_create_redis_filter(redis_key,  keyword_filter.keyword, @keyword_filter_group.server_setting_id, keyword_filter.filter_type, is_active = true, @keyword_filter_group.id, is_custom = true)
     end
   end
 end

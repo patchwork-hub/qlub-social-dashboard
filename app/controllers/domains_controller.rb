@@ -1,7 +1,7 @@
 class DomainsController < ApplicationController
   def verify
     domain = params[:domain]
-    expected_ip = ENV['SERVER_IP']
+    expected_ip = params[:ipAddress]
 
     verified = DnsVerifier.valid_a_record?(domain, expected_ip)
     message = verified ?
