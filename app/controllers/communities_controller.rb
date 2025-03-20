@@ -76,7 +76,7 @@ class CommunitiesController < BaseController
     authorize_step(:step2?)
     @records = load_filtered_records(commu_admin_records_filter)
     @community_admin = CommunityAdmin.new(patchwork_community_id: @community.id)
-    invoke_bridged unless Rails.env.development?
+    invoke_bridged unless @community.hub? || Rails.env.development?
   end
 
   def step3
@@ -199,7 +199,8 @@ class CommunitiesController < BaseController
           logo_image: @community.logo_image,
           community_type_id: @community.patchwork_community_type_id,
           is_recommended: @community.is_recommended,
-          is_custom_domain: @community.is_custom_domain
+          is_custom_domain: @community.is_custom_domain,
+          ip_address_id: @community.ip_address_id
         }
       else
         authorize current_user, :user_is_not_community_admin?
@@ -236,7 +237,7 @@ class CommunitiesController < BaseController
       :id, :name, :slug, :collection_id, :bio,
       :banner_image, :avatar_image, :logo_image,
       :community_type_id, :is_recommended,
-      :content_type, :channel_type, :is_custom_domain
+      :content_type, :channel_type, :is_custom_domain, :ip_address_id
     )
   end
 

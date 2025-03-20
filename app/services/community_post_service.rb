@@ -30,6 +30,7 @@ class CommunityPostService < BaseService
       @community.save!
       set_default_additional_information
       assign_roles_and_content_type
+      IpAddress.find_by(id: @options[:ip_address_id]).increment_use_count!
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -135,13 +136,14 @@ class CommunityPostService < BaseService
         note: @community.description || ''
       )
     else
+      actor_type = @community.hub? ? "Application" : "Service"
       @account.update!(
         display_name: @community.name,
         username: @community.slug.parameterize.underscore,
         note: @community.description,
         avatar: @community.avatar_image || '',
         header: @community.banner_image || '',
-        actor_type: "Service",
+        actor_type: actor_type,
         discoverable: true
       )
     end
@@ -197,6 +199,7 @@ class CommunityPostService < BaseService
       patchwork_community_type_id: @community_type.id,
       channel_type: @options[:channel_type],
       is_custom_domain: @options[:is_custom_domain],
+      ip_address_id: @options[:ip_address_id],
     }
 
     if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)

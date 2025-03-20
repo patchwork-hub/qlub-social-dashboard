@@ -60,39 +60,40 @@
                       = image_tag("icons/eye.svg", class: "ml-2", width: "16", height: "16", style: "filter: invert(21%) sepia(82%) saturate(7471%) hue-rotate(356deg) brightness(99%) contrast(112%);")
           .pagination.pagination-sm.m-0.float-right.mt-1
             = paginate @records, theme: 'bootstrap4'
-          - if user_admin? || @community&.channel_feed?
-            .col-auto.mt-3.bg-light
+          - unless @community.hub?
+            - if user_admin? || @community&.channel_feed?
+              .col-auto.mt-3.bg-light
+                .row
+                  %label.small Public feed role
+                .row
+                  .mt-auto
+                    %p.text-muted.small If the public feed role is assigned, it will boost posts and the account can be used to login to the mobile app.
+            - else
+              .col-auto.mt-3.bg-light
+                .row
+                  %label.small Organisation admin role
+                .row
+                  .mt-auto
+                    %p.text-muted.small If the organisation admin role is assigned, the account can be used to access the dashboard system to edit the assigned Channel.
+            .col-auto.mt-3
               .row
-                %label.small Public feed role
+                %label.mb-0 Progress of Bluesky bridging
               .row
                 .mt-auto
-                  %p.text-muted.small If the public feed role is assigned, it will boost posts and the account can be used to login to the mobile app.
-          - else
-            .col-auto.mt-3.bg-light
-              .row
-                %label.small Organisation admin role
-              .row
-                .mt-auto
-                  %p.text-muted.small If the organisation admin role is assigned, the account can be used to access the dashboard system to edit the assigned Channel.
-          .col-auto.mt-3
-            .row
-              %label.mb-0 Progress of Bluesky bridging
-            .row
-              .mt-auto
-                - if @records.size == 0
-                  %p.text-muted.small Channel admin doesn't exist.
-                - else
-                  .bluesky-bridge-progress-bar
-                    .bluesky-step
-                      .blue-sky-circle.completed
-                        = image_tag("icons/bluesky.svg", width: "16", height: "16")
-                      .bluesky-step-content
-                        %p Bluesky bridged information:
-                        - if bridged_completely?(@community, @bluesky_info)
-                          %p
-                            = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
-                        - else
-                          %p.text-warning In progress...
+                  - if @records.size == 0
+                    %p.text-muted.small Channel admin doesn't exist.
+                  - else
+                    .bluesky-bridge-progress-bar
+                      .bluesky-step
+                        .blue-sky-circle.completed
+                          = image_tag("icons/bluesky.svg", width: "16", height: "16")
+                        .bluesky-step-content
+                          %p Bluesky bridged information:
+                          - if bridged_completely?(@community, @bluesky_info)
+                            %p
+                              = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
+                          - else
+                            %p.text-warning In progress...
 
       .row.d-flex.justify-content-between
         .col-auto

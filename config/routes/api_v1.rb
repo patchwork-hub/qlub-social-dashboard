@@ -52,6 +52,7 @@ namespace :api, defaults: { format: :json } do
         get 'search_contributor'
         get 'mute_contributor_list'
         post 'set_visibility'
+        get 'fetch_ip_address'
       end
       member do
         patch :manage_additional_information
