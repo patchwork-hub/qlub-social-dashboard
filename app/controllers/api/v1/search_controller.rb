@@ -47,9 +47,8 @@ module Api
       def search_newsmast_channels
         query = params[:q].to_s.downcase.strip
         results = NEWSMAST_CHANNELS.select do |channel|
-          name = channel.dig('attributes', 'name').to_s.downcase
-          slug = channel.dig('attributes', 'slug').to_s.downcase
-  
+          name = channel.dig(:attributes, :name).to_s.downcase
+          slug = channel.dig(:attributes, :slug).to_s.downcase
           name.include?(query.strip) || slug.include?(query.strip)
         end
         results
