@@ -30,6 +30,7 @@ namespace :api, defaults: { format: :json } do
     resources :collections, only: [ :index ] do
       collection do
         get :fetch_channels
+        get :newsmast_collections
       end
     end
 

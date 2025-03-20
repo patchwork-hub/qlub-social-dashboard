@@ -9,7 +9,6 @@ module Api
         
         render json: {
           communities: serialize_communities(query),
-          collections: serialize_collections(query),
           channel_feeds: serialize_channel_feeds(query),
           newsmast_channels: {data: search_newsmast_channels}
         }
@@ -29,13 +28,6 @@ module Api
                       .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(communities).serializable_hash
-      end
-
-      def serialize_collections(query)
-        collections = Collection
-                      .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
-
-        Api::V1::CollectionSerializer.new(collections, { params: { recommended: false } }).serializable_hash
       end
 
       def serialize_channel_feeds(query)

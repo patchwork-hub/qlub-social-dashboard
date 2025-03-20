@@ -1,10 +1,11 @@
 class CollectionsController < ApplicationController
   before_action :authorize_master_admin!
   before_action :set_collection, only: %i[show edit update]
+  PER_PAGE = 10
 
   def index
     @search = Collection.ransack(params[:q])
-    @records = @search.result.order(:sorting_index).page(params[:page])
+    @records = @search.result.order(:sorting_index).page(params[:page]).per(PER_PAGE)
   end
 
   def show

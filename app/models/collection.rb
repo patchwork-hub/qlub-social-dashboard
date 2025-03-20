@@ -13,8 +13,8 @@ class Collection < ApplicationRecord
   has_attached_file :banner_image
 
 
-  validates :name, presence: true, uniqueness: true
-  validates :slug, presence: true
+  validates :name, presence: true
+  validates :slug, presence: true, uniqueness: true
   validates :sorting_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, uniqueness: true
 
   validates_attachment :avatar_image,

@@ -18,7 +18,7 @@
           %thead
             %tr
               %th Collection name
-              %th URL address
+              %th Slug
               %th Display order
               %th Actions
           %tbody
@@ -35,3 +35,7 @@
                 %td
                   %a{ href: edit_collection_path(collection), title: 'Edit' }
                     = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
+        .row.mt-2
+          .col
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @records, theme: 'bootstrap4'
