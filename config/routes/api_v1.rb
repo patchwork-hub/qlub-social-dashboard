@@ -6,7 +6,7 @@ namespace :api, defaults: { format: :json } do
 
     patch 'api_key/rotate', to: 'api_keys#rotate'
 
-    resources :channels, only: [  ] do
+    resources :channels, only: [] do
       collection do
         get :recommend_channels
         get :group_recommended_channels
@@ -18,7 +18,11 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
-    resources :search, only: [ :index ]
+    resources :search, only: [] do
+      collection do
+         post '/', to: 'search#search'
+      end
+    end
 
     resources :wait_list, only: [ :create ] do
       collection do
