@@ -52,7 +52,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
   def user_not_authorized
     if request.format.json?
       render json: { error: "You are not authorized to perform this action." }, status: :forbidden
@@ -63,6 +62,8 @@ class ApplicationController < ActionController::Base
         redirect_back_or_to(communities_path(channel_type: 'channel'))
       elsif current_user.user_admin?
         redirect_back_or_to(communities_path(channel_type: 'channel_feed'))
+      elsif current_user.hu_admin?
+        redirect_back_or_to(communities_path(channel_type: 'hub'))
       else
         redirect_back_or_to(root_path)
       end

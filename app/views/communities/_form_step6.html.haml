@@ -33,6 +33,58 @@
 
     .row
       .col-md-12
+        .card.mb-3
+          .card-body
+            .row
+              .col
+                %label= registration_mode_label(@community)
+                %p.text-muted.small Choose how new users can join your community. You can keep registration completely closed, allow only invited users, or open it to everyone.
+                .form-check
+                  .d-flex.align-items-center
+                    %label.form-check-label.switch.mb-0
+                      %input.form-check-input.switch-input#closed_mode{ type: 'radio', name: 'registration_mode', value: 'none', checked: @community.registration_mode == 'none' }
+                      %span.switch-slider.round
+                        %span.slider-tick
+                          %i.fa-solid.fa-check
+                        %span.slider-cross
+                          %i.fa-solid.fa-xmark
+                    %span.ml-2 Closed to new users
+                    %span.ml-2
+                      = render 'shared/tooltip_custom', tooltip_text: 'New registrations are completely disabled, and no one can sign up until it’s opened.', tooltip_position: 'right'
+
+            %hr
+              .row.mt-2
+                .col
+                  .form-check
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#invite_only_mode{ type: 'radio', name: 'registration_mode', value: 'approved', checked: @community.registration_mode == 'approved' }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2 New users with approval
+                      %span.ml-2
+                        = render 'shared/tooltip_custom', tooltip_text: 'Only users with an invite from an existing member or admin can join.', tooltip_position: 'right'
+            %hr
+              .row.mt-2
+                .col
+                  .form-check
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#open_mode{ type: 'radio', name: 'registration_mode', value: 'open', checked: @community.registration_mode == 'open' }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2 Open to new users
+                      %span.ml-2
+                        = render 'shared/tooltip_custom', tooltip_text: 'Anyone can sign up freely without any approval or invitation needed.', tooltip_position: 'right'
+
+    .row
+      .col-md-12
         .card
           .card-body
             .row.d-flex.justify-content-between

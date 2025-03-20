@@ -3,10 +3,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var form = document.querySelector('#new_admin_form');
   const emailField = document.querySelector('#community_admin_email');
 
+  // Function to update the role field based on checkbox selection
   window.updateRoleField = function (checkbox) {
     const roleField = document.querySelector('#community_admin_role');
-    if (checkbox.checked) {
+
+    if (checkbox.id === 'is_organisation_admin' && checkbox.checked) {
       roleField.value = 'OrganisationAdmin';
+    } else if (checkbox.id === 'is_hub_admin' && checkbox.checked) {
+      roleField.value = 'HubAdmin';
     } else {
       roleField.value = '';
     }
@@ -30,23 +34,17 @@ document.addEventListener('DOMContentLoaded', function () {
       const roleField = document.querySelector('#community_admin_role');
       roleField.value = role || '';
 
-      // Handle checkboxes based on attributes
-      // const isOrganisationAdminExists = document.querySelector('#is_organisation_admin') !== null;
-      // if (isOrganisationAdminExists) {
-      //   document.querySelector('#is_organisation_admin').checked = role === 'OrganisationAdmin';
-      // }
-      // const isBoostBotExists =  document.querySelector('#community_admin_is_boost_bot') !== null;
-      // if (isBoostBotExists) {
-      //   document.querySelector('#community_admin_is_boost_bot').checked = isBoostBot;
-      // }
       const isOrganisationAdminCheckbox = document.querySelector('#is_organisation_admin');
+      const isHubAdminCheckbox = document.querySelector('#is_hub_admin');
       const isBoostBotCheckbox = document.querySelector('#community_admin_is_boost_bot');
-
 
       if (adminId) {
         // Edit mode: set checkboxes based on existing admin data
         if (isOrganisationAdminCheckbox) {
           isOrganisationAdminCheckbox.checked = role === 'OrganisationAdmin';
+        }
+        if (isHubAdminCheckbox) {
+          isHubAdminCheckbox.checked = role === 'HubAdmin';
         }
         if (isBoostBotCheckbox) {
           isBoostBotCheckbox.checked = isBoostBot;
@@ -55,6 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
         form.setAttribute('action', '/community_admins/' + adminId);
         form.setAttribute('method', 'post');
         emailField.readOnly = true;
+
         // Add or update the hidden _method field for PATCH
         let methodInput = document.querySelector('input[name="_method"]');
         if (!methodInput) {
@@ -69,13 +68,18 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         // Create mode: set checkboxes to default true
         if (isOrganisationAdminCheckbox) {
-          isOrganisationAdminCheckbox.checked = true; // Default to true for "Create"
+          isOrganisationAdminCheckbox.checked = true;
           document.querySelector('#community_admin_role').value = 'OrganisationAdmin';
+        }
+        if (isHubAdminCheckbox) {
+          isHubAdminCheckbox.checked = true;
+          document.querySelector('#community_admin_role').value = 'HubAdmin';
         }
         if (isBoostBotCheckbox) {
           isBoostBotCheckbox.checked = true; // Default to true for "Create"
         }
 
+        roleField.value = '';
 
         form.setAttribute('action', '/community_admins');
         form.setAttribute('method', 'post');

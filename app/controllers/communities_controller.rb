@@ -48,9 +48,14 @@ class CommunitiesController < BaseController
 
   def step1_save
     @channel_type = @community&.channel_type || params[:channel_type]
-    content_type = (current_user.user_admin? || @channel_type == "channel_feed") ?
-                    'custom_channel' :
-                    (params[:content_type] || @community&.content_type)
+    content_type =
+      if current_user.user_admin? || @channel_type == "channel_feed"
+        "custom_channel"
+      elsif @channel_type == "hub"
+        "broadcast_channel"
+      else
+        params[:content_type] || @community&.content_type
+      end
 
     @community = CommunityPostService.new.call(
       current_user,
@@ -71,7 +76,7 @@ class CommunitiesController < BaseController
     authorize_step(:step2?)
     @records = load_filtered_records(commu_admin_records_filter)
     @community_admin = CommunityAdmin.new(patchwork_community_id: @community.id)
-    invoke_bridged
+    invoke_bridged unless Rails.env.development?
   end
 
   def step3
@@ -240,7 +245,8 @@ class CommunitiesController < BaseController
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
       social_links_attributes: [:id, :icon, :name, :url, :_destroy],
       general_links_attributes: [:id, :icon, :name, :url, :_destroy],
-      patchwork_community_rules_attributes: [:id, :rule, :_destroy]
+      patchwork_community_rules_attributes: [:id, :rule, :_destroy],
+      registration_mode: [],
     )
   end
 
@@ -258,7 +264,7 @@ class CommunitiesController < BaseController
   end
 
   def redirect_after_step1_save
-    path = path = (current_user.master_admin? || current_user.user_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
+    path = path = (current_user.master_admin? || current_user.user_admin? || current_user.hub_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
     redirect_to send("#{path}_community_path", @community, channel_type: @channel_type)
   end
 
@@ -269,6 +275,7 @@ class CommunitiesController < BaseController
     end
 
     if @community.update(community_params)
+      @community.update(registration_mode: params[:registration_mode])
       respond_to(&:html)
     else
       handle_update_error(step6_community_path)
@@ -289,7 +296,7 @@ class CommunitiesController < BaseController
   def load_follower_records(is_csv: false)
     account_ids = Follow.where(target_account_id: admin_account_id).pluck(:account_id)
     return Account.where(id: account_ids) if is_csv
-    
+
     paginated_records(Account.where(id: account_ids))
   end
 
@@ -360,8 +367,10 @@ class CommunitiesController < BaseController
     if @community.channel?
       CreateCommunityInstanceDataJob.perform_later(@community) if channels_allowed?
       redirect_to communities_path(channel_type: 'channel')
-    else
+    elsif @community.channel_feed?
       redirect_to communities_path(channel_type: 'channel_feed')
+    else
+      redirect_to communities_path(channel_type: 'hub')
     end
   end
 
@@ -404,7 +413,13 @@ class CommunitiesController < BaseController
   end
 
   def default_channel_type
-    current_user.user_admin? ? 'channel_feed' : 'channel'
+    if current_user.user_admin?
+      'channel_feed'
+    elsif current_user.hub_admin?
+      'hub'
+    else
+      'channel'
+    end
   end
 
   def set_current_step
