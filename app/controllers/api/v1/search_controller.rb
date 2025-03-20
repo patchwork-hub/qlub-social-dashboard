@@ -2,9 +2,9 @@ module Api
   module V1
     class SearchController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:index]
+      before_action :check_authorization_header, only: [:search]
 
-      def index
+      def search
         query = build_query(params[:q])
         
         render json: {
