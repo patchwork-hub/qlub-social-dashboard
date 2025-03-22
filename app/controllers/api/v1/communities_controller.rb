@@ -108,6 +108,7 @@ module Api
         end
 
         if @community.update(additional_community_params)
+          @community.update(registration_mode: params[:community][:registration_mode])
           render json: Api::V1::ChannelSerializer.new(@community, include: [:patchwork_community_additional_informations, :patchwork_community_links, :patchwork_community_rules]).serializable_hash.to_json
         else
           render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
