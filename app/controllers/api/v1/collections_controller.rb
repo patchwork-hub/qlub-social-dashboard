@@ -6,6 +6,7 @@ module Api
       skip_before_action :verify_key!
       before_action :fetch_channel_details, only: [:fetch_channels]
 
+      NEWSMAST_CHANNELS_SORTING_ORDERS = ['News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
       def index
         @all_collections = fetch_all_collections
         render_collections(@all_collections, type: 'channel')
@@ -14,6 +15,12 @@ module Api
       def newsmast_collections
         patchwork_collection_ids = extract_patchwork_collection_ids
         @all_collections = fetch_collections_by_ids(patchwork_collection_ids)
+
+        # Sort collections by NEWSMAST_CHANNELS_SORTING_ORDERS
+        @all_collections = @all_collections.sort_by do |collection|
+          NEWSMAST_CHANNELS_SORTING_ORDERS.index(collection.name) || Float::INFINITY
+        end
+        
         render_collections(@all_collections, type: 'newsmast')
       end
 
