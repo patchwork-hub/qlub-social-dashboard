@@ -2,7 +2,7 @@ module Api
   module V1
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
-      before_action :authenticate_user_from_header
+      # before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update set_visibility manage_additional_information]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       before_action :set_content_and_channel_type, only: %i[index create update]
@@ -154,11 +154,11 @@ module Api
 
       def additional_community_params
         params.require(:community).permit(
+          registration_mode
           patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
           social_links_attributes: [:id, :icon, :name, :url, :_destroy],
           general_links_attributes: [:id, :icon, :name, :url, :_destroy],
-          patchwork_community_rules_attributes: [:id, :rule, :_destroy],
-          registration_mode: []
+          patchwork_community_rules_attributes: [:id, :rule, :_destroy]
         )
       end
 
