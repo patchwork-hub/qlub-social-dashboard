@@ -154,11 +154,11 @@ module Api
 
       def additional_community_params
         params.require(:community).permit(
+          registration_mode
           patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
           social_links_attributes: [:id, :icon, :name, :url, :_destroy],
           general_links_attributes: [:id, :icon, :name, :url, :_destroy],
-          patchwork_community_rules_attributes: [:id, :rule, :_destroy],
-          registration_mode: []
+          patchwork_community_rules_attributes: [:id, :rule, :_destroy]
         )
       end
 
