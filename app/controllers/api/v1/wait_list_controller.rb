@@ -4,9 +4,11 @@ module Api
   module V1
     class WaitListController < ApiController
       skip_before_action :verify_key!
+      
       def create
         wait_list = WaitList.new
         wait_list.generate_invitation_code
+        wait_list.channel_type = params[:channel_type]
         if wait_list.save!
           render json: { data: wait_list}, status: 200
         else
@@ -34,10 +36,10 @@ module Api
 
       def validate_code
         invitation_code = params[:invitation_code]
-        if invitation_code.present? && WaitList.exists?(invitation_code: invitation_code, used: false)
-          render json: { message: 'Invitation code is valid.', invitation_code: invitation_code }, status: 200
+        if invitation_code.present? && code = WaitList.find_by(invitation_code: invitation_code&.to_s, used: false, channel_type: params[:channel_type])
+          render json: { message: 'Invitation code is valid.', data: code }, status: 200
         else
-          render json: { error: 'Invalid invitation code.' }, status: 422
+          render json: { error: 'Invalid invitation code.', data: [] }, status: 422
         end
       end
 
