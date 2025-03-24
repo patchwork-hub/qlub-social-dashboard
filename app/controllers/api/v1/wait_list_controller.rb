@@ -36,7 +36,7 @@ module Api
 
       def validate_code
         invitation_code = params[:invitation_code]
-        if invitation_code.present? && code = WaitList.find_by(invitation_code: invitation_code&.to_s, used: false, channel_type: params[:channel_type])
+        if invitation_code.present? && code = WaitList.find_by(invitation_code: invitation_code&.to_s, used: false)
           render json: { message: 'Invitation code is valid.', data: code }, status: 200
         else
           render json: { error: 'Invalid invitation code.', data: [] }, status: 422
