@@ -120,6 +120,12 @@ module CommunityHelper
     !(params[:channel_type] == 'channel' && organisation_admin?)
   end
 
+  def address_url(community)
+    return nil unless valid_address?(community)
+    protocol = %w[production staging].include?(ENV.fetch('RAILS_ENV', nil)) ? 'https' : 'http'
+    "#{protocol}://#{community&.slug}.#{default_domain}"
+  end
+
   private
 
   def default_domain
@@ -131,5 +137,12 @@ module CommunityHelper
     else
       'localhost.3000'
     end
+  end
+
+  def valid_address?(community)
+    community&.slug &&
+    community&.visibility &&
+    community&.channel_type.present? && community&.channel? &&
+    %w[production].include?(ENV.fetch('RAILS_ENV', nil))
   end
 end
