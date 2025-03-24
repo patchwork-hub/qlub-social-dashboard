@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_20_090740) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_24_090740) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -996,6 +996,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_20_090740) do
     t.string "platform_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "mute", default: false, null: false
     t.index ["account_id"], name: "index_patchwork_notification_tokens_on_account_id"
   end
 
