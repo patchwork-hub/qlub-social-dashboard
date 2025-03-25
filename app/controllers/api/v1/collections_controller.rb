@@ -35,7 +35,7 @@ module Api
       private
 
       def fetch_all_collections
-        collections = Collection.filter_channels.order(sorting_index: :asc).to_a
+        collections = Collection.filter_channels.distinct.order(sorting_index: :asc).to_a
         add_all_collection(collections)
       end
 
