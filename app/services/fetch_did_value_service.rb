@@ -23,7 +23,7 @@ class FetchDidValueService < BaseService
 
   def community_slug_url
     return unless @community&.slug
-    domain = @community.is_custom_domain? ? @community.slug : "#{community.slug}.channel.org"
+    domain = @community.is_custom_domain? ? @community.slug : "#{@community.slug}.channel.org"
     puts "[FetchDidValueService] url: https://fed.brid.gy/ap/@#{domain}"
 
     "https://fed.brid.gy/ap/@#{domain}"
