@@ -29,6 +29,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @channel_type = get_channel_type(community)
     @single_user_mode = (community.hub? && community.registration_mode == 'none').to_s
     @registration_mode = community.registration_mode
+    @ip_address = community.ip_address&.ip
 
     payload = build_payload(community_id, community_slug)
     puts payload
@@ -109,7 +110,8 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       CHANNEL_TYPE: @channel_type,
       IS_CUSTOM_DOMAIN: @is_custom_domain,
       REGISTRATION_MODE: @registration_mode,
-      SINGLE_USER_MODE: @single_user_mode
+      SINGLE_USER_MODE: @single_user_mode,
+      IP_ADDRESS: @ip_address
     }.to_json
   end
 
