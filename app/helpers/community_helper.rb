@@ -122,8 +122,13 @@ module CommunityHelper
 
   def address_url(community)
     return nil unless valid_address?(community)
+
     protocol = %w[production staging].include?(ENV.fetch('RAILS_ENV', nil)) ? 'https' : 'http'
-    "#{protocol}://#{community&.slug}.#{default_domain}"
+    if community&.is_custom_domain
+      "#{protocol}://#{community&.slug}"
+    else
+      "#{protocol}://#{community&.slug}.#{default_domain}"
+    end
   end
 
   private

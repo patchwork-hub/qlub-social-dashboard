@@ -6,7 +6,7 @@ module Api
       skip_before_action :verify_key!
       before_action :fetch_channel_details, only: [:fetch_channels]
 
-      NEWSMAST_CHANNELS_SORTING_ORDERS = ['News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
+      NEWSMAST_CHANNELS_SORTING_ORDERS = ['All', 'News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
       def index
         @all_collections = fetch_all_collections
         render_collections(@all_collections, type: 'channel')
@@ -35,7 +35,7 @@ module Api
       private
 
       def fetch_all_collections
-        collections = Collection.order(sorting_index: :asc).to_a
+        collections = Collection.filter_channels.distinct.order(sorting_index: :asc).to_a
         add_all_collection(collections)
       end
 
