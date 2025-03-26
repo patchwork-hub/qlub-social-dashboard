@@ -31,8 +31,7 @@ class CommunityPostService < BaseService
       set_default_additional_information
       assign_roles_and_content_type
       Rails.logger.info "IP Address ID: #{@options[:ip_address_id]}"
-      ip = IpAddress.find_by(id: @options[:ip_address_id])
-      ip&.increment_use_count!
+      ip = IpAddress.find_by(id: @options[:ip_address_id])&.increment_use_count! unless @options[:channel_type] == 'channel_feed'
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -201,7 +200,7 @@ class CommunityPostService < BaseService
       patchwork_community_type_id: @community_type.id,
       channel_type: @options[:channel_type],
       is_custom_domain: @options[:is_custom_domain],
-      ip_address_id: @options[:ip_address_id],
+      ip_address_id: @options[:ip_address_id] unless @options[:channel_type] == 'channel_feed',
     }
 
     if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)
