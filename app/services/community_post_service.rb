@@ -30,7 +30,9 @@ class CommunityPostService < BaseService
       @community.save!
       set_default_additional_information
       assign_roles_and_content_type
-      IpAddress.find_by(id: @options[:ip_address_id]).increment_use_count!
+      Rails.logger.info "IP Address ID: #{@options[:ip_address_id]}"
+      ip = IpAddress.find_by(id: @options[:ip_address_id])
+      ip&.increment_use_count!
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
