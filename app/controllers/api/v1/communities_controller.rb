@@ -20,7 +20,7 @@ module Api
 
         community = CommunityPostService.new.call(
           current_user,
-          community_params.merge(content_type: @content_type)
+          community_params.merge(content_type: @content_type, channel_type: @channel_type)
         )
 
         if community.errors.any?
