@@ -29,7 +29,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @channel_type = get_channel_type(community)
     @single_user_mode = (community.hub? && community.registration_mode == 'none').to_s
     @registration_mode = community.registration_mode
-    @ip_address = community.ip_address&.ip
+    @ip_address = community.ip_address&.private_ip
 
     payload = build_payload(community_id, community_slug)
     puts payload
