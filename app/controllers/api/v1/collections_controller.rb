@@ -6,7 +6,7 @@ module Api
       skip_before_action :verify_key!
       before_action :fetch_channel_details, only: [:fetch_channels]
 
-      NEWSMAST_CHANNELS_SORTING_ORDERS = ['All', 'News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
+      NEWSMAST_CHANNELS_SORTING_ORDERS = ['Newsmast Channels', 'News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
       def index
         @all_collections = fetch_all_channels_by_type(type: 'channel')
         render_collections(@all_collections, type: 'channel')
@@ -114,7 +114,7 @@ module Api
       end
 
       def add_all_collection(collections, type:)
-        name = case params[:type]
+        name = case type
                   when 'channel'
                     'Communities'
                   when 'channel_feed'
