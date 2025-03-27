@@ -38,11 +38,11 @@
           - if @community.channel? || @community.hub?
             .mb-3.form-group.position-relative.password
               = f.label :password, class: "form-label"
-              = f.password_field :password, class: "form-control", id: "community_admin_password"
+              = f.password_field :password, class: "form-control", id: "community_admin_password", readonly: is_disable
               %i.fa-solid.fa-eye-slash.red{onclick: 'togglePassword(this)'}
-          .modal-footer
-            %div.d-flex.justify-content-end
-              .col
-                %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
-              .col
-                = f.submit 'Save changes', class: 'btn btn-danger'
+          -#.modal-footer
+              %div.d-flex.justify-content-end
+                .col
+                  %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
+                .col
+                  = f.submit 'Save changes', class: 'btn btn-danger'
