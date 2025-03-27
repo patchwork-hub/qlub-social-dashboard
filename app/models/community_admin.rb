@@ -21,6 +21,8 @@ class CommunityAdmin < ApplicationRecord
 
   validate :require_admin_role_or_boost_bot, if: :community_is_channel?
 
+  enum account_status: { active: 0, suspended: 1, deleted: 2 }
+
   private
 
   def require_admin_role_or_boost_bot

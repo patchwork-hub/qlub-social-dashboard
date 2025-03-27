@@ -3,8 +3,8 @@ module Api
     class CommunityAdminsController < ApiController
       skip_before_action :verify_key!
       before_action :authenticate_with_token!, only: %i[boost_bot_accounts]
-      before_action :authenticate_user_from_header, except: :boost_bot_accounts
-      before_action :set_community, except: :boost_bot_accounts
+      before_action :authenticate_user_from_header, except: %i[boost_bot_accounts]
+      before_action :set_community,except: %i[boost_bot_accounts modify_account_status]
       before_action :set_community_admin, only: %i[show update]
 
       def boost_bot_accounts
@@ -30,6 +30,23 @@ module Api
         end
       end
 
+      def modify_account_status
+        @community_admin = current_account&.community_admin
+      byebug
+        unless @community_admin || params[:account_status].present?
+          render json: { error: 'Account not found' }, status: :not_found
+          return
+        end
+      
+        if @community_admin.update(account_status: params[:account_status])
+          handle_account_status_change(@community_admin)
+        else
+          render json: { errors: @community_admin.errors.full_messages }, status: :unprocessable_entity
+        end
+      rescue StandardError => e
+        render json: { error: "Unexpected error in modify_account_status: #{e.message}" }, status: :internal_server_error
+      end
+
       private
 
       def authenticate_with_token!
@@ -40,7 +57,7 @@ module Api
       end
 
       def boost_bot_accounts_list
-        community_admins = CommunityAdmin.where(is_boost_bot: true)
+        community_admins = CommunityAdmin.where(is_boost_bot: true, account_status: 0)
 
         result = {}
 
@@ -83,6 +100,18 @@ module Api
       def set_community
         p "COMMUNITY_PARAMS: #{params[:community_id]}"
         @community = Community.find(params[:community_id])
+      end
+
+      def handle_account_status_change(community_admin)
+        case community_admin.account_status
+        when 'deleted'
+          community_admin.community.update(visibility: nil)
+          render json: { message: 'Account has been successfully deleted.' }, status: :ok
+        when 'suspended'
+          render json: { message: 'Account has been successfully suspended.' }, status: :ok
+        else
+          render json: { message: 'Account status updated successfully.' }, status: :ok
+        end
       end
     end
   end

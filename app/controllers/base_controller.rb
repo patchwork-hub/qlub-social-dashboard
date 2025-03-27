@@ -21,7 +21,7 @@ class BaseController < ApplicationController
   end
 
   def get_community_admin_id
-    CommunityAdmin.where(patchwork_community_id: @community.id, is_boost_bot: true).pluck(:account_id).first
+    CommunityAdmin.where(patchwork_community_id: @community.id, is_boost_bot: true, account_status: 0).pluck(:account_id).first
   end
 
   def fetch_oauth_token(user_id)
