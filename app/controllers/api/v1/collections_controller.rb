@@ -8,7 +8,7 @@ module Api
 
       NEWSMAST_CHANNELS_SORTING_ORDERS = ['All', 'News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
       def index
-        @all_collections = fetch_all_collections
+        @all_collections = fetch_all_channels_by_type(type: 'channel')
         render_collections(@all_collections, type: 'channel')
       end
 
@@ -24,9 +24,14 @@ module Api
         render_collections(@all_collections, type: 'newsmast')
       end
 
+      def channel_feed_collections
+        @all_collections = fetch_all_channels_by_type(type: 'channel_feed')
+        render_collections(@all_collections, type: 'channel_feed')
+      end
+
       def fetch_channels
         if @channels
-          render json: serialized_channels(@channels, params[:type])
+          render json: serialized_channels(@channels,type: params[:type])
         else
           render json: { data: [] }
         end
@@ -34,9 +39,13 @@ module Api
 
       private
 
-      def fetch_all_collections
-        collections = Collection.filter_channels.distinct.order(sorting_index: :asc).to_a
-        add_all_collection(collections)
+      def fetch_all_channels_by_type(type:)
+        collections = if type == 'channel'
+          Collection.filter_channels.distinct.order(sorting_index: :asc).to_a
+        else
+          Collection.filter_channel_feeds.distinct.order(sorting_index: :asc).to_a
+        end
+        add_all_collection(collections, type: type)
       end
 
       def extract_patchwork_collection_ids
@@ -47,7 +56,7 @@ module Api
 
       def fetch_collections_by_ids(ids)
         collections = Collection.where(id: ids).order(sorting_index: :asc).to_a
-        add_all_collection(collections)
+        add_all_collection(collections, type: 'newsmast')
       end
 
       def render_collections(collections, type:)
@@ -56,8 +65,8 @@ module Api
         ).serializable_hash.to_json
       end
 
-      def serialized_channels(channels, type)
-        if type == 'channel'
+      def serialized_channels(channels, type:)
+        if type == 'channel' || type == 'channel_feed'
           Api::V1::ChannelSerializer.new(channels).serializable_hash.to_json
         else
           channels
@@ -70,7 +79,7 @@ module Api
         @channels = if params[:type] == 'newsmast'
                       fetch_newsmast_channels
                     else
-                      fetch_communities
+                      fetch_communities(type:  params[:type])
                     end
       end
 
@@ -87,20 +96,36 @@ module Api
         end
       end
 
-      def fetch_communities
-        if params[:slug] == 'all-collection'
-          Community.filter_channels.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
+      def fetch_communities(type:)
+        base_communities = if params[:slug] == 'all-collection'
+          Community.all
         else
-          Collection.find_by(slug: params[:slug])&.patchwork_communities&.filter_channels
-                   .exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
+          Collection.find_by(slug: params[:slug])&.patchwork_communities
         end
+        return [] unless base_communities
+
+        scope = type == 'channel' ? :filter_channels : :filter_channel_feeds
+
+        base_communities
+        .public_send(scope)
+        .exclude_array_ids
+        .exclude_incomplete_channels
+        .ordered_pos_name
       end
 
-      def add_all_collection(collections)
+      def add_all_collection(collections, type:)
+        name = case params[:type]
+                  when 'channel'
+                    'Communities'
+                  when 'channel_feed'
+                    'Channels'
+                  else
+                    'Newsmast Channels'
+                end
         collections.unshift(
           Collection.new(
             id: (collections.last&.id || 1) + 1,
-            name: "All",
+            name: name,
             slug: "all-collection",
             sorting_index: 0,
             created_at: nil,

@@ -34,6 +34,7 @@ class Collection < ApplicationRecord
       .order('patchwork_collections.sorting_index ASC')
   }
 
-  scope :filter_channels, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
+  scope :filter_channels, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel] }).where.not(patchwork_communities: { visibility: nil }) }
+  scope :filter_channel_feeds, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }).where.not(patchwork_communities: { visibility: nil }) }
 
 end
