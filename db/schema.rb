@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_26_102145) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_27_102145) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -861,6 +861,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_26_102145) do
     t.bigint "account_id"
     t.string "role"
     t.boolean "is_boost_bot", default: false, null: false
+    t.integer "account_status", default: 0, null: false
     t.index ["account_id", "patchwork_community_id"], name: "unique_community_admin_index", unique: true
     t.index ["account_id"], name: "index_patchwork_communities_admins_on_account_id"
     t.index ["patchwork_community_id"], name: "index_patchwork_communities_admins_on_patchwork_community_id"

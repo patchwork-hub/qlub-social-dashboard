@@ -7,6 +7,7 @@ module Api
       before_action :fetch_channel_details, only: [:fetch_channels]
 
       NEWSMAST_CHANNELS_SORTING_ORDERS = ['Newsmast Channels', 'News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
+     
       def index
         @all_collections = fetch_all_channels_by_type(type: 'channel')
         render_collections(@all_collections, type: 'channel')
