@@ -262,35 +262,45 @@ const togglePassword = (e) => {
 
 window.togglePassword = togglePassword;
 
-document.addEventListener('DOMContentLoaded', function() {
-  const createInvitationCodeBtn = document.getElementById('create-invitation-code-btn');
-  if (createInvitationCodeBtn) {
-    createInvitationCodeBtn.addEventListener('click', function() {
-      $.ajax({
-        url: '/api/v1/wait_list',
-        type: 'POST',
-        dataType: 'json',
-        success: function(response) {
-          if (response.data) {
-            const alertBox = document.createElement('div');
-            alertBox.className = 'bg-primary p-1';
-            const alertHeading = document.createElement('p');
-            alertHeading.className = 'mb-0 text-center';
-            alertHeading.textContent = "Generated code: " + response.data.invitation_code;
-            alertBox.appendChild(alertHeading);
-            const cardTools = document.querySelector('.card-tools');
-            if (cardTools) {
-              cardTools.appendChild(alertBox); // Append the alert box to the .card-tools element
+document.addEventListener('DOMContentLoaded', function () {
+  // Reusable function to handle code generation
+  function handleCodeGeneration(buttonId, channelType) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+      button.addEventListener('click', function () {
+        $.ajax({
+          url: `/api/v1/wait_list?channel_type=${channelType}`,
+          type: 'POST',
+          dataType: 'json',
+          success: function (response) {
+            if (response.data) {
+              const alertBox = document.createElement('div');
+              alertBox.className = 'bg-primary p-1';
+              const alertHeading = document.createElement('p');
+              alertHeading.className = 'mb-0 text-center';
+              alertHeading.textContent = "Generated code: " + response.data.invitation_code;
+              alertBox.appendChild(alertHeading);
+              const cardTools = document.querySelector('.card-tools');
+              if (cardTools) {
+                cardTools.appendChild(alertBox); // Append the alert box to the .card-tools element
+              }
+              setTimeout(() => {
+                location.reload();
+              }, 3000); // Reload the page after 3 seconds
             }
-            // setTimeout(() => {
-            //   location.reload();
-            // }, 3000); // Reload the page after 3 seconds
+          },
+          error: function (xhr) {
+            alert('Error: ' + xhr.responseText);
           }
-        },
-        error: function(xhr) {
-          alert('Error: ' + xhr.responseText);
-        }
+        });
+
+
+
       });
-    });
+    }
   }
+
+  // Attach event listeners for the buttons
+  handleCodeGeneration('create-channel-code-btn', 'channel');
+  handleCodeGeneration('create-hub-code-btn', 'hub');
 });
