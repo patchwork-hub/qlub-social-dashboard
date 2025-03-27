@@ -191,7 +191,7 @@ module Api
       end
 
       def fetch_contributors(type)
-        account_ids = CommunityAdmin.where(patchwork_community_id: @patchwork_community_id).pluck(:account_id)
+        account_ids = CommunityAdmin.where(patchwork_community_id: @patchwork_community_id, account_status: 0).pluck(:account_id)
 
         account_ids =
           case type

@@ -25,7 +25,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @links = prepare_links(community)
     @header_image = community.banner_image.url
     @logo_image = community.logo_image.url
-    @contact_email = CommunityAdmin.where(patchwork_community_id: community_id).pluck(:email).first
+    @contact_email = CommunityAdmin.where(patchwork_community_id: community_id, account_status: 0).pluck(:email).first
     @channel_type = get_channel_type(community)
     @single_user_mode = (community.hub? && community.registration_mode == 'none').to_s
     @registration_mode = community.registration_mode
@@ -46,7 +46,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
   end
 
   def prepare_admins(community_id)
-    admins = CommunityAdmin.where(patchwork_community_id: community_id)
+    admins = CommunityAdmin.where(patchwork_community_id: community_id, account_status: 0)
                 .select(:display_name, :email, :username, :password, :id)
 
     admins.each_with_object({}) do |admin, hash|

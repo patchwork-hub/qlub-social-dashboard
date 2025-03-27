@@ -228,7 +228,7 @@ class CommunitiesController < BaseController
   end
 
   def fetch_community_admins
-    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id)
+    @community_admins = CommunityAdmin.where(patchwork_community_id: @community.id, account_status: 0)
   end
 
   # Parameter handling
