@@ -57,7 +57,7 @@ module Api
       end
 
       def boost_bot_accounts_list
-        community_admins = CommunityAdmin.where(is_boost_bot: true)
+        community_admins = CommunityAdmin.where(is_boost_bot: true, account_status: 0)
 
         result = {}
 
