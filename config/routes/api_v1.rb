@@ -43,6 +43,7 @@ namespace :api, defaults: { format: :json } do
     resources :community_admins, only: %i[index show update] do
       collection do
         get :boost_bot_accounts
+        post :modify_account_status
       end
     end
 
