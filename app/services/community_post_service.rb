@@ -33,6 +33,7 @@ class CommunityPostService < BaseService
       assign_roles_and_content_type
       Rails.logger.info "IP Address ID: #{@options[:ip_address_id]}"
       IpAddress.find_by(id: @options[:ip_address_id])&.increment_use_count! if @options[:channel_type] != 'channel_feed' && @options[:ip_address_id].present?
+      set_default_hashtag if @community.channel_feed?
       @community
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -118,6 +119,26 @@ class CommunityPostService < BaseService
         )
       end
     end
+  end
+
+  def set_default_hashtag
+    hashtag = "#{@community.slug.split('_').map(&:capitalize).join}Channel"
+    community_id = @community.id
+
+    CommunityHashtagPostService.new.call(hashtag: hashtag, community_id: community_id)
+
+    ManageHashtagService.new(
+      hashtag,
+      :follow,
+      ENV['MASTODON_INSTANCE_URL'],
+      fetch_oauth_token(@current_user.id),
+      community_id
+    ).call
+  end
+
+  def fetch_oauth_token(user_id)
+    token_service = GenerateAdminAccessTokenService.new(user_id)
+    token_service.call
   end
 
   def assign_roles_and_content_type

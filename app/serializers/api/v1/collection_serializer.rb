@@ -14,8 +14,10 @@ class Api::V1::CollectionSerializer
   attribute :community_count do |object, params|
     if params[:type] == 'newsmast'
       newsmast_community_count(object)
+    elsif params[:type] == 'channel_feed'
+      default_community_count(object, params)
     else
-      default_community_count(object)
+      default_community_count(object, params)
     end
   end
 
@@ -30,6 +32,8 @@ class Api::V1::CollectionSerializer
   attribute :channels do |object, params|
     if params[:type] == 'newsmast'
       newsmast_channels(object)
+    elsif params[:type] == 'channel_feed'
+      default_channels(object, params)
     else
       default_channels(object, params)
     end
@@ -45,9 +49,11 @@ class Api::V1::CollectionSerializer
     end
   end
 
-  def self.default_community_count(object)
-    if object.slug == "all-collection"
+  def self.default_community_count(object, params)
+    if object.slug == "all-collection" && params[:type] == 'channel'
       Community.filter_channels.exclude_array_ids.exclude_incomplete_channels.size
+    elsif object.slug == "all-collection" && params[:type] == 'channel_feed'
+      Community.filter_channel_feeds.exclude_array_ids.exclude_incomplete_channels.size
     else
       object.patchwork_communities.exclude_array_ids.filter_channels.exclude_incomplete_channels.size
     end
@@ -62,10 +68,19 @@ class Api::V1::CollectionSerializer
   end
 
   def self.default_channels(object, params)
-    communities = params[:recommended] ? 
-      object.patchwork_communities.exclude_array_ids.exclude_incomplete_channels.recommended : 
-      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
-
+    communities = case params[:type]
+                  when 'channel'
+                    if params[:recommended]
+                      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.recommended
+                    else
+                      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
+                    end
+                  when 'channel_feed'
+                    object.patchwork_communities.filter_channel_feeds.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
+                  else
+                    []
+                  end
+  
     Api::V1::ChannelSerializer.new(communities).serializable_hash
   end
 

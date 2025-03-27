@@ -36,6 +36,7 @@ namespace :api, defaults: { format: :json } do
       collection do
         get :fetch_channels
         get :newsmast_collections
+        get :channel_feed_collections
       end
     end
 
