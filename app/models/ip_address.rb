@@ -1,5 +1,5 @@
 class IpAddress < ApplicationRecord
-  LIMIT_USAGE = 10
+  LIMIT_USAGE = 15
   RESERVATION_WINDOW = 1.hour
   has_many :communities
 
