@@ -49,7 +49,7 @@
               .pagination.pagination-sm.m-0.float-right
                 = paginate @wait_lists, theme: 'bootstrap4'
           .row.mt-4
-            .col-12.d-flex.justify-content-center
+            .col-8.d-flex.justify-content-center
               %div.btn-group
                 %button.btn.btn-danger.ml-3{ id: "create-channel-code-btn" }
                   Generate channel code
@@ -57,3 +57,4 @@
                 %button.btn.btn-danger.ml-3{ id: "create-hub-code-btn" }
                   Generate hub code
                   = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
+            .col-4.d-flex.justify-content-center.preview_code
