@@ -74,6 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
         methodInput.setAttribute("value", "patch");
 
         document.querySelector(".modal-title").innerHTML = "Edit channel admin";
+        const modalFooter = form.querySelector(".modal-footer");
+        if (modalFooter) modalFooter.style.display = "none";
+        if (passwordField) passwordField.disabled = true;
       } else {
         // Create mode: set checkboxes to default true
         if (isOrganisationAdminCheckbox) {
@@ -103,6 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelector(".modal-title").innerHTML =
           "Create channel admin";
+
+        if (passwordField) passwordField.disabled = false;
       }
     });
   });
