@@ -32,7 +32,6 @@ module Api
 
       def modify_account_status
         @community_admin = current_account&.community_admin
-      byebug
         unless @community_admin || params[:account_status].present?
           render json: { error: 'Account not found' }, status: :not_found
           return
