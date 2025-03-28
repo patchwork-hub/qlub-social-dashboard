@@ -48,15 +48,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // Edit mode: set checkboxes based on existing admin data
         if (isOrganisationAdminCheckbox) {
           isOrganisationAdminCheckbox.checked = role === "OrganisationAdmin";
-          isOrganisationAdminCheckbox.disabled = true;
         }
         if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = role === "HubAdmin";
-          isHubAdminCheckbox.disabled = true;
         }
         if (isBoostBotCheckbox) {
           isBoostBotCheckbox.checked = isBoostBot;
-          isBoostBotCheckbox.disabled = true;
         }
 
         form.setAttribute("action", "/community_admins/" + adminId);
@@ -74,9 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         methodInput.setAttribute("value", "patch");
 
         document.querySelector(".modal-title").innerHTML = "Edit channel admin";
-        const modalFooter = form.querySelector(".modal-footer");
-        if (modalFooter) modalFooter.style.display = "none";
-        if (passwordField) passwordField.disabled = true;
       } else {
         // Create mode: set checkboxes to default true
         if (isOrganisationAdminCheckbox) {
@@ -106,8 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelector(".modal-title").innerHTML =
           "Create channel admin";
-
-        if (passwordField) passwordField.disabled = false;
       }
     });
   });
