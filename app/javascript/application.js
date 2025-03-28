@@ -275,18 +275,18 @@ document.addEventListener('DOMContentLoaded', function () {
           success: function (response) {
             if (response.data) {
               const alertBox = document.createElement('div');
-              alertBox.className = 'bg-primary p-1';
-              const alertHeading = document.createElement('p');
-              alertHeading.className = 'mb-0 text-center';
+              alertBox.className = 'w-100 rounded text-center';
+              const alertHeading = document.createElement('span');
+              alertHeading.className = 'd-block p-2 bg-secondary bg-gradient text-white w-100 rounded';
               alertHeading.textContent = "Generated code: " + response.data.invitation_code;
               alertBox.appendChild(alertHeading);
-              const cardTools = document.querySelector('.card-tools');
+              const cardTools = document.querySelector('.preview_code');
               if (cardTools) {
                 cardTools.appendChild(alertBox); // Append the alert box to the .card-tools element
               }
               setTimeout(() => {
                 location.reload();
-              }, 3000); // Reload the page after 3 seconds
+              }, 5000); // Reload the page after 3 seconds
             }
           },
           error: function (xhr) {
