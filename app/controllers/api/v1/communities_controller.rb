@@ -91,6 +91,7 @@ module Api
 
       def set_visibility
         authorize @community, :set_visibility?
+        CreateCommunityInstanceDataJob.perform_later(@community) if @community.hub? && ENV['ALLOW_CHANNELS_CREATION'] == 'true'
         if @community.visibility.nil?
           @community.update(visibility: 'public_access')
           render json: { message: "Channel created successfully" }, status: :ok
