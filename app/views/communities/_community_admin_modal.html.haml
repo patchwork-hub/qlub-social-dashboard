@@ -1,4 +1,3 @@
-- is_disable = true
 .modal.fade#communityAdminModal{ tabindex: '-1', aria: { labelledby: 'communityAdminModalLabel', hidden: 'true' } }
   .modal-dialog
     .modal-content
@@ -20,17 +19,17 @@
             .row.mb-3
               .col
                 .form-check
-                  = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', readonly: is_disable, onchange: "updateRoleField(this)"
+                  = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', onchange: "updateRoleField(this)"
                   = f.label :role, "Organisation admin", class: "form-check-label", for: 'is_organisation_admin'
               .col
                 .form-check
-                  = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot', readonly: is_disable
+                  = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'
                   = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
           - if @community.hub?
             .row.mb-3
               .col
                 .form-check
-                  = check_box_tag 'is_hub_admin', 'hub_admin', @community_admin.role == 'HubAdmin', class: 'form-check-input red-check-box', id: 'is_hub_admin', readonly: is_disable, onchange: "updateRoleField(this)"
+                  = check_box_tag 'is_hub_admin', 'hub_admin', @community_admin.role == 'HubAdmin', class: 'form-check-input red-check-box', id: 'is_hub_admin', onchange: "updateRoleField(this)"
                   = f.label :role, "Hub admin", class: "form-check-label", for: 'is_hub_admin'
           .mb-3
             = f.label :email, class: "form-label"
@@ -38,9 +37,9 @@
           - if @community.channel? || @community.hub?
             .mb-3.form-group.position-relative.password
               = f.label :password, class: "form-label"
-              = f.password_field :password, class: "form-control", id: "community_admin_password", readonly: is_disable
+              = f.password_field :password, class: "form-control", id: "community_admin_password"
               %i.fa-solid.fa-eye-slash.red{onclick: 'togglePassword(this)'}
-          -#.modal-footer
+            .modal-footer
               %div.d-flex.justify-content-end
                 .col
                   %button.btn.btn-secondary{"data-dismiss" => "modal", :type => "button"} Cancel
