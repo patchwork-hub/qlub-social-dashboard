@@ -49,21 +49,17 @@
       #hashtags-section
         .card
           .card-body
-            .row.d-flex.justify-content-between
-              .col-auto
-                .row
-                  %label Hashtags
+            .row.d-flex.align-items-center.justify-content-between
+              .col
+                %label Hashtags
                 - if @community.channel_feed?
-                  .row
-                    .mt-auto
-                      %p.text-muted.small Anyone can join the conversation by adding your Channel hashtag to their posts. Here’s the preset channel hashtag. If you’d like to change this or add an additional hashtag, email support@newsmast.org.
+                  %p.text-muted.small Anyone can join the conversation by adding your Channel hashtag to their posts. Here’s the preset channel hashtag. If you’d like to change this or add an additional hashtag, email support@newsmast.org.
                 - else
-                  .row
-                    .mt-auto
-                      %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your channel.
-                  .col-auto.d-flex.flex-column.justify-content-end
-                    .mt-auto
-                      %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add new
+                  %p.text-muted.small Add hashtags from the wider network to bring relevant posts into your channel.
+              .col-auto
+                %button.btn.btn-outline-secondary{type: "button", "data-target" => "#hashtagModal", "data-toggle" => "modal"} Add new
+
+
             .table-responsive
               %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
                 %thead
@@ -85,13 +81,12 @@
                         = check_box_tag "selected_accounts[]", community_hashtag.id, false, class: 'select_hashtag'
                       %td{ style: 'width: 90%;' }
                         = "##{community_hashtag.hashtag}"
-                        - unless @community.channel_feed?
-                          %td
-                            %a{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
-                              = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
-                          %td
-                            = link_to community_community_hashtag_path(id: community_hashtag.id, community_id: @community.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow' do
-                              = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
+                        %td
+                          %a{ href: '#', "data-toggle" => "modal", "data-target" => "#editHashtagModal", "data-id" => community_hashtag.id, "data-hashtag" => community_hashtag.hashtag }
+                            = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
+                        %td
+                          = link_to community_community_hashtag_path(id: community_hashtag.id, community_id: @community.id), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-danger', title: 'Delete', rel: 'nofollow' do
+                            = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")
             .pagination.pagination-sm.m-0.float-right
               = paginate @records, theme: 'bootstrap4'
       #contributors-section
