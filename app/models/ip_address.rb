@@ -8,7 +8,7 @@ class IpAddress < ApplicationRecord
   def self.valid_ip
     ip = where("use_count < ?", LIMIT_USAGE)
          .where("reserved_at IS NULL OR reserved_at < ?", RESERVATION_WINDOW.ago)
-         .order(:use_count)
+         .order(id: :asc, use_count: :desc)
          .limit(1)
          .first
 
