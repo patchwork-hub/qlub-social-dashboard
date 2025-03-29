@@ -13,6 +13,8 @@ gem "jbuilder"
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 gem "bootsnap", require: false
 gem "sassc-rails"
+# Annotates modules with schema
+gem 'annotaterb', '~> 4.14'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
@@ -23,9 +25,6 @@ group :development do
   gem "byebug"
   gem "better_errors"
   gem "binding_of_caller"
-  
-  # Annotates modules with schema
-  gem 'annotaterb', '~> 4.14'
 end
 
 group :test do
