@@ -122,7 +122,7 @@ class CommunityPostService < BaseService
   end
 
   def set_default_hashtag
-    hashtag = "#{@community.slug.split('_').map(&:capitalize).join}Channel"
+    hashtag = "#{@community.slug.split('-').map(&:capitalize).join}Channel"
     community_id = @community.id
 
     CommunityHashtagPostService.new.call(hashtag: hashtag, community_id: community_id)
