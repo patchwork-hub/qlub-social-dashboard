@@ -75,3 +75,4 @@ namespace :api, defaults: { format: :json } do
     get 'social_icons',  to: 'community_links#social'
   end
 end
+
