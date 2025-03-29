@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: server_settings
+#
+#  id             :bigint           not null, primary key
+#  deleted_at     :datetime
+#  name           :string
+#  optional_value :string
+#  position       :integer
+#  value          :boolean
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  parent_id      :bigint
+#
 class ServerSetting < ApplicationRecord
   validates :name, presence: true
 

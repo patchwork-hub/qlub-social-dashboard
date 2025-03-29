@@ -1,3 +1,31 @@
+# == Schema Information
+#
+# Table name: patchwork_communities_admins
+#
+#  id                     :bigint           not null, primary key
+#  account_status         :integer          default("active"), not null
+#  display_name           :string
+#  email                  :string
+#  is_boost_bot           :boolean          default(FALSE), not null
+#  password               :string
+#  role                   :string
+#  username               :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  account_id             :bigint
+#  patchwork_community_id :bigint           not null
+#
+# Indexes
+#
+#  index_patchwork_communities_admins_on_account_id              (account_id)
+#  index_patchwork_communities_admins_on_patchwork_community_id  (patchwork_community_id)
+#  unique_community_admin_index                                  (account_id,patchwork_community_id) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id) ON DELETE => cascade
+#  fk_rails_...  (patchwork_community_id => patchwork_communities.id)
+#
 class CommunityAdmin < ApplicationRecord
   self.table_name = 'patchwork_communities_admins'
   belongs_to :community, foreign_key: 'patchwork_community_id'

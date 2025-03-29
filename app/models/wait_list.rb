@@ -1,5 +1,29 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: patchwork_wait_lists
+#
+#  id              :bigint           not null, primary key
+#  channel_type    :integer          default("channel"), not null
+#  confirmed_at    :datetime
+#  description     :text
+#  email           :text
+#  invitation_code :text             not null
+#  used            :boolean          default(FALSE)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  account_id      :bigint
+#
+# Indexes
+#
+#  index_patchwork_wait_lists_on_account_id       (account_id)
+#  index_patchwork_wait_lists_on_invitation_code  (invitation_code) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (account_id => accounts.id)
+#
 class WaitList < ApplicationRecord
   self.table_name = 'patchwork_wait_lists'
   belongs_to :account, class_name: 'Account', optional: true
