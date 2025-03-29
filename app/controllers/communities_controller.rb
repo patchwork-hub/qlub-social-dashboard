@@ -367,11 +367,16 @@ class CommunitiesController < BaseController
     # DashboardMailer.channel_created(@community, admin_email).deliver_now
     if @community.channel? || @community.hub?
       CreateCommunityInstanceDataJob.perform_later(@community) if channels_allowed?
-      redirect_to communities_path(channel_type: 'channel')
+
+      channel_type = if @community.channel?
+                       'channel'
+                     elsif @community.hub?
+                       'hub'
+                     end
+
+      redirect_to communities_path(channel_type: channel_type)
     elsif @community.channel_feed?
       redirect_to communities_path(channel_type: 'channel_feed')
-    else
-      redirect_to communities_path(channel_type: 'hub')
     end
   end
 
