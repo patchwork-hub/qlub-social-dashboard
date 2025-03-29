@@ -50,6 +50,7 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV app_path /usr/app
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true
+ENV RAILS_ENV production
 
 ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so
 
