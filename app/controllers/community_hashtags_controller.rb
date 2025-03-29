@@ -4,9 +4,6 @@ class CommunityHashtagsController < BaseController
   before_action :set_api_credentials
   before_action :set_hashtag, only: [:update, :destroy]
 
-  rescue_from ActiveRecord::RecordNotFound, with: :handle_record_not_found
-  rescue_from CommunityHashtagPostService::InvalidHashtagError, with: :handle_invalid_hashtag
-
   def create
     begin
       perform_hashtag_action(community_hashtag_params[:hashtag].gsub('#', ''), community_hashtag_params[:community_id], :follow)
