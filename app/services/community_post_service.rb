@@ -173,7 +173,7 @@ class CommunityPostService < BaseService
   end
 
   def set_community_admin
-    community_admin = @community.community_admins.find_by(email: @current_user.email)
+    community_admin = CommunityAdmin.find_by(email: @current_user.email)
     community_admin.update(
       account_id: @account.id,
       username: @account.username,
