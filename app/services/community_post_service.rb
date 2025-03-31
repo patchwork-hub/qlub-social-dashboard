@@ -176,6 +176,7 @@ class CommunityPostService < BaseService
     community_admin = CommunityAdmin.find_by(email: @current_user.email)
     community_admin.update(
       account_id: @account.id,
+      patchwork_community_id: @community.id,
       username: @account.username,
       display_name: @community.name,
       role: @current_user&.role&.name,
