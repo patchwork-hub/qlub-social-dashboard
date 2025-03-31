@@ -48,7 +48,10 @@
                           %i.fa-solid.fa-check
                         %span.slider-cross
                           %i.fa-solid.fa-xmark
-                    %span.ml-2 Closed to new users
+                    - if @community.channel?
+                      %span.ml-2 Closed to new users
+                    - elsif @community.hub?
+                      %span.ml-2 Single user
                     %span.ml-2
                       = render 'shared/tooltip_custom', tooltip_text: 'New registrations are completely disabled, and no one can sign up until it’s opened.', tooltip_position: 'right'
 
