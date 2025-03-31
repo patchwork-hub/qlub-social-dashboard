@@ -1,3 +1,23 @@
+# == Schema Information
+#
+# Table name: keyword_filter_groups
+#
+#  id                :bigint           not null, primary key
+#  is_active         :boolean          default(TRUE)
+#  is_custom         :boolean          default(TRUE)
+#  name              :string
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  server_setting_id :bigint           not null
+#
+# Indexes
+#
+#  index_keyword_filter_groups_on_server_setting_id  (server_setting_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (server_setting_id => server_settings.id) ON DELETE => cascade
+#
 class KeywordFilterGroup < ApplicationRecord
   belongs_to :server_setting, class_name: 'ServerSetting', optional: true
   has_many :keyword_filters, dependent: :destroy

@@ -1,5 +1,16 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
+# == Schema Information
+#
+# Table name: api_keys
+#
+#  id         :bigint           not null, primary key
+#  key        :string
+#  secret     :string
+#  status     :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
 one:
   key: MyString
   secret: MyString

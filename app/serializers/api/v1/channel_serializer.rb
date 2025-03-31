@@ -56,7 +56,15 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :channel_content_type do |object|
-    object&.content_type&.custom_channel? ? 'Curated' : ''
+    if object&.content_type&.custom_channel? 
+      'Curated'
+    elsif object&.content_type&.broadcast_channel?
+      'Broadcast'
+    elsif object&.content_type&.group_channel?
+      'Group'
+    else
+      ''    
+    end
   end
 
   private

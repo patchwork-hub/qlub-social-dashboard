@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: ip_addresses
+#
+#  id          :bigint           not null, primary key
+#  ip          :string           not null
+#  private_ip  :string
+#  reserved_at :datetime
+#  use_count   :integer          default(0), not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#
+# Indexes
+#
+#  index_ip_addresses_on_ip  (ip) UNIQUE
+#
 class IpAddress < ApplicationRecord
   LIMIT_USAGE = 15
   RESERVATION_WINDOW = 1.hour

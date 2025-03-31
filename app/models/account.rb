@@ -1,3 +1,69 @@
+# == Schema Information
+#
+# Table name: accounts
+#
+#  id                            :bigint           not null, primary key
+#  actor_type                    :string
+#  also_known_as                 :string           is an Array
+#  attribution_domains           :string           default([]), is an Array
+#  avatar_content_type           :string
+#  avatar_file_name              :string
+#  avatar_file_size              :integer
+#  avatar_remote_url             :string
+#  avatar_storage_schema_version :integer
+#  avatar_updated_at             :datetime
+#  devices_url                   :string
+#  discoverable                  :boolean
+#  display_name                  :string           default(""), not null
+#  domain                        :string
+#  featured_collection_url       :string
+#  fields                        :jsonb
+#  followers_url                 :string           default(""), not null
+#  header_content_type           :string
+#  header_file_name              :string
+#  header_file_size              :integer
+#  header_remote_url             :string           default(""), not null
+#  header_storage_schema_version :integer
+#  header_updated_at             :datetime
+#  hide_collections              :boolean
+#  inbox_url                     :string           default(""), not null
+#  indexable                     :boolean          default(FALSE), not null
+#  last_webfingered_at           :datetime
+#  locked                        :boolean          default(FALSE), not null
+#  memorial                      :boolean          default(FALSE), not null
+#  note                          :text             default(""), not null
+#  outbox_url                    :string           default(""), not null
+#  private_key                   :text
+#  protocol                      :integer          default(0), not null
+#  public_key                    :text             default(""), not null
+#  requested_review_at           :datetime
+#  reviewed_at                   :datetime
+#  sensitized_at                 :datetime
+#  shared_inbox_url              :string           default(""), not null
+#  silenced_at                   :datetime
+#  suspended_at                  :datetime
+#  suspension_origin             :integer
+#  trendable                     :boolean
+#  uri                           :string           default(""), not null
+#  url                           :string
+#  username                      :string           default(""), not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  moved_to_account_id           :bigint
+#
+# Indexes
+#
+#  index_accounts_on_domain_and_id              (domain,id)
+#  index_accounts_on_moved_to_account_id        (moved_to_account_id) WHERE (moved_to_account_id IS NOT NULL)
+#  index_accounts_on_uri                        (uri)
+#  index_accounts_on_url                        (url) WHERE (url IS NOT NULL)
+#  index_accounts_on_username_and_domain_lower  (lower((username)::text), COALESCE(lower((domain)::text), ''::text)) UNIQUE
+#  search_index                                 ((((setweight(to_tsvector('simple'::regconfig, (display_name)::text), 'A'::"char") || setweight(to_tsvector('simple'::regconfig, (username)::text), 'B'::"char")) || setweight(to_tsvector('simple'::regconfig, (COALESCE(domain, ''::character varying))::text), 'C'::"char")))) USING gin
+#
+# Foreign Keys
+#
+#  fk_rails_...  (moved_to_account_id => accounts.id) ON DELETE => nullify
+#
 require 'spreadsheet'
 
 class Account < ApplicationRecord

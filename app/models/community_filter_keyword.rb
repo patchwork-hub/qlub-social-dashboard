@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: patchwork_communities_filter_keywords
+#
+#  id                     :bigint           not null, primary key
+#  filter_type            :string           default("filter_out"), not null
+#  is_filter_hashtag      :boolean          default(FALSE), not null
+#  keyword                :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  patchwork_community_id :bigint           not null
+#
+# Indexes
+#
+#  idx_on_keyword_is_filter_hashtag_de4b77f0f4                    (keyword,is_filter_hashtag) UNIQUE
+#  idx_on_patchwork_community_id_eadde3c87b                       (patchwork_community_id)
+#  index_on_keyword_is_filter_hashtag_and_patchwork_community_id  (keyword,is_filter_hashtag,patchwork_community_id) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (patchwork_community_id => patchwork_communities.id) ON DELETE => cascade
+#
 class CommunityFilterKeyword < ApplicationRecord
   self.table_name = 'patchwork_communities_filter_keywords'
 

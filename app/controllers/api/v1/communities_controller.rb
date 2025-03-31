@@ -181,6 +181,9 @@ module Api
         elsif current_user.hub_admin?
           @content_type = 'broadcast_channel'
           @channel_type = 'hub'
+        elsif current_user.organisation_admin?
+          @content_type = current_user.account.community_admin&.community&.content_type&.channel_type
+          @channel_type = 'channel'
         end
       end
 

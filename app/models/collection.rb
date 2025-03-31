@@ -1,3 +1,26 @@
+# == Schema Information
+#
+# Table name: patchwork_collections
+#
+#  id                        :bigint           not null, primary key
+#  avatar_image_content_type :string
+#  avatar_image_file_name    :string
+#  avatar_image_file_size    :bigint
+#  avatar_image_updated_at   :datetime
+#  banner_image_content_type :string
+#  banner_image_file_name    :string
+#  banner_image_file_size    :bigint
+#  banner_image_updated_at   :datetime
+#  name                      :string           not null
+#  slug                      :string           not null
+#  sorting_index             :integer          not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#
+# Indexes
+#
+#  index_patchwork_collections_on_slug  (slug) UNIQUE
+#
 class Collection < ApplicationRecord
   self.table_name = 'patchwork_collections'
 

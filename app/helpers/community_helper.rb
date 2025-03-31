@@ -30,6 +30,17 @@ module CommunityHelper
     end
   end
 
+  def determine_channel_keyword(channel_type_param)
+    case channel_type_param
+    when 'hub'
+      'hub'
+    when 'channel'
+      'community'
+    else
+      'channel'
+    end
+  end
+
   def edit_community_path(channel_type_param, community)
     if channel_type_param == 'channel'
       step0_communities_path(id: community.id, channel_type: channel_type_param)

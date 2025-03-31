@@ -1,3 +1,51 @@
+# == Schema Information
+#
+# Table name: patchwork_communities
+#
+#  id                          :bigint           not null, primary key
+#  admin_following_count       :integer          default(0)
+#  avatar_image_content_type   :string
+#  avatar_image_file_name      :string
+#  avatar_image_file_size      :bigint
+#  avatar_image_updated_at     :datetime
+#  banner_image_content_type   :string
+#  banner_image_file_name      :string
+#  banner_image_file_size      :bigint
+#  banner_image_updated_at     :datetime
+#  channel_type                :string           default("channel"), not null
+#  description                 :string
+#  did_value                   :string
+#  guides                      :jsonb
+#  is_custom_domain            :boolean          default(FALSE), not null
+#  is_recommended              :boolean          default(FALSE), not null
+#  logo_image_content_type     :string
+#  logo_image_file_name        :string
+#  logo_image_file_size        :bigint
+#  logo_image_updated_at       :datetime
+#  name                        :string           not null
+#  participants_count          :integer          default(0)
+#  position                    :integer          default(0)
+#  registration_mode           :string           default("none")
+#  slug                        :string           not null
+#  visibility                  :integer
+#  created_at                  :datetime         not null
+#  updated_at                  :datetime         not null
+#  ip_address_id               :bigint
+#  patchwork_collection_id     :bigint           not null
+#  patchwork_community_type_id :bigint
+#
+# Indexes
+#
+#  index_patchwork_communities_on_ip_address_id                (ip_address_id)
+#  index_patchwork_communities_on_name                         (name) UNIQUE
+#  index_patchwork_communities_on_patchwork_collection_id      (patchwork_collection_id)
+#  index_patchwork_communities_on_patchwork_community_type_id  (patchwork_community_type_id)
+#  index_patchwork_communities_on_slug                         (slug) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (patchwork_collection_id => patchwork_collections.id)
+#
 class Community < ApplicationRecord
   self.table_name = 'patchwork_communities'
 
