@@ -144,7 +144,7 @@ class CommunityPostService < BaseService
   def assign_roles_and_content_type
     if @current_user.user_admin? || @current_user.hub_admin?
       update_account_attributes
-      create_community_admin
+      set_community_admin
       set_clean_up_policy
     end
   end
@@ -172,12 +172,12 @@ class CommunityPostService < BaseService
     end
   end
 
-  def create_community_admin
-    @community.community_admins.create(
+  def set_community_admin
+    community_admin = @community.community_admins.find_by(email: @current_user.email)
+    community_admin.update(
       account_id: @account.id,
       username: @account.username,
       display_name: @community.name,
-      email: @current_user.email,
       role: @current_user&.role&.name,
       is_boost_bot: true
     )

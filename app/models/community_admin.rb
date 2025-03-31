@@ -13,7 +13,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  account_id             :bigint
-#  patchwork_community_id :bigint           not null
+#  patchwork_community_id :bigint
 #
 # Indexes
 #
@@ -28,7 +28,7 @@
 #
 class CommunityAdmin < ApplicationRecord
   self.table_name = 'patchwork_communities_admins'
-  belongs_to :community, foreign_key: 'patchwork_community_id'
+  belongs_to :community, foreign_key: 'patchwork_community_id', optional: true
   belongs_to :account, foreign_key: 'account_id', optional: true
 
   validates :email, presence: true,
