@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_31_094325) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_01_071104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -793,6 +793,22 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_31_094325) do
     t.index ["owner_id", "owner_type"], name: "index_oauth_applications_on_owner_id_and_owner_type"
     t.index ["superapp"], name: "index_oauth_applications_on_superapp", where: "(superapp = true)"
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
+  end
+
+  create_table "patchwork_app_version_histories", force: :cascade do |t|
+    t.bigint "app_version_id", null: false
+    t.string "os_type"
+    t.boolean "deprecated", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["app_version_id"], name: "index_patchwork_app_version_histories_on_app_version_id", unique: true
+  end
+
+  create_table "patchwork_app_versions", force: :cascade do |t|
+    t.string "version_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["version_name"], name: "index_patchwork_app_versions_on_version_name", unique: true
   end
 
   create_table "patchwork_collections", force: :cascade do |t|
@@ -1607,6 +1623,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_31_094325) do
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id", name: "fk_f5fc4c1ee3", on_delete: :cascade
   add_foreign_key "oauth_access_tokens", "users", column: "resource_owner_id", name: "fk_e84df68546", on_delete: :cascade
   add_foreign_key "oauth_applications", "users", column: "owner_id", name: "fk_b0988c7c0a", on_delete: :cascade
+  add_foreign_key "patchwork_app_version_histories", "patchwork_app_versions", column: "app_version_id"
   add_foreign_key "patchwork_communities", "patchwork_collections"
   add_foreign_key "patchwork_communities_admins", "accounts", on_delete: :cascade
   add_foreign_key "patchwork_communities_admins", "patchwork_communities"
