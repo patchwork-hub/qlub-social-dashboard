@@ -22,11 +22,7 @@ namespace :community_hashtags do
             default_hashtag = "#{community.slug.split('-').map(&:capitalize).join}Channel"
 
             unless CommunityHashtag.exists?(hashtag: default_hashtag, patchwork_community_id: community.id)
-              CommunityHashtag.create!(
-                hashtag: default_hashtag,
-                name: default_hashtag,
-                patchwork_community_id: community.id
-              )
+              CommunityHashtagPostService.new.call(hashtag: default_hashtag, community_id: community_id)
             end
 
             ManageHashtagService.new(
