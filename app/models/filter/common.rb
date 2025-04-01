@@ -1,3 +1,5 @@
+require 'ostruct'
+
 class Filter::Common
   DEFAULT_ITEMS_LIMIT = 25
   attr_reader :current_page, :total_pages, :per_page, :search
@@ -44,7 +46,7 @@ class Filter::Common
 
   def each_page
     (display_page..@total_pages).map do |page|
-      OpenStruct.new(number: page, current?: page == current_page)
+      ::OpenStruct.new(number: page, current?: page == current_page)
     end
   end
 end
