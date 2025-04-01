@@ -77,17 +77,24 @@ class Community < ApplicationRecord
   validate :conditional_slug_format
 
   def conditional_slug_format
-    regex = is_custom_domain? ? /\A[a-z][a-z0-9.-]*[a-z0-9]\z/i : /\A[a-z][a-z0-9-]*[a-z0-9]\z/i
+    custom_domain = ActiveModel::Type::Boolean.new.cast(self[:is_custom_domain])
+
+    regex = if custom_domain
+      /\A[a-zA-Z0-9]+([-a-zA-Z0-9]*\.[a-zA-Z0-9]+)*\z/
+    else
+      /\A[a-z][a-z0-9-]*[a-z0-9]\z/i
+    end
 
     unless slug =~ regex
-    message = if is_custom_domain?
-      "must start with a letter, can include letters, numbers, hyphens, and dots, but cannot end with a hyphen or dot"
-    else
-      "must start with a letter, can include letters, numbers, and hyphens, but cannot end with a hyphen"
-    end
-    errors.add(:slug, message)
+      message = if custom_domain
+        "must be a valid domain format (e.g., example.com), cannot have consecutive dots or end with a dot"
+      else
+        "must start with a letter, can include letters, numbers, and hyphens, but cannot end with a hyphen"
+      end
+      errors.add(:slug, message)
     end
   end
+
 
   def slug_cannot_be_changed
     if slug_changed? && persisted?
@@ -232,9 +239,5 @@ class Community < ApplicationRecord
     if duplicate_urls.any?
       errors.add(:base, "Links contains duplicate URLs: #{duplicate_urls.join(', ')}")
     end
-  end
-
-  def is_custom_domain?
-    ActiveModel::Type::Boolean.new.cast(self[:is_custom_domain])
   end
 end
