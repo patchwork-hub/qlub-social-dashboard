@@ -233,4 +233,8 @@ class Community < ApplicationRecord
       errors.add(:base, "Links contains duplicate URLs: #{duplicate_urls.join(', ')}")
     end
   end
+
+  def is_custom_domain?
+    ActiveModel::Type::Boolean.new.cast(self[:is_custom_domain])
+  end
 end
