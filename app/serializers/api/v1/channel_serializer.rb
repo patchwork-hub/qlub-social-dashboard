@@ -7,7 +7,7 @@ class Api::V1::ChannelSerializer
   set_type :channel
 
   attributes :id, :name, :slug, :description, :is_recommended, :admin_following_count,
-             :patchwork_collection_id, :guides, :participants_count,
+             :patchwork_collection_id, :guides, :participants_count, :is_custom_domain,
              :visibility, :position, :channel_type, :created_at, :no_of_admins, :channel_content_type, :registration_mode
 
   has_many :patchwork_community_additional_informations, serializer: Api::V1::CommunityAdditionalInformationSerializer
@@ -56,14 +56,14 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :channel_content_type do |object|
-    if object&.content_type&.custom_channel? 
+    if object&.content_type&.custom_channel?
       'Curated'
     elsif object&.content_type&.broadcast_channel?
       'Broadcast'
     elsif object&.content_type&.group_channel?
       'Group'
     else
-      ''    
+      ''
     end
   end
 
