@@ -145,7 +145,9 @@ module Api
          :banner_image,
          :avatar_image,
          :community_type_id,
-         :is_custom_domain
+         :is_recommended,
+         :is_custom_domain,
+         :ip_address_id
         ).to_h
 
         if default_community_type_id.present?
