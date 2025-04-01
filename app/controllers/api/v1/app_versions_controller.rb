@@ -2,7 +2,7 @@ module Api
   module V1
     class AppVersionsController < ApiController
 			skip_before_action :verify_key!
-			before_action :authenticate_user_from_header
+			before_action :check_authorization_header, only: [:check_version]
 			before_action :set_app_version, only: %i[check_version]
 
 			def check_version
@@ -24,6 +24,10 @@ module Api
 			def render_not_found
 				render json: { error: "Record not found" }, status: 404
 			end
+
+			def check_authorization_header
+        authenticate_user_from_header if request.headers['Authorization'].present?
+      end
 		end
 	end
 end
