@@ -31,8 +31,8 @@ class CommunityPostService < BaseService
       @community.save!
       set_default_additional_information
       assign_roles_and_content_type
-      Rails.logger.info "IP Address ID: #{@options[:ip_address_id]}"
-      IpAddress.find_by(id: @options[:ip_address_id])&.increment_use_count! if @options[:channel_type] != 'channel_feed' && @options[:ip_address_id].present?
+      Rails.logger.info "IP Address ID: #{@ip_address_id}"
+      IpAddress.find_by(id: @ip_address_id)&.increment_use_count! if @ip_address_id.present?
       set_default_hashtag if @community.channel_feed?
       @community
     end
