@@ -28,7 +28,7 @@
                 = check_box_tag :select_all, '', false, id: 'select_all'
               %th #{title}
               %th Username
-              - if channel_type_param.eql?('channel')
+              - if channel_type_param.eql?('channel') || channel_type_param.eql?('hub')
                 %th Address
               %th Followers
               %th #{keyword.capitalize} type

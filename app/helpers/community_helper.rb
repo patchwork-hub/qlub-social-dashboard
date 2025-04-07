@@ -156,9 +156,10 @@ module CommunityHelper
   end
 
   def valid_address?(community)
-    community&.slug &&
-    community&.visibility &&
-    community&.channel_type.present? && community&.channel? &&
-    %w[production].include?(ENV.fetch('RAILS_ENV', nil))
+
+    return false unless community&.slug && community&.visibility && community&.channel_type.present?
+    return false unless community&.channel? || community&.hub?
+
+    %w[production staging].include?(ENV.fetch('RAILS_ENV', nil))
   end
 end
