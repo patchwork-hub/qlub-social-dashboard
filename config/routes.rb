@@ -90,4 +90,7 @@ Rails.application.routes.draw do
   resources :master_admins, except: [:show, :destroy]
 
   resources :wait_lists
+
+  resources :app_versions
+  patch "history/:id/deprecate", to: 'app_versions#deprecate'
 end

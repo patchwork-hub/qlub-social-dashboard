@@ -1,0 +1,27 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          = "#{action_name.capitalize}"
+
+      .card-body.w-250
+        = simple_form_for @app_version, local: true do |f|
+          .row
+            .col-md-6
+              .mb-3.string.required.version_name
+                = f.label :version_name, 'Version name', class: 'form-label string required'
+                %abbr{ title: 'required' }*
+                = f.text_field :version_name, class: 'form-control string required', required: true, aria: { required: true }
+
+            .col-md-6
+              = label_tag :os_type, 'OS type', class: 'form-label'
+              = select_tag :os_type, options_for_select([ 'both', 'android', 'ios'], 'both'), class: 'form-control'
+
+          .row.mt-2
+            .col-md-6.d-flex.justify-content-center
+              = link_to 'Cancel', app_versions_path, class: 'btn btn-secondary mx-2 btn-custom'
+              = f.submit 'Save', class: 'btn btn-danger mx-2 btn-custom'
+    .row.d-flex.justify-content-between.mt-4
+      .col-auto
+        %a.btn.btn-outline-secondary{ href: app_versions_path } Back
