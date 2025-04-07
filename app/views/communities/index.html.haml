@@ -52,7 +52,7 @@
                     %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
                   - else
                     %span.text-muted -
-                - if channel_type_param.eql?('channel')
+                - if channel_type_param.eql?('channel') || channel_type_param.eql?('hub')
                   %td
                     - if address_url(community).present?
                       %p
