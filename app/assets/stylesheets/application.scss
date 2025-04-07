@@ -781,3 +781,15 @@ ul.pagination {
     color: #212529;
   }
 }
+
+.unstyled-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline;
+  line-height: 1;
+}

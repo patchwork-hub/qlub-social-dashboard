@@ -303,4 +303,35 @@ document.addEventListener('DOMContentLoaded', function () {
   // Attach event listeners for the buttons
   handleCodeGeneration('create-channel-code-btn', 'channel');
   handleCodeGeneration('create-hub-code-btn', 'hub');
+
+  document.querySelectorAll('.deprecated-checkbox').forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      const checkbox = event.target;
+      const id = checkbox.dataset.id;
+      const osType = checkbox.dataset.os_type;
+      const deprecated = checkbox.checked;
+
+      fetch(`/history/${id}/deprecate`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: JSON.stringify({ deprecated, os_type: osType }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to update deprecated status');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log('Updated successfully:', data);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          checkbox.checked = !deprecated; // Revert checkbox state on error
+        });
+    });
+  });
 });
