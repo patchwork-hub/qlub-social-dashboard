@@ -1,3 +1,5 @@
+- keyword = determine_channel_keyword(@community.channel_type)
+
 #previewCommunityModal.modal.fade{ role: 'dialog', tabindex: "-1", aria: { labelledby: 'previewCommunityModalLabel', hidden: 'true' } }
   .modal-dialog.custom-modal-width{ role: 'document' }
     .modal-content
@@ -79,5 +81,5 @@
 
             .modal-footer
               %button.btn.btn-secondary{ "data-dismiss": "modal" } Cancel
-              - button_label = @community.visibility.present? ? 'Update Channel' : 'Create Channel'
+              - button_label = @community.visibility.present? ? "Update #{keyword}" : "Create #{keyword}"
               = form.submit button_label, id: 'create-community-submit', class: 'btn btn-danger'
