@@ -109,6 +109,12 @@ module Scheduler
       end
 
       if channel_zone
+        name = if community&.is_custom_domain?
+                "_atproto.#{community.slug}"
+              else
+                "_atproto.#{community&.slug}.channel.org"
+              end
+        Rails.logger.info("[FollowBlueskyBotScheduler] Creating DNS record for #{name} with value #{did_value}")
         response = route53.change_resource_record_sets({
           hosted_zone_id:  channel_zone.id, # Hosted Zone for channel.org
           change_batch: {
@@ -116,7 +122,7 @@ module Scheduler
               {
           action: 'UPSERT',
           resource_record_set: {
-            name: "_atproto.#{community&.slug}.channel.org",
+            name: name,
             type: 'TXT',
             ttl: 60,
             resource_records: [
@@ -136,6 +142,12 @@ module Scheduler
 
     def create_direct_message(token, community)
 
+      name = if community&.is_custom_domain?
+              community&.slug
+            else
+              "#{community&.slug}.channel.org"
+            end
+
       status_params = {
         "in_reply_to_id": nil,
         "language": "en",
@@ -143,7 +155,7 @@ module Scheduler
         "poll": nil,
         "sensitive": false,
         "spoiler_text": "",
-        "status": "@bsky.brid.gy@bsky.brid.gy username #{community&.slug}.channel.org",
+        "status": "@bsky.brid.gy@bsky.brid.gy username #{name}",
         "visibility": "direct"
       }
 
