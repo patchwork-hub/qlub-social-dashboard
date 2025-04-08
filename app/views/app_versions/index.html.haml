@@ -1,0 +1,65 @@
+- content_for :title do
+  = 'App versions'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          App versions
+          %br
+          %small.text-muted.pt-2 App versions list.
+        .card-tools
+          %button.btn.btn-sm.btn-danger.ml-3{ onclick: "window.location='#{new_app_version_path}'" }
+            Create App version
+            = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
+      .card-body
+        %table.table.no-side-borders.top-bottom-border{data: {url: app_versions_url, type: 'app_version'}}
+          %thead
+            %tr
+              %th Version name
+              %th Android
+              %th Deprecated
+              %th iOS
+              %th Deprecated
+              %th Actions
+          %tbody
+            - if @app_versions.size == 0
+              %tr
+                %td.text-center.info-box-content{colspan: "100%"}
+                  %p.text-muted.small You haven’t added any App versions yet.
+                  %a.text-danger.small{ href: new_app_version_path } Click here to create one
+            - @app_versions.each do |app_version|
+              %tr
+                %td= app_version.version_name
+                - android_data = os_type_android(app_version.app_version_hostories)
+                - unless android_data[:id].nil?
+                  %td= "#{android_data[:string]}"
+                - else
+                  %td -
+                - android_deprecated_data = deprecated_android(app_version.app_version_hostories)
+                - unless android_deprecated_data[:id].nil?
+                  %td
+                    = check_box_tag "android_deprecated_#{android_deprecated_data[:id]}", '1', android_deprecated_data[:string] == '✅', data: { id: android_deprecated_data[:id], os_type: 'android' }, class: 'deprecated-checkbox'
+                - else
+                  %td -
+                - ios_data = os_type_ios(app_version.app_version_hostories)
+                - unless ios_data[:id].nil?
+                  %td= "#{ios_data[:string]}"
+                - else
+                  %td -
+                - ios_deprecated_data = deprecated_ios(app_version.app_version_hostories)
+                - unless ios_deprecated_data[:id].nil?
+                  %td
+                    = check_box_tag "ios_deprecated_#{ios_deprecated_data[:id]}", '1', ios_deprecated_data[:string] == '✅', data: { id: ios_deprecated_data[:id], os_type: 'ios' }, class: 'deprecated-checkbox'
+                - else
+                  %td -
+                %td
+                  = form_with url: app_version_path(app_version), method: :delete, local: true do
+                    = button_tag type: 'submit', class: 'unstyled-button' do
+                      = image_tag("icons/trash-can.svg", width: "16", height: "16")
+
+        .row.mt-2
+          .col
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @app_versions, theme: 'bootstrap4'
