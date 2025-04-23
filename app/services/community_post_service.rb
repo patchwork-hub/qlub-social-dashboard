@@ -173,7 +173,8 @@ class CommunityPostService < BaseService
   end
 
   def set_community_admin
-    community_admin = CommunityAdmin.find_by(email: @current_user.email)
+    community_admin = CommunityAdmin.find_or_create_by(email: @current_user.email)
+
     community_admin.update(
       account_id: @account.id,
       patchwork_community_id: @community.id,
@@ -226,7 +227,7 @@ class CommunityPostService < BaseService
       ip_address_id: @ip_address_id
     }
 
-    if @options[:id].nil? || (!@community&.visibility&.present? && !@current_user.user_admin?)
+    if @options[:id].blank? || (!@community&.visibility&.present? && !@current_user.user_admin?)
       attributes[:slug] = @options[:slug]
     end
 
