@@ -184,9 +184,13 @@ $(document).ready(function () {
         $continueButton.prop("disabled", false);
         return;
       }
+
+      const subdomainVal = $subdomainSection.find("input").val();
+      const customVal =
+        $customDomainInput.length > 0 ? $customDomainInput.val().trim() : "";
       const isDisabled = state.isSubdomainMode
-        ? $subdomainSection.find("input").val().trim() === ""
-        : !(state.domainVerified && $customDomainInput.val().trim());
+        ? !subdomainVal || subdomainVal.trim() === ""
+        : !(state.domainVerified && customVal);
       $continueButton.prop("disabled", isDisabled);
     }
 
