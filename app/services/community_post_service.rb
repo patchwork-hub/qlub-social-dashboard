@@ -33,9 +33,9 @@ class CommunityPostService < BaseService
       assign_roles_and_content_type
       Rails.logger.info "IP Address ID: #{@ip_address_id}"
       IpAddress.find_by(id: @ip_address_id)&.increment_use_count! if @ip_address_id.present?
-      set_default_hashtag if @community.channel_feed?
       @community
     end
+    CommunityCreationJob.perform_later(@community.id, @current_user.id)
   rescue ActiveRecord::RecordInvalid => e
     Rails.logger.error("Community creation failed: #{e.message}")
     @community
@@ -121,7 +121,11 @@ class CommunityPostService < BaseService
     end
   end
 
-  def set_default_hashtag
+  def set_default_hashtag(community, user)
+    return nil if community.nil? || user.nil?
+
+    @community = community
+    @current_user = user
     hashtag = "#{@community.slug.split('-').map(&:capitalize).join}Channel"
     community_id = @community.id
 
