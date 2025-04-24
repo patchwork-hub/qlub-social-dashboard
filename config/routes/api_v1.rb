@@ -81,3 +81,4 @@ namespace :api, defaults: { format: :json } do
     end
   end
 end
+
