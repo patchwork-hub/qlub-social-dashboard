@@ -11,14 +11,22 @@
     .card
       .card-header
         %h3.card-title #{title}
-        .card-tools
-          = search_form_for @search, url: communities_path, method: :get do |f|
-            .input-group.input-group-sm{style: "width: 250px;"}
-              = f.search_field :name_cont, class: "form-control float-right", placeholder: "Search"
+        .card-tools.d-flex.justify-content-end.align-items-center
+          = form_with url: communities_path, method: :get, local: true, html: { class: 'form-inline mr-2' } do
+            = hidden_field_tag :channel_type, channel_type_param
+            = select_tag :status,
+                options_for_select([['All', 'all'], ['Active', 'active'], ['Deleted', 'deleted']], params[:status] || 'active'),
+                class: "form-control form-control-sm",
+                onchange: "this.form.submit();"
+
+          = search_form_for @search, url: communities_path, method: :get, html: { class: 'form-inline' } do |f|
+            .input-group.input-group-sm
+              = f.search_field :name_cont, class: "form-control", placeholder: "Search"
               = f.hidden_field :channel_type, value: channel_type_param
               .input-group-append
                 %button.btn.btn-default{type: "submit"}
                   %i.fas.fa-search
+
       .card-body
         %p.text-muted Here you can see a list of all the #{title.downcase} on your server. From this dashboard, you can easily import #{title.downcase} hosted on other servers, create new ones hosted here or manage your existing #{title.downcase}.
         %table.table.no-side-borders.top-bottom-border{data: {url: accounts_url, type: 'account'}}
@@ -33,7 +41,7 @@
               %th Followers
               %th #{keyword.capitalize} type
               %th Status
-              %th Edit
+              %th Actions
           %tbody
             - if @records.size == 0
               %tr
@@ -75,8 +83,15 @@
                   - else
                     %span.badge.badge-pill.badge-warning Incomplete
                 %td
-                  %a{ href: edit_community_path(channel_type_param, community) }
-                    = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
+                  - if community.deleted_at.present?
+                    = link_to recover_community_path(community, channel_type_param: channel_type_param), method: :post, data: { confirm: "Are you sure you want to recover this community?" } do
+                      = image_tag("icons/recover.svg", title: "Recover", class: "ml-2", width: "16", height: "16")
+                  - else
+                    = link_to edit_community_path(channel_type_param, community) do
+                      = image_tag("icons/edit-btn.svg", title: "Edit", class: "ml-2", width: "16", height: "16")
+                    = link_to community_path(community, channel_type_param: channel_type_param), method: :delete, data: { confirm: "Are you sure you want to delete this community?" } do
+                      = image_tag("icons/trash-can.svg", title: "Delete", class: "ml-2", width: "16", height: "16")
+
 
         - if master_admin?
           .row.mt-2
@@ -98,9 +113,9 @@
           .row.mt-4
             .col-12.d-flex.justify-content-center
               %div.btn-group
-                %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
-                  Import a #{keyword}
-                  = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
+                -#  %button.btn.btn-outline-secondary{ onclick: "window.location='#{communities_path}'" }
+                      Import a #{keyword}
+                      = image_tag("icons/circle-left.svg", class: "ml-2", width: "16", height: "16")
                 %button.btn.btn-danger.ml-3{ onclick: "window.location='#{create_path}'" }
                   Create a #{keyword}
                   = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")

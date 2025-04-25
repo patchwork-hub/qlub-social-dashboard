@@ -15,13 +15,15 @@ class Filter::Community < Filter::Common
   end
 
   def build_search
-    if master_admin?
-      Community.ransack(@q)
-    else
-      Community.joins(:community_admins)
-               .where(community_admins: { account_id: account_id })
-               .ransack(@q)
-    end
+    base_scope = if master_admin?
+                   Community.all
+                 else
+                   Community.joins(:community_admins)
+                            .where(community_admins: { account_id: account_id })
+
+                 end
+
+    base_scope.ransack(@q)
   end
 
   def master_admin?
