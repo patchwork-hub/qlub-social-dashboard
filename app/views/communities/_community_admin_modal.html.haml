@@ -34,11 +34,13 @@
           .mb-3
             = f.label :email, class: "form-label"
             = f.email_field :email, class: "form-control", id: "community_admin_email"
-          - if @community.channel? || @community.hub?
-            .mb-3.form-group.position-relative.password
-              = f.label :password, class: "form-label"
-              = f.password_field :password, class: "form-control", id: "community_admin_password"
-              %i.fa-solid.fa-eye-slash.red{onclick: 'togglePassword(this)'}
+
+          .mb-3.form-group.position-relative.password
+            = f.label :password, class: "form-label"
+            = f.password_field :password, class: "form-control", id: "community_admin_password"
+            %i.fa-solid.fa-eye-slash.red{onclick: 'togglePassword(this)'}
+
+          - if current_user.master_admin?
             .modal-footer
               %div.d-flex.justify-content-end
                 .col
