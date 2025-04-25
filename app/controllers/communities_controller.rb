@@ -18,8 +18,34 @@ class CommunitiesController < BaseController
     params[:channel_type] ||= params[:q]&.delete(:channel_type)
     redirect_to communities_path(request.query_parameters.merge(channel_type: default_channel_type)) unless params[:channel_type].present?
     @channel_type = params[:channel_type] || default_channel_type
-    @records = load_filtered_records(commu_records_filter).where(channel_type: @channel_type)
     @search = commu_records_filter.build_search
+    params[:status] ||= 'active'
+    @records = load_filtered_records(commu_records_filter)
+              .where(channel_type: @channel_type)
+              .yield_self { |scope| apply_status_filter(scope, params[:status]) }
+  end
+
+  def destroy
+    @channel = Community.find(params[:id])
+    @channel.soft_delete!
+    if @channel.community_admins.last
+      @channel.community_admins.last.update(account_status: :suspended)
+    end
+    redirect_to communities_path(channel_type: params[:channel_type_param])
+  end
+
+  def recover
+    @channel = Community.deleted.find(params[:id])
+    channel_type = params[:channel_type_param]
+    if @channel.recoverable?
+      @channel.recover!
+      if @channel.community_admins.last
+        @channel.community_admins.last.update(account_status: :active)
+      end
+      redirect_to communities_path(channel_type: channel_type)
+    else
+      redirect_to communities_path(channel_type: channel_type)
+    end
   end
 
   def step0
@@ -391,6 +417,17 @@ class CommunitiesController < BaseController
   # Filter initializers
   def commu_records_filter
     Filter::Community.new(params, current_user)
+  end
+
+  def apply_status_filter(scope, status)
+    case status
+    when 'deleted'
+      scope.where.not(deleted_at: nil)
+    when 'active'
+      scope.where(deleted_at: nil)
+    else
+      scope # all
+    end
   end
 
   def commu_admin_records_filter

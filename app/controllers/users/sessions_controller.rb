@@ -12,11 +12,20 @@ class Users::SessionsController < Devise::SessionsController
   def create
     self.resource = warden.authenticate!(auth_options)
 
-    if resource.persisted? && !policy(resource).login?
-      sign_out(resource)
-      flash[:error] = "You are not authorized to log in."
-      Rails.logger.debug("Flash message: #{flash[:error]}")
-      redirect_to new_user_session_path and return
+    unless resource.master_admin?
+      community_admin = CommunityAdmin.find_by(
+        account_id: resource.account_id,
+        is_boost_bot: true,
+        account_status: CommunityAdmin.account_statuses["active"]
+      )
+
+      # If no active community admin is found, sign out and show error
+      if community_admin.nil?
+        sign_out(resource)
+        flash[:error] = "You are not authorized to log in."
+        Rails.logger.debug("Flash message: #{flash[:error]}")
+        redirect_to new_user_session_path and return
+      end
     end
 
     super do |resource|

@@ -13,6 +13,7 @@
 #  banner_image_file_size      :bigint
 #  banner_image_updated_at     :datetime
 #  channel_type                :string           default("channel"), not null
+#  deleted_at                  :datetime
 #  description                 :string
 #  did_value                   :string
 #  guides                      :jsonb
@@ -228,6 +229,25 @@ class Community < ApplicationRecord
 
   def self.ransackable_associations(auth_object = nil)
     []
+  end
+
+  scope :active, -> { where(deleted_at: nil) }
+  scope :deleted, -> { where.not(deleted_at: nil) }
+
+  def soft_delete!
+    update(deleted_at: Time.current)
+  end
+
+  def recover!
+    update(deleted_at: nil)
+  end
+
+  def deleted?
+    deleted_at.present?
+  end
+
+  def recoverable?
+    deleted_at && deleted_at > 30.days.ago
   end
 
   private
