@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
           isOrganisationAdminCheckbox.checked = role === "OrganisationAdmin";
         }
         if (isUserAdminCheckbox) {
-          isHubAdminCheckbox.checked = role === "UserAdmin";
+          isUserAdminCheckbox.checked = role === "UserAdmin";
         }
         if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = role === "HubAdmin";
