@@ -25,6 +25,16 @@
                 .form-check
                   = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'
                   = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
+          - if @community.channel_feed?
+            .row.mb-3
+              .col
+                .form-check
+                  = check_box_tag 'is_user_admin', 'user_admin', @community_admin.role == 'UserAdmin', class: 'form-check-input red-check-box', id: 'is_user_admin', onchange: "updateRoleField(this)"
+                  = f.label :role, "User admin", class: "form-check-label", for: 'is_user_admin'
+              .col
+                .form-check
+                  = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'
+                  = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
           - if @community.hub?
             .row.mb-3
               .col

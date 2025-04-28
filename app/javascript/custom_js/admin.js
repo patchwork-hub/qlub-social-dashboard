@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const isOrganisationAdminCheckbox = document.querySelector(
         "#is_organisation_admin"
       );
+      const isUserAdminCheckbox = document.querySelector("#is_user_admin");
       const isHubAdminCheckbox = document.querySelector("#is_hub_admin");
       const isBoostBotCheckbox = document.querySelector(
         "#community_admin_is_boost_bot"
@@ -48,6 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // Edit mode: set checkboxes based on existing admin data
         if (isOrganisationAdminCheckbox) {
           isOrganisationAdminCheckbox.checked = role === "OrganisationAdmin";
+        }
+        if (isUserAdminCheckbox) {
+          isHubAdminCheckbox.checked = role === "UserAdmin";
         }
         if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = role === "HubAdmin";
@@ -77,6 +81,15 @@ document.addEventListener("DOMContentLoaded", function () {
           isOrganisationAdminCheckbox.checked = true;
           document.querySelector("#community_admin_role").value =
             "OrganisationAdmin";
+
+          if (isBoostBotCheckbox) {
+            isBoostBotCheckbox.checked = true; // Default to true for "Create"
+          }
+        }
+
+        if (isUserAdminCheckbox) {
+          isUserAdminCheckbox.checked = true;
+          document.querySelector("#community_admin_role").value = "UserAdmin";
 
           if (isBoostBotCheckbox) {
             isBoostBotCheckbox.checked = true; // Default to true for "Create"
