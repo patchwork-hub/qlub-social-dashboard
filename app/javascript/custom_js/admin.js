@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (checkbox.id === "is_organisation_admin" && checkbox.checked) {
       roleField.value = "OrganisationAdmin";
+    } else if (checkbox.id === "is_user_admin" && checkbox.checked) {
+      roleField.value = "UserAdmin";
     } else if (checkbox.id === "is_hub_admin" && checkbox.checked) {
       roleField.value = "HubAdmin";
     } else {
