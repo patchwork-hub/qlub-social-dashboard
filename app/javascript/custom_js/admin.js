@@ -79,31 +79,22 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(".modal-title").innerHTML = "Edit channel admin";
       } else {
         // Create mode: set checkboxes to default true
+        const roleField = document.querySelector("#community_admin_role");
+
         if (isOrganisationAdminCheckbox) {
           isOrganisationAdminCheckbox.checked = true;
-          document.querySelector("#community_admin_role").value =
-            "OrganisationAdmin";
-
-          if (isBoostBotCheckbox) {
-            isBoostBotCheckbox.checked = true; // Default to true for "Create"
-          }
-        }
-
-        if (isUserAdminCheckbox) {
+          roleField.value = "OrganisationAdmin";
+        } else if (isUserAdminCheckbox) {
           isUserAdminCheckbox.checked = true;
-          document.querySelector("#community_admin_role").value = "UserAdmin";
-
-          if (isBoostBotCheckbox) {
-            isBoostBotCheckbox.checked = true; // Default to true for "Create"
-          }
-        }
-
-        if (isHubAdminCheckbox) {
+          roleField.value = "UserAdmin";
+        } else if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = true;
-          document.querySelector("#community_admin_role").value = "HubAdmin";
+          roleField.value = "HubAdmin";
         }
 
-        roleField.value = "";
+        if (isBoostBotCheckbox) {
+          isBoostBotCheckbox.checked = true;
+        }
 
         form.setAttribute("action", "/community_admins");
         form.setAttribute("method", "post");
