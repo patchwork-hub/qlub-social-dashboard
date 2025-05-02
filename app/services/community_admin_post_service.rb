@@ -16,7 +16,8 @@ class CommunityAdminPostService < BaseService
       display_name: @community_admin.display_name,
       avatar: @community.avatar_image || '',
       header: @community.banner_image || '',
-      note: @community.description
+      note: @community.description,
+      discoverable: true
     }
 
     if @community_admin.is_boost_bot

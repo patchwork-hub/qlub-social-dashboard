@@ -111,7 +111,17 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       IS_CUSTOM_DOMAIN: @is_custom_domain,
       REGISTRATION_MODE: @registration_mode,
       SINGLE_USER_MODE: @single_user_mode,
-      IP_ADDRESS: @ip_address
+      IP_ADDRESS: @ip_address,
+      SMS_REGION: ENV['SMS_REGION'],
+      SMTP_LOGIN: ENV['SMTP_LOGIN'],
+      SMTP_PASSWORD: ENV['SMTP_PASSWORD'],
+      SMTP_SERVER: ENV['SMTP_SERVER'],
+      SMTP_FROM_ADDRESS: ENV['SMTP_FROM_ADDRESS'],
+      SMTP_DOMAIN: ENV['SMTP_DOMAIN'],
+      SMTP_AUTH_METHOD: ENV['SMTP_AUTH_METHOD'],
+      SMTP_ENABLE_STARTTLS: ENV['SMTP_ENABLE_STARTTLS'],
+      SMTP_ENABLE_STARTTLS_AUTO: ENV['SMTP_ENABLE_STARTTLS_AUTO'],
+      SMTP_PORT: ENV['SMTP_PORT']
     }.to_json
   end
 
