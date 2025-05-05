@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       get 'follower_list', to: 'communities#follower_list'
       get 'follower_list_csv', to: 'communities#follower_list_csv'
       post 'recover', to: 'communities#recover'
+      post 'upgrade', to: 'communities#upgrade'
     end
     resources :community_hashtags, only: %i[create update destroy]
     resource :community_post_type, only: [:create, :update]
