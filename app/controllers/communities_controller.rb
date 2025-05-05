@@ -24,6 +24,28 @@ class CommunitiesController < BaseController
               .where(channel_type: @channel_type)
               .yield_self { |scope| apply_status_filter(scope, params[:status]) }
   end
+  def upgrade
+    community = Community.find(params[:id])
+
+    if community.visibility.nil?
+      flash[:error] = "Cannot upgrade incomplete channel!"
+      redirect_back fallback_location: communities_path
+      return
+    end
+
+    community.update!(channel_type: :channel, visibility: nil)
+
+    if (admin = community.community_admins.last)
+      admin.update!(role: "OrganisationAdmin")
+
+      if (account = Account.find_by(id: admin.account_id))
+        user_role = UserRole.find_by(name: "OrganisationAdmin")
+        account.user.update!(role_id: user_role.id) if user_role
+      end
+    end
+
+    redirect_to edit_community_path('channel', community)
+  end
 
   def destroy
     @channel = Community.find(params[:id])
