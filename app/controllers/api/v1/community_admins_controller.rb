@@ -70,18 +70,18 @@ module Api
             channel_type = community.channel_type
 
             url = ""
-            name = ""
+            name = community.name
 
             if community.channel?
-              name = community.slug
+              slug = community.slug.downcase
 
               if community.is_custom_domain?
-                url = "https://#{community.slug.downcase}"
+                url = "https://#{slug}"
               else
-                url = "https://#{name.downcase}.channel.org"
-              end 
+                url = "https://#{slug}.channel.org"
+              end
             else
-              name = community_admin.username
+              url = "https://channel.org/@#{community_admin.account.username}"
             end
   
             account_id = community_admin.account_id
