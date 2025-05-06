@@ -76,9 +76,9 @@ module Api
               name = community.slug
 
               if community.is_custom_domain?
-                url = "https://#{community.slug}"
+                url = "https://#{community.slug.downcase}"
               else
-                url = "https://#{name}.channel.org"
+                url = "https://#{name.downcase}.channel.org"
               end 
             else
               name = community_admin.username
