@@ -56,26 +56,42 @@ module Api
       end
 
       def boost_bot_accounts_list
-        community_admins = CommunityAdmin.where(is_boost_bot: true, account_status: 0)
-
         result = {}
 
-        community_admins.each do |community_admin|
-          community = Community.find_by(id: community_admin.patchwork_community_id)
-          next unless community
+        communities = Community.where(channel_type: ['channel_feed', 'channel'])
+                              .where(deleted_at: nil)
 
-          channel_type = community.channel_type
-          name = community.slug
+        communities.each do |community|
+          
+          community_admin = community.community_admins.last
+          next unless community_admin
 
-          url = community.channel? ? (community.is_custom_domain? ? name : "https://#{name}.channel.org") : ""
+          if community_admin.is_boost_bot? && community_admin.account_status == 0
+            channel_type = community.channel_type
 
-          account_id = community_admin.account_id
+            url = ""
+            name = ""
 
-          result[name] = {
-            account_id: account_id,
-            channel_type: channel_type,
-            url: url
-          }
+            if community.channel?
+              name = community.slug
+
+              if community.is_custom_domain?
+                url = "https://#{community.slug}"
+              else
+                url = "https://#{name}.channel.org"
+              end 
+            else
+              name = community_admin.username
+            end
+  
+            account_id = community_admin.account_id
+  
+            result[name] = {
+              account_id: account_id,
+              channel_type: channel_type,
+              url: url
+            }    
+          end
         end
 
         result
