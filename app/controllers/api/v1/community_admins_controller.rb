@@ -67,7 +67,12 @@ module Api
           next unless community_admin
 
           if community_admin.is_boost_bot? && community_admin.account_status == "active"
-            channel_type = community.channel_type
+            # Map the channel_type value with correct naming
+            channel_type = if community.channel_type == "channel"
+                            "community"
+                          elsif community.channel_type == "channel_feed"
+                            "channel"
+                          end
 
             url = ""
             name = community.name
