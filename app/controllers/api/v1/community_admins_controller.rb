@@ -66,7 +66,7 @@ module Api
           community_admin = community.community_admins.last
           next unless community_admin
 
-          if community_admin.is_boost_bot? && community_admin.account_status == 0
+          if community_admin.is_boost_bot? && community_admin.account_status == "active"
             channel_type = community.channel_type
 
             url = ""
