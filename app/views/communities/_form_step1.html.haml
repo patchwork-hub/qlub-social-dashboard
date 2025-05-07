@@ -1,5 +1,6 @@
 - is_channel_feed = user_admin? || params[:channel_type] == 'channel_feed' || @community&.channel_feed?
 - is_channel = organisation_admin? || params[:channel_type] == 'channel' || @community&.channel?
+- channel_type_info  = is_channel_feed ? 'Channel' : is_channel ? 'Community' : 'Hub'
 - ip_address = @community&.ip_address_id.present? ? IpAddress.find_by(id: @community.ip_address_id) : IpAddress.valid_ip
 
 .container-fluid{ 'data-is-channel-feed' => is_channel_feed }
@@ -18,7 +19,7 @@
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step #{fetch_display_step} Channel information
+              %h5.card-title Step #{fetch_display_step} #{channel_type_info} Information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme.
           - is_read_only = params[:id].present? && (!is_channel_feed ? Community.find_by_id(params[:id])&.visibility.present? : true)
@@ -104,18 +105,19 @@
                           %td A
                           %td @
                           %td= ip_address&.ip
-            .row.mb-4
-              .col-md-12
-                .d-flex.align-items-center
-                  %label.form-check-label.switch.mb-0
-                    = f.check_box :is_recommended, { class: "form-check-input switch-input" }
-                    %span.switch-slider.round
-                      %span.slider-tick
-                        %i.fa-solid.fa-check
-                      %span.slider-cross
-                        %i.fa-solid.fa-xmark
-                  %span.ml-2
-                    Recommend this channel to users
+            - unless channel_type_info == 'Hub' 
+              .row.mb-4
+                .col-md-12
+                  .d-flex.align-items-center
+                    %label.form-check-label.switch.mb-0
+                      = f.check_box :is_recommended, { class: "form-check-input switch-input" }
+                      %span.switch-slider.round
+                        %span.slider-tick
+                          %i.fa-solid.fa-check
+                        %span.slider-cross
+                          %i.fa-solid.fa-xmark
+                    %span.ml-2
+                      Recommend this channel to users
           - else
             .row
               .col-md-6.col-sm-12
