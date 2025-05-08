@@ -15,13 +15,13 @@
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step #{fetch_display_step} Choose channel type
+              %h5.card-title Step #{fetch_display_step} Choose community type
         .card-body
-          %p.text-muted.small Select the type of channel you want to create. Each type has different features and use cases.
+          %p.text-muted.small Select the type of community you want to create. Each type has different features and use cases.
 
           .card.p-3.mb-3
             .card-header
-              %h5.mb-0 Channel type
+              %h5.mb-0 Community type
             .card-body.d-flex.flex-column.gap-3
               - @initial_content_types.each do |content_type|
                 .card.mb-2.rounded-lg.radio-card{

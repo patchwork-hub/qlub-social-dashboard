@@ -20,7 +20,7 @@ class CommunityPostService < BaseService
 
   def create_community
     ActiveRecord::Base.transaction do
-      validate_collection
+      validate_collection unless @options[:channel_type] == 'hub'
       validate_community_type
       validate_uniqueness(:name)
       validate_uniqueness(:slug)

@@ -7,16 +7,16 @@ module StepHelper
     is_custom_channel = params[:content_type].present? ? params[:content_type] == 'custom_channel' : @community&.content_type&.custom_channel?
 
     if master_admin? && is_channel
-      steps << { step: 0, display: 1, title: 'Choose channel type', description: 'Select the type of channel you want to create.' }
-      steps << { step: 1, display: 2, title: 'Community Information', description: 'Set up the basic details of your channel.' }
-      steps << { step: 2, display: 3, title: 'Admin and public feed details', description: 'Create admin accounts for your channel.' }
+      steps << { step: 0, display: 1, title: 'Choose community type', description: 'Select the type of community you want to create.' }
+      steps << { step: 1, display: 2, title: 'Community Information', description: 'Set up the basic details of your community.' }
+      steps << { step: 2, display: 3, title: 'Admin and public feed details', description: 'Create admin accounts for your community.' }
       if is_custom_channel
-        steps << { step: 3, display: 4, title: 'Add content', description: 'Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your channel.' }
-        steps << { step: 4, display: 5, title: 'Filter content', description: 'Filter content from the wider network to ensure your channel stays relevant.' }
+        steps << { step: 3, display: 4, title: 'Add content', description: 'Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your community.' }
+        steps << { step: 4, display: 5, title: 'Filter content', description: 'Filter content from the wider network to ensure your community stays relevant.' }
         # steps << { step: 5, display: 6, title: 'Share content', description: 'Select default hashtags to help posts reach audiences beyond your channel.' }
-        steps << { step: 6, display: 6, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the channel.' }
+        steps << { step: 6, display: 6, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the community.' }
       else
-        steps << { step: 6, display: 4, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the channel.' }
+        steps << { step: 6, display: 4, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the community.' }
       end
     elsif user_admin? || is_channel_feed
       steps << { step: 1, display: 1, title: 'Channel information', description: 'Set up the basic details of your channel.' }
