@@ -44,7 +44,7 @@ class CommunityPostService < BaseService
   def update_community
     ActiveRecord::Base.transaction do
       @community = Community.find_by(id: @options[:id])
-      validate_collection
+      validate_collection unless @options[:channel_type] == 'hub'
       validate_community_type
       validate_uniqueness(:name)
       return @community if @community&.errors&.any?
@@ -222,7 +222,6 @@ class CommunityPostService < BaseService
       description: @options[:bio],
       is_recommended: @options[:is_recommended],
       guides: nil,
-      patchwork_collection_id: @collection.id,
       position: get_position,
       admin_following_count: 0,
       patchwork_community_type_id: @community_type.id,
@@ -230,6 +229,12 @@ class CommunityPostService < BaseService
       is_custom_domain: @options[:is_custom_domain],
       ip_address_id: @ip_address_id
     }
+
+    if @options[:channel_type] == 'hub'
+      attributes[:patchwork_collection_id] = nil
+    else
+      attributes[:patchwork_collection_id] = @collection.id
+    end
 
     if @options[:id].blank? || (!@community&.visibility&.present? && !@current_user.user_admin?)
       attributes[:slug] = @options[:slug]
