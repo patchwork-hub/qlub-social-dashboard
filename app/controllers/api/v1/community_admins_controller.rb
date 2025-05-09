@@ -56,26 +56,47 @@ module Api
       end
 
       def boost_bot_accounts_list
-        community_admins = CommunityAdmin.where(is_boost_bot: true, account_status: 0)
-
         result = {}
 
-        community_admins.each do |community_admin|
-          community = Community.find_by(id: community_admin.patchwork_community_id)
-          next unless community
+        communities = Community.where(channel_type: ['channel_feed', 'channel'])
+                              .where(deleted_at: nil)
 
-          channel_type = community.channel_type
-          name = community.slug
+        communities.each do |community|
+          
+          community_admin = community.community_admins.last
+          next unless community_admin
 
-          url = community.channel? ? (community.is_custom_domain? ? name : "https://#{name}.channel.org") : ""
+          if community_admin.is_boost_bot? && community_admin.account_status == "active"
+            # Map the channel_type value with correct naming
+            channel_type = if community.channel_type == "channel"
+                            "community"
+                          elsif community.channel_type == "channel_feed"
+                            "channel"
+                          end
 
-          account_id = community_admin.account_id
+            url = ""
+            name = community.name
 
-          result[name] = {
-            account_id: account_id,
-            channel_type: channel_type,
-            url: url
-          }
+            if community.channel?
+              slug = community.slug.downcase
+
+              if community.is_custom_domain?
+                url = "https://#{slug}"
+              else
+                url = "https://#{slug}.channel.org"
+              end
+            else
+              url = "https://channel.org/@#{community_admin.account.username}"
+            end
+  
+            account_id = community_admin.account_id
+  
+            result[name] = {
+              account_id: account_id,
+              channel_type: channel_type,
+              url: url
+            }    
+          end
         end
 
         result

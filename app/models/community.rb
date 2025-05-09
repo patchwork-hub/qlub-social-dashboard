@@ -148,7 +148,8 @@ class Community < ApplicationRecord
 
   belongs_to :patchwork_collection,
             class_name: 'Collection',
-            foreign_key: 'patchwork_collection_id'
+            foreign_key: 'patchwork_collection_id',
+            optional: true
 
   belongs_to :patchwork_community_type,
               class_name: 'CommunityType',
