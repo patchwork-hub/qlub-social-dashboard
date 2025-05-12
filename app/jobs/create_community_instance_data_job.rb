@@ -30,7 +30,6 @@ class CreateCommunityInstanceDataJob < ApplicationJob
     @single_user_mode = (community.hub? && community.registration_mode == 'none').to_s
     @registration_mode = community.registration_mode
     @ip_address = community.ip_address&.private_ip
-    @is_hub = community.hub?
 
     payload = build_payload(community_id, community_slug)
     puts payload
@@ -122,8 +121,7 @@ class CreateCommunityInstanceDataJob < ApplicationJob
       SMTP_AUTH_METHOD: ENV['SMTP_AUTH_METHOD'],
       SMTP_ENABLE_STARTTLS: ENV['SMTP_ENABLE_STARTTLS'],
       SMTP_ENABLE_STARTTLS_AUTO: ENV['SMTP_ENABLE_STARTTLS_AUTO'],
-      SMTP_PORT: ENV['SMTP_PORT'],
-      IS_HUB: @is_hub
+      SMTP_PORT: ENV['SMTP_PORT']
     }.to_json
   end
 
