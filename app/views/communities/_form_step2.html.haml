@@ -15,10 +15,10 @@
               .row
                 .mt-auto
                   %p.text-muted.small Assign additional administrators to your channel by providing their details below.
-            - if @community.channel? && @records.size == 0
+            - if @community.channel? && @records.size > 0
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add new
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal", "data-hide-boost-bot" => "true"} Add new
           %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
             %thead
               %tr
@@ -36,7 +36,7 @@
                     %p.text-muted.small You haven’t added any administrators to this channel yet
                     %a.text-danger.small{href: "#", "data-toggle" => "modal", "data-target" => "#communityAdminModal"}
                       Click here to add one
-              - @records.each do |community_admin|
+              - @records.each_with_index do |community_admin, index|
                 %tr
                   %td.text-center
                     = check_box_tag "selected_accounts[]", community_admin.id, false, class: 'select_account'
@@ -55,7 +55,8 @@
                       "data-email": community_admin.email,
                       "data-password": community_admin.password,
                       "data-role": community_admin.role,
-                      "data-is-boost-bot": community_admin.is_boost_bot.to_s
+                      "data-is-boost-bot": community_admin.is_boost_bot.to_s,
+                      "data-hide-boost-bot": (@community.channel? && index > 1)
                     }
                       = image_tag("icons/eye.svg", class: "ml-2", width: "16", height: "16", style: "filter: invert(21%) sepia(82%) saturate(7471%) hue-rotate(356deg) brightness(99%) contrast(112%);")
           .pagination.pagination-sm.m-0.float-right.mt-1
