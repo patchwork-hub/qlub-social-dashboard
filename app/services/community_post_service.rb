@@ -47,13 +47,7 @@ class CommunityPostService < BaseService
       validate_community_type
       return @community if @community&.errors&.any?
       set_default_additional_information
-
-      begin
-        @community.update!(community_attributes)
-      rescue ActiveRecord::RecordNotUnique => e
-        @community.errors.add(:slug, "is already taken")
-        return @community
-      end
+      @community.update(community_attributes)
       if @community.community_admins.present?
         @account = Account.find_by(id: @community.community_admins.first.account_id) if @current_user.master_admin?
         update_account_attributes
