@@ -197,7 +197,7 @@ class Community < ApplicationRecord
 
   belongs_to :ip_address, optional: true
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
 
   validates :registration_mode, inclusion: { in: ['open', 'approved', 'none'] }
 
