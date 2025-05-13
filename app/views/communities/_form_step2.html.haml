@@ -15,10 +15,10 @@
               .row
                 .mt-auto
                   %p.text-muted.small Assign additional administrators to your channel by providing their details below.
-            - if @community.channel? && @records.size > 0
+            - if @community.channel?
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal", "data-hide-boost-bot" => "true"} Add new
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal", "data-hide-boost-bot" => (@records.size != 0).to_s} Add new
           %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
             %thead
               %tr
@@ -56,7 +56,7 @@
                       "data-password": community_admin.password,
                       "data-role": community_admin.role,
                       "data-is-boost-bot": community_admin.is_boost_bot.to_s,
-                      "data-hide-boost-bot": (@community.channel? && index > 1)
+                      "data-hide-boost-bot": (@community.channel? && index > 0).to_s
                     }
                       = image_tag("icons/eye.svg", class: "ml-2", width: "16", height: "16", style: "filter: invert(21%) sepia(82%) saturate(7471%) hue-rotate(356deg) brightness(99%) contrast(112%);")
           .pagination.pagination-sm.m-0.float-right.mt-1
