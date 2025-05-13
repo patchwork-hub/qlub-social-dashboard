@@ -15,7 +15,7 @@ module Scheduler
       communities.each do |community|
         Rails.logger.info("[FollowBlueskyBotScheduler] community: id = #{community.id} | name =  #{community.name} | slug = #{community.slug}")
 
-        community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true).first
+        community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
         next if community_admin.nil?
 
         account = community_admin&.account
@@ -49,7 +49,7 @@ module Scheduler
         else
           FollowService.new.call(account, target_account)
           account_relationship_array = handle_relationship(account, target_account.id)
-          process_did_value(target_account, community, token, account) if account_relationship_array.present? && account_relationship_array&.last && account_relationship_array&.last['following']
+          process_did_value(community, token, account) if account_relationship_array.present? && account_relationship_array&.last && account_relationship_array&.last['following']
         end
       end
     end
