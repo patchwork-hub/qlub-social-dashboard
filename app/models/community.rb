@@ -220,6 +220,8 @@ class Community < ApplicationRecord
 
   scope :exclude_array_ids, -> { where.not(id: EXCLUDE_ARRAY_IDS) }
 
+  scope :not_deleted, -> { where(deleted: nil) }
+
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub' }
 
   def self.ransackable_attributes(auth_object = nil)
