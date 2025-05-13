@@ -205,6 +205,7 @@ class Community < ApplicationRecord
       .filter_channels
       .exclude_array_ids
       .exclude_incomplete_channels
+      .exclude_deleted_channels
       .order('patchwork_community_types.sorting_index ASC')
   }
 
@@ -215,6 +216,8 @@ class Community < ApplicationRecord
   scope :filter_channel_feeds, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }) }
 
   scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
+
+  scope :exclude_deleted_channels, -> { where.not(patchwork_communities: { deleted_at: nil }) }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 

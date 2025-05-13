@@ -51,11 +51,11 @@ class Api::V1::CollectionSerializer
 
   def self.default_community_count(object, params)
     if object.slug == "all-collection" && params[:type] == 'channel'
-      Community.filter_channels.exclude_array_ids.exclude_incomplete_channels.size
+      Community.filter_channels.exclude_array_ids.exclude_incomplete_channels.exclude_deleted_channels.size
     elsif object.slug == "all-collection" && params[:type] == 'channel_feed'
-      Community.filter_channel_feeds.exclude_array_ids.exclude_incomplete_channels.size
+      Community.filter_channel_feeds.exclude_array_ids.exclude_incomplete_channels.exclude_deleted_channels.size
     else
-      object.patchwork_communities.exclude_array_ids.filter_channels.exclude_incomplete_channels.size
+      object.patchwork_communities.exclude_array_ids.filter_channels.exclude_incomplete_channels.exclude_deleted_channels.size
     end
   end
 
@@ -71,12 +71,12 @@ class Api::V1::CollectionSerializer
     communities = case params[:type]
                   when 'channel'
                     if params[:recommended]
-                      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.recommended
+                      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.exclude_deleted_channels.recommended
                     else
-                      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
+                      object.patchwork_communities.filter_channels.exclude_array_ids.exclude_incomplete_channels.exclude_deleted_channels.ordered_pos_name
                     end
                   when 'channel_feed'
-                    object.patchwork_communities.filter_channel_feeds.exclude_array_ids.exclude_incomplete_channels.ordered_pos_name
+                    object.patchwork_communities.filter_channel_feeds.exclude_array_ids.exclude_incomplete_channels.exclude_deleted_channels.ordered_pos_name
                   else
                     []
                   end

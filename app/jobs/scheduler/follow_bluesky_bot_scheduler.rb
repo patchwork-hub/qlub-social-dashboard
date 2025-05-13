@@ -9,7 +9,7 @@ module Scheduler
     def perform
       return if ENV.fetch('RAILS_ENV', nil).eql?('staging')
 
-      communities = Community.where(did_value: nil).exclude_incomplete_channels
+      communities = Community.where(did_value: nil).exclude_incomplete_channels.exclude_deleted_channels
       return unless communities.any?
 
       communities.each do |community|
