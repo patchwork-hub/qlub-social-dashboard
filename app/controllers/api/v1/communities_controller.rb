@@ -9,7 +9,7 @@ module Api
       PER_PAGE = 5
 
       def index
-        communities = records_filter.get.where(channel_type: @channel_type).not_deleted
+        communities = records_filter.get.where(channel_type: @channel_type)
         render json: Api::V1::ChannelSerializer.new(communities).serializable_hash.to_json
       end
 
