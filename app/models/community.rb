@@ -217,7 +217,7 @@ class Community < ApplicationRecord
 
   scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
 
-  scope :exclude_deleted_channels, -> { where.not(patchwork_communities: { deleted_at: nil }) }
+  scope :exclude_deleted_channels, -> { where(patchwork_communities: { deleted_at: nil }) }
 
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
