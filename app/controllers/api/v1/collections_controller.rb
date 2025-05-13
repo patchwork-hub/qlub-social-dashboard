@@ -99,9 +99,10 @@ module Api
 
       def fetch_communities(type:)
         base_communities = if params[:slug] == 'all-collection'
-          Community.all
+          Community.where(deleted_at: nil)
         else
-          Collection.find_by(slug: params[:slug])&.patchwork_communities
+          collection = Collection.find_by(slug: params[:slug])
+          collection&.patchwork_communities&.where(deleted_at: nil)
         end
         return [] unless base_communities
 
