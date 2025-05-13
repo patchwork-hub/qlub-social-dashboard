@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  var editButtons = document.querySelectorAll(
+  var Buttons = document.querySelectorAll(
     '[data-target="#communityAdminModal"]'
   );
   var form = document.querySelector("#new_admin_form");
@@ -20,13 +20,26 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   };
 
-  editButtons.forEach(function (button) {
+  Buttons.forEach(function (button) {
     button.addEventListener("click", function () {
       var adminId = this.getAttribute("data-admin-id");
       var email = this.getAttribute("data-email");
       var password = this.getAttribute("data-password");
       var role = this.getAttribute("data-role");
       var isBoostBot = this.getAttribute("data-is-boost-bot") === "true";
+
+      const hideBoostBot = this.getAttribute("data-hide-boost-bot") === "true";
+      const boostBotWrapper = document.querySelector(
+        "#is_boost_bot_checkbox_wrapper"
+      );
+
+      if (boostBotWrapper) {
+        if (hideBoostBot) {
+          boostBotWrapper.style.display = "none";
+        } else {
+          boostBotWrapper.style.display = "";
+        }
+      }
 
       // Populate the form fields
       emailField.value = email || "";

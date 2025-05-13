@@ -32,7 +32,7 @@
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
 #  ip_address_id               :bigint
-#  patchwork_collection_id     :bigint           not null
+#  patchwork_collection_id     :bigint
 #  patchwork_community_type_id :bigint
 #
 # Indexes

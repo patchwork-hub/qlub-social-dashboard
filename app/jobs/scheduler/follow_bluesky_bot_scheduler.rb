@@ -15,7 +15,7 @@ module Scheduler
       communities.each do |community|
         Rails.logger.info("[FollowBlueskyBotScheduler] community: id = #{community.id} | name =  #{community.name} | slug = #{community.slug}")
 
-        community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
+        community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true).first
         next if community_admin.nil?
 
         account = community_admin&.account
@@ -56,7 +56,7 @@ module Scheduler
 
     private
 
-    def enable_bride_bluesky?(account)  
+    def enable_bride_bluesky?(account)
       account&.username.present? && account&.display_name.present?
     end
 
@@ -64,7 +64,7 @@ module Scheduler
       query = '@bsky.brid.gy@bsky.brid.gy'
       retries = 5
       result = nil
-    
+
       while retries >= 0
         result = ContributorSearchService.new(query, url: ENV['MASTODON_INSTANCE_URL'], token: token).call
         if result.any?
@@ -73,7 +73,7 @@ module Scheduler
         retries -= 1
       end
       nil
-    end  
+    end
 
     def fetch_oauth_token(user)
       GenerateAdminAccessTokenService.new(user&.id).call

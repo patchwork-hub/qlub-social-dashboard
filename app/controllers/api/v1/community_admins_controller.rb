@@ -36,7 +36,7 @@ module Api
           render json: { error: 'Account not found' }, status: :not_found
           return
         end
-      
+
         if @community_admin.update(account_status: params[:account_status])
           handle_account_status_change(@community_admin)
         else
@@ -62,8 +62,8 @@ module Api
                               .where(deleted_at: nil)
 
         communities.each do |community|
-          
-          community_admin = community.community_admins.last
+
+          community_admin = community.community_admins.first
           next unless community_admin
 
           if community_admin.is_boost_bot? && community_admin.account_status == "active"
@@ -88,14 +88,14 @@ module Api
             else
               url = "https://channel.org/@#{community_admin.account.username}"
             end
-  
+
             account_id = community_admin.account_id
-  
+
             result[name] = {
               account_id: account_id,
               channel_type: channel_type,
               url: url
-            }    
+            }
           end
         end
 
