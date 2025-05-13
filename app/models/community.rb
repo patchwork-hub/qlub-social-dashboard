@@ -197,8 +197,6 @@ class Community < ApplicationRecord
 
   belongs_to :ip_address, optional: true
 
-  validates :name, presence: true, uniqueness: true
-
   validates :registration_mode, inclusion: { in: ['open', 'approved', 'none'] }
 
   scope :recommended, -> {
@@ -221,6 +219,8 @@ class Community < ApplicationRecord
   enum visibility: { public_access: 0, guest_access: 1, private_local: 2 }
 
   scope :exclude_array_ids, -> { where.not(id: EXCLUDE_ARRAY_IDS) }
+
+  scope :not_deleted, -> { where(deleted: nil) }
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub' }
 
