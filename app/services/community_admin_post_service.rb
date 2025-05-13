@@ -26,7 +26,7 @@ class CommunityAdminPostService < BaseService
       account_attributes[:actor_type] = 'Person'
     end
 
-    admin = Account.find_or_initialize_by(username: @community_admin.username)
+    admin = Account.find_or_initialize_by(username: @community_admin.username, domain: nil)
     admin.assign_attributes(account_attributes.compact)
     admin.save!
 
