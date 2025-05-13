@@ -9,7 +9,7 @@ module Api
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
 
       def recommend_channels
-        @recommended_channels = Community.recommended.exclude_array_ids
+        @recommended_channels = Community.recommended.not_deleted.exclude_array_ids
         render json: Api::V1::ChannelSerializer.new(@recommended_channels).serializable_hash.to_json
       end
 
@@ -47,7 +47,7 @@ module Api
       end
 
       def channel_feeds
-        channel_feeds = Community.filter_channel_feeds.exclude_incomplete_channels
+        channel_feeds = Community.filter_channel_feeds.not_deleted.exclude_incomplete_channels
         render json: Api::V1::ChannelSerializer.new(channel_feeds , { params: { current_account: current_account } }).serializable_hash.to_json
       end
 
@@ -55,9 +55,9 @@ module Api
         render json: NEWSMAST_CHANNELS.size > 0 ? { data: NEWSMAST_CHANNELS } : { data: [] }
       end
 
-      private 
+      private
 
-      def set_channel 
+      def set_channel
         @channel = Community.find_by(slug: params[:id])
       end
 
@@ -72,11 +72,11 @@ module Api
           channel_feed: serialized_channel_feed(channel_feed)
         }
       end
-            
+
       def serialized_channel(channel)
         channel ? Api::V1::ChannelSerializer.new(channel, {}) : {}
       end
-      
+
       def serialized_channel_feed(channel_feed)
         if !channel_feed.nil? && channel_feed[:account].present? && channel_feed[:community].present?
           Api::V1::ChannelFeedSerializer.new(channel_feed[:account], { params: { community: channel_feed[:community] } })
