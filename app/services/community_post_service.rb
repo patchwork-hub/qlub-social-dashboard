@@ -93,7 +93,7 @@ class CommunityPostService < BaseService
   def slug_uniqueness_within_accounts
     return unless @options[:slug].present?
 
-    if Account.where(username: @options[:slug].parameterize.underscore).exists?
+    if Account.where(username: @options[:slug].parameterize.underscore, domain: nil).exists?
       unless @current_user.user_admin? && @current_user&.account&.username == @options[:slug].parameterize.underscore
         @community ||= Community.new(community_attributes)
         @community.errors.add(:slug, "is already taken by an existing account username")
