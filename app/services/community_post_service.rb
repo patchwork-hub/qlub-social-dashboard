@@ -22,7 +22,6 @@ class CommunityPostService < BaseService
     ActiveRecord::Base.transaction do
       validate_collection unless @options[:channel_type] == 'hub'
       validate_community_type
-      validate_uniqueness(:name)
       validate_uniqueness(:slug)
       slug_uniqueness_within_accounts
       return @community if @community&.errors&.any?
@@ -46,7 +45,6 @@ class CommunityPostService < BaseService
       @community = Community.find_by(id: @options[:id])
       validate_collection unless @options[:channel_type] == 'hub'
       validate_community_type
-      validate_uniqueness(:name)
       return @community if @community&.errors&.any?
       set_default_additional_information
 
