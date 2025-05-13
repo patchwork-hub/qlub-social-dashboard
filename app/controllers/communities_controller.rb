@@ -35,7 +35,7 @@ class CommunitiesController < BaseController
 
     community.update!(channel_type: :channel, visibility: nil)
 
-    if (admin = community.community_admins.last)
+    if (admin = community.community_admins.first)
       admin.update!(role: "OrganisationAdmin")
 
       if (account = Account.find_by(id: admin.account_id))
@@ -50,8 +50,8 @@ class CommunitiesController < BaseController
   def destroy
     @channel = Community.find(params[:id])
     @channel.soft_delete!
-    if @channel.community_admins.last
-      @channel.community_admins.last.update(account_status: :suspended)
+    if @channel.community_admins.first
+      @channel.community_admins.first.update(account_status: :suspended)
     end
     redirect_to communities_path(channel_type: params[:channel_type_param])
   end
@@ -61,8 +61,8 @@ class CommunitiesController < BaseController
     channel_type = params[:channel_type_param]
     if @channel.recoverable?
       @channel.recover!
-      if @channel.community_admins.last
-        @channel.community_admins.last.update(account_status: :active)
+      if @channel.community_admins.first
+        @channel.community_admins.first.update(account_status: :active)
       end
       redirect_to communities_path(channel_type: channel_type)
     else
