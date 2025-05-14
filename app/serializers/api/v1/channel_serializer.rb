@@ -43,7 +43,11 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :favourited do |object, params|
-    params[:current_account] ? JoinedCommunity.exists?(patchwork_community_id: object.id, account_id: params[:current_account]['id']) : false
+    favourited_status(object.id, params[:current_account]['id'])
+  end
+
+  attribute :is_primary do |object, params|
+    primary_status(object.id, params[:current_account]['id'])
   end
 
   attribute :community_admin do |object|
@@ -80,4 +84,15 @@ class Api::V1::ChannelSerializer
     end
   end
 
+  def self.favourited_status(channel_id, account_id)
+    return false unless account_id
+  
+    JoinedCommunity.exists?(patchwork_community_id: channel_id, account_id: account_id)
+  end
+  
+  def self.primary_status(channel_id, account_id)
+    return false unless account_id
+  
+    JoinedCommunity.exists?(patchwork_community_id: channel_id, is_primary: true, account_id: account_id)
+  end
 end

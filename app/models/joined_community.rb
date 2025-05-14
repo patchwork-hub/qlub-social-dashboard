@@ -27,4 +27,14 @@ class JoinedCommunity < ApplicationRecord
 
   validates :community, presence: true
   validates :account, presence: true, uniqueness: { scope: :patchwork_community_id }
+
+  validate :ensure_only_one_primary_for_account
+
+  private
+
+  def ensure_only_one_primary_for_account
+    if is_primary? && JoinedCommunity.where(account_id: account_id, is_primary: true).exists?
+      errors.add(:is_primary, "can only be true for one community per account")
+    end
+  end
 end
