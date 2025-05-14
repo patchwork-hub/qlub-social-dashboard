@@ -3,6 +3,7 @@
 # Table name: patchwork_joined_communities
 #
 #  id                     :bigint           not null, primary key
+#  is_primary             :boolean          default(FALSE), not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  account_id             :bigint           not null

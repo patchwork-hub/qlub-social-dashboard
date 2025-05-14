@@ -53,7 +53,12 @@ module Api
       end
 
       def newsmast_channels
-        render json: NEWSMAST_CHANNELS.size > 0 ? { data: NEWSMAST_CHANNELS } : { data: [] }
+        newsmast_channels = Community.filter_newsmast_channels.exclude_incomplete_channels
+        if newsmast_channels.present?
+          render json: Api::V1::ChannelSerializer.new(newsmast_channels , { params: { current_account: current_remote_account } }).serializable_hash.to_json
+        else
+          render json: NEWSMAST_CHANNELS.size > 0 ? { data: NEWSMAST_CHANNELS } : { data: [] }
+        end
       end
 
       private
@@ -87,7 +92,11 @@ module Api
       end
 
       def check_authorization_header
-        authenticate_user_from_header if request.headers['Authorization'].present?
+        if request.headers['Authorization'].present? && params[:instance_domain].present?
+          validate_mastodon_account
+        else
+          authenticate_user_from_header if request.headers['Authorization'].present?
+        end
       end
     end
   end

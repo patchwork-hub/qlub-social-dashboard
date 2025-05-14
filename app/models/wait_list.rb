@@ -22,7 +22,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (account_id => accounts.id)
+#  fk_rails_...  (account_id => accounts.id) ON DELETE => cascade
 #
 class WaitList < ApplicationRecord
   self.table_name = 'patchwork_wait_lists'
