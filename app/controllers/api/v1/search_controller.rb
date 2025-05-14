@@ -25,6 +25,7 @@ module Api
                       .filter_channels
                       .exclude_array_ids
                       .exclude_incomplete_channels
+                      .exclude_deleted_channels
                       .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(communities).serializable_hash
@@ -35,6 +36,7 @@ module Api
                         .filter_channel_feeds
                         .exclude_array_ids
                         .exclude_incomplete_channels
+                        .exclude_deleted_channels
                         .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(channel_feeds, { params: { current_account: current_account } }).serializable_hash

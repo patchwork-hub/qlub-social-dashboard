@@ -111,6 +111,7 @@ module Api
         .public_send(scope)
         .exclude_array_ids
         .exclude_incomplete_channels
+        .exclude_deleted_channels
         .ordered_pos_name
       end
 
