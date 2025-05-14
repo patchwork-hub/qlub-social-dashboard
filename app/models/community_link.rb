@@ -31,9 +31,8 @@ class CommunityLink < ApplicationRecord
     website: "WebsiteIcon",
     rssfeed: "RssFeedIcon",
     bluesky: "Bluesky",
-    thread: "ThreadIcon",
+    threads: "ThreadIcon",
     mastodon: "Mastodon",
-    message: "MessageIcon",
     video: "Video",
     linktree: "LinkTree",
     facebook: "Facebook",
@@ -44,14 +43,17 @@ class CommunityLink < ApplicationRecord
     snapchat: "Snapchat",
     pixelfed: "Pixelfed",
     reddit: "Reddit",
-    x: "X"
+    x: "X",
+    linkedin: "LinkedIn",
+    github: "GitHub"
+
   }
 
   scope :social, -> { where(is_social: true) }
   scope :general, -> { where(is_social: false) }
 
   # Icon categories
-  SOCIAL_ICONS = %i[bluesky facebook instagram linktree mastodon pinterest pixelfed reddit snapchat thread tiktok whatsapp x].freeze
+  SOCIAL_ICONS = %i[bluesky facebook instagram linktree mastodon pinterest pixelfed reddit snapchat threads tiktok whatsapp x linkedin github].freeze
 
   GENERAL_ICONS = icons.keys.map(&:to_sym) - SOCIAL_ICONS
 
