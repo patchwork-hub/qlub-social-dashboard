@@ -147,7 +147,7 @@ function displaySearchResults(accounts) {
         </p>
         <small class="text-muted">
           <a href="${account.profile_url}" target="_blank">
-            @${account.username}@${account.domain}
+            @${account.username}@${account.domain || "channel.org"}
           </a>
         </small>
       </div>
