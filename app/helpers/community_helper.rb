@@ -136,9 +136,9 @@ module CommunityHelper
 
     protocol = %w[production staging].include?(ENV.fetch('RAILS_ENV', nil)) ? 'https' : 'http'
     if community&.is_custom_domain
-      "#{protocol}://#{community&.slug}"
+      "#{protocol}://#{community&.slug}/public"
     else
-      "#{protocol}://#{community&.slug}.#{default_domain}"
+      "#{protocol}://#{community&.slug}.#{default_domain}/public"
     end
   end
 
