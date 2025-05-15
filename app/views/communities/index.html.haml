@@ -64,7 +64,7 @@
                   %td
                     - if address_url(community).present?
                       %p
-                        = link_to address_url(community), address_url(community), target: '_blank'
+                        = link_to address_url(community).sub('/public', ''), address_url(community), target: '_blank'
                     - else
                       %p.text-muted -
                 %td
