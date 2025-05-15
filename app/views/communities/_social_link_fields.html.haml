@@ -3,9 +3,9 @@
     = f.hidden_field :is_social, value: true
     = f.select :icon, options_for_select( CommunityLink::SOCIAL_ICONS.map do |icon| [icon.to_s.titleize, icon, { data: { icon: image_path("icons/#{icon.to_s.dasherize}.svg") } }] end, f.object.icon ), {}, class: 'form-control select2-icon'
   %td
-    = f.text_field :name, class: 'form-control', placeholder: "Enter name"
+    = f.input :name, input_html: { class: 'form-control', placeholder: "Enter name" }, label: false
   %td{ colspan: 2 }
-    = f.text_field :url, class: 'form-control', placeholder: "Enter URL"
+    = f.input :url, input_html: { class: 'form-control', placeholder: "Enter URL" }, label: false
   %td
     = link_to_remove_association f, class: 'text-danger' do
       = image_tag("icons/trash-can.svg", width: "16", height: "16")

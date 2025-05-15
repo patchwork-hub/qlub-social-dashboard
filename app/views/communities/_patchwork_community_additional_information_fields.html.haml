@@ -1,8 +1,8 @@
 %tr.nested-fields
   %td{ style: 'width: 30%;' }
-    = f.text_field :heading, class: 'form-control', placeholder: "Enter heading"
+    = f.input :heading, input_html: { class: 'form-control', placeholder: "Enter heading" }, label: false
   %td{ style: 'width: 65%;' }
-    = f.text_field :text, class: 'form-control', placeholder: "Enter text"
+    = f.input :text, as: :string, input_html: { class: 'form-control', placeholder: "Enter text" }, label: false
   %td{ style: 'width: 5%;' }
     = link_to_remove_association f, class: 'text-danger', title: "Remove" do
       = image_tag("icons/trash-can.svg", class: "ml-2", width: "16", height: "16")

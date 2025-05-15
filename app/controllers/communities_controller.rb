@@ -289,6 +289,14 @@ class CommunitiesController < BaseController
     )
   end
 
+  def prepare_for_step6_rendering
+    fetch_community_admins
+    @community.patchwork_community_rules.build if @community.patchwork_community_rules.empty?
+    @community.patchwork_community_additional_informations.build if @community.patchwork_community_additional_informations.empty?
+    @community.social_links.build if @community.social_links.empty?
+    @community.general_links.build if @community.general_links.empty?
+  end
+
   def community_params
     params.require(:community).permit(
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
@@ -318,16 +326,21 @@ class CommunitiesController < BaseController
   end
 
   def update_additional_information
+    @community.assign_attributes(community_params)
+    @community.registration_mode = params[:registration_mode]
+
     if params[:community].blank?
       @community.errors.add(:base, "Missing additional information")
-      return handle_update_error(step6_community_path)
+      prepare_for_step6_rendering
+      render :step6
+      return
     end
 
-    if @community.update(community_params)
-      @community.update(registration_mode: params[:registration_mode])
+    if @community.save
       respond_to(&:html)
     else
-      handle_update_error(step6_community_path)
+      prepare_for_step6_rendering
+      render :step6
     end
   end
 
@@ -493,11 +506,6 @@ class CommunitiesController < BaseController
 
   def new_community_post_type
     CommunityPostType.new(patchwork_community_id: @community.id)
-  end
-
-  def handle_update_error(redirect_path)
-    flash[:error] = @community.errors.full_messages.join(", ")
-    redirect_to redirect_path
   end
 
   # Bluesky integration
