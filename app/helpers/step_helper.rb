@@ -70,7 +70,12 @@ module StepHelper
   end
 
   def fetch_display_step
-    step_data = community_steps.find { |s| s[:step] == @current_step }
-    step_data ? step_data[:display] : 1
+    if request.path.include?("manage_additional_information")
+      @community.content_type.custom_channel? ? 6 : 4
+    else
+      step_data = community_steps.find { |s| s[:step] == @current_step }
+      step_data ? step_data[:display] : 1
+    end
   end
+
 end

@@ -23,7 +23,9 @@
 class CommunityLink < ApplicationRecord
   self.table_name = 'patchwork_community_links'
   belongs_to :community, class_name: 'Community', foreign_key: 'patchwork_community_id'
+  validates :name, presence: true
   validates :url, presence: true, uniqueness: { scope: :patchwork_community_id }
+
   enum :icon, {
     blog: "BlogIcon",
     podcast: "PodcastIcon",

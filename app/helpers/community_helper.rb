@@ -94,11 +94,11 @@ module CommunityHelper
     end
   end
 
-  def previous_path_for_step6(community, content_type)
-    return step4_community_path(id: community.id, channel_type: community.channel_type) if content_type&.custom_channel?
+  def previous_path_for_step6(community)
+    return step4_community_path(id: community.id, channel_type: community.channel_type) if community&.content_type&.custom_channel?
 
     if organisation_admin?
-      step1_communities_path(id: community.id, channel_type: community.channel_type, content_type: content_type&.channel_type)
+      step1_communities_path(id: community.id, channel_type: community.channel_type, content_type: community&.content_type&.custom_channel?)
     elsif master_admin?
       step2_community_path(id: community.id, channel_type: community.channel_type)
     else
@@ -136,9 +136,9 @@ module CommunityHelper
 
     protocol = %w[production staging].include?(ENV.fetch('RAILS_ENV', nil)) ? 'https' : 'http'
     if community&.is_custom_domain
-      "#{protocol}://#{community&.slug}"
+      "#{protocol}://#{community&.slug}/public"
     else
-      "#{protocol}://#{community&.slug}.#{default_domain}"
+      "#{protocol}://#{community&.slug}.#{default_domain}/public"
     end
   end
 
