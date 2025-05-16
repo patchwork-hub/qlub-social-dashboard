@@ -31,9 +31,8 @@ class JoinedCommunity < ApplicationRecord
   validate :ensure_only_one_primary_for_account
 
   private
-
   def ensure_only_one_primary_for_account
-    if is_primary? && JoinedCommunity.exists?(account_id: account_id, is_primary: true)
+    if is_primary? && account.joined_communities.where(is_primary: true).where.not(id: id).exists?
       errors.add(:is_primary, "can only be true for one community per account")
     end
   end
