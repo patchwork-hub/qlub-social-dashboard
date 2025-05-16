@@ -60,65 +60,69 @@ module Api
 
       private
 
-      def already_favorited?(patchwork_community)
-        return false if params[:instance_domain].present?
-      
-        CommunityAdmin.exists?(
-          patchwork_community_id: patchwork_community.id,
-          account_id: @account.id
-        )
-      end
-
-      def joined_community_params
-        params.permit(:account_id).merge(account_id: @account.id)
-      end
-
-      def find_patchwork_community(slug)
-        return unless slug.present?
-
-        Community.exclude_incomplete_channels.find_by(slug: slug)
-      end
-
-      def check_authorization_header
-        if request.headers['Authorization'].present? && params[:instance_domain].present?
-          login_with_mastodon
-        else
-          authenticate_user_from_header
-          @account = current_account
+        def already_favorited?(patchwork_community)
+          return false if params[:instance_domain].present?
+        
+          CommunityAdmin.exists?(
+            patchwork_community_id: patchwork_community.id,
+            account_id: @account.id
+          )
         end
-      end
 
-      def login_with_mastodon
-        validate_mastodon_account
-        @account = current_remote_account
-      end
+        def joined_community_params
+          params.permit(:account_id).merge(account_id: @account.id)
+        end
 
-      def joined_channels
-        @joined_communities = @account&.communities
-        @community = Community.find_by(slug: params[:id])
-      end
+        def find_patchwork_community(slug)
+          return unless slug.present?
 
-      def handle_primary_status_change(is_primary:, error_message:)
-        unless @joined_communities&.any?
-          return render json: { errors: 'You don\'t have favourited channels' }, status: 422
+          Community.exclude_incomplete_channels.find_by(slug: slug)
         end
-      
-        unless @community
-          return render json: { errors: 'Community not found' }, status: 404
+
+        def check_authorization_header
+          if request.headers['Authorization'].present? && params[:instance_domain].present?
+            login_with_mastodon
+          else
+            authenticate_user_from_header
+            @account = current_account
+          end
         end
-      
-        joined_channel = @account.joined_communities.find_by(patchwork_community_id: @community.id, is_primary: !is_primary)
-        unless joined_channel
-          return render json: { errors: error_message }, status: 422
+
+        def login_with_mastodon
+          validate_mastodon_account
+          @account = current_remote_account
         end
-      
-        if joined_channel.update(is_primary: is_primary)
-          message = is_primary ? 'Channel has been set primary successfully' : 'Channel has been unset primary successfully'
-          render json: { message: message }, status: 200
-        else
-          render json: { errors: joined_channel.errors.full_messages }, status: 422
+
+        def joined_channels
+          @joined_communities = @account&.communities&.to_a || []
+          @joined_communities.sort_by! do |community|
+            joined = community.joined_communities.find_by(account_id: @account.id)
+            joined&.is_primary ? 0 : 1
+          end
+          @community = Community.find_by(slug: params[:id])
         end
-      end
+
+        def handle_primary_status_change(is_primary:, error_message:)
+          unless @joined_communities&.any?
+            return render json: { errors: 'You don\'t have favourited channels' }, status: 422
+          end
+        
+          unless @community
+            return render json: { errors: 'Community not found' }, status: 404
+          end
+        
+          joined_channel = @account.joined_communities.find_by(patchwork_community_id: @community.id, is_primary: !is_primary)
+          unless joined_channel
+            return render json: { errors: error_message }, status: 422
+          end
+        
+          if joined_channel.update(is_primary: is_primary)
+            message = is_primary ? 'Channel has been set primary successfully' : 'Channel has been unset primary successfully'
+            render json: { message: message }, status: 200
+          else
+            render json: { errors: joined_channel.errors.full_messages }, status: 422
+          end
+        end
     end
   end
 end
