@@ -71,7 +71,6 @@ namespace :api, defaults: { format: :json } do
     resources :joined_communities, only: %i[index create destroy] do
       collection do
         post :set_primary
-        post :unset_primary
       end
     end
 

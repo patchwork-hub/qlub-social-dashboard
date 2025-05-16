@@ -35,7 +35,7 @@ class ApiController < ApplicationController
 
   def authenticate_user_from_header
     token = bearer_token
-    return render json: { error: 'The access token is invalid' }, status: :unauthorized unless token
+    return render json: { error: 'Authentication required!' }, status: :unauthorized unless token
 
     user_info = validate_token(token)
 
@@ -54,7 +54,7 @@ class ApiController < ApplicationController
 
   def validate_mastodon_account
     token = bearer_token
-    return render json: { error: 'The access token is invalid' }, status: :unauthorized unless token || !instance_domain.nil?
+    return render json: { error: 'Authentication required!' }, status: :unauthorized unless token && !instance_domain.nil?
 
     acc_id = RemoteAccountVerifyService.new(token, instance_domain).call.fetch_remote_account_id
 
