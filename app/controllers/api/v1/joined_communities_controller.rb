@@ -104,7 +104,16 @@ module Api
         end
 
         def load_joined_channels
-          @joined_communities = @account&.communities
+          @joined_communities = @account&.communities.includes(
+            [
+              :content_type,
+              :patchwork_community_type,
+              :patchwork_community_hashtags,
+              :patchwork_community_rules,
+              :patchwork_community_additional_informations,
+              :patchwork_community_links
+            ]
+            )
           @community = Community.find_by(slug: params[:id])
         end
 

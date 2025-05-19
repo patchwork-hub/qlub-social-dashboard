@@ -41,7 +41,7 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :no_of_admins do |object|
-    object.community_admins.count
+    object.community_admins.size
   end
 
   attribute :favourited do |object, params|

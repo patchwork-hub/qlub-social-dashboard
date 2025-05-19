@@ -7,6 +7,10 @@ namespace :api, defaults: { format: :json } do
     patch 'api_key/rotate', to: 'api_keys#rotate'
     get 'custom_menus/display', to: proc { [200, { 'Content-Type' => 'application/json' }, [{ display: true }.to_json]] }
 
+    namespace :debug do
+       post :queries,  to: 'debug#queries' if Rails.env.development?
+    end
+
     resources :channels, only: [] do
       collection do
         get :recommend_channels
