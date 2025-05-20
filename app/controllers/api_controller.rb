@@ -6,6 +6,8 @@ class ApiController < ApplicationController
 
   before_action :verify_key!
 
+  helper_method :current_remote_account
+
   protected
 
   def verify_key!
@@ -33,7 +35,7 @@ class ApiController < ApplicationController
 
   def authenticate_user_from_header
     token = bearer_token
-    return render json: { error: 'The access token is invalid' }, status: :unauthorized unless token
+    return render json: { error: 'Authentication required!' }, status: :unauthorized unless token
 
     user_info = validate_token(token)
 
@@ -49,12 +51,30 @@ class ApiController < ApplicationController
     end
   end
 
+
+  def validate_mastodon_account
+    token = bearer_token
+    return render json: { error: 'Authentication required!' }, status: :unauthorized unless token && !instance_domain.nil?
+
+    acc_id = RemoteAccountVerifyService.new(token, instance_domain).call.fetch_remote_account_id
+
+    if acc_id
+      @current_remote_account = Account.find_by(id: acc_id)
+    else
+      render json: { error: 'Account not found' }, status: :unauthorized
+    end
+  end
+
   private
 
   def bearer_token
     pattern = /^Bearer /
     header  = request.headers['Authorization']
     header.gsub(pattern, '') if header && header.match(pattern)
+  end
+
+  def instance_domain
+    params[:instance_domain].present? ? params[:instance_domain] : nil
   end
 
   def validate_token(token)
@@ -74,6 +94,10 @@ class ApiController < ApplicationController
       Rails.logger.error "Error fetching user info: #{e.message}"
       nil
     end
+  end
+
+  def current_remote_account
+    return @current_remote_account if defined?(@current_remote_account)
   end
 
 end

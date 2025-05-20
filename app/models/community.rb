@@ -215,6 +215,8 @@ class Community < ApplicationRecord
 
   scope :filter_channel_feeds, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }) }
 
+  scope :filter_newsmast_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:newsmast] }) }
+
   scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
 
   scope :exclude_deleted_channels, -> { where(patchwork_communities: { deleted_at: nil }) }
@@ -225,7 +227,7 @@ class Community < ApplicationRecord
 
   scope :not_deleted, -> { where(deleted: nil) }
 
-  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast' }
+  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast'}
 
   def self.ransackable_attributes(auth_object = nil)
     ["name"]

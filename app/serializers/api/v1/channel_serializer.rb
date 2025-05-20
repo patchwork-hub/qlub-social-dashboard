@@ -8,7 +8,9 @@ class Api::V1::ChannelSerializer
 
   attributes :id, :name, :slug, :description, :is_recommended, :admin_following_count,
              :patchwork_collection_id, :guides, :participants_count, :is_custom_domain,
-             :visibility, :position, :channel_type, :created_at, :no_of_admins, :channel_content_type, :registration_mode
+             :visibility, :position, :channel_type, :created_at, :no_of_admins, :channel_content_type,
+             :registration_mode, :patchwork_community_hashtags, :patchwork_community_rules,
+             :patchwork_community_additional_informations, :patchwork_community_links
 
   has_many :patchwork_community_additional_informations, serializer: Api::V1::CommunityAdditionalInformationSerializer
   has_many :patchwork_community_links, serializer: Api::V1::CommunityLinkSerializer
@@ -43,7 +45,11 @@ class Api::V1::ChannelSerializer
   end
 
   attribute :favourited do |object, params|
-    params[:current_account] ? JoinedCommunity.exists?(patchwork_community_id: object.id, account_id: params[:current_account]['id']) : false
+    favourited_status(object.id, params[:current_account])
+  end
+
+  attribute :is_primary do |object, params|
+    primary_status(object.id, params[:current_account])
   end
 
   attribute :community_admin do |object|
@@ -80,4 +86,15 @@ class Api::V1::ChannelSerializer
     end
   end
 
+  def self.favourited_status(channel_id, account)
+    return false unless account
+  
+    JoinedCommunity.exists?(patchwork_community_id: channel_id, account_id: account['id'])
+  end
+  
+  def self.primary_status(channel_id, account)
+    return false unless account
+  
+    JoinedCommunity.exists?(patchwork_community_id: channel_id, is_primary: true, account_id: account['id'])
+  end
 end
