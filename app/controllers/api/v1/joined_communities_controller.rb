@@ -49,7 +49,7 @@ module Api
 
       def set_primary
         
-        unless params[:instance_domain] == 'newsmast.social' &&  @account&.domain == 'newsmast.social'
+        unless is_newsmast?
           render json: { errors: 'You have no access to set primary' }, status: 422
         end
 
@@ -109,7 +109,7 @@ module Api
         end
 
         def load_joined_channels
-        channel_type = params[:instance_domain] == 'newsmast.social' &&  @account&.domain == 'newsmast.social' ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
+        channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
           @joined_communities = @account&.communities.where(deleted_at: nil).where(
             channel_type: channel_type
             )
@@ -122,6 +122,10 @@ module Api
             joined = community.joined_communities.find_by(account_id: @account.id)
             joined&.is_primary ? 0 : 1
           end
+        end
+
+        def is_newsmast?
+          params[:instance_domain] == 'newsmast.social' && @account&.domain == 'newsmast.social'
         end
     end
   end
