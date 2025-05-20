@@ -9,11 +9,11 @@ class ManageHashtagService < BaseService
 
   def call
     hashtag = SearchHashtagService.new(@api_base_url, @token, @hashtag_name).call
-    return puts "Hashtag not found" unless hashtag
+    return Rails.logger.error "Hashtag not found" unless hashtag
 
     service_class = @action == :follow ? FollowHashtagService : UnfollowHashtagService
     result = service_class.new(@api_base_url, @token, hashtag[:name]).call
-    puts result ? "Successfully #{@action}ed ##{hashtag[:name]}" : "Failed to #{@action} ##{hashtag[:name]}"
+    Rails.logger.info result ? "Successfully #{@action}ed ##{hashtag[:name]}" : "Failed to #{@action} ##{hashtag[:name]}"
 
     owner_role = UserRole.find_by(name: 'Owner')
     owner_user = User.find_by(role: owner_role)

@@ -225,7 +225,7 @@ class Community < ApplicationRecord
 
   scope :not_deleted, -> { where(deleted: nil) }
 
-  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub' }
+  enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast' }
 
   def self.ransackable_attributes(auth_object = nil)
     ["name"]

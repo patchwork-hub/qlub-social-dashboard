@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_25_062202) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_07_115310) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -1644,7 +1644,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_25_062202) do
   add_foreign_key "patchwork_joined_communities", "accounts"
   add_foreign_key "patchwork_joined_communities", "patchwork_communities"
   add_foreign_key "patchwork_notification_tokens", "accounts", on_delete: :cascade
-  add_foreign_key "patchwork_wait_lists", "accounts"
+  add_foreign_key "patchwork_wait_lists", "accounts", on_delete: :cascade, validate: false
   add_foreign_key "poll_votes", "accounts", on_delete: :cascade
   add_foreign_key "poll_votes", "polls", on_delete: :cascade
   add_foreign_key "polls", "accounts", on_delete: :cascade
