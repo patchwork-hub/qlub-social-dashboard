@@ -111,7 +111,7 @@ namespace :migrate_newsmast_channels do
 
     created_count = skipped_count = error_count = 0
 
-    [channel = NEWSMAST_CHANNELS[0]].compact.each_with_index do |channel, index|
+    [channel = NEWSMAST_CHANNELS.first(5)].compact.each_with_index do |channel, index|
       puts "Processing [#{index + 1}] #{channel[:attributes][:name]} : #{channel[:attributes][:slug]}"
 
       ActiveRecord::Base.transaction do
