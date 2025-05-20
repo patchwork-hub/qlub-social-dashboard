@@ -13,7 +13,9 @@ module Api
 
         render json: Api::V1::ChannelSerializer.new(
           @joined_communities,
-          { params: { current_account: @account} }
+          { params: { current_account: @account},
+            meta: { total: @joined_communities.size }
+          }
         ).serializable_hash.to_json
       end
 
@@ -48,6 +50,11 @@ module Api
       end
 
       def set_primary
+        
+        unless is_newsmast?
+          render json: { errors: 'You have no access to set primary' }, status: 422
+        end
+
         unless @joined_communities&.any?
           return render json: { errors: 'You have no favourited channels' }, status: 422
         end
@@ -85,8 +92,11 @@ module Api
 
         def find_patchwork_community(slug)
           return unless slug.present?
+          channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
 
-          Community.exclude_incomplete_channels.find_by(slug: slug)
+          Community.exclude_incomplete_channels.find_by(slug: slug).where(
+            channel_type: channel_type
+          )
         end
 
         def check_authorization_header
@@ -104,7 +114,10 @@ module Api
         end
 
         def load_joined_channels
-          @joined_communities = @account&.communities
+          channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
+          @joined_communities = @account&.communities.where(deleted_at: nil).where(
+            channel_type: channel_type
+            )
           @community = Community.find_by(slug: params[:id])
         end
 
@@ -114,6 +127,10 @@ module Api
             joined = community.joined_communities.find_by(account_id: @account.id)
             joined&.is_primary ? 0 : 1
           end
+        end
+
+        def is_newsmast?
+          params[:platform_type].present? && params[:platform_type] == 'newsmast.social'
         end
     end
   end
