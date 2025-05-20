@@ -70,6 +70,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  def truthy_param?(key)
+    ActiveModel::Type::Boolean.new.cast(params[key])
+  end
+
   def current_account
     return @current_account if defined?(@current_account)
 

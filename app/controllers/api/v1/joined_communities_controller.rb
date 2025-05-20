@@ -13,7 +13,9 @@ module Api
 
         render json: Api::V1::ChannelSerializer.new(
           @joined_communities,
-          { params: { current_account: @account} }
+          { params: { current_account: @account},
+            meta: { total: @joined_communities.size }
+          }
         ).serializable_hash.to_json
       end
 
@@ -90,8 +92,11 @@ module Api
 
         def find_patchwork_community(slug)
           return unless slug.present?
+          channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
 
-          Community.exclude_incomplete_channels.find_by(slug: slug)
+          Community.exclude_incomplete_channels.find_by(slug: slug).where(
+            channel_type: channel_type
+          )
         end
 
         def check_authorization_header
@@ -109,7 +114,6 @@ module Api
         end
 
         def load_joined_channels
-        channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
           @joined_communities = @account&.communities.where(deleted_at: nil).where(
             channel_type: channel_type
             )
@@ -125,7 +129,7 @@ module Api
         end
 
         def is_newsmast?
-          params[:instance_domain] == 'newsmast.social' && @account&.domain == 'newsmast.social'
+          truthy_param?(params[:platfrom_type])
         end
     end
   end
