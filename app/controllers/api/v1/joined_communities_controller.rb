@@ -48,6 +48,11 @@ module Api
       end
 
       def set_primary
+        
+        unless params[:instance_domain] == 'newsmast.social' &&  @account&.domain == 'newsmast.social'
+          render json: { errors: 'You have no access to set primary' }, status: 422
+        end
+
         unless @joined_communities&.any?
           return render json: { errors: 'You have no favourited channels' }, status: 422
         end
@@ -104,7 +109,10 @@ module Api
         end
 
         def load_joined_channels
-          @joined_communities = @account&.communities
+        channel_type = params[:instance_domain] == 'newsmast.social' &&  @account&.domain == 'newsmast.social' ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
+          @joined_communities = @account&.communities.where(deleted_at: nil).where(
+            channel_type: channel_type
+            )
           @community = Community.find_by(slug: params[:id])
         end
 
