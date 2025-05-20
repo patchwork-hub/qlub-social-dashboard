@@ -182,20 +182,18 @@ namespace :migrate_newsmast_channels do
           raise ActiveRecord::Rollback
         end
       end
-      
-      # Fetch hashtags from newsmast.social
-      # And store into database
-      set_hashtags(@community, @community_admin&.account&.user, channel)
-      puts "  ✓ Successfully set default hashtags for @community: #{@community.name}"
 
-      # Fetch Newsmast's admin follwings and follow them
-      # And store into database
       if @community_admin&.account
+        # Fetch Newsmast's admin follwings and follow them
         fetch_followings(channel, @community_admin.account)
         puts "  ✓ Successfully followed contributor for @community: #{@community.name}"
+
+        # Fetch hashtags from newsmast.social
+        set_hashtags(@community, @community_admin&.account&.user, channel)
+        puts "  ✓ Successfully set default hashtags for @community: #{@community.name}"
       else
         skipped_count += 1
-        puts "  ✗ Skipped following contributors: admin account missing for #{@community.name}"
+        puts "  ✗ Skipped following contributors | hashtags admin account missing for #{@community.name}"
       end
        created_count += 1
     end
