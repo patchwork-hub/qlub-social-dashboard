@@ -114,6 +114,7 @@ module Api
         end
 
         def load_joined_channels
+          channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
           @joined_communities = @account&.communities.where(deleted_at: nil).where(
             channel_type: channel_type
             )
@@ -129,7 +130,7 @@ module Api
         end
 
         def is_newsmast?
-          truthy_param?(params[:platfrom_type])
+          params[:platform_type].present? && params[:platform_type] == 'newsmast.social'
         end
     end
   end
