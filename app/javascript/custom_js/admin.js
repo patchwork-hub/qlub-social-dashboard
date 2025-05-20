@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         methodInput.setAttribute("value", "patch");
 
-        document.querySelector(".modal-title").innerHTML = "Edit channel admin";
+        document.querySelector(".modal-title").innerHTML = "Edit admin";
       } else {
         // Create mode: set checkboxes to default true
         const roleField = document.querySelector("#community_admin_role");
@@ -117,8 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let methodInput = document.querySelector('input[name="_method"]');
         if (methodInput) methodInput.remove();
 
-        document.querySelector(".modal-title").innerHTML =
-          "Create channel admin";
+        document.querySelector(".modal-title").innerHTML = "Create admin";
       }
     });
   });
