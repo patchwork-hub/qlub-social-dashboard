@@ -50,7 +50,7 @@
 class Community < ApplicationRecord
   self.table_name = 'patchwork_communities'
 
-  IMAGE_MIME_TYPES = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg'].freeze
+  IMAGE_MIME_TYPES = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp'].freeze
   LIMIT = 2.megabytes
 
   NAME_LENGTH_LIMIT = 30

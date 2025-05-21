@@ -14,6 +14,8 @@ end
 def attach_remote_image(record, attribute, url)
   return if url.blank?
   file = URI.open(url)
+  content_type = file.content_type rescue 'unknown'
+  puts "Attaching #{attribute} from #{url} (content-type: #{content_type})"
   record.send("#{attribute}=", file)
 rescue => e
   puts "Failed to attach #{attribute} from #{url}: #{e.message}"
