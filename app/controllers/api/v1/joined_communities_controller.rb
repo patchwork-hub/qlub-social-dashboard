@@ -63,7 +63,9 @@ module Api
           return render json: { errors: 'Community not found' }, status: 404
         end
 
-        @account.joined_communities.find_by(is_primary: true).update!(is_primary: false)
+        if @account.joined_communities.size < 6
+          return render json: { errors: 'You need to join at least 5 to set as primary' }, status: 422
+        end
 
         ActiveRecord::Base.transaction do
           @account.joined_communities.where(is_primary: true).update_all(is_primary: false)
@@ -94,9 +96,7 @@ module Api
           return unless slug.present?
           channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
 
-          Community.exclude_incomplete_channels.find_by(slug: slug).where(
-            channel_type: channel_type
-          )
+          Community.exclude_incomplete_channels.find_by(slug: slug, channel_type: channel_type)
         end
 
         def check_authorization_header
