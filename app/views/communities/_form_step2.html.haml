@@ -94,7 +94,12 @@
                             %p
                               = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
                           - else
-                            %p.text-warning In progress...
+                            - error_msg = check_account_info(@community)
+                            - if error_msg.nil?
+                              %p.text-warning In progress...
+                            - else
+                              %p.text-danger
+                                = error_msg
 
       .row.d-flex.justify-content-between
         .col-auto

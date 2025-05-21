@@ -43,7 +43,7 @@
               %p.text-muted.small Choose accounts to Mute from the channel.
           .row.d-flex.justify-content-between
             .col-auto
-              %label Your muted contributors (#{@muted_accounts.present? ? @muted_accounts.size : 0})
+              %label Your muted contributors (#{@muted_accounts.present? ? @muted_accounts_size : 0})
             .col-3-auto
               %button.btn.btn-outline-secondary{"data-toggle" => "modal", "data-target" => "#muteContributorModal"} Search
           .table-responsive

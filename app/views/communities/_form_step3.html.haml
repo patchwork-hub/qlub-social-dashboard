@@ -102,7 +102,7 @@
             .row
               .col
                 %label
-                  = "Your channel contributors (#{@follow_records.present? ? @follow_records.size : 0})"
+                  = "Your channel contributors (#{@follow_records.present? ? @follow_records_size : 0})"
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-outline-secondary{title: 'Add a contributor', "data-toggle" => "modal", "data-target" => "#addContributorModal"} Add new
@@ -125,7 +125,7 @@
                           = record.display_name
                           - domain = record&.domain.present? ? "https://#{record.domain}" : ENV.fetch('MASTODON_INSTANCE_URL', nil)
                           %br
-                          %a{ href: "#{record.url}", target: "_blank" }= "@#{record.username}@#{record.domain}"
+                          %a{ href: "#{record.url}", target: "_blank" }= "@#{record.username}@#{record.domain || 'channel.org'}"
                         %td{style: "width: 60px;"}
                           %button.btn.btn-sm.btn-outline-dark{ id: "follow_btn_#{record.id}", onclick: "unfollowContributor('#{record.id}', '#{@community.id}'); setTimeout(function() { location.reload(); }, 1000);" } Unfollow
             .pagination.pagination-sm.m-0.float-right
