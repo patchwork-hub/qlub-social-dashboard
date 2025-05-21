@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
   );
   var form = document.querySelector("#new_admin_form");
   const emailField = document.querySelector("#community_admin_email");
+  const displayNameField = document.querySelector(
+    "#community_admin_display_name"
+  );
+  const usernameField = document.querySelector("#community_admin_username");
 
   // Function to update the role field based on checkbox selection
   window.updateRoleField = function (checkbox) {
@@ -24,6 +28,8 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function () {
       var adminId = this.getAttribute("data-admin-id");
       var email = this.getAttribute("data-email");
+      var displayName = this.getAttribute("data-display-name");
+      var username = this.getAttribute("data-username");
       var password = this.getAttribute("data-password");
       var role = this.getAttribute("data-role");
       var isBoostBot = this.getAttribute("data-is-boost-bot") === "true";
@@ -77,6 +83,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         form.setAttribute("action", "/community_admins/" + adminId);
         form.setAttribute("method", "post");
+
+        displayNameField.value = displayName;
+        usernameField.value = username;
+        usernameField.readOnly = true;
         emailField.readOnly = true;
 
         // Add or update the hidden _method field for PATCH

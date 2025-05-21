@@ -9,21 +9,29 @@
         = simple_form_for @community_admin, url: (@community_admin.persisted? ? community_admin_path(@community_admin) : community_admins_path), method: (@community_admin.persisted? ? :patch : :post), html: { id: 'new_admin_form' } do |f|
           = f.hidden_field :community_id, value: @community.id
           = f.hidden_field :role, id: 'community_admin_role', value: @community_admin.role || ''
-          .mb-3
-            = f.label :display_name, class: "form-label"
-            = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, readonly: true
-          .mb-3
-            = f.label :username, class: "form-label"
-            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.parameterize.underscore, readonly: true
+          - if @records.size == 0
+            .mb-3
+              = f.label :display_name, class: "form-label"
+              = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, readonly: true
+            .mb-3
+              = f.label :username, class: "form-label"
+              = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.parameterize.underscore, readonly: true
+          - else
+            .mb-3
+              = f.label :display_name, class: "form-label"
+              = f.text_field :display_name, class: "form-control", id: "community_admin_display_name"
+            .mb-3
+              = f.label :username, class: "form-label"
+              = f.text_field :username, class: "form-control", id: "community_admin_username"
           - if @community.channel?
             .row.mb-3
               .col
                 .form-check
                   = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', onchange: "updateRoleField(this)"
                   = f.label :role, "Organisation admin", class: "form-check-label", for: 'is_organisation_admin'
-              .col
-                .form-check
-                  #is_boost_bot_checkbox_wrapper
+              - if @records.size == 0
+                .col
+                  .form-check
                     = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'
                     = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
           - if @community.channel_feed?
