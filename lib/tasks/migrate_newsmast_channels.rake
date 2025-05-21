@@ -140,7 +140,7 @@ namespace :migrate_newsmast_channels do
 
     created_count = skipped_count = error_count = 0
 
-    NEWSMAST_CHANNELS.first(2).each_with_index do |channel, index|
+    NEWSMAST_CHANNELS.first(5).each_with_index do |channel, index|
       puts "Processing [#{index + 1}] #{channel[:attributes][:name]} : #{channel[:attributes][:slug]}"
 
       ActiveRecord::Base.transaction do
