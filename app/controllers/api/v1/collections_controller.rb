@@ -21,7 +21,6 @@ module Api
         @all_collections = @all_collections.sort_by do |collection|
           NEWSMAST_CHANNELS_SORTING_ORDERS.index(collection.name) || Float::INFINITY
         end
-        
         render_collections(@all_collections, type: 'newsmast')
       end
 
@@ -50,9 +49,13 @@ module Api
       end
 
       def extract_patchwork_collection_ids
-        NEWSMAST_CHANNELS.map do |channel|
-          channel.dig(:attributes, :patchwork_collection_id)
-        end.compact
+        if Community.has_local_newsmast_channel?
+          Community.filter_newsmast_channels.pluck(:patchwork_collection_id).uniq
+        else
+          NEWSMAST_CHANNELS.map do |channel|
+            channel.dig(:attributes, :patchwork_collection_id)
+          end.compact
+        end
       end
 
       def fetch_collections_by_ids(ids)

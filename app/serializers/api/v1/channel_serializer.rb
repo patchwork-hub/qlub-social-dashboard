@@ -54,10 +54,15 @@ class Api::V1::ChannelSerializer
 
   attribute :community_admin do |object|
     community_admin = object&.community_admins&.first
+    username = if object&.channel_type == Community.channel_types[:newsmast]
+       community_admin&.account&.username ? "@#{community_admin&.account&.username}@newsmast.community" : ""
+    else
+      community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : ""
+    end
     community_admin ? {
       id: community_admin.id,
       account_id: community_admin&.account&.id.to_s,
-      username: community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : "",
+      username: username,
     } : {}
   end
 

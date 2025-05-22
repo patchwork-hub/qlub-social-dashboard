@@ -256,6 +256,10 @@ class Community < ApplicationRecord
     deleted_at && deleted_at > 30.days.ago
   end
 
+  def self.has_local_newsmast_channel?
+    self.filter_newsmast_channels.present?
+  end
+
   private
 
   def unique_patchwork_community_links
