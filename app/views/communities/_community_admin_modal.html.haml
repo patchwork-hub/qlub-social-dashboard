@@ -29,9 +29,9 @@
                 .form-check
                   = check_box_tag 'is_organisation_admin', 'organisation_admin', @community_admin.role == 'OrganisationAdmin', class: 'form-check-input red-check-box', id: 'is_organisation_admin', onchange: "updateRoleField(this)"
                   = f.label :role, "Organisation admin", class: "form-check-label", for: 'is_organisation_admin'
-              - if @records.size == 0
-                .col
-                  .form-check
+              .col
+                .form-check
+                  #is_boost_bot_checkbox_wrapper
                     = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'
                     = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
           - if @community.channel_feed?

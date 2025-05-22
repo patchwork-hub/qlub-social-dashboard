@@ -18,7 +18,7 @@
             - if @community.channel? || @records.size == 0
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add new
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal", "data-hide-boost-bot" => (@records.size != 0).to_s} Add new
           %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
             %thead
               %tr
