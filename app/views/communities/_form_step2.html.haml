@@ -18,7 +18,7 @@
             - if @community.channel? || @records.size == 0
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
-                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal"} Add new
+                  %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal", "data-hide-boost-bot" => (@records.size != 0).to_s} Add new
           %table.table.table-striped.no-side-borders.top-bottom-border.mt-3
             %thead
               %tr
@@ -94,7 +94,12 @@
                             %p
                               = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
                           - else
-                            %p.text-warning In progress...
+                            - error_msg = check_account_info(@community)
+                            - if error_msg.nil?
+                              %p.text-warning In progress...
+                            - else
+                              %p.text-danger
+                                = error_msg
 
       .row.d-flex.justify-content-between
         .col-auto

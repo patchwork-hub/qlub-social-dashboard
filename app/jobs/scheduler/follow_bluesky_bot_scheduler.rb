@@ -57,7 +57,8 @@ module Scheduler
     private
 
     def enable_bride_bluesky?(account)
-      account&.username.present? && account&.display_name.present?
+      account&.username.present? && account&.display_name.present? && 
+      account&.avatar.present? && account&.header.present?
     end
 
     def search_target_account_id(token)

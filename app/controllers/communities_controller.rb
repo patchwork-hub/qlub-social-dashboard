@@ -352,6 +352,7 @@ class CommunitiesController < BaseController
   def load_follow_records
     account_ids = Follow.where(account_id: admin_account_id).pluck(:target_account_id) +
                   FollowRequest.where(account_id: admin_account_id).pluck(:target_account_id)
+    @follow_records_size = account_ids.size
     paginated_records(Account.where(id: account_ids))
   end
 
@@ -364,6 +365,7 @@ class CommunitiesController < BaseController
 
   def load_muted_accounts
     muted_ids = Mute.where(account_id: admin_account_id).pluck(:target_account_id)
+    @muted_accounts_size = muted_ids.size
     paginated_records(Account.where(id: muted_ids))
   end
 

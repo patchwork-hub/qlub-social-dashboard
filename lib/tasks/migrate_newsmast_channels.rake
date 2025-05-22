@@ -4,15 +4,33 @@ DEFAULT_REGISTRATION_MODE = 'none'
 DEFAULT_ACCOUNT_STATUS = 0
 DEFAULT_MIN_STATUS_AGE = 1.week.seconds
 BACKEND_NEWSMAST_URL= 'https://backend.newsmast.org'
+require 'open-uri'
 
 def extract_admin_username(input_string)
   match = input_string.match(/^@(\w+)@newsmast\.community$/)
   match ? match[1] : nil
 end
 
+def attach_remote_image(record, attribute, url)
+  return if url.blank?
+  file = URI.open(url)
+  content_type = file.content_type rescue 'unknown'
+  puts "Attaching #{attribute} from #{url} (content-type: #{content_type})"
+  record.send("#{attribute}=", file)
+rescue => e
+  puts "Failed to attach #{attribute} from #{url}: #{e.message}"
+end
+
 def create_community(channel, community_type)
   attrs = channel[:attributes]
   slug = attrs[:slug].gsub('_', '-')
+
+  collection_id = Collection.find_by(slug: channel[:attributes][:collection][:slug])&.id
+
+  if collection_id.nil?
+    puts "  ✗ Collection not found for slug: #{channel[:attributes][:collection][:slug]} (community: #{attrs[:name]})"
+    raise "Collection not found for slug: #{channel[:attributes][:collection][:slug]}"
+  end
 
   Community.find_or_initialize_by(slug: slug).tap do |community|
     next if community.persisted?
@@ -20,12 +38,16 @@ def create_community(channel, community_type)
     community.assign_attributes(
       name: attrs[:name],
       channel_type: Community.channel_types[:newsmast],
-      patchwork_collection_id: attrs[:patchwork_collection_id],
+      patchwork_collection_id: collection_id,
       visibility: attrs[:visibility],
       registration_mode: DEFAULT_REGISTRATION_MODE,
       position: attrs[:position],
-      patchwork_community_type_id: community_type.id
+      patchwork_community_type_id: community_type.id,
+      description: attrs[:description]
     )
+
+    attach_remote_image(community, :banner_image, attrs[:banner_image_url])
+    attach_remote_image(community, :avatar_image, attrs[:avatar_image_url])
   end
 end
 
@@ -92,6 +114,13 @@ namespace :migrate_newsmast_channels do
     puts 'Staring Newsmast migration......'
 
     @newsmast_account_token = args[:token] || 'eXRapzohPTadlcvzmfCLOMdkAAykVd634V1C85idKE8'
+
+    acc_id = RemoteAccountVerifyService.new(@newsmast_account_token, 'newsmast.social').call.fetch_remote_account_id
+
+    unless acc_id
+      puts 'Newsmast account not found. Aborting migration.'
+      return
+    end
 
     owner_role = UserRole.find_by(name: 'Owner')
     owner_user = User.find_by(role: owner_role)
@@ -193,7 +222,7 @@ namespace :migrate_newsmast_channels do
         puts "  ✓ Successfully set default hashtags for @community: #{@community.name}"
       else
         skipped_count += 1
-        puts "  ✗ Skipped following contributors | hashtags admin account missing for #{@community.name}"
+        puts "  ✗ Skipped following contributors | hashtags admin account missing for #{channel[:attributes][:name]}"
       end
        created_count += 1
     end

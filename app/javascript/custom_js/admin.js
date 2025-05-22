@@ -39,14 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
         "#is_boost_bot_checkbox_wrapper"
       );
 
-      if (boostBotWrapper) {
-        if (hideBoostBot) {
-          boostBotWrapper.style.display = "none";
-        } else {
-          boostBotWrapper.style.display = "";
-        }
-      }
-
       // Populate the form fields
       emailField.value = email || "";
 
@@ -65,6 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const isBoostBotCheckbox = document.querySelector(
         "#community_admin_is_boost_bot"
       );
+
+      if (boostBotWrapper) {
+        if (hideBoostBot) {
+          boostBotWrapper.style.display = "none";
+        } else {
+          boostBotWrapper.style.display = "";
+        }
+      }
 
       if (adminId) {
         // Edit mode: set checkboxes based on existing admin data
@@ -116,7 +116,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (isBoostBotCheckbox) {
-          isBoostBotCheckbox.checked = true;
+          if (hideBoostBot) {
+            displayNameField.value = null;
+            usernameField.value = null;
+            isBoostBotCheckbox.checked = false;
+            usernameField.readOnly = false;
+            emailField.readOnly = false;
+          } else {
+            isBoostBotCheckbox.checked = true;
+          }
         }
 
         form.setAttribute("action", "/community_admins");
