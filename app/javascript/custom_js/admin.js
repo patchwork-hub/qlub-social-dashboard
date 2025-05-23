@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
       roleField.value = "UserAdmin";
     } else if (checkbox.id === "is_hub_admin" && checkbox.checked) {
       roleField.value = "HubAdmin";
+    } else if (checkbox.id === "is_newsmast_admin" && checkbox.checked) {
+      roleField.value = "NewsmastAdmin";
     } else {
       roleField.value = "";
     }
@@ -54,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const isUserAdminCheckbox = document.querySelector("#is_user_admin");
       const isHubAdminCheckbox = document.querySelector("#is_hub_admin");
+      const isNewsmastAdminCheckbox =
+        document.querySelector("#is_newsmast_admin");
       const isBoostBotCheckbox = document.querySelector(
         "#community_admin_is_boost_bot"
       );
@@ -76,6 +80,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = role === "HubAdmin";
+        }
+        if (isNewsmastAdminCheckbox) {
+          isNewsmastAdminCheckbox.checked = role === "NewsmastAdmin";
         }
         if (isBoostBotCheckbox) {
           isBoostBotCheckbox.checked = isBoostBot;
@@ -113,6 +120,9 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = true;
           roleField.value = "HubAdmin";
+        } else if (isNewsmastAdminCheckbox) {
+          isNewsmastAdminCheckbox.checked = true;
+          roleField.value = "NewsmastAdmin";
         }
 
         if (isBoostBotCheckbox) {

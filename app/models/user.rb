@@ -86,6 +86,10 @@ class User < ApplicationRecord
     role.name == 'HubAdmin'
   end
 
+  def newsmast_admin?
+    role.name == "NewsmastAdmin"
+  end
+
   def primary_community
     if community_users.any?
       cu = community_users.find_by(is_primary: true)
