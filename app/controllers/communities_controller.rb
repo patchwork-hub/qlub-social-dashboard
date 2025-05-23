@@ -24,6 +24,7 @@ class CommunitiesController < BaseController
               .where(channel_type: @channel_type)
               .yield_self { |scope| apply_status_filter(scope, params[:status]) }
   end
+
   def upgrade
     community = Community.find(params[:id])
 
@@ -97,7 +98,7 @@ class CommunitiesController < BaseController
   def step1_save
     @channel_type = @community&.channel_type || params[:channel_type]
     content_type =
-      if current_user.user_admin? || @channel_type == "channel_feed"
+      if current_user.user_admin? || @channel_type == "channel_feed" || current_user.newsmast_admin? || @channel_type == "newsmast"
         "custom_channel"
       elsif @channel_type == "hub"
         "broadcast_channel"
@@ -321,7 +322,7 @@ class CommunitiesController < BaseController
   end
 
   def redirect_after_step1_save
-    path = path = (current_user.master_admin? || current_user.user_admin? || current_user.hub_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
+    path = path = (current_user.master_admin? || current_user.user_admin? || current_user.hub_admin? || current_user.newsmast_admin?) ? :step2 : (params[:content_type] == 'custom_channel' ? :step3 : :step6)
     redirect_to send("#{path}_community_path", @community, channel_type: @channel_type)
   end
 
@@ -440,6 +441,8 @@ class CommunitiesController < BaseController
       redirect_to communities_path(channel_type: channel_type)
     elsif @community.channel_feed?
       redirect_to communities_path(channel_type: 'channel_feed')
+    elsif @community.newsmast?
+      redirect_to communities_path(channel_type: 'newsmast')
     end
   end
 
@@ -497,8 +500,10 @@ class CommunitiesController < BaseController
       'channel_feed'
     elsif current_user.hub_admin?
       'hub'
-    else
+    elsif current_user.organisation_admin?
       'channel'
+    else
+      'newsmast'
     end
   end
 
