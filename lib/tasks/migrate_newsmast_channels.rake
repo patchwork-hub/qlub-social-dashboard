@@ -57,10 +57,12 @@ def find_or_create_community_admin(community, admin_username)
     acc.save(validate: false)
 
     domain = 'channel.org'
-    user = User.where(email: "#{admin_username}@#{domain}").first_or_initialize(email: "#{admin_username}@#{domain}", password: 'password', password_confirmation: 'password', confirmed_at: Time.now.utc, role: UserRole.find_by(name: 'UserAdmin'), account: acc, agreement: true, approved: true)
+    user = User.where(email: "#{admin_username}@#{domain}").first_or_initialize(email: "#{admin_username}@#{domain}", password: 'password', password_confirmation: 'password', confirmed_at: Time.now.utc, role: UserRole.find_by(name: 'NewsmastAdmin'), account: acc, agreement: true, approved: true)
     user.save!
     acc
   end
+
+  account&.user.update(role: UserRole.find_by(name: 'NewsmastAdmin')) if account&.user&.role&.name != 'NewsmastAdmin'
 
   admin = CommunityAdmin.find_or_initialize_by(account_id: account.id, patchwork_community_id: community.id)
   return admin if admin.persisted?
@@ -89,6 +91,13 @@ def create_content_type(community)
     patchwork_community_id: community.id,
     channel_type: ContentType.channel_types[:custom_channel],
     custom_condition: ContentType.custom_conditions['or_condition']
+  )
+end
+
+def create_post_type(community)
+  CommunityPostType.find_or_create_by(
+    patchwork_community_id: community.id,
+    posts: true
   )
 end
 
@@ -204,6 +213,14 @@ namespace :migrate_newsmast_channels do
             puts "  ✓ Successfully created content type for @community: #{@community.name}"
           else
             puts "  ✗ Failed to create content type: #{content_type.errors.full_messages.join(', ')}"
+          end
+
+          # Create post type
+          post_type = create_post_type(@community)
+          if post_type.save
+            puts "  ✓ Successfully created post type for @community: #{@community.name}"
+          else
+            puts "  ✗ Failed to create post type: #{post_type.errors.full_messages.join(', ')}"
           end
         rescue StandardError => e
           puts "  ✗ Error processing @community #{channel[:attributes][:name]}: #{e.message}"
