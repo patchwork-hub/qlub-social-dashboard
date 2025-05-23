@@ -115,7 +115,7 @@ module CommunityHelper
     when 'channel_feed'
       'Channels'
     else
-      'Newsmast'
+      'Newsmast channels'
     end
   end
 
