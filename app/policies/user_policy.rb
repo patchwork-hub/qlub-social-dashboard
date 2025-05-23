@@ -1,6 +1,6 @@
 class UserPolicy < ApplicationPolicy
   def login?
-    user&.role&.name.in?(%w[MasterAdmin OrganisationAdmin UserAdmin HubAdmin])
+    user&.role&.name.in?(%w[MasterAdmin OrganisationAdmin UserAdmin HubAdmin NewsmastAdmin])
   end
 
   def master_admin?
@@ -19,7 +19,11 @@ class UserPolicy < ApplicationPolicy
     user&.role&.name.in?(%w[HubAdmin])
   end
 
+  def newsmast_admin?
+    user&.role&.name.in?(%w[NewsmastAdmin])
+  end
+
   def user_is_not_community_admin?
-    (organisation_admin? || user_admin? || hub_admin?) && !CommunityAdmin.exists?(account_id: user.account_id)
+    (organisation_admin? || user_admin? || hub_admin? || newsmast_admin?) && !CommunityAdmin.exists?(account_id: user.account_id)
   end
 end

@@ -5,7 +5,7 @@ class CommunityPostService < BaseService
     @account = @current_user.account
     @options = options
     @content_type = options[:content_type]
-    @ip_address_id = options[:ip_address_id] unless @options[:channel_type] == 'channel_feed'
+    @ip_address_id = @options[:ip_address_id] unless %w[channel_feed newsmast].include?(@options[:channel_type])
     if @options[:id].present?
       update_community
     else

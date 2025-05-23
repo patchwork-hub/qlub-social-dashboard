@@ -4,6 +4,7 @@ module StepHelper
     is_channel_feed = params[:channel_type] == "channel_feed" || @community&.channel_feed?
     is_channel = params[:channel_type] == "channel" || @community&.channel?
     is_hub = params[:channel_type] == "hub" || @community&.hub?
+    is_newsmast = params[:channel_type] == "newsmast" || @community&.newsmast?
     is_custom_channel = params[:content_type].present? ? params[:content_type] == 'custom_channel' : @community&.content_type&.custom_channel?
 
     if master_admin? && is_channel
@@ -23,6 +24,11 @@ module StepHelper
       steps << { step: 2, display: 2, title: 'Admin and public feed details', description: 'Create admin accounts for your channel.' }
       steps << { step: 3, display: 3, title: 'Add content', description: 'Populate your channel with content from across the New Social network. Here you can define rules that specify what content is included in your channel.' }
       steps << { step: 4, display: 4, title: 'Filter content', description: 'Filter content from the wider network to ensure your channel stays relevant.' }
+    elsif newsmast_admin? || is_newsmast
+      steps << { step: 1, display: 1, title: 'Newsmat channel information', description: 'Set up the basic details of your newsmast channel.' }
+      steps << { step: 2, display: 2, title: 'Admin and public feed details', description: 'Create admin accounts for your newsmast channel.' }
+      steps << { step: 3, display: 3, title: 'Add content', description: 'Populate your newsmast channel with content from across the New Social network. Here you can define rules that specify what content is included in your newsmast channel.' }
+      steps << { step: 4, display: 4, title: 'Filter content', description: 'Filter content from the wider network to ensure your newsmast channel stays relevant.' }
     elsif organisation_admin? && is_channel
       steps << { step: 0, display: 1, title: 'Choose Channel Type', description: 'Select the type of channel you want to create.' }
       steps << { step: 1, display: 2, title: 'Community Information', description: 'Set up the basic details of your channel.' }

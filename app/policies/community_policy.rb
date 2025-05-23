@@ -1,6 +1,6 @@
 class CommunityPolicy < ApplicationPolicy
   def initialize_form?
-    master_admin? || user_has_access_to_community? || user_admin?
+    master_admin? || user_has_access_to_community? || user_admin? || newsmast_admin?
   end
 
   def index?
@@ -28,7 +28,7 @@ class CommunityPolicy < ApplicationPolicy
   end
 
   def step2?
-    master_admin? || user_admin?
+    master_admin? || user_admin? || newsmast_admin?
   end
 
   def step2_save?

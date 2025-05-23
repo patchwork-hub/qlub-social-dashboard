@@ -41,7 +41,7 @@ class CommunityAdmin < ApplicationRecord
     message: "is already taken"
   }
 
-  ROLES = %w[OrganisationAdmin UserAdmin HubAdmin].freeze
+  ROLES = %w[OrganisationAdmin UserAdmin HubAdmin NewsmastAdmin].freeze
 
   validates :role, inclusion: { in: ROLES, message: "%{value} is not a valid role" }, allow_blank: true
 

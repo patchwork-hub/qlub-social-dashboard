@@ -41,7 +41,7 @@
                       = @admin&.user&.current_sign_in_at ? time_ago_in_words(@admin&.user&.current_sign_in_at) : "0h"
             .row.mt-1.mx-1
               %p.small.mb-0= raw(@admin&.note)
-        - if @community.channel_feed?
+        - if @community.channel_feed? || @community.newsmast?
           = simple_form_for @community, url: set_visibility_community_path, method: :post, local: true do |form|
             .add-to-server.mt-4
               = form.hidden_field :visibility, value: 'public_access'

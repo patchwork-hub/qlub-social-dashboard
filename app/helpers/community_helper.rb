@@ -67,14 +67,14 @@ module CommunityHelper
   end
 
   def previous_path_for_step1(community, params)
-    if user_admin? || params[:channel_type] == 'channel_feed' || community&.channel_feed? || hub_admin? || params[:channel_type] == 'hub' || community&.hub?
-      communities_path(channel_type: community&.channel_type)
-    else
+    if organisation_admin? || params[:channel_type] == 'channel' || community&.channel?
       step0_communities_path(
         channel_type: params[:channel_type],
         content_type: params[:content_type],
         id: params[:id]
       )
+    else
+      communities_path(channel_type: community&.channel_type)
     end
   end
 
@@ -112,8 +112,10 @@ module CommunityHelper
       'Hubs'
     when 'channel'
       'Communities'
-    else
+    when 'channel_feed'
       'Channels'
+    else
+      'Newsmast channels'
     end
   end
 
@@ -128,6 +130,7 @@ module CommunityHelper
   def hide_add_button
     !(params[:channel_type] == 'hub' && hub_admin?) &&
     !(params[:channel_type] == 'channel_feed' && user_admin?) &&
+    !(params[:channel_type] == 'newsmast' && newsmast_admin?) &&
     !(params[:channel_type] == 'channel' && organisation_admin?)
   end
 

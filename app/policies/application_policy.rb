@@ -49,6 +49,10 @@ class ApplicationPolicy
     user&.role&.name.in?(%w[UserAdmin])
   end
 
+  def newsmast_admin?
+    user&.role&.name.in?(%w[NewsmastAdmin])
+  end
+
   class Scope
     def initialize(user, scope)
       @user = user
