@@ -28,7 +28,7 @@ module ApplicationHelper
         { path: resources_path, id: 'resources-link', header: 'Resources', icon: 'folder.svg', text: 'Resources', active_if: 'resources' },
         { path: api_keys_path, id: 'resources-link', header: 'API Key', icon: 'key.svg', text: 'API Key', active_if: 'api_keys' },
         { path: wait_lists_path, id: 'invitation-codes-link', header: 'Invitation codes', icon: 'invitation_code.svg', text: 'Invitation codes', active_if: 'wait_lists' },
-        { path: app_versions_path, id: 'app-versions-link', header: 'App versions', icon: 'sliders.svg', text: 'App versions', active_if: 'app_versions' },
+        { path: app_versions_path(app_name: AppVersion.app_names['patchwork']), id: 'app-versions-link', header: 'App versions', icon: 'sliders.svg', text: 'App versions', active_if: 'app_versions' },
         { path: "/sidekiq", id: 'sidekiq-link', header: 'Sidekiq', icon: 'smile-1.svg', text: 'Sidekiq', target: '_blank' },
         { path: '#', id: 'help-support-link', header: 'Help & Support', icon: 'question.svg', text: 'Help & Support', active_if: 'help_support' }
       ]
