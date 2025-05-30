@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_05_13_002202) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_30_120317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -830,7 +830,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_05_13_002202) do
     t.string "version_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["version_name"], name: "index_patchwork_app_versions_on_version_name", unique: true
+    t.integer "app_name", default: 0, null: false
+    t.index ["version_name", "app_name"], name: "index_patchwork_app_versions_on_version_name_and_app_name", unique: true
   end
 
   create_table "patchwork_collections", force: :cascade do |t|

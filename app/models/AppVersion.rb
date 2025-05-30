@@ -8,6 +8,10 @@
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #
+# Indexes
+#
+#  index_patchwork_app_versions_on_version_name_and_app_name  (version_name,app_name) UNIQUE
+#
 class AppVersion < ApplicationRecord
   VALID_VERSION_REGEX = /\A(\*|(\d+(\.(\*|\d+)){0,2}))\z/
 
