@@ -5,8 +5,13 @@ class AppVersionsController < ApplicationController
   PER_PAGE = 10
 
   def index
-    @search = AppVersion.ransack(params[:q])
-    @app_versions = @search.result.order(created_at: :asc).page(params[:page]).per(PER_PAGE)
+    app_name_key = params[:app_name]&.to_s
+    scope = if AppVersion.app_names.value?(app_name_key&.to_i)
+      AppVersion.send(AppVersion.app_names.key(app_name_key.to_i)).ransack(params[:q])
+    else
+      AppVersion.patchwork.ransack(params[:q])
+    end
+    @app_versions = scope.result.order(created_at: :asc).page(params[:page]).per(PER_PAGE)
   end
 
   def new
@@ -14,20 +19,13 @@ class AppVersionsController < ApplicationController
   end
 
   def create
-    payload      = app_version_params
-    version_name = payload.delete :version_name
-    @app_version = AppVersion.new(version_name: version_name)
-    if @app_version.save
-      if params[:os_type] == 'both'
-        AppVersionHistory.create(app_version: @app_version, os_type: 'android', deprecated: false)
-        AppVersionHistory.create(app_version: @app_version, os_type: 'ios', deprecated: false)
-      else
-        AppVersionHistory.create(app_version: @app_version, os_type: params[:os_type], deprecated: false)
-      end
-      redirect_to app_versions_url, notice: 'An App version was successfully created!'
+    service = CreateAppVersionService.new(app_version_params.merge(os_type: params[:os_type]))
+
+    if service.call
+      redirect_to app_versions_url(app_name: service.app_name&.to_i), notice: 'App version was successfully created!'
     else
-      flash[:error] = @app_version.errors.full_messages
-      render :new
+      flash[:error] = service.errors.full_messages
+      redirect_to new_app_version_url(app_name: service.app_name&.to_i || AppVersion.app_names.invert[AppVersion.app_names[:patchwork]])
     end
   end
 
@@ -40,8 +38,9 @@ class AppVersionsController < ApplicationController
   end
 
   def destroy
+    app_name = @app_version.app_name_before_type_cast
     @app_version.destroy
-    redirect_to app_versions_url, notice: 'App version was successfully destroyed.'
+    redirect_to app_versions_url(params: {app_name: app_name}), notice: 'App version was successfully destroyed.'
   end
 
   def deprecate
@@ -61,6 +60,6 @@ class AppVersionsController < ApplicationController
   end
 
   def app_version_params
-    params.require(:app_version).permit(:version_name)
+    params.require(:app_version).permit(:version_name, :app_name)
   end
 end

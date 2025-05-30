@@ -1,9 +1,11 @@
+- title = application_name(params[:app_name])
+
 .row
   .col-12
     .card
       .card-header
         %h3.card-title
-          = "#{action_name.capitalize}"
+          = "#{action_name.capitalize} App version of #{title}"
 
       .card-body.w-250
         = simple_form_for @app_version, local: true do |f|
@@ -17,11 +19,12 @@
             .col-md-6
               = label_tag :os_type, 'OS type', class: 'form-label'
               = select_tag :os_type, options_for_select([ 'both', 'android', 'ios'], 'both'), class: 'form-control'
-
+      
+              = f.input :app_name, as: :hidden, input_html: { value: params[:app_name] }
           .row.mt-2
             .col-md-6.d-flex.justify-content-center
-              = link_to 'Cancel', app_versions_path, class: 'btn btn-secondary mx-2 btn-custom'
+              = link_to 'Cancel', app_versions_path(app_name: params[:app_name]), class: 'btn btn-secondary mx-2 btn-custom'
               = f.submit 'Save', class: 'btn btn-danger mx-2 btn-custom'
     .row.d-flex.justify-content-between.mt-4
       .col-auto
-        %a.btn.btn-outline-secondary{ href: app_versions_path } Back
+        %a.btn.btn-outline-secondary{ href: app_versions_path(app_name: params[:app_name]) } Back
