@@ -6,32 +6,46 @@ module Api
       skip_before_action :verify_key!
       before_action :fetch_channel_details, only: [:fetch_channels]
 
-      NEWSMAST_CHANNELS_SORTING_ORDERS = ['Newsmast Channels', 'News','Global Issues', 'Government & Politics', 'Environment', 'Communities & Allies', 'Business & Work', 'Technology', 'Science', 'Humanities', 'Culture', 'Sport', 'Lifestyle', ]
+      COLLECTION_TYPES = {
+        channel: 'channel',
+        channel_feed: 'channel_feed',
+        newsmast: 'newsmast'
+      }.freeze
+
+      NEWSMAST_CHANNELS_SORTING_ORDERS = [
+        'Newsmast Channels',
+        'News',
+        'Global Issues',
+        'Government & Politics',
+        'Environment',
+        'Communities & Allies',
+        'Business & Work',
+        'Technology',
+        'Science',
+        'Humanities',
+        'Culture',
+        'Sport',
+        'Lifestyle'
+      ].freeze
      
       def index
-        @all_collections = fetch_all_channels_by_type(type: 'channel')
-        render_collections(@all_collections, type: 'channel')
-      end
-
-      def newsmast_collections
-        patchwork_collection_ids = extract_patchwork_collection_ids
-        @all_collections = fetch_collections_by_ids(patchwork_collection_ids)
-
-        # Sort collections by NEWSMAST_CHANNELS_SORTING_ORDERS
-        @all_collections = @all_collections.sort_by do |collection|
-          NEWSMAST_CHANNELS_SORTING_ORDERS.index(collection.name) || Float::INFINITY
-        end
-        render_collections(@all_collections, type: 'newsmast')
+        @all_collections = fetch_all_channels_by_type(type: COLLECTION_TYPES[:channel])
+        render_collections(@all_collections, type: COLLECTION_TYPES[:channel])
       end
 
       def channel_feed_collections
-        @all_collections = fetch_all_channels_by_type(type: 'channel_feed')
-        render_collections(@all_collections, type: 'channel_feed')
+        @all_collections = fetch_all_channels_by_type(type: COLLECTION_TYPES[:channel_feed])
+        render_collections(@all_collections, type: COLLECTION_TYPES[:channel_feed])
+      end
+
+      def newsmast_collections
+        @all_collections = fetch_all_channels_by_type(type: COLLECTION_TYPES[:newsmast])
+        render_collections(@all_collections, type: COLLECTION_TYPES[:newsmast])
       end
 
       def fetch_channels
         if @channels
-          render json: serialized_channels(@channels,type: params[:type])
+          render json: serialized_channels(type: params[:type])
         else
           render json: { data: [] }
         end
@@ -40,27 +54,34 @@ module Api
       private
 
       def fetch_all_channels_by_type(type:)
-        collections = if type == 'channel'
-          Collection.filter_channels.distinct.order(sorting_index: :asc).to_a
+        collections = case type
+        when COLLECTION_TYPES[:channel]
+          Collection.filter_by_channel_type(type).order(sorting_index: :asc).to_a
+        when COLLECTION_TYPES[:channel_feed]
+          Collection.filter_by_channel_type(type).order(sorting_index: :asc).to_a
         else
-          Collection.filter_channel_feeds.distinct.order(sorting_index: :asc).to_a
+          newsmast_collections = if Community.has_local_newsmast_channel?
+            Collection.filter_by_channel_type(type).order(sorting_index: :asc).to_a
+          else
+            patchwork_collection_ids = extract_patchwork_collection_ids
+            fetch_collections_by_ids(patchwork_collection_ids)
+          end
+          newsmast_collections = newsmast_collections.sort_by do |collection|
+            NEWSMAST_CHANNELS_SORTING_ORDERS.index(collection.name) || Float::INFINITY
+          end
+          newsmast_collections
         end
         add_all_collection(collections, type: type)
       end
 
       def extract_patchwork_collection_ids
-        if Community.has_local_newsmast_channel?
-          Community.filter_newsmast_channels.pluck(:patchwork_collection_id).uniq
-        else
-          NEWSMAST_CHANNELS.map do |channel|
-            channel.dig(:attributes, :patchwork_collection_id)
-          end.compact
-        end
+        NEWSMAST_CHANNELS.map do |channel|
+          channel.dig(:attributes, :patchwork_collection_id)
+        end.compact
       end
 
       def fetch_collections_by_ids(ids)
-        collections = Collection.where(id: ids).order(sorting_index: :asc).to_a
-        add_all_collection(collections, type: 'newsmast')
+        Collection.where(id: ids).order(sorting_index: :asc).to_a
       end
 
       def render_collections(collections, type:)
@@ -69,22 +90,26 @@ module Api
         ).serializable_hash.to_json
       end
 
-      def serialized_channels(channels, type:)
-        if type == 'channel' || type == 'channel_feed'
-          Api::V1::ChannelSerializer.new(channels).serializable_hash.to_json
+      def serialized_channels(type:)
+        if type == COLLECTION_TYPES[:channel] || type == COLLECTION_TYPES[:channel_feed]
+          Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
         else
-          channels
+          if Community.has_local_newsmast_channel? && params[:type] == COLLECTION_TYPES[:newsmast]
+            Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
+          else
+            @channels
+          end
         end
       end
 
       def fetch_channel_details
         return unless params[:slug].present? && params[:type].present?
 
-        @channels = if params[:type] == 'newsmast'
-                      fetch_newsmast_channels
-                    else
-                      fetch_communities(type:  params[:type])
-                    end
+        @channels = if !Community.has_local_newsmast_channel? && params[:type] == COLLECTION_TYPES[:newsmast]
+          fetch_newsmast_channels
+        else
+          fetch_communities(type:  params[:type])
+        end
       end
 
       def fetch_newsmast_channels
@@ -108,8 +133,13 @@ module Api
         end
         return [] unless base_communities
 
-        scope = type == 'channel' ? :filter_channels : :filter_channel_feeds
-
+        scope = if type == COLLECTION_TYPES[:channel]
+          :filter_channels
+        elsif type == COLLECTION_TYPES[:channel_feed]
+          :filter_channel_feeds
+        else
+          :filter_newsmast_channels
+        end
         base_communities
         .public_send(scope)
         .exclude_array_ids
@@ -120,9 +150,9 @@ module Api
 
       def add_all_collection(collections, type:)
         name = case type
-                  when 'channel'
+                  when COLLECTION_TYPES[:channel]
                     'Communities'
-                  when 'channel_feed'
+                  when COLLECTION_TYPES[:channel_feed]
                     'Channels'
                   else
                     'Newsmast Channels'
