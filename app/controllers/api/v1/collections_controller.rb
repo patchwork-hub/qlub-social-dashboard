@@ -95,7 +95,10 @@ module Api
           Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
         else
           if Community.has_local_newsmast_channel? && params[:type] == COLLECTION_TYPES[:newsmast]
-            Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
+            data = Api::V1::ChannelSerializer.new(@channels).serializable_hash.to_json
+            # Need to remove after mobile lunch again
+            parsed = JSON.parse(data)
+            parsed["data"]
           else
             @channels
           end
