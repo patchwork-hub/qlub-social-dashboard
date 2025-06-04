@@ -4,7 +4,7 @@ require 'sidekiq-scheduler'
 require 'uri'
  
 redis_url = if ENV['REDIS_PASSWORD'].present?
-  "redis://:#{encoded_password}@#{ENV['REDIS_HOST']}:#{ENV['REDIS_PORT']}"
+  "redis://:#{ENV['REDIS_PASSWORD']}@#{ENV['REDIS_HOST']}:#{ENV['REDIS_PORT']}"
 else
   "redis://#{ENV['REDIS_HOST']}:#{ENV['REDIS_PORT']}"
 end
