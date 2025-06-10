@@ -12,6 +12,7 @@ class CommunityPostService < BaseService
       create_community
     end
     create_content_type if @community.persisted?
+
     @community
   rescue ActiveRecord::RecordNotUnique => e
     Rails.logger.error("Community creation/update failed: #{e.message}")
@@ -193,6 +194,13 @@ class CommunityPostService < BaseService
       channel_type: @options[:content_type],
       custom_condition: custom_condition_value
     )
+    
+    boost_bot_account = Account.find_by(id: @community&.community_admins&.where(is_boost_bot: true)&.first&.account_id)
+    if @content_type.group_channel?
+      boost_bot_account.update(locked: true)
+    else
+      boost_bot_account.update(locked: false)
+    end
   end
 
   def custom_condition_value
