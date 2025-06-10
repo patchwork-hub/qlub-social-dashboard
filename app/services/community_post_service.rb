@@ -196,7 +196,7 @@ class CommunityPostService < BaseService
     )
     
     boost_bot_account = Account.find_by(id: @community&.community_admins&.where(is_boost_bot: true)&.first&.account_id)
-    if @content_type.group_channel?
+    if content_type.group_channel?
       boost_bot_account.update(locked: true)
     else
       boost_bot_account.update(locked: false)
