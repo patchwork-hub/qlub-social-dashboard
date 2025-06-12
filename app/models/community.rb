@@ -66,7 +66,8 @@ class Community < ApplicationRecord
   attribute :is_custom_domain, :boolean, default: false
 
   validates :name, presence: true,
-    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" },
+    uniqueness: { case_sensitive: false, message: "has already been taken" }
 
   validates :slug, presence: true,
     length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
