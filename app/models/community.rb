@@ -69,7 +69,6 @@ class Community < ApplicationRecord
     length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" },
     uniqueness: { case_sensitive: false, message: "has already been taken" }
 
-
   validates :slug, presence: true,
     length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
               too_short: "must be at least %{count} characters",
