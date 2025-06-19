@@ -83,6 +83,12 @@ namespace :api, defaults: { format: :json } do
         get 'check_version' => 'app_versions#check_version', as: 'check_version'
       end
     end
+
+    resources :settings,only: [:index, :destroy] do
+      collection do
+        post :upsert
+      end
+    end
   end
 end
 

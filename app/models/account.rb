@@ -85,6 +85,7 @@ class Account < ApplicationRecord
   has_many :communities, through: :joined_communities
   has_one :wait_list, foreign_key: :account_id, class_name: 'WaitList', dependent: :destroy
   has_one :community_admin, foreign_key: :account_id, class_name: 'CommunityAdmin', dependent: :destroy
+  has_many :settings, class_name: 'Setting', foreign_key: :account_id, dependent: :destroy
 
   validates_attachment_content_type :avatar, content_type: IMAGE_MIME_TYPES
   validates_attachment_content_type :header, content_type: IMAGE_MIME_TYPES
