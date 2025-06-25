@@ -14,7 +14,7 @@
 #
 # Foreign Keys
 #
-#  fk_rails_...  (patchwork_community_id => patchwork_communities.id)
+#  fk_rails_...  (patchwork_community_id => patchwork_communities.id) ON DELETE => cascade
 #
 class CommunityRule < ApplicationRecord
   self.table_name = 'patchwork_community_rules'
