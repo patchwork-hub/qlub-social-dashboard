@@ -300,11 +300,12 @@ class CommunitiesController < BaseController
 
   def community_params
     params.require(:community).permit(
+      :post_visibility,
       patchwork_community_additional_informations_attributes: [:id, :heading, :text, :_destroy],
       social_links_attributes: [:id, :icon, :name, :url, :_destroy],
       general_links_attributes: [:id, :icon, :name, :url, :_destroy],
       patchwork_community_rules_attributes: [:id, :rule, :_destroy],
-      registration_mode: [],
+      registration_mode: []
     )
   end
 
