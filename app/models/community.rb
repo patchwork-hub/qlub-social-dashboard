@@ -26,6 +26,7 @@
 #  name                        :string           not null
 #  participants_count          :integer          default(0)
 #  position                    :integer          default(0)
+#  post_visibility             :integer          default("followers_only"), not null
 #  registration_mode           :string           default("none")
 #  slug                        :string           not null
 #  visibility                  :integer
@@ -229,6 +230,8 @@ class Community < ApplicationRecord
   scope :not_deleted, -> { where(deleted: nil) }
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast'}
+
+  enum post_visibility: { public_visibility: 0, unlisted: 1, followers_only: 2, direct: 3 }
 
   def self.ransackable_attributes(auth_object = nil)
     ["name"]
