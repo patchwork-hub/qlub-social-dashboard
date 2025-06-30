@@ -40,7 +40,7 @@ module StepHelper
         steps << { step: 6, display: 3, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the channel.' }
       end
     elsif hub_admin? || is_hub
-      steps << { step: 1, display: 1, title: 'Hub Information', description: 'Set up the basic details of your channel.' }
+      steps << { step: 1, display: 1, title: 'Hub information', description: 'Set up the basic details of your channel.' }
       steps << { step: 2, display: 2, title: 'Admin and public feed details', description: 'Create admin accounts for your channel.' }
       steps << { step: 6, display: 3, title: 'Additional information', description: 'Add your channel guidelines and any additional information to support the channel.' }
     end
