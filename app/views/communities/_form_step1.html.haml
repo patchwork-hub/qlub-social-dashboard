@@ -21,7 +21,7 @@
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step #{fetch_display_step} #{channel_type_info} Information
+              %h5.card-title Step #{fetch_display_step} #{channel_type_info} information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme.
           - is_read_only = params[:id].present? && (!is_channel_feed || is_newsmast ? Community.find_by_id(params[:id])&.visibility.present? : true)
@@ -186,7 +186,9 @@
                 %div.dropzone-placeholder
                   %i.fa-solid.fa-upload
                   %p.mb-1 Drag & drop an image here or click to select a file
-                  %p.mb-0.text-muted.small 1080 x 540 recommended dimensions, up to 2MB
+                  %p.mb-0.text-muted.small 1080 x 540px recommended dimensions, up to 2MB
+              - if banner_image_url.present?
+                %p.mt-4.text-muted.small.text-center 1080 x 540px recommended dimensions, up to 2MB
 
       .row.d-flex.justify-content-between
         .col-auto
