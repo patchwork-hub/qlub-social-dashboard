@@ -68,7 +68,7 @@ def find_or_create_community_admin(community, admin_username)
   return admin if admin.persisted?
 
   admin.assign_attributes(
-    role: 'UserAdmin',
+    role: 'NewsmastAdmin',
     display_name: community.slug,
     email: "#{admin_username}@channel.org",
     password: ENV.fetch('DEFAULT_ADMIN_PASSWORD', 'password'),
