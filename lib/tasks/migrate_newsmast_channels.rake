@@ -122,7 +122,7 @@ namespace :migrate_newsmast_channels do
 
     puts 'Staring Newsmast migration......'
 
-    @newsmast_account_token = args[:token] || 'eXRapzohPTadlcvzmfCLOMdkAAykVd634V1C85idKE8'
+    @newsmast_account_token = args[:token] || 'hCRc66fBH8BGxhPKeWx49S0m_rrIDR2UStVM1R-Uvds'
 
     acc_id = RemoteAccountVerifyService.new(@newsmast_account_token, 'newsmast.social').call.fetch_remote_account_id
 
@@ -149,7 +149,7 @@ namespace :migrate_newsmast_channels do
 
     created_count = skipped_count = error_count = 0
 
-    NEWSMAST_CHANNELS.first(5).each_with_index do |channel, index|
+    NEWSMAST_CHANNELS.each_with_index do |channel, index|
       puts "Processing [#{index + 1}] #{channel[:attributes][:name]} : #{channel[:attributes][:slug]}"
 
       ActiveRecord::Base.transaction do
