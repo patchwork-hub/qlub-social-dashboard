@@ -215,7 +215,7 @@ $(document).ready(function () {
 
   const $channelType = $("#channel_type").val();
 
-  if ($channelType !== "channel_feed") {
+  if ($channelType !== "channel_feed" && $channelType !== "newsmast") {
     CommunitySetup.init();
   }
 });

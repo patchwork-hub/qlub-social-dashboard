@@ -5,7 +5,7 @@
 - channel_type_info  = is_channel_feed ? 'Channel' : is_channel ? 'Community' : is_hub ? 'Hub' : 'Newsmast'
 - ip_address = @community&.ip_address_id.present? ? IpAddress.find_by(id: @community.ip_address_id) : IpAddress.valid_ip
 
-.container-fluid{ 'data-is-channel-feed' => is_channel_feed || is_newsmast}
+.container-fluid{ 'data-is-channel-feed' => is_channel_feed }
   .row-md-12.my-4
     .col
       = carousel_indicators
