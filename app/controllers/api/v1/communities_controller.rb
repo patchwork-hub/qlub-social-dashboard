@@ -2,7 +2,7 @@ module Api
   module V1
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
-      before_action :authenticate_user_from_header, except: %i[bridge_information]
+      before_action :authenticate_user_from_header
       before_action :set_community, only: %i[show update set_visibility manage_additional_information]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       before_action :set_content_and_channel_type, only: %i[index create update]
@@ -131,18 +131,6 @@ module Api
         else
           render json: { error: "No valid IP available" }, status: :not_found
         end
-      end
-
-      def bridge_information
-        community = Community.find_by(id: params[:id])
-        if community.nil?
-          render json: { error: 'Community not found' }, status: :not_found and return
-        end
-        bluesky_info = BlueskyService.new(@community).fetch_bluesky_account
-        render json: {
-          community: community,
-          bluesky_info: bluesky_info,
-        }
       end
 
       private

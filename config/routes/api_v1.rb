@@ -16,6 +16,7 @@ namespace :api, defaults: { format: :json } do
         get :my_channel
         get :channel_feeds
         get :newsmast_channels
+        get :bridge_information
       end
     end
 
@@ -56,7 +57,6 @@ namespace :api, defaults: { format: :json } do
         get 'mute_contributor_list'
         post 'set_visibility'
         get 'fetch_ip_address'
-        get 'bridge_information'
       end
       member do
         patch :manage_additional_information

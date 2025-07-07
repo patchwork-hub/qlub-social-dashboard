@@ -61,6 +61,18 @@ module Api
         end
       end
 
+      def bridge_information
+        community = Community.find_by(id: params[:id])
+        if community.nil?
+          render json: { error: 'Community not found' }, status: :not_found and return
+        end
+        bluesky_info = BlueskyService.new(@community).fetch_bluesky_account
+        render json: {
+          community: community,
+          bluesky_info: bluesky_info,
+        }
+      end
+
       private
 
       def set_channel
