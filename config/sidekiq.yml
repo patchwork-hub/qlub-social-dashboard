@@ -15,10 +15,10 @@ development:
         every: '5m'
         class: Scheduler::FetchSpamKeywordScheduler
         queue: dashboard_development_scheduler
-      FollowBlueskyBotScheduler:
-        every: '10m'
-        class: Scheduler::FollowBlueskyBotScheduler
-        queue: dashboard_development_scheduler
+      # FollowBlueskyBotScheduler:
+      #   every: '10m'
+      #   class: Scheduler::FollowBlueskyBotScheduler
+      #   queue: dashboard_development_scheduler
 
 staging:
   :verbose: true
