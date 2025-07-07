@@ -56,6 +56,7 @@ namespace :api, defaults: { format: :json } do
         get 'mute_contributor_list'
         post 'set_visibility'
         get 'fetch_ip_address'
+        get 'bridge_information'
       end
       member do
         patch :manage_additional_information
