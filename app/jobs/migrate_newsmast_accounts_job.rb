@@ -88,7 +88,7 @@ class MigrateNewsmastAccountsJob < ApplicationJob
   end
 
   def search_target_account_id(query, owner_token)
-    retries = 5
+    retries = 20
     result = nil
     while retries >= 0
       result = ContributorSearchService.new(
