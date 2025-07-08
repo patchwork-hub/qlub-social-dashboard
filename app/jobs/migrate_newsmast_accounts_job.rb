@@ -29,9 +29,9 @@ class MigrateNewsmastAccountsJob < ApplicationJob
 
   def process_batch(rows)
     # Preload communities
-    slugs = rows.map { |r| r['slug'] }
+    slugs = rows.map { |r| r['slug'].tr('_', '-') }
     names = rows.map { |r| r['name'] }
-    communities = Community.where(slug: slugs, name: names).index_by { |c| [c.slug, c.name] }
+    communities = Community.where(slug: slugs, name: names, channel_type: 'newsmast').index_by { |c| [c.slug, c.name] }
 
     # Prepare account queries
     acct_queries = rows.map { |r| "@#{r['username']}@#{r['domain']}" }.uniq
@@ -42,9 +42,9 @@ class MigrateNewsmastAccountsJob < ApplicationJob
     accounts = Account.where(id: account_id_map.values.compact).index_by(&:id)
     rows.each do |row|
       username, domain, name, slug, is_primary = row.values_at('username', 'domain', 'name', 'slug', 'is_primary')
-      community = communities[[slug, name]]
+      community = communities[[slug.tr('_', '-'), name]]
       unless community
-        Rails.logger.error "Community not found: #{name} (#{slug}) for user acct: #{username}@#{domain}"
+        Rails.logger.error "Community not found: #{name} (#{slug.tr('_', '-')}) for user acct: #{username}@#{domain}"
         next
       end
 
