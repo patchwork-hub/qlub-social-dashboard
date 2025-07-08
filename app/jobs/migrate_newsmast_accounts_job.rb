@@ -5,6 +5,8 @@ class MigrateNewsmastAccountsJob < ApplicationJob
   BATCH_SIZE = 100
 
   def perform(csv_path = Rails.root.join('user_community_export.csv'))
+    @missing_accounts = []
+    
     owner_role = UserRole.find_by(name: 'Owner')
     owner_user = User.find_by(role: owner_role)
     return Rails.logger.error('Owner user not found. Aborting migration.') unless owner_user
@@ -23,6 +25,9 @@ class MigrateNewsmastAccountsJob < ApplicationJob
       end
     end
     process_batch(batch) if batch.any?
+    
+    # Output missing accounts at the end
+    output_missing_accounts
   end
 
   private
@@ -40,6 +45,7 @@ class MigrateNewsmastAccountsJob < ApplicationJob
       account_id_map[acct] = search_target_account_id(acct, @owner_token)
     end
     accounts = Account.where(id: account_id_map.values.compact).index_by(&:id)
+    
     rows.each do |row|
       username, domain, name, slug, is_primary = row.values_at('username', 'domain', 'name', 'slug', 'is_primary')
       community = communities[[slug.tr('_', '-'), name]]
@@ -52,6 +58,15 @@ class MigrateNewsmastAccountsJob < ApplicationJob
       target_account_id = account_id_map[acct]
       target_account = accounts[target_account_id.to_i]
       unless target_account
+        # Store missing account in array
+        @missing_accounts << {
+          username: username,
+          domain: domain,
+          acct: acct,
+          community_name: name,
+          community_slug: slug.tr('_', '-'),
+          target_account_id: target_account_id
+        }
         Rails.logger.error "Account not found for user acct: #{username}@#{domain}"
         next
       end
@@ -76,6 +91,34 @@ class MigrateNewsmastAccountsJob < ApplicationJob
         Rails.logger.info "Created joined_community for account #{username}@#{domain} in community #{name} (#{slug})"
       end
     end
+  end
+
+  def output_missing_accounts
+    Rails.logger.info "="*80
+    Rails.logger.info "MIGRATION COMPLETED"
+    Rails.logger.info "="*80
+    
+    if @missing_accounts.empty?
+      Rails.logger.info "✅ All accounts were found successfully!"
+    else
+      Rails.logger.info "❌ Missing accounts summary:"
+      Rails.logger.info "Total missing accounts: #{@missing_accounts.length}"
+      Rails.logger.info "-" * 80
+      
+      @missing_accounts.each_with_index do |account, index|
+        Rails.logger.info "#{index + 1}. #{account[:acct]} -> #{account[:community_name]} (#{account[:community_slug]})"
+        Rails.logger.info "   Target ID: #{account[:target_account_id] || 'Not found'}"
+      end
+      
+      Rails.logger.info "-" * 80
+      Rails.logger.info "Missing accounts by domain:"
+      domain_counts = @missing_accounts.group_by { |a| a[:domain] }.transform_values(&:count)
+      domain_counts.each do |domain, count|
+        Rails.logger.info "  #{domain}: #{count} accounts"
+      end
+    end
+    
+    Rails.logger.info "="*80
   end
 
   def search_target_account_id(query, owner_token)
