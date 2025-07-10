@@ -12,12 +12,14 @@ class CommunityAdminPostService < BaseService
   private
 
   def create_admin!
+    is_locked = @community&.content_type&.group_channel? ? true : false
     account_attributes = {
       display_name: @community_admin.display_name,
       avatar: @community.avatar_image || '',
       header: @community.banner_image || '',
       note: @community.description,
-      discoverable: true
+      discoverable: true,
+      locked: is_locked
     }
 
     if @community_admin.is_boost_bot

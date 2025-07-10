@@ -32,16 +32,16 @@
         %table.table.no-side-borders.top-bottom-border{data: {url: accounts_url, type: 'account'}}
           %thead
             %tr
-              %th.align-left
+              %th.align-left{ style: "width: 40px;" }
                 = check_box_tag :select_all, '', false, id: 'select_all'
-              %th #{title}
-              %th Username
+              %th{ style: "width: 80px;"} #{title}
+              %th{ style: "width: 100px;"} Username
               - if channel_type_param.eql?('channel') || channel_type_param.eql?('hub')
-                %th Address
-              %th Followers
-              %th #{keyword.capitalize} type
-              %th Status
-              %th Actions
+                %th{ style: "width: 100px;"} Address
+              %th{ style: "width: 50px;"} Followers
+              %th{ style: "width: 100px;"} Type
+              %th{ style: "width: 110px;"} Status
+              %th{ style: "width: 80px;"} Actions
           %tbody
             - if @records.size == 0
               %tr
@@ -52,22 +52,22 @@
             - @records.each do |community|
             - account = community&.community_admins&.first&.account
               %tr
-                %td.text-center
+                %td.text-center{ style: "width: 40px;" }
                   = check_box_tag "selected_communities[]", community.id, false, class: 'select_community'
-                %td= community.name
-                %td
+                %td{ style: "width: 80px;"}= community.name
+                %td{ style: "width: 100px;"}
                   - if account.present?
                     %span.copyable-text{title: "Click to copy", style: "cursor: pointer;", onclick: "copyToClipboard('#{account_url(account)}')"}= "@#{username(account)}@#{domain(account)}"
                   - else
                     %span.text-muted -
                 - if channel_type_param.eql?('channel') || channel_type_param.eql?('hub')
-                  %td
+                  %td{ style: "width: 100px;"}
                     - if address_url(community).present?
                       %p
                         = link_to address_url(community).sub('/public', ''), address_url(community), target: '_blank'
                     - else
                       %p.text-muted -
-                %td
+                %td{ style: "width: 50px;"}
                   - if account&.follower_count && account&.follower_count > 0
                     %a{ href: follower_list_community_url(id: community), title: "view followers", style: "display: flex; align-items: center;" }
                       = image_tag("icons/eye.svg", width: "20", height: "20", style: "margin-right: 5px;")
@@ -76,13 +76,13 @@
                     %a{ href: "#", title: "no followers", style: "display: flex; align-items: center; pointer-events: none; color: gray !important;" }
                       = image_tag("icons/eye.svg", width: "20", height: "20", style: "margin-right: 5px;")
                       0
-                %td= get_channel_content_type(community)
-                %td
+                %td{ style: "width: 100px;"}= get_channel_content_type(community)
+                %td{ style: "width: 110px;"}
                   - if community.visibility.present?
                     %span.badge.badge-pill.badge-success Complete
                   - else
                     %span.badge.badge-pill.badge-warning Incomplete
-                %td
+                %td{ style: "width: 80px;"}
                   - if community.deleted_at.present?
                     = link_to recover_community_path(community, channel_type_param: channel_type_param), method: :post, data: { confirm: "Are you sure you want to recover this #{keyword}?" } do
                       = image_tag("icons/recover.svg", title: "Recover", class: "ml-2", width: "16", height: "16")

@@ -6,6 +6,7 @@ module Api
       before_action :set_community, only: %i[show update set_visibility manage_additional_information]
       before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
       before_action :set_content_and_channel_type, only: %i[index create update]
+      include BlueskyAccountBridgeHleper
       PER_PAGE = 5
 
       def index

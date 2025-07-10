@@ -57,7 +57,15 @@ class Collection < ApplicationRecord
       .order('patchwork_collections.sorting_index ASC')
   }
 
-  scope :filter_channels, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel] }).where.not(patchwork_communities: { visibility: nil }) }
-  scope :filter_channel_feeds, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }).where.not(patchwork_communities: { visibility: nil }) }
+  scope :filter_by_channel_type, ->(type) {
+    includes(:patchwork_communities)
+      .where(patchwork_communities: { channel_type: Community.channel_types[type] })
+      .merge(Community.exclude_incomplete_channels)
+      .distinct
+    }
+
+  # scope :filter_channels, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel] }).where.not(patchwork_communities: { visibility: nil }) }
+  # scope :filter_channel_feeds, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }).where.not(patchwork_communities: { visibility: nil }) }
+  # scope :filter_newsmast, -> { joins(:patchwork_communities).where(patchwork_communities: { channel_type: Community.channel_types[:newsmast] }).where.not(patchwork_communities: { visibility: nil }) }
 
 end

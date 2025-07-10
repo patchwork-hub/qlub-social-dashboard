@@ -57,16 +57,18 @@ def find_or_create_community_admin(community, admin_username)
     acc.save(validate: false)
 
     domain = 'channel.org'
-    user = User.where(email: "#{admin_username}@#{domain}").first_or_initialize(email: "#{admin_username}@#{domain}", password: 'password', password_confirmation: 'password', confirmed_at: Time.now.utc, role: UserRole.find_by(name: 'UserAdmin'), account: acc, agreement: true, approved: true)
+    user = User.where(email: "#{admin_username}@#{domain}").first_or_initialize(email: "#{admin_username}@#{domain}", password: 'password', password_confirmation: 'password', confirmed_at: Time.now.utc, role: UserRole.find_by(name: 'NewsmastAdmin'), account: acc, agreement: true, approved: true)
     user.save!
     acc
   end
+
+  account&.user.update(role: UserRole.find_by(name: 'NewsmastAdmin')) if account&.user&.role&.name != 'NewsmastAdmin'
 
   admin = CommunityAdmin.find_or_initialize_by(account_id: account.id, patchwork_community_id: community.id)
   return admin if admin.persisted?
 
   admin.assign_attributes(
-    role: 'UserAdmin',
+    role: 'NewsmastAdmin',
     display_name: community.slug,
     email: "#{admin_username}@channel.org",
     password: ENV.fetch('DEFAULT_ADMIN_PASSWORD', 'password'),
@@ -92,6 +94,13 @@ def create_content_type(community)
   )
 end
 
+def create_post_type(community)
+  CommunityPostType.find_or_create_by(
+    patchwork_community_id: community.id,
+    posts: true
+  )
+end
+
 def set_hashtags(community, user, channel = nil)
   return nil if community.nil? || user.nil?
 
@@ -113,7 +122,7 @@ namespace :migrate_newsmast_channels do
 
     puts 'Staring Newsmast migration......'
 
-    @newsmast_account_token = args[:token] || 'eXRapzohPTadlcvzmfCLOMdkAAykVd634V1C85idKE8'
+    @newsmast_account_token = args[:token] || 'hCRc66fBH8BGxhPKeWx49S0m_rrIDR2UStVM1R-Uvds'
 
     acc_id = RemoteAccountVerifyService.new(@newsmast_account_token, 'newsmast.social').call.fetch_remote_account_id
 
@@ -140,7 +149,7 @@ namespace :migrate_newsmast_channels do
 
     created_count = skipped_count = error_count = 0
 
-    NEWSMAST_CHANNELS.first(5).each_with_index do |channel, index|
+    NEWSMAST_CHANNELS.each_with_index do |channel, index|
       puts "Processing [#{index + 1}] #{channel[:attributes][:name]} : #{channel[:attributes][:slug]}"
 
       ActiveRecord::Base.transaction do
@@ -204,6 +213,14 @@ namespace :migrate_newsmast_channels do
             puts "  ✓ Successfully created content type for @community: #{@community.name}"
           else
             puts "  ✗ Failed to create content type: #{content_type.errors.full_messages.join(', ')}"
+          end
+
+          # Create post type
+          post_type = create_post_type(@community)
+          if post_type.save
+            puts "  ✓ Successfully created post type for @community: #{@community.name}"
+          else
+            puts "  ✗ Failed to create post type: #{post_type.errors.full_messages.join(', ')}"
           end
         rescue StandardError => e
           puts "  ✗ Error processing @community #{channel[:attributes][:name]}: #{e.message}"

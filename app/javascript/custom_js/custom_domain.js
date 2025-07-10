@@ -185,9 +185,12 @@ $(document).ready(function () {
         return;
       }
 
+      const subdomainVal = $subdomainSection.find("input").val();
+      const customDomainVal = $customDomainInput && $customDomainInput.length ? $customDomainInput.val() : "";
+
       const isDisabled = state.isSubdomainMode
-        ? $subdomainSection.find("input").val().trim() === ""
-        : !(state.domainVerified && $customDomainInput.val().trim());
+        ? !subdomainVal || subdomainVal.trim() === ""
+        : !(state.domainVerified && customDomainVal && customDomainVal.trim());
       $continueButton.prop("disabled", isDisabled);
     }
 
@@ -212,7 +215,7 @@ $(document).ready(function () {
 
   const $channelType = $("#channel_type").val();
 
-  if ($channelType !== "channel_feed") {
+  if ($channelType !== "channel_feed" && $channelType !== "newsmast") {
     CommunitySetup.init();
   }
 });

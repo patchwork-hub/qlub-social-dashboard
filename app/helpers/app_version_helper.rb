@@ -18,4 +18,12 @@ module AppVersionHelper
     ios_history = histories.find { |h| h.os_type == 'ios' }
     ios_history ? { id: ios_history.id, string: (ios_history.deprecated ? '✅' : '❌') } : { id: nil, string: '❌' }
   end
+
+  def application_name(app_name)
+    return 'Patchwork' unless app_name.present?
+
+    if app_name.present?
+      AppVersion.app_names.key(app_name.to_i).humanize.capitalize
+    end
+  end
 end

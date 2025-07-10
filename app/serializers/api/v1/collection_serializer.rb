@@ -42,10 +42,19 @@ class Api::V1::CollectionSerializer
   private
 
   def self.newsmast_community_count(object)
-    if object.slug == "all-collection"
-      NEWSMAST_CHANNELS.size
+    if Community.has_local_newsmast_channel?
+      if object.slug == "all-collection"
+        Community.filter_newsmast_channels.size
+      else
+         Community.filter_newsmast_channels.where(patchwork_collection_id: object.id).size
+      end
     else
-      NEWSMAST_CHANNELS.select { |channel| channel[:attributes][:patchwork_collection_id] == object.id }.size
+      # If there are no local newsmast channels, we use the NEWSMAST_CHANNELS constant
+      if object.slug == "all-collection"
+        NEWSMAST_CHANNELS.size
+      else
+        NEWSMAST_CHANNELS.select { |channel| channel[:attributes][:patchwork_collection_id] == object.id }.size
+      end
     end
   end
 
@@ -63,7 +72,12 @@ class Api::V1::CollectionSerializer
     if object.slug == "all-collection"
       { data: [] }
     else
+      if Community.has_local_newsmast_channel?
+        newmast_channels = Community.filter_newsmast_channels.where(patchwork_collection_id: object.id)
+        Api::V1::ChannelSerializer.new(newmast_channels).serializable_hash
+      else
       { data: NEWSMAST_CHANNELS.select { |channel| channel[:attributes][:patchwork_collection_id] == object.id } }
+      end
     end
   end
 

@@ -1,5 +1,3 @@
-# UserRole.where(name: 'community-admin').destroy_all
-
 roles = [
   { name: 'OrganisationAdmin', position: 1010, permissions: %w[invite_users] },
   { name: 'MasterAdmin', position: 1100, permissions: %w[administrator] },

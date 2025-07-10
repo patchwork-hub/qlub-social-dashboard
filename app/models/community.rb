@@ -26,6 +26,7 @@
 #  name                        :string           not null
 #  participants_count          :integer          default(0)
 #  position                    :integer          default(0)
+#  post_visibility             :integer          default("followers_only"), not null
 #  registration_mode           :string           default("none")
 #  slug                        :string           not null
 #  visibility                  :integer
@@ -66,7 +67,8 @@ class Community < ApplicationRecord
   attribute :is_custom_domain, :boolean, default: false
 
   validates :name, presence: true,
-    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" },
+    uniqueness: { case_sensitive: false, message: "has already been taken" }
 
   validates :slug, presence: true,
     length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
@@ -229,6 +231,8 @@ class Community < ApplicationRecord
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast'}
 
+  enum post_visibility: { public_visibility: 0, unlisted: 1, followers_only: 2, direct: 3 }
+
   def self.ransackable_attributes(auth_object = nil)
     ["name"]
   end
@@ -254,6 +258,10 @@ class Community < ApplicationRecord
 
   def recoverable?
     deleted_at && deleted_at > 30.days.ago
+  end
+
+  def self.has_local_newsmast_channel?
+    self.filter_newsmast_channels.present?
   end
 
   private

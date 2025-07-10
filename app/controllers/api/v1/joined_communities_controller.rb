@@ -63,7 +63,7 @@ module Api
           return render json: { errors: 'Community not found' }, status: 404
         end
 
-        if @account.joined_communities.size < 6
+        if @account.joined_communities.size < 4
           return render json: { errors: 'You need to join at least 5 to set as primary' }, status: 422
         end
 

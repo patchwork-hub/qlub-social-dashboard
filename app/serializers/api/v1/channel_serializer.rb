@@ -48,16 +48,25 @@ class Api::V1::ChannelSerializer
     favourited_status(object.id, params[:current_account])
   end
 
+  attribute :favourited_count do |object, params|
+    favourited_account_counts(object.id)
+  end
+
   attribute :is_primary do |object, params|
     primary_status(object.id, params[:current_account])
   end
 
   attribute :community_admin do |object|
     community_admin = object&.community_admins&.first
+    username = if object&.channel_type == Community.channel_types[:newsmast]
+       community_admin&.account&.username ? "@#{community_admin&.account&.username}@newsmast.community" : ""
+    else
+      community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : ""
+    end
     community_admin ? {
       id: community_admin.id,
       account_id: community_admin&.account&.id.to_s,
-      username: community_admin&.account&.username ? "@#{community_admin&.account&.username}@#{self.default_domain}" : "",
+      username: username,
     } : {}
   end
 
@@ -96,5 +105,9 @@ class Api::V1::ChannelSerializer
     return false unless account
   
     JoinedCommunity.exists?(patchwork_community_id: channel_id, is_primary: true, account_id: account['id'])
+  end
+
+  def self.favourited_account_counts(channel_id)  
+    JoinedCommunity.where(patchwork_community_id: channel_id).size
   end
 end
