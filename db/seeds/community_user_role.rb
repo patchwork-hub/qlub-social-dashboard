@@ -1,10 +1,9 @@
-# UserRole.where(name: 'community-admin').destroy_all
-
 roles = [
   { name: 'OrganisationAdmin', position: 1010, permissions: %w[invite_users] },
   { name: 'MasterAdmin', position: 1100, permissions: %w[administrator] },
   { name: 'UserAdmin', position: 1200, permissions: %w[invite_users] },
-  { name: 'HubAdmin', position: 1300, permissions: %w[invite_users] }
+  { name: 'HubAdmin', position: 1300, permissions: %w[invite_users] },
+  { name: 'NewsmastAdmin', position: 1400, permissions: %w[invite_users] }
 ]
 
 roles.each do |role_attrs|

@@ -2,19 +2,27 @@
   .modal-dialog
     .modal-content
       .modal-header
-        %h5.modal-title#communityAdminModalLabel Create channel admin
+        %h5.modal-title#communityAdminModalLabel Create admin
         %button.close{ type: 'button', 'data-dismiss': 'modal', 'aria-label': 'Close' }
           = image_tag 'icons/circle-xmark.svg', alt: 'Close', width: 18, height: 18, 'aria-hidden': 'true'
       .modal-body
         = simple_form_for @community_admin, url: (@community_admin.persisted? ? community_admin_path(@community_admin) : community_admins_path), method: (@community_admin.persisted? ? :patch : :post), html: { id: 'new_admin_form' } do |f|
           = f.hidden_field :community_id, value: @community.id
           = f.hidden_field :role, id: 'community_admin_role', value: @community_admin.role || ''
-          .mb-3
-            = f.label :display_name, class: "form-label"
-            = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, readonly: true
-          .mb-3
-            = f.label :username, class: "form-label"
-            = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.parameterize.underscore, readonly: true
+          - if @records.size == 0
+            .mb-3
+              = f.label :display_name, class: "form-label"
+              = f.text_field :display_name, class: "form-control", id: "community_admin_display_name", value: @community.name, readonly: true
+            .mb-3
+              = f.label :username, class: "form-label"
+              = f.text_field :username, class: "form-control", id: "community_admin_username", value: @community.slug.parameterize.underscore, readonly: true
+          - else
+            .mb-3
+              = f.label :display_name, class: "form-label"
+              = f.text_field :display_name, class: "form-control", id: "community_admin_display_name"
+            .mb-3
+              = f.label :username, class: "form-label"
+              = f.text_field :username, class: "form-control", id: "community_admin_username"
           - if @community.channel?
             .row.mb-3
               .col
@@ -26,12 +34,18 @@
                   #is_boost_bot_checkbox_wrapper
                     = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'
                     = f.label :is_boost_bot, "Public feed", class: "form-check-label", for: 'community_admin_is_boost_bot'
-          - if @community.channel_feed?
+          - if @community.channel_feed? || @community.newsmast?
             .row.mb-3
-              .col
-                .form-check
-                  = check_box_tag 'is_user_admin', 'user_admin', @community_admin.role == 'UserAdmin', class: 'form-check-input red-check-box', id: 'is_user_admin', onchange: "updateRoleField(this)"
-                  = f.label :role, "User admin", class: "form-check-label", for: 'is_user_admin'
+              - if @community.channel_feed?
+                .col
+                  .form-check
+                    = check_box_tag 'is_user_admin', 'user_admin', @community_admin.role == 'UserAdmin', class: 'form-check-input red-check-box', id: 'is_user_admin', onchange: "updateRoleField(this)"
+                    = f.label :role, "User admin", class: "form-check-label", for: 'is_user_admin'
+              - if @community.newsmast?
+                .col
+                  .form-check
+                    = check_box_tag 'is_newsmast_admin', 'newsmast_admin', @community_admin.role == 'NewsmastAdmin', class: 'form-check-input red-check-box', id: 'is_newsmast_admin', onchange: "updateRoleField(this)"
+                    = f.label :role, "Newsmast admin", class: "form-check-label", for: 'is_newsmast_admin'
               .col
                 .form-check
                   = f.check_box :is_boost_bot, class: 'form-check-input red-check-box', id: 'community_admin_is_boost_bot'

@@ -1,6 +1,8 @@
 - is_channel_feed = user_admin? || params[:channel_type] == 'channel_feed' || @community&.channel_feed?
 - is_channel = organisation_admin? || params[:channel_type] == 'channel' || @community&.channel?
-- channel_type_info  = is_channel_feed ? 'Channel' : is_channel ? 'Community' : 'Hub'
+- is_hub = hub_admin? || params[:channel_type] == 'hub' || @community&.hub?
+- is_newsmast = newsmast_admin? || params[:channel_type] == 'newsmast' || @community&.newsmast?
+- channel_type_info  = is_channel_feed ? 'Channel' : is_channel ? 'Community' : is_hub ? 'Hub' : 'Newsmast'
 - ip_address = @community&.ip_address_id.present? ? IpAddress.find_by(id: @community.ip_address_id) : IpAddress.valid_ip
 
 .container-fluid{ 'data-is-channel-feed' => is_channel_feed }
@@ -19,11 +21,11 @@
         .card-header
           %div.d-flex.justify-content-between
             %div
-              %h5.card-title Step #{fetch_display_step} #{channel_type_info} Information
+              %h5.card-title Step #{fetch_display_step} #{channel_type_info} information
         .card-body
           %p.text-muted.small Fill out the basic details for your channel. Provide a unique name, choose the collection it belongs to, and upload images for the banner and avatar. Write a short bio to describe the channel’s purpose and theme.
-          - is_read_only = params[:id].present? && (!is_channel_feed ? Community.find_by_id(params[:id])&.visibility.present? : true)
-          - unless is_channel_feed
+          - is_read_only = params[:id].present? && (!is_channel_feed || is_newsmast ? Community.find_by_id(params[:id])&.visibility.present? : true)
+          - unless is_channel_feed || is_newsmast
             .row
               .col-md-6.col-sm-12
                 = f.input :name, label: "Display name", input_html: { type: "text", class: "form-control" }
@@ -160,7 +162,7 @@
                     %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFilelogo').click();" } Upload image
                     %p.mt-4.text-muted.small The logo is the profile photo in the top-left corner of the /public page of the sub-channel.
                     %p.text-muted.small SVG, PNG, JPG (aspect ratio: 300x150px)
-            - col_class = is_channel_feed ? 'col-md-12' : 'col-md-4'
+            - col_class = is_channel_feed || is_newsmast ? 'col-md-12' : 'col-md-4'
             .col{ class: col_class }
               %label{ for: "customFileAvatar", class: "form-label" } Avatar
               .row.avatar-image-upload-container.gap-1
@@ -184,13 +186,15 @@
                 %div.dropzone-placeholder
                   %i.fa-solid.fa-upload
                   %p.mb-1 Drag & drop an image here or click to select a file
-                  %p.mb-0.text-muted.small 1080 x 540 recommended dimensions, up to 2MB
+                  %p.mb-0.text-muted.small 1080 x 540px recommended dimensions, up to 2MB
+              - if banner_image_url.present?
+                %p.mt-4.text-muted.small.text-center 1080 x 540px recommended dimensions, up to 2MB
 
       .row.d-flex.justify-content-between
         .col-auto
           %a.btn.btn-outline-secondary{ href: previous_path_for_step1(@community, params) } Back
         .col-auto
-          = f.button :submit, "Continue", class: 'btn btn-danger', id: "continue_button", disabled: !is_channel_feed
+          = f.button :submit, "Continue", class: 'btn btn-danger', id: "continue_button", disabled: !(is_channel_feed || is_newsmast)
 
 = javascript_include_tag "custom_js/custom_domain"
 = stylesheet_link_tag "custom_domain", media: "all"

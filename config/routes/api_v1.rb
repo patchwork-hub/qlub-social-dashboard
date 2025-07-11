@@ -20,6 +20,7 @@ namespace :api, defaults: { format: :json } do
         get :my_channel
         get :channel_feeds
         get :newsmast_channels
+        get :bridge_information
       end
     end
 
@@ -85,6 +86,12 @@ namespace :api, defaults: { format: :json } do
     resources :app_versions,only: [] do 
       collection do
         get 'check_version' => 'app_versions#check_version', as: 'check_version'
+      end
+    end
+
+    resources :settings,only: [:index, :destroy] do
+      collection do
+        post :upsert
       end
     end
   end

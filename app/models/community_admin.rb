@@ -36,8 +36,12 @@ class CommunityAdmin < ApplicationRecord
     uniqueness: { case_sensitive: false, message: "is already in use. Please use a different email for the organisation admin account." }
 
   validates :username, presence: true
+  validates :username, uniqueness: {
+    case_sensitive: false,
+    message: "is already taken"
+  }
 
-  ROLES = %w[OrganisationAdmin UserAdmin HubAdmin].freeze
+  ROLES = %w[OrganisationAdmin UserAdmin HubAdmin NewsmastAdmin].freeze
 
   validates :role, inclusion: { in: ROLES, message: "%{value} is not a valid role" }, allow_blank: true
 

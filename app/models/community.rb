@@ -26,6 +26,7 @@
 #  name                        :string           not null
 #  participants_count          :integer          default(0)
 #  position                    :integer          default(0)
+#  post_visibility             :integer          default("followers_only"), not null
 #  registration_mode           :string           default("none")
 #  slug                        :string           not null
 #  visibility                  :integer
@@ -50,7 +51,7 @@
 class Community < ApplicationRecord
   self.table_name = 'patchwork_communities'
 
-  IMAGE_MIME_TYPES = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg'].freeze
+  IMAGE_MIME_TYPES = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp'].freeze
   LIMIT = 2.megabytes
 
   NAME_LENGTH_LIMIT = 30
@@ -66,7 +67,8 @@ class Community < ApplicationRecord
   attribute :is_custom_domain, :boolean, default: false
 
   validates :name, presence: true,
-    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" }
+    length: { maximum: NAME_LENGTH_LIMIT, too_long: "cannot be longer than %{count} characters" },
+    uniqueness: { case_sensitive: false, message: "has already been taken" }
 
   validates :slug, presence: true,
     length: { minimum: MINIMUM_SLUG_LENGTH, maximum: SLUG_LENGTH_LIMIT,
@@ -211,13 +213,13 @@ class Community < ApplicationRecord
 
   scope :ordered_pos_name, -> { order('patchwork_communities.position ASC, patchwork_communities.name ASC') }
 
-  scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }) }
+  scope :filter_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel] }).exclude_deleted_channels }
 
-  scope :filter_channel_feeds, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }) }
+  scope :filter_channel_feeds, -> { where(patchwork_communities: { channel_type: Community.channel_types[:channel_feed] }).exclude_deleted_channels }
 
-  scope :filter_newsmast_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:newsmast] }) }
+  scope :filter_newsmast_channels, -> { where(patchwork_communities: { channel_type: Community.channel_types[:newsmast] }).exclude_deleted_channels }
 
-  scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }) }
+  scope :exclude_incomplete_channels, -> { where.not(patchwork_communities: { visibility: nil }).exclude_deleted_channels }
 
   scope :exclude_deleted_channels, -> { where(patchwork_communities: { deleted_at: nil }) }
 
@@ -228,6 +230,8 @@ class Community < ApplicationRecord
   scope :not_deleted, -> { where(deleted: nil) }
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast'}
+
+  enum post_visibility: { public_visibility: 0, unlisted: 1, followers_only: 2, direct: 3 }
 
   def self.ransackable_attributes(auth_object = nil)
     ["name"]
@@ -254,6 +258,10 @@ class Community < ApplicationRecord
 
   def recoverable?
     deleted_at && deleted_at > 30.days.ago
+  end
+
+  def self.has_local_newsmast_channel?
+    self.filter_newsmast_channels.present?
   end
 
   private

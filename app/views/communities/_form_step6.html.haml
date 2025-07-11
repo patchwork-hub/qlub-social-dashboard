@@ -2,6 +2,7 @@
   .row-md-12.my-4
     .col
       = carousel_indicators
+  - is_group_channel = @content_type&.group_channel?
 
   = simple_form_for @community, url: manage_additional_information_community_path, method: :post, html: { id: 'additionalForm' } do |form|
     .row
@@ -85,7 +86,72 @@
                       %span.ml-2 Open to new users
                       %span.ml-2
                         = render 'shared/tooltip_custom', tooltip_text: 'Anyone can sign up freely without any approval or invitation needed.', tooltip_position: 'right'
+    .row{ class: ("d-none" unless is_group_channel) }
+      .col-md-12
+        .card.mb-3
+          .card-body
+            .row
+              .col
+                %label Post’s default visibility setting
+                %p.text-muted.small Controls who can see your post, giving you flexible privacy from public sharing to private messages.
+                .form-check
+                  .d-flex.align-items-center
+                    %label.form-check-label.switch.mb-0
+                      %input.form-check-input.switch-input#public_mode{ type: 'radio', name: 'community[post_visibility]', value: 'public_visibility', checked: @community.post_visibility == 'public_visibility' }
+                      %span.switch-slider.round
+                        %span.slider-tick
+                          %i.fa-solid.fa-check
+                        %span.slider-cross
+                          %i.fa-solid.fa-xmark
+                    %span.ml-2 Public
+                    %span.ml-2
+                      = render 'shared/tooltip_custom', tooltip_text: 'Visible to everyone and appears in public timelines', tooltip_position: 'right'
 
+            %hr
+              .row.mt-2
+                .col
+                  .form-check
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#unlisted_mode{ type: 'radio', name: 'community[post_visibility]', value: 'unlisted', checked: @community.post_visibility == 'unlisted' }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2 Unlisted
+                      %span.ml-2
+                        = render 'shared/tooltip_custom', tooltip_text: 'Visible to anyone with the link but hidden from public timelines.', tooltip_position: 'right'
+            %hr
+              .row.mt-2
+                .col
+                  .form-check
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#followers_only_mode{ type: 'radio', name: 'community[post_visibility]', value: 'followers_only', checked: @community.post_visibility == 'followers_only' }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2 Followers-only
+                      %span.ml-2
+                        = render 'shared/tooltip_custom', tooltip_text: 'Visible only to your followers and excluded from public timelines.', tooltip_position: 'right'
+            %hr
+              .row.mt-2
+                .col
+                  .form-check
+                    .d-flex.align-items-center
+                      %label.form-check-label.switch.mb-0
+                        %input.form-check-input.switch-input#direct_mode{ type: 'radio', name: 'community[post_visibility]', value: 'direct', checked: @community.post_visibility == 'direct' }
+                        %span.switch-slider.round
+                          %span.slider-tick
+                            %i.fa-solid.fa-check
+                          %span.slider-cross
+                            %i.fa-solid.fa-xmark
+                      %span.ml-2 Direct
+                      %span.ml-2
+                        = render 'shared/tooltip_custom', tooltip_text: 'Visible only to mentioned users, like a private message.', tooltip_position: 'right'
     .row
       .col-md-12
         .card

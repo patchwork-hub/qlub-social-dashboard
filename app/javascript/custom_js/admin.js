@@ -4,6 +4,10 @@ document.addEventListener("DOMContentLoaded", function () {
   );
   var form = document.querySelector("#new_admin_form");
   const emailField = document.querySelector("#community_admin_email");
+  const displayNameField = document.querySelector(
+    "#community_admin_display_name"
+  );
+  const usernameField = document.querySelector("#community_admin_username");
 
   // Function to update the role field based on checkbox selection
   window.updateRoleField = function (checkbox) {
@@ -15,6 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
       roleField.value = "UserAdmin";
     } else if (checkbox.id === "is_hub_admin" && checkbox.checked) {
       roleField.value = "HubAdmin";
+    } else if (checkbox.id === "is_newsmast_admin" && checkbox.checked) {
+      roleField.value = "NewsmastAdmin";
     } else {
       roleField.value = "";
     }
@@ -24,6 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function () {
       var adminId = this.getAttribute("data-admin-id");
       var email = this.getAttribute("data-email");
+      var displayName = this.getAttribute("data-display-name");
+      var username = this.getAttribute("data-username");
       var password = this.getAttribute("data-password");
       var role = this.getAttribute("data-role");
       var isBoostBot = this.getAttribute("data-is-boost-bot") === "true";
@@ -32,14 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const boostBotWrapper = document.querySelector(
         "#is_boost_bot_checkbox_wrapper"
       );
-
-      if (boostBotWrapper) {
-        if (hideBoostBot) {
-          boostBotWrapper.style.display = "none";
-        } else {
-          boostBotWrapper.style.display = "";
-        }
-      }
 
       // Populate the form fields
       emailField.value = email || "";
@@ -56,9 +56,19 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       const isUserAdminCheckbox = document.querySelector("#is_user_admin");
       const isHubAdminCheckbox = document.querySelector("#is_hub_admin");
+      const isNewsmastAdminCheckbox =
+        document.querySelector("#is_newsmast_admin");
       const isBoostBotCheckbox = document.querySelector(
         "#community_admin_is_boost_bot"
       );
+
+      if (boostBotWrapper) {
+        if (hideBoostBot) {
+          boostBotWrapper.style.display = "none";
+        } else {
+          boostBotWrapper.style.display = "";
+        }
+      }
 
       if (adminId) {
         // Edit mode: set checkboxes based on existing admin data
@@ -71,12 +81,19 @@ document.addEventListener("DOMContentLoaded", function () {
         if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = role === "HubAdmin";
         }
+        if (isNewsmastAdminCheckbox) {
+          isNewsmastAdminCheckbox.checked = role === "NewsmastAdmin";
+        }
         if (isBoostBotCheckbox) {
           isBoostBotCheckbox.checked = isBoostBot;
         }
 
         form.setAttribute("action", "/community_admins/" + adminId);
         form.setAttribute("method", "post");
+
+        displayNameField.value = displayName;
+        usernameField.value = username;
+        usernameField.readOnly = true;
         emailField.readOnly = true;
 
         // Add or update the hidden _method field for PATCH
@@ -89,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         methodInput.setAttribute("value", "patch");
 
-        document.querySelector(".modal-title").innerHTML = "Edit channel admin";
+        document.querySelector(".modal-title").innerHTML = "Edit admin";
       } else {
         // Create mode: set checkboxes to default true
         const roleField = document.querySelector("#community_admin_role");
@@ -103,10 +120,21 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (isHubAdminCheckbox) {
           isHubAdminCheckbox.checked = true;
           roleField.value = "HubAdmin";
+        } else if (isNewsmastAdminCheckbox) {
+          isNewsmastAdminCheckbox.checked = true;
+          roleField.value = "NewsmastAdmin";
         }
 
         if (isBoostBotCheckbox) {
-          isBoostBotCheckbox.checked = true;
+          if (hideBoostBot) {
+            displayNameField.value = null;
+            usernameField.value = null;
+            isBoostBotCheckbox.checked = false;
+            usernameField.readOnly = false;
+            emailField.readOnly = false;
+          } else {
+            isBoostBotCheckbox.checked = true;
+          }
         }
 
         form.setAttribute("action", "/community_admins");
@@ -117,8 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let methodInput = document.querySelector('input[name="_method"]');
         if (methodInput) methodInput.remove();
 
-        document.querySelector(".modal-title").innerHTML =
-          "Create channel admin";
+        document.querySelector(".modal-title").innerHTML = "Create admin";
       }
     });
   });

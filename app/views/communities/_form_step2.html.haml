@@ -15,7 +15,7 @@
               .row
                 .mt-auto
                   %p.text-muted.small Assign additional administrators to your channel by providing their details below.
-            - if @community.channel?
+            - if @community.channel? || @records.size == 0
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-block.btn-outline-dark{type: "button", "data-target" => "#communityAdminModal", "data-toggle" => "modal", "data-hide-boost-bot" => (@records.size != 0).to_s} Add new
@@ -62,7 +62,7 @@
           .pagination.pagination-sm.m-0.float-right.mt-1
             = paginate @records, theme: 'bootstrap4'
           - unless @community.hub?
-            - if user_admin? || @community&.channel_feed?
+            - if user_admin? || @community&.channel_feed? || newsmast_admin? || @community&.newsmast?
               .col-auto.mt-3.bg-light
                 .row
                   %label.small Public feed role
@@ -94,7 +94,12 @@
                             %p
                               = link_to bridged_handle(@community, @bluesky_info), bridged_account_url(@community, @bluesky_info), target: '_blank'
                           - else
-                            %p.text-warning In progress...
+                            - error_msg = check_account_info(@community)
+                            - if error_msg.nil?
+                              %p.text-warning In progress...
+                            - else
+                              %p.text-danger
+                                = error_msg
 
       .row.d-flex.justify-content-between
         .col-auto

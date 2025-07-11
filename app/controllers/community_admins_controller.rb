@@ -17,7 +17,14 @@ class CommunityAdminsController < ApplicationController
 
     if @community_admin.save
       CommunityAdminPostService.new(@community_admin, current_user, @community).call
-      flash[:notice] = 'Community admin created successfully.'
+      flash[:notice] = case @community.channel_type
+                       when 'hub'
+                         'Hub admin created successfully.'
+                       when 'channel_feed'
+                         'Channel admin created successfully.'
+                       else
+                         'Community admin created successfully.'
+                       end
     else
       flash[:error] = @community_admin.errors.full_messages.join(', ')
     end

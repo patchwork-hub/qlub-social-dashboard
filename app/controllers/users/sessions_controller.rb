@@ -13,18 +13,11 @@ class Users::SessionsController < Devise::SessionsController
     self.resource = warden.authenticate!(auth_options)
 
     unless resource.master_admin?
-      community_admin = CommunityAdmin.find_by(
-        account_id: resource.account_id,
-        is_boost_bot: true,
-        account_status: CommunityAdmin.account_statuses["active"]
-      )
+      community_admin = find_active_community_admin(resource)
 
-      # If no active community admin is found, sign out and show error
       if community_admin.nil?
-        sign_out(resource)
-        flash[:error] = "You are not authorized to log in."
-        Rails.logger.debug("Flash message: #{flash[:error]}")
-        redirect_to new_user_session_path and return
+        handle_unauthorized_login
+        return
       end
     end
 
@@ -54,8 +47,10 @@ class Users::SessionsController < Devise::SessionsController
       communities_path(channel_type: 'channel')
     elsif resource.user_admin?
       communities_path(channel_type: 'channel_feed')
-    else
+    elsif resource.hub_admin?
       communities_path(channel_type: 'hub')
+    else
+      communities_path(channel_type: 'newsmast')
     end
   end
 
@@ -79,5 +74,27 @@ class Users::SessionsController < Devise::SessionsController
     rescue HTTParty::Error => e
       Rails.logger.error "Failed to revoke access token: #{e.message}"
     end
+  end
+
+  def find_active_community_admin(user)
+    if user.organisation_admin?
+      CommunityAdmin.find_by(
+        account_id: user.account_id,
+        account_status: CommunityAdmin.account_statuses[:active]
+      )
+    else
+      CommunityAdmin.find_by(
+        account_id: user.account_id,
+        is_boost_bot: true,
+        account_status: CommunityAdmin.account_statuses[:active]
+      )
+    end
+  end
+
+  def handle_unauthorized_login
+    sign_out(resource)
+    flash[:error] = "You are not authorized to log in."
+    Rails.logger.debug("Flash message: #{flash[:error]}")
+    redirect_to new_user_session_path
   end
 end

@@ -64,10 +64,17 @@ class ApplicationController < ActionController::Base
         redirect_back_or_to(communities_path(channel_type: 'channel_feed'))
       elsif current_user.hub_admin?
         redirect_back_or_to(communities_path(channel_type: 'hub'))
+      elsif current_user.newsmast_admin?
+        redirect_back_or_to(communities_path(channel_type: 'newsmast'))
       else
         redirect_back_or_to(root_path)
       end
     end
+  end
+
+
+  def truthy_param?(key)
+    ActiveModel::Type::Boolean.new.cast(params[key])
   end
 
   def current_account
