@@ -65,7 +65,7 @@ module Api
           @community_hashtag.destroy!
           render json: { message: "Hashtag removed successfully!" }, status: :ok
         rescue => e
-          render json: { error: "Failed to remove hashtag." }, status: :internal_server_error
+          render json: { error: e }, status: :internal_server_error
         end
       end
 

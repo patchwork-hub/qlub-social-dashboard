@@ -10,7 +10,7 @@ class Api::V1::ChannelSerializer
              :patchwork_collection_id, :guides, :participants_count, :is_custom_domain,
              :visibility, :position, :channel_type, :created_at, :no_of_admins, :channel_content_type,
              :registration_mode, :patchwork_community_hashtags, :patchwork_community_rules,
-             :patchwork_community_additional_informations, :patchwork_community_links
+             :patchwork_community_additional_informations, :patchwork_community_links, :about
 
   has_many :patchwork_community_additional_informations, serializer: Api::V1::CommunityAdditionalInformationSerializer
   has_many :patchwork_community_links, serializer: Api::V1::CommunityLinkSerializer

@@ -21,7 +21,7 @@ class CommunitiesController < BaseController
     @search = commu_records_filter.build_search
     params[:status] ||= 'active'
     @records = load_filtered_records(commu_records_filter)
-              .where(channel_type: @channel_type)
+              .where(channel_type: @channel_type).includes([:content_type])
               .yield_self { |scope| apply_status_filter(scope, params[:status]) }
   end
 
