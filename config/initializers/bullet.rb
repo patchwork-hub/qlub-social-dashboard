@@ -1,4 +1,4 @@
-if Rails.env.development?
+if Rails.env.development? || Rails.env.local?
   require 'stringio'
   require 'logger'
   Bullet.enable = true
