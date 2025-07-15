@@ -6,10 +6,8 @@ require 'csv'
 
 require 'doorkeeper'
 
-require_relative '../lib/middleware/bullet_logger'
-require_relative '../lib/middleware/query_profiler'
-
-
+# require_relative '../lib/middleware/bullet_logger'
+# require_relative '../lib/middleware/query_profiler'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
