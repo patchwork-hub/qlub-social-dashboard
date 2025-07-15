@@ -1,5 +1,6 @@
-# Enables rack-mini-profiler in development mode
-if Rails.env.development?
+return unless Rails.env.development?
+
+begin
   require 'rack-mini-profiler'
 
   # Start the profiler
@@ -7,4 +8,6 @@ if Rails.env.development?
 
   # Optional: Customize settings
   Rack::MiniProfiler.config.position = 'bottom' # display at bottom of page
+rescue LoadError => e
+  Rails.logger.warn "rack-mini-profiler not available: #{e.message}"
 end
