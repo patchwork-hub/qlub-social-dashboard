@@ -8,6 +8,8 @@ class ApiController < ApplicationController
 
   helper_method :current_remote_account
 
+  helper_method :local_account?
+
   protected
 
   def verify_key!
@@ -33,6 +35,14 @@ class ApiController < ApplicationController
     }
   end
 
+  def check_authorization_header
+    if request.headers['Authorization'].present? && params[:instance_domain].present?
+      validate_mastodon_account
+    else
+      authenticate_user_from_header if request.headers['Authorization'].present?
+    end
+  end
+
   def authenticate_user_from_header
     token = bearer_token
     return render json: { error: 'Authentication required!' }, status: :unauthorized unless token
@@ -50,7 +60,6 @@ class ApiController < ApplicationController
       render json: { error: 'Invalid token' }, status: :unauthorized
     end
   end
-
 
   def validate_mastodon_account
     token = bearer_token
@@ -100,4 +109,11 @@ class ApiController < ApplicationController
     return @current_remote_account if defined?(@current_remote_account)
   end
 
+  def local_account?
+    if request.headers['Authorization'].present? && params[:instance_domain].present?
+      return false if defined?(@current_remote_account)
+    end
+
+    true
+  end
 end

@@ -3,6 +3,7 @@
 # Table name: patchwork_communities
 #
 #  id                          :bigint           not null, primary key
+#  about                       :string
 #  admin_following_count       :integer          default(0)
 #  avatar_image_content_type   :string
 #  avatar_image_file_name      :string
@@ -228,6 +229,17 @@ class Community < ApplicationRecord
   scope :exclude_array_ids, -> { where.not(id: EXCLUDE_ARRAY_IDS) }
 
   scope :not_deleted, -> { where(deleted: nil) }
+
+  scope :with_all_includes, -> {
+  includes(
+    :content_type,
+    :patchwork_community_type,
+    :patchwork_community_hashtags,
+    :patchwork_community_rules,
+    :patchwork_community_additional_informations,
+    :patchwork_community_links
+  )
+}
 
   enum channel_type: { channel: 'channel', channel_feed: 'channel_feed', hub: 'hub', newsmast: 'newsmast'}
 

@@ -25,6 +25,18 @@ group :development do
   gem "byebug"
   gem "better_errors"
   gem "binding_of_caller"
+
+  # Request profiling (SQL, timing, memory)
+  gem 'rack-mini-profiler', require: false
+  gem 'stackprof'  # Explicitly add stackprof
+  gem 'flamegraph', '~> 0.9.5'
+  gem 'memory_profiler'  # Optional: Memory usage
+
+  # N+1 query detection
+  gem 'bullet'
+
+  # Better Rails logs
+  gem 'awesome_print'
 end
 
 group :test do

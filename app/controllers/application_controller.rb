@@ -72,7 +72,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
   def truthy_param?(key)
     ActiveModel::Type::Boolean.new.cast(params[key])
   end

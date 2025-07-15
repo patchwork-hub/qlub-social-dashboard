@@ -135,11 +135,11 @@ class Account < ApplicationRecord
   end
 
   def follower_count
-    followers.count
+    followers.size
   end
 
   def following_count
-    follows.count
+    follows.size
   end
 
   def following_ids(account_id = nil)

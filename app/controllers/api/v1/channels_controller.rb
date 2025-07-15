@@ -4,8 +4,7 @@ module Api
   module V1
     class ChannelsController < ApiController
       skip_before_action :verify_key!
-      before_action :authenticate_user_from_header, only: [:my_channel]
-      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel]
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
 
       def recommend_channels
@@ -14,7 +13,13 @@ module Api
       end
 
       def channel_detail
-        render json: Api::V1::ChannelSerializer.new(@channel, { params: { current_account: current_account } }).serializable_hash.to_json
+        account = local_account? ? current_account : current_remote_account
+        render json: Api::V1::ChannelSerializer.new(
+          @channel,
+          { 
+            params: { current_account: account }
+          }
+         ).serializable_hash.to_json
       end
 
       def group_recommended_channels
@@ -48,12 +53,12 @@ module Api
       end
 
       def channel_feeds
-        channel_feeds = Community.filter_channel_feeds.exclude_incomplete_channels.exclude_deleted_channels
+        channel_feeds = Community.filter_channel_feeds.exclude_incomplete_channels.exclude_deleted_channels.with_all_includes
         render json: Api::V1::ChannelSerializer.new(channel_feeds , { params: { current_account: current_account } }).serializable_hash.to_json
       end
 
       def newsmast_channels
-        newsmast_channels = Community.filter_newsmast_channels.exclude_incomplete_channels
+        newsmast_channels = Community.filter_newsmast_channels.exclude_incomplete_channels.with_all_includes
         if newsmast_channels.present?
           render json: Api::V1::ChannelSerializer.new(newsmast_channels , { params: { current_account: current_remote_account } }).serializable_hash.to_json
         else

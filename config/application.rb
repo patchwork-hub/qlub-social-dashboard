@@ -6,6 +6,9 @@ require 'csv'
 
 require 'doorkeeper'
 
+# require_relative '../lib/middleware/bullet_logger'
+# require_relative '../lib/middleware/query_profiler'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -34,5 +37,10 @@ module Dashboard
     # Sidekiq/redis job runner
     config.active_job.queue_adapter = :sidekiq
     config.active_job.queue_name_prefix = "dashboard_#{Rails.env}"
+
+    #  N+1 query logging for Postman and SQL profiling in API responses
+    # config.middleware.insert_after ActionDispatch::Executor, BulletLogger
+    # config.middleware.insert_before 0, QueryProfiler
+
   end
 end
