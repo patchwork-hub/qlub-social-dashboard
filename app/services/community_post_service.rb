@@ -272,10 +272,4 @@ class CommunityPostService < BaseService
     last_position = Community.order(:position).pluck(:position).last
     (last_position || 0) + 1
   end
-
-  private
-
-  def is_hub?
-    @options[:channel_type] == 'hub'
-  end
 end
