@@ -44,7 +44,7 @@ class CommunityPostService < BaseService
   def update_community
     ActiveRecord::Base.transaction do
       @community = Community.find_by(id: @options[:id])
-      validate_collection unless @options[:channel_type] == 'hub'
+      validate_collection unless @options[:channel_type] == 'hub' || @community.hub?
       validate_community_type
       return @community if @community&.errors&.any?
       set_default_additional_information
@@ -271,5 +271,11 @@ class CommunityPostService < BaseService
   def get_position
     last_position = Community.order(:position).pluck(:position).last
     (last_position || 0) + 1
+  end
+
+  private
+
+  def is_hub?
+    @options[:channel_type] == 'hub'
   end
 end
