@@ -44,7 +44,7 @@ class CommunityPostService < BaseService
   def update_community
     ActiveRecord::Base.transaction do
       @community = Community.find_by(id: @options[:id])
-      validate_collection unless @options[:channel_type] == 'hub' || @community.hub?
+      validate_collection unless @options[:channel_type] == 'hub'
       validate_community_type
       return @community if @community&.errors&.any?
       set_default_additional_information
