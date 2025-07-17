@@ -67,7 +67,7 @@ class CommunityPostService < BaseService
   def validate_collection
     unless @options[:channel_type] == 'hub'
       if @options[:collection_id].blank?
-        @community ||= Community.new(community_attributes)
+        @community ||= Community.new()
         @community.errors.add(:collection_id, "could not be blank for channel type #{@options[:channel_type]}")
         return @community
       end
