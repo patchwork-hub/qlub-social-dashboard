@@ -21,7 +21,7 @@ class CommunityPostService < BaseService
 
   def create_community
     ActiveRecord::Base.transaction do
-      validate_collection unless @options[:channel_type] == 'hub'
+      validate_collection
       validate_community_type
       validate_uniqueness(:slug)
       slug_uniqueness_within_accounts
@@ -44,7 +44,7 @@ class CommunityPostService < BaseService
   def update_community
     ActiveRecord::Base.transaction do
       @community = Community.find_by(id: @options[:id])
-      validate_collection unless @options[:channel_type] == 'hub'
+      validate_collection
       validate_community_type
       return @community if @community&.errors&.any?
       set_default_additional_information
@@ -65,8 +65,16 @@ class CommunityPostService < BaseService
   end
 
   def validate_collection
-    @collection = Collection.find_by(id: @options[:collection_id])
-    handle_not_found('Collection') if @collection.nil?
+    unless @options[:channel_type] == 'hub'
+      if @options[:collection_id].blank?
+        @community ||= Community.new(community_attributes)
+        @community.errors.add(:collection_id, "could not be blank for channel type #{@options[:channel_type]}")
+        return @community
+      end
+
+      @collection = Collection.find_by(id: @options[:collection_id])
+      return handle_not_found('Collection') if @collection.nil?
+    end
   end
 
   def validate_community_type
