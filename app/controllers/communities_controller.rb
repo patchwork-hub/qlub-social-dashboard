@@ -292,7 +292,7 @@ class CommunitiesController < BaseController
 
   def prepare_for_step6_rendering
     fetch_community_admins
-    @community.patchwork_community_rules.build if @community.patchwork_community_rules.empty?
+    CommunityLink.build if @community.patchwork_community_rules.empty?
     @community.patchwork_community_additional_informations.build if @community.patchwork_community_additional_informations.empty?
     @community.social_links.build if @community.social_links.empty?
     @community.general_links.build if @community.general_links.empty?
@@ -338,11 +338,19 @@ class CommunitiesController < BaseController
       return
     end
 
-    if @community.save
-      respond_to(&:html)
-    else
+    begin
+      if @community.save
+        respond_to(&:html)
+      else
+        prepare_for_step6_rendering
+        render :step6
+      end
+    rescue ActiveRecord::RecordNotUnique
+      @community.errors.add(:base, "Duplicate link URL for this community is not allowed.")
       prepare_for_step6_rendering
+      flash.now[:error] = @community.formatted_error_messages.join(', ')
       render :step6
+      return
     end
   end
 
