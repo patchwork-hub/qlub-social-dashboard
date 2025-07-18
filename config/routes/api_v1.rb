@@ -5,7 +5,20 @@ namespace :api, defaults: { format: :json } do
     resources :accounts
 
     patch 'api_key/rotate', to: 'api_keys#rotate'
-    get 'custom_menus/display', to: proc { [200, { 'Content-Type' => 'application/json' }, [{ display: true }.to_json]] }
+    get 'custom_menus/display', to: proc { |env|
+      req = Rack::Request.new(env)
+      app_name = req.params['app_name']
+      result =
+        case app_name
+        when 'patchwork'
+          { display: true, app_name: 'patchwork' }
+        when 'newsmast'
+          { display: true, app_name: 'newsmast' }
+        else
+          { display: true, app_name: app_name }
+        end
+      [200, { 'Content-Type' => 'application/json' }, [result.to_json]]
+    }
 
     namespace :debug do
        post :queries,  to: 'debug#queries' if Rails.env.development?
