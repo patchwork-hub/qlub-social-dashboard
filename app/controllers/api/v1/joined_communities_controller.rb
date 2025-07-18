@@ -4,8 +4,8 @@ module Api
   module V1
     class JoinedCommunitiesController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:index, :create, :destroy]
-      before_action :load_joined_channels, only: [:index]
+      before_action :check_authorization_header, only: [:index, :create, :destroy, :set_primary]
+      before_action :load_joined_channels, only: [:index, :set_primary]
 
       def index
         sort_by_primary!
@@ -48,6 +48,34 @@ module Api
         end
       end
 
+      def set_primary
+        
+        unless is_newsmast?
+          render json: { errors: 'You have no access to set primary' }, status: 422
+        end
+
+        unless @joined_communities&.any?
+          return render json: { errors: 'You have no favourited channels' }, status: 422
+        end
+        
+        unless @community
+          return render json: { errors: 'Community not found' }, status: 404
+        end
+
+        if @account.joined_communities.size < 4
+          return render json: { errors: 'You need to join at least 5 to set as primary' }, status: 422
+        end
+
+        ActiveRecord::Base.transaction do
+          @account.joined_communities.where(is_primary: true).update_all(is_primary: false)
+          joined_community = @account.joined_communities.find_by(patchwork_community_id: @community.id)
+          joined_community.update!(is_primary: true)
+        end
+        render json: { message: 'Channel has been set as primary successfully' }, status: 200
+      rescue ActiveRecord::RecordInvalid => e
+        render json: { errors: e.message }, status: 422
+      end
+      
       private
 
         def already_favorited?(patchwork_community)
