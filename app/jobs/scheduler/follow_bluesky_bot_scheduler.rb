@@ -13,14 +13,12 @@ module Scheduler
       return unless communities.any?
 
       communities.each do |community|
-        Rails.logger.info("[FollowBlueskyBotScheduler] community: id = #{community.id} | name =  #{community.name} | slug = #{community.slug}")
 
         community_admin = CommunityAdmin.find_by(patchwork_community_id: community&.id, is_boost_bot: true)
         next if community_admin.nil?
 
         account = community_admin&.account
         next if account.nil?
-        Rails.logger.info("[FollowBlueskyBotScheduler] account: id = #{account.id} | username = #{account.username}")
 
         user = User.find_by(email: community_admin&.email, account_id: account&.id)
         next if user.nil?
@@ -41,7 +39,6 @@ module Scheduler
           UnfollowService.new.call(account, target_account)
         end
 
-        Rails.logger.info("[FollowBlueskyBotScheduler] enable_bride_bluesky?: #{enable_bride_bluesky?(account)}")
         next unless enable_bride_bluesky?(account)
 
         if account_relationship_array&.last['following'] == true && account_relationship_array&.last['requested'] == false
@@ -115,7 +112,6 @@ module Scheduler
               else
                 "_atproto.#{community&.slug}.channel.org"
               end
-        Rails.logger.info("[FollowBlueskyBotScheduler] Creating DNS record for #{name} with value #{did_value}")
         response = route53.change_resource_record_sets({
           hosted_zone_id:  channel_zone.id, # Hosted Zone for channel.org
           change_batch: {
@@ -134,8 +130,6 @@ module Scheduler
             ],
           },
         })
-
-        Rails.logger.info("[FollowBlueskyBotScheduler] Change ID: #{response.change_info.id}")
       else
         Rails.logger.error("Hosted zone for #{ENV.fetch('RAILS_ENV', nil)} not found.")
       end
