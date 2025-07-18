@@ -27,7 +27,6 @@ class BlueskyService
       if response.code == 200
         return JSON.parse(response.body)
       else
-        Rails.logger.error("Failed to fetch bluesky account from #{url}: #{response.body}")
         return {}
       end
     rescue Socket::ResolutionError, SocketError => e
@@ -35,11 +34,9 @@ class BlueskyService
         sleep 1
         retry
       else
-        Rails.logger.error("Network error after retries for #{url}: #{e.message}")
         return {}
       end
     rescue StandardError => e
-      Rails.logger.error("Unexpected error fetching #{url}: #{e.message}")
       {}
     end
   end
