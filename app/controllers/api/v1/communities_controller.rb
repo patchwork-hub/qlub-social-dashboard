@@ -195,10 +195,24 @@ module Api
       end
 
       def validate_patchwork_community_id
-        @patchwork_community_id = params[:patchwork_community_id]
-        if @patchwork_community_id.blank?
-          render json: { error: 'patchwork_community_id is required' }, status: :bad_request
+        if params[:patchwork_community_id].blank?
+          render json: { error: 'Patchwork community ID is required.' }, status: :bad_request
+          return
         end
+
+        community_param = params[:patchwork_community_id]
+        community = Community.find_by(slug: community_param)
+
+        unless community
+          community = Community.find_by(id: community_param.to_i) if community_param.to_i.to_s == community_param
+        end
+
+        unless community
+          render json: { error: 'Patchwork community not found.' }, status: :not_found
+          return
+        end
+
+        @patchwork_community_id = community.id
       end
 
       def fetch_contributors(type)

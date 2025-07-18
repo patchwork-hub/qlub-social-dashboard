@@ -74,7 +74,24 @@ module Api
       PER_PAGE = 5
 
       def set_community
-        @community = Community.find(params[:community_id])
+
+        if params[:community_id].blank?
+          render json: { error: 'Patchwork community ID is required.' }, status: :bad_request
+          return
+        end
+
+        community_param = params[:community_id]
+        @community = Community.find_by(slug: community_param)
+
+        unless @community
+          @community = Community.find_by(id: community_param.to_i) if community_param.to_i.to_s == community_param
+        end
+
+        unless @community
+          render json: { error: 'Patchwork community not found.' }, status: :not_found
+          return
+        end
+
         @api_base_url = ENV.fetch('MASTODON_INSTANCE_URL')
         @token = bearer_token
       end
