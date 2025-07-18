@@ -43,7 +43,6 @@ class FetchDidValueService < BaseService
     if response.code == 200
       extract_did_value(response.body)
     else
-      log_error("Error fetching DID: #{response.code} - #{response.message}")
       nil
     end
   end
@@ -54,19 +53,10 @@ class FetchDidValueService < BaseService
 
     if onclick_value
       did_value = onclick_value.match(/'([^']+)'/)[1]
-      log_info("DID Value:: #{did_value}")
       did_value
     else
-      log_error('DID value not found in response.')
       nil
     end
   end
 
-  def log_info(message)
-    Rails.logger.info(message)
-  end
-
-  def log_error(message)
-    Rails.logger.error(message)
-  end
 end

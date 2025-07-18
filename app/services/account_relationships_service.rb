@@ -20,7 +20,6 @@ class AccountRelationshipsService < BaseService
 
     if response.code == 200
       results = JSON.parse(response.body)
-      Rails.logger.info("Fetched relationships: #{results}")
       results
     else
       Rails.logger.error("Failed to fetch relationships target_account_id #{target_account_id}: #{response.body}")

@@ -94,7 +94,6 @@ class Users::SessionsController < Devise::SessionsController
   def handle_unauthorized_login
     sign_out(resource)
     flash[:error] = "You are not authorized to log in."
-    Rails.logger.debug("Flash message: #{flash[:error]}")
     redirect_to new_user_session_path
   end
 end
