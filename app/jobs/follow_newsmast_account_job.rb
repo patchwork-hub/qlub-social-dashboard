@@ -46,6 +46,11 @@ class FollowNewsmastAccountJob < ApplicationJob
       return
     end
 
+    # Skip if slug doesn't contain a hyphen
+    unless slug_val&.include?('-')
+      return
+    end
+
     community = find_community(slug_val, line_number)
     return unless community
 
@@ -63,8 +68,7 @@ class FollowNewsmastAccountJob < ApplicationJob
   end
 
   def find_community(slug_val, line_number)
-    normalized_slug = slug_val.tr('-', '_')
-    community = Community.find_by(slug: normalized_slug)
+    community = Community.find_by(slug: slug_val)
     
     unless community
       @stats[:community_not_found] += 1
