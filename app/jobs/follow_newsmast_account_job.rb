@@ -76,7 +76,7 @@ class FollowNewsmastAccountJob < ApplicationJob
   end
 
   def find_community_admin(community, line_number)
-    admin = community.admins.where(
+    admin = community.community_admins.where(
       is_boost_bot: true,
       patchwork_community_id: community.id,
       account_status: 0
