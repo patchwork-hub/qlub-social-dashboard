@@ -1,4 +1,4 @@
-class SearchNewsmastAccountsJob < ApplicationJob
+class FollowNewsmastAccountJob < ApplicationJob
   queue_as :default
 
   def perform(csv_path = Rails.root.join('newsmast_adm_followers.csv'))
