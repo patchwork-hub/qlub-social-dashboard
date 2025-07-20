@@ -1,4 +1,4 @@
-class SearchNewsmastAccountsJob < ApplicationJob
+class FollowNewsmastAccountJob < ApplicationJob
   queue_as :default
 
   def perform(csv_path = Rails.root.join('newsmast_adm_followers.csv'))
@@ -46,6 +46,11 @@ class SearchNewsmastAccountsJob < ApplicationJob
       return
     end
 
+    # Skip if slug doesn't contain a hyphen
+    unless slug_val&.include?('-')
+      return
+    end
+
     community = find_community(slug_val, line_number)
     return unless community
 
@@ -63,8 +68,7 @@ class SearchNewsmastAccountsJob < ApplicationJob
   end
 
   def find_community(slug_val, line_number)
-    normalized_slug = slug_val.tr('-', '_')
-    community = Community.find_by(id: normalized_slug)
+    community = Community.find_by(slug: slug_val)
     
     unless community
       @stats[:community_not_found] += 1
@@ -76,7 +80,7 @@ class SearchNewsmastAccountsJob < ApplicationJob
   end
 
   def find_community_admin(community, line_number)
-    admin = community.admins.where(
+    admin = community.community_admins.where(
       is_boost_bot: true,
       patchwork_community_id: community.id,
       account_status: 0
