@@ -46,10 +46,10 @@ class FollowNewsmastAccountJob < ApplicationJob
       return
     end
 
-    # Skip if slug doesn't contain a hyphen
-    unless slug_val&.include?('-')
-      return
-    end
+    # # Skip if slug doesn't contain a hyphen
+    # unless slug_val&.include?('-')
+    #   return
+    # end
 
     community = find_community(slug_val, line_number)
     return unless community
