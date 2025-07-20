@@ -64,7 +64,7 @@ class FollowNewsmastAccountJob < ApplicationJob
 
   def find_community(slug_val, line_number)
     normalized_slug = slug_val.tr('-', '_')
-    community = Community.find_by(id: normalized_slug)
+    community = Community.find_by(slug: normalized_slug)
     
     unless community
       @stats[:community_not_found] += 1
