@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Scheduler
 
   class FollowBlueskyBotScheduler
@@ -112,7 +110,7 @@ module Scheduler
               else
                 "_atproto.#{community&.slug}.channel.org"
               end
-        response = route53.change_resource_record_sets({
+        route53.change_resource_record_sets({
           hosted_zone_id:  channel_zone.id, # Hosted Zone for channel.org
           change_batch: {
             changes: [
