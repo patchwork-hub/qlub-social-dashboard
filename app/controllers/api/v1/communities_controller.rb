@@ -2,9 +2,9 @@ module Api
   module V1
     class CommunitiesController < ApiController
       skip_before_action :verify_key!
-      before_action :authenticate_user_from_header, except: %i[contributor_list]
+      before_action :authenticate_user_from_header, except: %i[contributor_list hashtag_list]
       before_action :set_community, only: %i[show update set_visibility manage_additional_information]
-      before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list]
+      before_action :validate_patchwork_community_id, only: %i[contributor_list mute_contributor_list hashtag_list]
       before_action :set_content_and_channel_type, only: %i[index create update]
       include BlueskyAccountBridgeHleper
       PER_PAGE = 5
@@ -85,6 +85,11 @@ module Api
         render_contributors(contributors)
       end
 
+      def hashtag_list
+        hashtags = load_commu_hashtag_records
+        render_hashtags(hashtags)
+      end
+
       def mute_contributor_list
         contributors = fetch_contributors(:muted)
         render_contributors(contributors)
@@ -119,6 +124,7 @@ module Api
         render json: { error: e.message }, status: :bad_request
       rescue ActiveRecord::RecordNotUnique
         @community.errors.add(:base, "Duplicate link URL for this community is not allowed.")
+        Rails.logger.error "#{'*'*10} Duplicate link URL for community #{@community.id} #{'*'*10}"
         render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
       end
 
@@ -201,18 +207,18 @@ module Api
         end
 
         community_param = params[:patchwork_community_id]
-        community = Community.find_by(slug: community_param)
+        @community = Community.find_by(slug: community_param)
 
-        unless community
-          community = Community.find_by(id: community_param.to_i) if community_param.to_i.to_s == community_param
+        unless @community
+          @community = Community.find_by(id: community_param.to_i) if community_param.to_i.to_s == community_param
         end
 
-        unless community
+        unless @community
           render json: { error: 'Patchwork community not found.' }, status: :not_found
           return
         end
 
-        @patchwork_community_id = community.id
+        @patchwork_community_id = @community.id
       end
 
       def fetch_contributors(type)
@@ -232,6 +238,13 @@ module Api
         Account.where(id: account_ids).where.not(username: "bsky.brid.gy").page(params[:page]).per(params[:per_page] || PER_PAGE)
       end
 
+      def load_commu_hashtag_records
+        @community.patchwork_community_hashtags
+          .order(created_at: :desc)
+          .page(params[:page])
+          .per(params[:per_page] || PER_PAGE)
+      end
+
       def render_contributors(contributors)
         serialized_contributors = Api::V1::ContributorSerializer.new(
           contributors,
@@ -242,6 +255,13 @@ module Api
           contributors: serialized_contributors[:data],
           meta: pagination_meta(contributors)
         }
+      end
+
+      def render_hashtags(hashtags)
+        render json: {
+          data: hashtags,
+          meta: pagination_meta(hashtags)
+        }, status: :ok
       end
 
       def pagination_meta(object)

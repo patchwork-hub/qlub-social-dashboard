@@ -74,6 +74,7 @@ namespace :api, defaults: { format: :json } do
         get 'mute_contributor_list'
         post 'set_visibility'
         get 'fetch_ip_address'
+        get 'hashtag_list'
       end
       member do
         patch :manage_additional_information
