@@ -119,6 +119,7 @@ module Api
         render json: { error: e.message }, status: :bad_request
       rescue ActiveRecord::RecordNotUnique
         @community.errors.add(:base, "Duplicate link URL for this community is not allowed.")
+        Rails.logger.error "#{'*'*10} Duplicate link URL for community #{@community.id} #{'*'*10}"
         render json: { errors: @community.formatted_error_messages }, status: :unprocessable_entity
       end
 

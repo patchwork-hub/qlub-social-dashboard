@@ -51,6 +51,8 @@ class CommunitiesController < BaseController
   def destroy
     @channel = Community.find(params[:id])
     @channel.soft_delete!
+    Rails.logger.info "#{'*'*10} Destroy: deleted_at=> #{@channel.deleted_at} #{'*'*10}"
+    Rails.logger.info "#{'*'*10} Destroy: admin=> #{@channel.community_admins.first} #{'*'*10}"
     if @channel.community_admins.first
       @channel.community_admins.first.update(account_status: :suspended)
     end
@@ -346,6 +348,7 @@ class CommunitiesController < BaseController
         render :step6
       end
     rescue ActiveRecord::RecordNotUnique
+      Rails.logger.error "#{'*'*10}Duplicate link URL for community #{@community.id} #{'*'*10}"
       @community.errors.add(:base, "Duplicate link URL for this community is not allowed.")
       prepare_for_step6_rendering
       flash.now[:error] = @community.formatted_error_messages.join(', ')
