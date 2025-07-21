@@ -2,7 +2,7 @@ module Api
   module V1
     class CommunityHashtagsController < ApiController
       skip_before_action :verify_key!
-      before_action :authenticate_user_from_header, except: %i[index]
+      before_action :authenticate_user_from_header
       before_action :set_community
       before_action :set_community_hashtag, only: %i[update destroy]
 
