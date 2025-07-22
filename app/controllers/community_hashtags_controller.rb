@@ -29,8 +29,6 @@ class CommunityHashtagsController < BaseController
         community_hashtag.assign_attributes(hashtag: new_hashtag, name: new_hashtag)
         community_hashtag.save!
         perform_hashtag_action(new_hashtag, nil, :follow)
-      else
-        community_hashtag.save!
       end
   
       flash[:notice] = "Hashtag updated successfully!"
