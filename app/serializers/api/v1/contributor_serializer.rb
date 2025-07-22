@@ -17,11 +17,11 @@ class Api::V1::ContributorSerializer
   end
 
   attribute :domain do |object|
-    object.domain || object.local? ? ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain : object.domain
+   object.local? ? ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain : object.domain
   end
 
   attribute :acct do |object|
-    domain = object.domain || object.local? ? ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain : object.domain
+    domain = object.local? ? ENV['LOCAL_DOMAIN'] || Rails.configuration.x.local_domain : object.domain
     "@#{object.username}@#{domain}"
   end
 
