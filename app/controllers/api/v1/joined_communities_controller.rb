@@ -24,7 +24,7 @@ module Api
         return render json: { errors: 'Channel not found' }, status: 404 unless patchwork_community
 
         if already_favorited?(patchwork_community)
-          render json: { errors: 'Channel is already favourited' }, status: 422
+          render json: { errors: 'You can\'t favorite own channel' }, status: 403
           return
         end
 
