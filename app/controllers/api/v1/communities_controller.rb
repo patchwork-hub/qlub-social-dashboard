@@ -275,19 +275,6 @@ module Api
         }
       end
 
-      def check_authorization_header
-        if request.headers['Authorization'].present? && params[:instance_domain].present?
-          login_with_mastodon
-        else
-          authenticate_user_from_header
-          @account = current_account
-        end
-      end
-
-      def login_with_mastodon
-        validate_mastodon_account
-        @account = current_remote_account
-      end
     end
   end
 end

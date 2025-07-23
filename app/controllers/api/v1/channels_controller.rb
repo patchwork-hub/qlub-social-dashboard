@@ -131,13 +131,6 @@ module Api
         end
       end
 
-      def check_authorization_header
-        if request.headers['Authorization'].present? && params[:instance_domain].present?
-          validate_mastodon_account
-        else
-          authenticate_user_from_header if request.headers['Authorization'].present?
-        end
-      end
     end
   end
 end

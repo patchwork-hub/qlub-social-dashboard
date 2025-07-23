@@ -35,10 +35,6 @@ module Api
 		 			params.permit(:current_app_version, :app_name, :os_type)
 				end
 
-				def check_authorization_header
-					authenticate_user_from_header if request.headers['Authorization'].present?
-				end
-
 				def fetch_version_history
 					@app_version.app_version_histories
 						.where(os_type: app_version_params[:os_type])
