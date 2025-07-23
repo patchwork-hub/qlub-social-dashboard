@@ -4,7 +4,8 @@ module Api
   module V1
     class JoinedCommunitiesController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:index, :create, :destroy, :set_primary]
+      before_action :check_authorization_header
+      before_action :set_authenticated_account
       before_action :load_joined_channels, only: [:index, :set_primary]
 
       def index
@@ -98,20 +99,6 @@ module Api
           Community.exclude_incomplete_channels.find_by(slug: slug, channel_type: channel_type)
         end
 
-        def check_authorization_header
-          if request.headers['Authorization'].present? && params[:instance_domain].present?
-            login_with_mastodon
-          else
-            authenticate_user_from_header
-            @account = current_account
-          end
-        end
-
-        def login_with_mastodon
-          validate_mastodon_account
-          @account = current_remote_account
-        end
-
         def load_joined_channels
           channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
           @joined_communities = @account&.communities.where(deleted_at: nil).where(
@@ -130,6 +117,18 @@ module Api
 
         def is_newsmast?
           params[:platform_type].present? && params[:platform_type] == 'newsmast.social'
+        end
+
+        def set_authenticated_account
+          if params[:instance_domain].present?
+            @account = current_remote_account
+          else
+            @account = current_account
+          end
+          unless @account
+            return render json: { errors: 'Account not found' }, status: 404
+          end
+          @account
         end
     end
   end

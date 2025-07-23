@@ -39,7 +39,7 @@ class ApiController < ApplicationController
     if request.headers['Authorization'].present? && params[:instance_domain].present?
       validate_mastodon_account
     else
-      authenticate_user_from_header if request.headers['Authorization'].present?
+      authenticate_user_from_header
     end
   end
 
