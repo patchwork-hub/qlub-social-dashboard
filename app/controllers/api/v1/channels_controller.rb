@@ -4,8 +4,18 @@ module Api
   module V1
     class ChannelsController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel, :mo_me_channels]
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
+
+      DEFAULT_MO_ME_CHANNELS = [
+        { slug: 'mediarevolution', channel_type: Community.channel_types[:channel] },
+        { slug: 'activism-civil-rights', channel_type: Community.channel_types[:newsmast] },
+        { slug: 'climate-change', channel_type: Community.channel_types[:newsmast]},
+        { slug: 'politics', channel_type: Community.channel_types[:newsmast]},
+        { slug: 'democracy-human-rights', channel_type: Community.channel_types[:newsmast]},
+        { slug: 'nature-wildlife', channel_type: Community.channel_types[:newsmast]},
+        { slug: 'photography', channel_type: Community.channel_types[:newsmast]}
+      ].freeze
 
       def recommend_channels
         @recommended_channels = Community.recommended.exclude_array_ids
@@ -76,6 +86,19 @@ module Api
           community: community,
           bluesky_info: bluesky_info,
         }
+      end
+
+      def mo_me_channels
+        account = local_account? ? current_account : current_remote_account
+
+        slugs_with_types = DEFAULT_MO_ME_CHANNELS.map { |entry| [entry[:slug], entry[:channel_type]] }
+        communities = Community.where(slug: slugs_with_types.map(&:first), channel_type: slugs_with_types.map(&:last)).exclude_incomplete_channels.with_all_includes
+
+        sorted_communities = DEFAULT_MO_ME_CHANNELS.map do |entry|
+          communities.find { |community| community.slug == entry[:slug] && community.channel_type == entry[:channel_type] }
+        end.compact
+
+        render json: Api::V1::ChannelSerializer.new(sorted_communities, { params: { current_account: account } }).serializable_hash.to_json
       end
 
       private
