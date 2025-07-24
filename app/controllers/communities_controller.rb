@@ -342,8 +342,9 @@ class CommunitiesController < BaseController
 
     begin
       if @community.save
-        respond_to(&:html)
+        redirect_to step6_community_path(@community, show_preview: true)
       else
+        flash.now[:error] = @community.formatted_error_messages.join(', ')
         prepare_for_step6_rendering
         render :step6
       end
