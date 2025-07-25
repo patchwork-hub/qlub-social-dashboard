@@ -366,8 +366,9 @@ class CommunitiesController < BaseController
   def load_follow_records
     account_ids = Follow.where(account_id: admin_account_id).pluck(:target_account_id) +
                   FollowRequest.where(account_id: admin_account_id).pluck(:target_account_id)
-    @follow_records_size = account_ids.size
-    paginated_records(Account.where(id: account_ids))
+    accounts = Account.where(id: account_ids)
+    @follow_records_size = accounts.reject { |r| r.username == 'bsky.brid.gy' }.size
+    paginated_records(accounts)
   end
 
   def load_follower_records(is_csv: false)
