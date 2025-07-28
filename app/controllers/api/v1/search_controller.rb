@@ -10,7 +10,7 @@ module Api
         render json: {
           communities: serialize_communities(query),
           channel_feeds: serialize_channel_feeds(query),
-          newsmast_channels: {data: serialize_newsmast_communities(query)}
+          newsmast_channels: serialize_newsmast_communities(query)
         }
       end
 
