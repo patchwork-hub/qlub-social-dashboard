@@ -141,7 +141,7 @@ class CommunitiesController < BaseController
 
   def step4
     authorize_step(:step4?)
-    verify_hashtags_presence
+    verify_hashtags_presence if params[:action] == 'step4' && params[:page].blank?
     @muted_accounts = load_muted_accounts
     @community_post_type = @community.community_post_type || new_community_post_type
     setup_filter_keywords(COMMUNITY_FILTER_TYPES[:out])
