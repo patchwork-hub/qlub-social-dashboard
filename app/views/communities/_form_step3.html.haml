@@ -102,8 +102,7 @@
             .row
               .col
                 %label
-                  - filtered_follow_records = @follow_records.present? ? @follow_records.reject { |r| r.username == 'bsky.brid.gy' } : []
-                  = "Your channel contributors (#{filtered_follow_records.size})"
+                  = "Your channel contributors (#{@follow_records.present? ? @follow_records_size : 0})"
               .col-auto.d-flex.flex-column.justify-content-end
                 .mt-auto
                   %button.btn.btn-outline-secondary{title: 'Add a contributor', "data-toggle" => "modal", "data-target" => "#addContributorModal"} Add new
