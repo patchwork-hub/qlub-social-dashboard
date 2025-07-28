@@ -6,7 +6,7 @@ module Api
 
       def search
         query = build_query(params[:q])
-        
+
         render json: {
           communities: serialize_communities(query),
           channel_feeds: serialize_channel_feeds(query),
@@ -26,6 +26,7 @@ module Api
                       .exclude_array_ids
                       .exclude_incomplete_channels
                       .exclude_deleted_channels
+                      .exclude_not_recommended
                       .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(communities).serializable_hash
@@ -37,6 +38,7 @@ module Api
                         .exclude_array_ids
                         .exclude_incomplete_channels
                         .exclude_deleted_channels
+                        .exclude_not_recommended
                         .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(channel_feeds, { params: { current_account: current_account } }).serializable_hash
@@ -48,6 +50,7 @@ module Api
                       .exclude_array_ids
                       .exclude_incomplete_channels
                       .exclude_deleted_channels
+                      .exclude_not_recommended
                       .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(newsmast_communities).serializable_hash
