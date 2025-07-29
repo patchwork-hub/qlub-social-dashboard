@@ -28,4 +28,12 @@ class CommunityFilterKeyword < ApplicationRecord
   FILTER_TYPES = %w[filter_in filter_out].freeze
   validates :filter_type, presence: true, inclusion: { in: FILTER_TYPES }
   validates_uniqueness_of :keyword, scope: [:is_filter_hashtag, :patchwork_community_id], message: "already exists."
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["keyword"]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    []
+  end
 end
