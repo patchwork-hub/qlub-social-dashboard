@@ -15,7 +15,7 @@ namespace :api, defaults: { format: :json } do
         when 'newsmast'
           { display: true, app_name: 'newsmast' }
         when 'mo-me'
-          { display: false, app_name: 'mo-me' }
+          { display: true, app_name: 'mo-me' }
         else
           { display: true, app_name: app_name }
         end
