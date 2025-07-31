@@ -62,13 +62,17 @@ class ApiController < ApplicationController
   end
 
   def validate_mastodon_account
+    Rails.logger.info "Validating Mastodon account for instance domain: #{params[:instance_domain]}"
     token = bearer_token
+    Rails.logger.info "Bearer token: #{token}"
     return render json: { error: 'Authentication required!' }, status: :unauthorized unless token && !instance_domain.nil?
 
     acc_id = RemoteAccountVerifyService.new(token, instance_domain).call.fetch_remote_account_id
+    Rails.logger.info "Remote account ID: #{acc_id}"
 
     if acc_id
       @current_remote_account = Account.find_by(id: acc_id)
+      Rails.logger.info "Current remote account: #{@current_remote_account&.id} - #{@current_remote_account&.username}"
     else
       render json: { error: 'Account not found' }, status: :unauthorized
     end
