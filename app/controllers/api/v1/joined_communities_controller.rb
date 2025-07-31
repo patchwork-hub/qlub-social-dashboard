@@ -100,7 +100,7 @@ module Api
         end
 
         def load_joined_channels
-          Rails.logger.info "Loading joined communities for account: #{@account.id} #{@account.user.email} with platform type: #{params[:platform_type]}"
+          Rails.logger.info "Loading joined communities for account: #{@account.id} #{@account.display_name} with platform type: #{params[:platform_type]}"
           channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
           Rails.logger.info "Channel type: #{channel_type}"
           @joined_communities = @account&.communities.where(deleted_at: nil).where(
