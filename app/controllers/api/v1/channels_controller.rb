@@ -68,7 +68,9 @@ module Api
       end
 
       def newsmast_channels
+        Rails.logger.info "Fetching newsmast channels for instance domain: #{params[:instance_domain]} for current_remote_account: #{current_remote_account&.id} and current_account: #{current_account&.id}"
         newsmast_channels = Community.filter_newsmast_channels.exclude_incomplete_channels.exclude_deleted_channels.exclude_not_recommended.with_all_includes
+        Rails.logger.info "Newsmast channels fetched: #{newsmast_channels.size}"
         if newsmast_channels.present?
           render json: Api::V1::ChannelSerializer.new(newsmast_channels , { params: { current_account: current_remote_account } }).serializable_hash.to_json
         else
