@@ -25,16 +25,13 @@ class RemoteAccountVerifyService
 
   def fetch_remote_account_id
     # Find account in local server
-    Rails.logger.info "Fetching remote account ID for username: #{@remote_account['username']} on domain: #{@domain}"
     domain = @domain
     if @domain == 'backend.newsmast.org'
       domain = 'newsmast.social'
     end
     account_id = if acc = Account.find_by(username: @remote_account["username"], domain: domain)
-      Rails.logger.info "Found local account with ID: #{acc.id}"
       acc.id
     else
-      Rails.logger.info "Account not found locally, searching in remote instance"
       account_handler = "@#{@remote_account["username"]}@#{domain}"
       search_target_account_id(account_handler)
     end

@@ -100,26 +100,19 @@ module Api
         end
 
         def load_joined_channels
-          Rails.logger.info "Loading joined communities for account: #{@account.id} #{@account.display_name} with platform type: #{params[:platform_type]}"
           channel_type = is_newsmast? ? Community.channel_types[:newsmast] : Community.channel_types[:channel]
-          Rails.logger.info "Channel type: #{channel_type}"
           @joined_communities = @account&.communities.where(deleted_at: nil).where(
             channel_type: channel_type
             )
-          Rails.logger.info "Joined communities loaded: #{@joined_communities.size}"
           @community = Community.find_by(slug: params[:id])
-          Rails.logger.info "Community found: #{@community&.name} with ID: #{@community&.id}" if @community
         end
 
         def sort_by_primary!
-          Rails.logger.info "Sorting joined communities by primary status for account: #{@account.id}"
           @joined_communities = @joined_communities&.to_a || []
-          Rails.logger.info "Joined communities before sorting: #{@joined_communities.size}"
           @joined_communities.sort_by! do |community|
             joined = community.joined_communities.find_by(account_id: @account.id)
             joined&.is_primary ? 0 : 1
           end
-          Rails.logger.info "Joined communities after sorting: #{@joined_communities.size}"
         end
 
         def is_newsmast?
