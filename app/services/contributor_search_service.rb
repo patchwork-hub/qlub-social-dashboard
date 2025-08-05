@@ -41,7 +41,7 @@ class ContributorSearchService
       {
         'id' => account.id.to_s,
         'username' => account.username,
-        'display_name' => account.display_name,
+        'display_name' => account.display_name.gsub(/:[^:\s]+:/, '').strip,
         'domain' => account.domain,
         'note' => account.note,
         'avatar_url' => account.avatar_url,
