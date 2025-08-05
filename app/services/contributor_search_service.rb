@@ -45,8 +45,7 @@ class ContributorSearchService
       {
         'id' => account.id.to_s,
         'username' => account.username,
-        'display_name' => account.display_name,
-        'display_name_with_emojis' => render_custom_emojis(account.display_name),
+        'display_name' => render_custom_emojis(account.display_name),
         'domain' => account.domain,
         'note' => account.note,
         'avatar_url' => account.avatar_url,
