@@ -1,4 +1,7 @@
 class ContributorSearchService
+  include ActionView::Helpers::TextHelper
+  include ApplicationHelper
+  
   def initialize(query, options = {})
     @query = query
     @api_base_url = options[:url]
