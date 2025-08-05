@@ -92,4 +92,17 @@ module ApplicationHelper
   def newsmast_admin?
     current_user && policy(current_user).newsmast_admin?
   end
+
+  def render_custom_emojis(text)
+    emoji_map = MastodonEmoji.fetch_and_cache_emojis
+
+    pattern = /:([a-zA-Z0-9_+-]+):/
+    text.gsub(pattern) do |match|
+      if emoji_map[match]
+        image_tag emoji_map[match], alt: match, class: "custom-emoji"
+      else
+        match
+      end
+    end.html_safe
+  end
 end
