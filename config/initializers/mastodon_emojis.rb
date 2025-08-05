@@ -6,7 +6,7 @@ require 'json'
 module MastodonEmoji
   INSTANCE_URL = ENV.fetch("MASTODON_INSTANCE_URL", "https://channel.org")
   CACHE_KEY = "mastodon_custom_emojis"
-  CACHE_EXPIRY = 24.hours
+  CACHE_EXPIRY = 6.hours
 
   def self.fetch_and_cache_emojis
     Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_EXPIRY) do
