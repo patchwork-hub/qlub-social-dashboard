@@ -22,8 +22,8 @@ module Api
         { slug: 'podcasting', channel_type: Community.channel_types[:channel_feed] },
         { slug: 'opensocialweb', channel_type: Community.channel_types[:channel_feed]},
         { slug: 'fedibookclub', channel_type: Community.channel_types[:channel_feed]},
-        { slug: 'noticiasbrasil', channel_type: Community.channel_types[:channel_feed]},
-        { slug: 'renewedresistance', channel_type: Community.channel_types[:channel]}
+        { slug: 'NoticiasBrasil', channel_type: Community.channel_types[:channel_feed]},
+        { slug: 'RenewedResistance', channel_type: Community.channel_types[:channel]}
       ].freeze
 
 
