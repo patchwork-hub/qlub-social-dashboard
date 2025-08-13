@@ -4,7 +4,7 @@ module Api
   module V1
     class ChannelsController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel, :mo_me_channels]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel, :mo_me_channels, :patchwork_demo_channels]
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
 
       DEFAULT_MO_ME_CHANNELS = [
@@ -16,6 +16,16 @@ module Api
         { slug: 'nature-wildlife', channel_type: Community.channel_types[:newsmast]},
         { slug: 'photography', channel_type: Community.channel_types[:newsmast]}
       ].freeze
+
+      DEFAULT_PATCHWORK_DEMO_CHANNELS = [
+        { slug: 'trees', channel_type: Community.channel_types[:channel_feed] },
+        { slug: 'podcasting', channel_type: Community.channel_types[:channel_feed] },
+        { slug: 'opensocialweb', channel_type: Community.channel_types[:channel_feed]},
+        { slug: 'fedibookclub', channel_type: Community.channel_types[:channel_feed]},
+        { slug: 'noticiasbrasil', channel_type: Community.channel_types[:channel_feed]},
+        { slug: 'renewedresistance', channel_type: Community.channel_types[:channel]}
+      ].freeze
+
 
       def recommend_channels
         @recommended_channels = Community.recommended.exclude_array_ids
@@ -89,16 +99,11 @@ module Api
       end
 
       def mo_me_channels
-        account = local_account? ? current_account : current_remote_account
+        render_custom_channels(DEFAULT_MO_ME_CHANNELS)
+      end
 
-        slugs_with_types = DEFAULT_MO_ME_CHANNELS.map { |entry| [entry[:slug], entry[:channel_type]] }
-        communities = Community.where(slug: slugs_with_types.map(&:first), channel_type: slugs_with_types.map(&:last)).exclude_incomplete_channels.with_all_includes
-
-        sorted_communities = DEFAULT_MO_ME_CHANNELS.map do |entry|
-          communities.find { |community| community.slug == entry[:slug] && community.channel_type == entry[:channel_type] }
-        end.compact
-
-        render json: Api::V1::ChannelSerializer.new(sorted_communities, { params: { current_account: account } }).serializable_hash.to_json
+      def patchwork_demo_channels
+        render_custom_channels(DEFAULT_PATCHWORK_DEMO_CHANNELS)
       end
 
       private
@@ -137,6 +142,19 @@ module Api
         else
           authenticate_user_from_header if request.headers['Authorization'].present?
         end
+      end
+
+      def render_custom_channels(channels_list)
+        account = local_account? ? current_account : current_remote_account
+
+        slugs_with_types = channels_list.map { |entry| [entry[:slug], entry[:channel_type]] }
+        communities = Community.where(slug: slugs_with_types.map(&:first), channel_type: slugs_with_types.map(&:last)).exclude_incomplete_channels.with_all_includes
+
+        sorted_communities = channels_list.map do |entry|
+          communities.find { |community| community.slug == entry[:slug] && community.channel_type == entry[:channel_type] }
+        end.compact
+
+        render json: Api::V1::ChannelSerializer.new(sorted_communities, { params: { current_account: account } }).serializable_hash.to_json
       end
 
     end
