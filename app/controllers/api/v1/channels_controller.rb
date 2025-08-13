@@ -20,7 +20,7 @@ module Api
       DEFAULT_PATCHWORK_DEMO_CHANNELS = [
         { slug: 'trees', channel_type: Community.channel_types[:channel_feed] },
         { slug: 'podcasting', channel_type: Community.channel_types[:channel_feed] },
-        { slug: 'opensocialweb', channel_type: Community.channel_types[:channel_feed]},
+        { slug: 'greens', channel_type: Community.channel_types[:channel]},
         { slug: 'fedibookclub', channel_type: Community.channel_types[:channel_feed]},
         { slug: 'NoticiasBrasil', channel_type: Community.channel_types[:channel_feed]},
         { slug: 'RenewedResistance', channel_type: Community.channel_types[:channel]}
