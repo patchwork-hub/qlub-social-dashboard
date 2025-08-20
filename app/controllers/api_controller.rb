@@ -1,6 +1,11 @@
 class ApiController < ApplicationController
   respond_to :json
 
+  # Include internationalization support for API controllers
+  include LocaleDetection
+  # Include standardized API response helpers with I18n support
+  include ApiResponseHelper
+
   skip_before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
 
@@ -48,29 +53,29 @@ class ApiController < ApplicationController
     return render json: { error: 'Authentication required!' }, status: :unauthorized unless token
 
     user_info = validate_token(token)
-
+    
     if user_info
       user = User.find_by(id: user_info["resource_owner_id"])
       if user
         sign_in(user)
       else
-        render json: { error: 'User not found' }, status: :unauthorized
+        render_unauthorized
       end
     else
-      render json: { error: 'Invalid token' }, status: :unauthorized
+      render_forbidden
     end
   end
 
   def validate_mastodon_account
     token = bearer_token
-    return render json: { error: 'Authentication required!' }, status: :unauthorized unless token && !instance_domain.nil?
+    return render_unauthorized unless token && !instance_domain.nil?
 
     acc_id = RemoteAccountVerifyService.new(token, instance_domain).call.fetch_remote_account_id
 
     if acc_id
       @current_remote_account = Account.find_by(id: acc_id)
     else
-      render json: { error: 'Account not found' }, status: :unauthorized
+      render_unauthorized
     end
   end
 

@@ -1,0 +1,160 @@
+# Italian translations for Patchwork Dashboard
+# Traduzioni italiane per il Patchwork Dashboard
+
+it:
+  # Locale information
+  locale:
+    name: "Italiano"
+    native_name: "Italiano"
+
+  # API responses and messages
+  api:
+    errors:
+      unauthorized: "Non sei autorizzato a eseguire questa azione."
+      forbidden: "Accesso negato."
+      not_found: "Risorsa non trovata."
+      unprocessable_entity: "La richiesta non può essere elaborata."
+      internal_server_error: "Si è verificato un errore interno del server."
+      validation_failed: "Validazione fallita."
+      invalid_request: "Richiesta non valida."
+      rate_limit_exceeded: "Limite di velocità superato. Riprova più tardi."
+      
+    messages:
+      success: "Operazione completata con successo."
+      created: "Risorsa creata con successo."
+      updated: "Risorsa aggiornata con successo."
+      deleted: "Risorsa eliminata con successo."
+      processing: "La richiesta è in elaborazione."
+
+    community:
+      errors:
+        only_one_channel: "Puoi creare solo un canale."
+        not_found: "Comunità non trovata."
+        access_denied: "Accesso a questa comunità negato."
+        invalid_slug: "Identificatore della comunità non valido."
+        name_taken: "Il nome della comunità è già stato preso."
+        slug_taken: "L'identificatore della comunità è già stato preso."
+        invalid_visibility: "Impostazione di visibilità non valida."
+        
+      messages:
+        created: "Comunità creata con successo."
+        updated: "Comunità aggiornata con successo."
+        visibility_updated: "Visibilità della comunità aggiornata."
+        
+    account:
+      errors:
+        invalid_credentials: "Nome utente o password non validi."
+        account_not_found: "Account non trovato."
+        account_suspended: "L'account è stato sospeso."
+        email_not_verified: "Indirizzo email non verificato."
+
+    joined_communities:
+      errors:
+        channel_not_found: "Canale non trovato."
+        already_favorited: "Non puoi aggiungere ai preferiti il tuo stesso canale."
+        no_access_set_primary: "Non hai accesso per impostare come principale."
+        no_favorited_channels: "Non hai canali preferiti."
+        community_not_found: "Comunità non trovata."
+        minimum_channels_required: "Devi unirti ad almeno 5 canali per impostarne uno come principale."
+        favorited_channel_not_found: "Canale preferito non trovato."
+        
+      messages:
+        favorited_successfully: "Il canale è stato aggiunto ai preferiti con successo."
+        unfavorited_successfully: "Canale preferito eliminato con successo."
+        primary_set_successfully: "Il canale è stato impostato come principale con successo."
+        
+    validation:
+      required: "è richiesto"
+      too_long: "è troppo lungo (massimo %{count} caratteri)"
+      too_short: "è troppo corto (minimo %{count} caratteri)"
+      invalid_format: "ha un formato non valido"
+      not_unique: "è già stato preso"
+
+  # Model validation messages
+  activerecord:
+    errors:
+      models:
+        community:
+          attributes:
+            name:
+              blank: "Il nome della comunità non può essere vuoto."
+              too_long: "Il nome della comunità non può superare i %{count} caratteri."
+              taken: "Il nome della comunità è già stato preso."
+            slug:
+              blank: "L'identificatore della comunità non può essere vuoto."
+              too_short: "L'identificatore della comunità deve essere di almeno %{count} caratteri."
+              too_long: "L'identificatore della comunità non può superare i %{count} caratteri."
+              invalid: "Il formato dell'identificatore della comunità non è valido."
+              taken: "L'identificatore della comunità è già stato preso."
+              immutable: "L'identificatore della comunità non può essere modificato dopo la creazione."
+            description:
+              too_long: "La descrizione non può superare i %{count} caratteri."
+            about:
+              too_long: "La sezione 'Chi siamo' non può superare i %{count} caratteri."
+              
+        account:
+          attributes:
+            username:
+              blank: "Il nome utente non può essere vuoto."
+              too_short: "Il nome utente deve essere di almeno %{count} caratteri."
+              too_long: "Il nome utente non può superare i %{count} caratteri."
+              invalid: "Il nome utente può contenere solo lettere, numeri e trattini bassi."
+              taken: "Il nome utente è già stato preso."
+            email:
+              blank: "L'email non può essere vuota."
+              invalid: "Il formato dell'email non è valido."
+              taken: "L'email è già stata presa."
+            password:
+              blank: "La password non può essere vuota."
+              too_short: "La password deve essere di almeno %{count} caratteri."
+              
+        api_key:
+          attributes:
+            name:
+              blank: "Il nome della chiave API non può essere vuoto."
+              too_long: "Il nome della chiave API non può superare i %{count} caratteri."
+            scopes:
+              blank: "Deve essere selezionato almeno un ambito."
+
+        user:
+          attributes:
+            locale:
+              invalid: "non è una locale supportata"
+              inclusion: "deve essere una delle locale supportate: %{values}"
+
+        joined_community:
+          attributes:
+            community:
+              blank: "La comunità deve essere selezionata."
+            account:
+              blank: "L'account deve essere presente."
+              taken: "si è già unito a questa comunità."
+            is_primary:
+              only_one_primary: "può essere vero solo per una comunità per account."
+
+  # Time and date formats
+  time:
+    formats:
+      default: "%d/%m/%Y %H:%M:%S"
+      short: "%d %b %H:%M"
+      long: "%d %B %Y alle %H:%M"
+      
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d %B %Y"
+
+  # General terms
+  general:
+    yes: "Sì"
+    no: "No"
+    save: "Salva"
+    cancel: "Annulla"
+    delete: "Elimina"
+    edit: "Modifica"
+    create: "Crea"
+    update: "Aggiorna"
+    submit: "Invia"
+    loading: "Caricamento..."
+    confirm: "Sei sicuro?"

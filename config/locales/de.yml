@@ -1,0 +1,159 @@
+# German translations for Patchwork Dashboard
+# Deutsche Übersetzungen für das Patchwork Dashboard
+
+de:
+  # Locale information
+  locale:
+    name: "Deutsch"
+    native_name: "Deutsch"
+
+  # API responses and messages
+  api:
+    errors:
+      unauthorized: "Sie sind nicht berechtigt, diese Aktion auszuführen."
+      forbidden: "Zugriff verweigert!"
+      not_found: "Ressource nicht gefunden."
+      unprocessable_entity: "Die Anfrage konnte nicht verarbeitet werden."
+      internal_server_error: "Ein interner Serverfehler ist aufgetreten."
+      validation_failed: "Validierung fehlgeschlagen!"
+      invalid_request: "Ungültige Anfrage!"
+      rate_limit_exceeded: "Rate-Limit überschritten. Bitte versuchen Sie es später erneut."
+      
+    messages:
+      success: "Vorgang erfolgreich abgeschlossen."
+      created: "Ressource erfolgreich erstellt."
+      updated: "Ressource erfolgreich aktualisiert."
+      deleted: "Ressource erfolgreich gelöscht."
+      processing: "Anfrage wird verarbeitet."
+
+    community:
+      errors:
+        only_one_channel: "Sie können nur einen Kanal erstellen."
+        not_found: "Community nicht gefunden."
+        access_denied: "Zugriff auf diese Community verweigert."
+        invalid_slug: "Ungültiger Community-Bezeichner."
+        name_taken: "Community-Name ist bereits vergeben."
+        slug_taken: "Community-Bezeichner ist bereits vergeben."
+        invalid_visibility: "Ungültige Sichtbarkeitseinstellung."
+        
+      messages:
+        created: "Community erfolgreich erstellt."
+        updated: "Community erfolgreich aktualisiert."
+        visibility_updated: "Community-Sichtbarkeit aktualisiert."
+        
+    account:
+      errors:
+        invalid_credentials: "Ungültiger Benutzername oder Passwort."
+        account_not_found: "Konto nicht gefunden."
+        account_suspended: "Konto wurde gesperrt."
+        email_not_verified: "E-Mail-Adresse nicht verifiziert."
+
+    joined_communities:
+      errors:
+        channel_not_found: "Kanal nicht gefunden."
+        already_favorited: "Sie können Ihren eigenen Kanal nicht favorisieren."
+        no_access_set_primary: "Sie haben keine Berechtigung, einen primären Kanal zu setzen."
+        no_favorited_channels: "Sie haben keine favorisierten Kanäle."
+        community_not_found: "Community nicht gefunden."
+        minimum_channels_required: "Sie müssen mindestens 5 Kanälen beitreten, um einen als primär zu setzen."
+        favorited_channel_not_found: "Favorisierter Kanal nicht gefunden."
+        
+      messages:
+        favorited_successfully: "Kanal wurde erfolgreich favorisiert."
+        unfavorited_successfully: "Favorisierter Kanal wurde erfolgreich gelöscht."
+        primary_set_successfully: "Kanal wurde erfolgreich als primär gesetzt."
+        validation:
+      required: "ist erforderlich"
+      too_long: "ist zu lang (maximal %{count} Zeichen)"
+      too_short: "ist zu kurz (mindestens %{count} Zeichen)"
+      invalid_format: "hat ein ungültiges Format"
+      not_unique: "ist bereits vergeben"
+
+  # Model validation messages
+  activerecord:
+    errors:
+      models:
+        community:
+          attributes:
+            name:
+              blank: "Community-Name darf nicht leer sein"
+              too_long: "Community-Name darf nicht länger als %{count} Zeichen sein"
+              taken: "Community-Name ist bereits vergeben"
+            slug:
+              blank: "Community-Bezeichner darf nicht leer sein"
+              too_short: "Community-Bezeichner muss mindestens %{count} Zeichen haben"
+              too_long: "Community-Bezeichner darf nicht länger als %{count} Zeichen sein"
+              invalid: "Community-Bezeichner hat ein ungültiges Format"
+              taken: "Community-Bezeichner ist bereits vergeben"
+              immutable: "Community-Bezeichner kann nach der Erstellung nicht geändert werden"
+            description:
+              too_long: "Beschreibung darf nicht länger als %{count} Zeichen sein."
+            about:
+              too_long: "Über-Bereich darf nicht länger als %{count} Zeichen sein."
+              
+        account:
+          attributes:
+            username:
+              blank: "Benutzername darf nicht leer sein"
+              too_short: "Benutzername muss mindestens %{count} Zeichen haben"
+              too_long: "Benutzername darf nicht länger als %{count} Zeichen sein"
+              invalid: "Benutzername darf nur Buchstaben, Zahlen und Unterstriche enthalten"
+              taken: "Benutzername ist bereits vergeben"
+            email:
+              blank: "E-Mail darf nicht leer sein"
+              invalid: "E-Mail-Format ist ungültig"
+              taken: "E-Mail ist bereits vergeben"
+            password:
+              blank: "Passwort darf nicht leer sein."
+              too_short: "Passwort muss mindestens %{count} Zeichen haben."
+              
+        api_key:
+          attributes:
+            name:
+              blank: "API-Schlüssel-Name darf nicht leer sein"
+              too_long: "API-Schlüssel-Name darf nicht länger als %{count} Zeichen sein"
+            scopes:
+              blank: "Mindestens ein Bereich muss ausgewählt werden."
+
+        user:
+          attributes:
+            locale:
+              invalid: "ist keine unterstützte Sprache"
+              inclusion: "muss eine der unterstützten Sprachen sein: %{values}"
+
+        joined_community:
+          attributes:
+            community:
+              blank: "Community muss ausgewählt werden."
+            account:
+              blank: "Konto muss vorhanden sein."
+              taken: "ist dieser Community bereits beigetreten."
+            is_primary:
+              only_one_primary: "kann nur für eine Community pro Konto wahr sein."
+
+  # Time and date formats
+  time:
+    formats:
+      default: "%d.%m.%Y %H:%M:%S"
+      short: "%d. %b %H:%M"
+      long: "%d. %B %Y %H:%M"
+      
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d. %b"
+      long: "%d. %B %Y"
+
+  # General terms
+  general:
+    yes: "Ja"
+    no: "Nein"
+    save: "Speichern"
+    cancel: "Abbrechen"
+    delete: "Löschen"
+    edit: "Bearbeiten"
+    create: "Erstellen"
+    update: "Aktualisieren"
+    submit: "Absenden"
+    loading: "Wird geladen..."
+    confirm: "Sind Sie sicher?"

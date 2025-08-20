@@ -21,6 +21,17 @@ module Dashboard
 
     config.time_zone = "London"
 
+    # I18n configuration for internationalization
+    # Set default locale to English and add available locales
+    config.i18n.default_locale = :en
+    config.i18n.available_locales = [:en, :de, :ja, :ru, :cy, :fr, :it, :pt_BR, :pt]
+    # Set English as fallback locale for missing translations
+    config.i18n.fallbacks = { 
+      de: :en, ja: :en, ru: :en, cy: :en, fr: :en, it: :en, pt_BR: :en, pt: :en 
+    }
+    # Load all locale files from subdirectories
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+
     #config.action_mailer.deliver_later_queue_name = 'mailers'
 
     # smtp settings
