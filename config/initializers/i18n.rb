@@ -11,18 +11,21 @@ Rails.application.config.after_initialize do
         Rails.logger.warn "Missing translation: #{locale}.#{key}"
       end
       
-      # Return the key with fallback behavior
-      "[Missing: #{locale}.#{key}]"
+      # Return a user-friendly message or the key itself in production  
+      if Rails.env.production?  
+        key.to_s.to_s.humanize  
+      else  
+        "[Missing: #{locale}.#{key}]"  
+      end 
     else
       raise exception
     end
   end
 end
-
 # Configure pluralization rules for different languages
 I18n.backend.store_translations(:en, i18n: { plural: { keys: [:one, :other] } })
 I18n.backend.store_translations(:de, i18n: { plural: { keys: [:one, :other] } })
-I18n.backend.store_translations(:ja, i18n: { plural: { keys: [:other] } })  # Japanese doesn't have plural forms
+I18n.backend.store_translations(:ja, i18n: { plural: { keys: [:other] } })  # Japanese does have pluralization concepts, but Rails I18n uses only :other because it doesn't distinguish between singular and plural as European languages do
 I18n.backend.store_translations(:ru, i18n: { plural: { keys: [:one, :few, :many, :other] } })  # Russian has complex pluralization
 I18n.backend.store_translations(:cy, i18n: { plural: { keys: [:zero, :one, :two, :few, :many, :other] } })  # Welsh has complex pluralization
 I18n.backend.store_translations(:fr, i18n: { plural: { keys: [:one, :other] } })  # French pluralization
