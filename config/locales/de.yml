@@ -10,11 +10,11 @@ de:
   # API responses and messages
   api:
     errors:
-      unauthorized: "Sie sind nicht berechtigt, diese Aktion auszuführen."
+      unauthorized: "Sie sind nicht berechtigt, diese Aktion auszuführen"
       forbidden: "Zugriff verweigert!"
-      not_found: "Ressource nicht gefunden."
-      unprocessable_entity: "Die Anfrage konnte nicht verarbeitet werden."
-      internal_server_error: "Ein interner Serverfehler ist aufgetreten."
+      not_found: "Ressource nicht gefunden"
+      unprocessable_entity: "Die Anfrage konnte nicht verarbeitet werden"
+      internal_server_error: "Ein interner Serverfehler ist aufgetreten"
       validation_failed: "Validierung fehlgeschlagen!"
       invalid_request: "Ungültige Anfrage!"
       rate_limit_exceeded: "Rate-Limit überschritten. Bitte versuchen Sie es später erneut."

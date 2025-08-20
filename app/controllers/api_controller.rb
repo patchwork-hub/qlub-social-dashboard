@@ -50,7 +50,7 @@ class ApiController < ApplicationController
 
   def authenticate_user_from_header
     token = bearer_token
-    return render json: { error: 'Authentication required!' }, status: :unauthorized unless token
+    return render_unauthorized unless token
 
     user_info = validate_token(token)
     
