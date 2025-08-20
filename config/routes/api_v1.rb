@@ -101,7 +101,7 @@ namespace :api, defaults: { format: :json } do
     get 'general_icons', to: 'community_links#general'
     get 'social_icons',  to: 'community_links#social'
 
-    resources :app_versions,only: [] do 
+    resources :app_versions, only: [] do 
       collection do
         get 'check_version' => 'app_versions#check_version', as: 'check_version'
       end
@@ -112,6 +112,18 @@ namespace :api, defaults: { format: :json } do
         post :upsert
       end
     end
+
+    resources :locale, only: [:index, :show] do
+      collection do
+        post :set
+        post :save_preference
+        get :user_preference
+      end
+      member do
+        get 'translations/:namespace', to: 'locale#translations', as: :translations
+      end
+    end
+    
   end
 end
 

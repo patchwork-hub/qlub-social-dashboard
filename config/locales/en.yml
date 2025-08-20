@@ -1,33 +1,160 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# The following keys must be escaped otherwise they will not be retrieved by
-# the default I18n backend:
-#
-# true, false, on, off, yes, no
-#
-# Instead, surround them with single quotes.
-#
-# en:
-#   "true": "foo"
-#
-# To learn more, please read the Rails Internationalization guide
-# available at https://guides.rubyonrails.org/i18n.html.
+# English translations for Patchwork Dashboard
+# This file contains all English translations for the application
 
 en:
-  hello: "Hello world"
+  # Locale information
+  locale:
+    name: "English"
+    native_name: "English"
+
+  # API responses and messages
+  api:
+    errors:
+      unauthorized: "You are not authorized to perform this action."
+      forbidden: "Access denied!"
+      not_found: "Resource not found."
+      unprocessable_entity: "The request could not be processed."
+      internal_server_error: "An internal server error occurred."
+      validation_failed: "Validation failed!"
+      invalid_request: "Invalid request!"
+      rate_limit_exceeded: "Rate limit exceeded. Please try again later"
+      
+    messages:
+      success: "Operation completed successfully"
+      created: "Resource created successfully"
+      updated: "Resource updated successfully"
+      deleted: "Resource deleted successfully"
+      processing: "Request is being processed."
+
+    community:
+      errors:
+        only_one_channel: "You can only create one channel"
+        not_found: "Community not found"
+        access_denied: "Access to this community is denied"
+        invalid_slug: "Invalid community identifier"
+        name_taken: "Community name is already taken"
+        slug_taken: "Community identifier is already taken"
+        invalid_visibility: "Invalid visibility setting"
+        
+      messages:
+        created: "Community created successfully"
+        updated: "Community updated successfully"
+        visibility_updated: "Community visibility updated"
+        
+    account:
+      errors:
+        invalid_credentials: "Invalid username or password"
+        account_not_found: "Account not found"
+        account_suspended: "Account has been suspended"
+        email_not_verified: "Email address not verified"
+
+    joined_communities:
+      errors:
+        channel_not_found: "Channel not found"
+        already_favorited: "You can't favorite own channel"
+        no_access_set_primary: "You have no access to set primary"
+        no_favorited_channels: "You have no favourited channels"
+        community_not_found: "Community not found"
+        minimum_channels_required: "You need to join at least 5 to set as primary"
+        favorited_channel_not_found: "Favourited channel not found"
+        
+      messages:
+        favorited_successfully: "Channel has been favorited successfully"
+        unfavorited_successfully: "Favourited channel successfully deleted"
+        primary_set_successfully: "Channel has been set as primary successfully"
+        
+    validation:
+      required: "is required"
+      too_long: "is too long (maximum %{count} characters)"
+      too_short: "is too short (minimum %{count} characters)"
+      invalid_format: "has invalid format"
+      not_unique: "has already been taken"
+
+  # Model validation messages
+  activerecord:
+    errors:
+      models:
+        community:
+          attributes:
+            name:
+              blank: "Community name cannot be blank"
+              too_long: "Community name cannot be longer than %{count} characters"
+              taken: "Community name has already been taken"
+            slug:
+              blank: "Community identifier cannot be blank"
+              too_short: "Community identifier must be at least %{count} characters"
+              too_long: "Community identifier cannot be longer than %{count} characters"
+              invalid: "Community identifier format is invalid"
+              taken: "Community identifier has already been taken"
+              immutable: "Community identifier cannot be changed after creation"
+            description:
+              too_long: "Description cannot be longer than %{count} characters"
+            about:
+              too_long: "About section cannot be longer than %{count} characters"
+              
+        account:
+          attributes:
+            username:
+              blank: "Username cannot be blank"
+              too_short: "Username must be at least %{count} characters"
+              too_long: "Username cannot be longer than %{count} characters"
+              invalid: "Username can only contain letters, numbers, and underscores"
+              taken: "Username has already been taken"
+            email:
+              blank: "Email cannot be blank"
+              invalid: "Email format is invalid"
+              taken: "Email has already been taken"
+            password:
+              blank: "Password cannot be blank"
+              too_short: "Password must be at least %{count} characters"
+              
+        api_key:
+          attributes:
+            name:
+              blank: "API key name cannot be blank"
+              too_long: "API key name cannot be longer than %{count} characters"
+            scopes:
+              blank: "At least one scope must be selected"
+
+        user:
+          attributes:
+            locale:
+              invalid: "is not a supported locale"
+              inclusion: "must be one of the supported locales: %{values}"
+
+        joined_community:
+          attributes:
+            community:
+              blank: "Community must be selected"
+            account:
+              blank: "Account must be present"
+              taken: "has already joined this community"
+            is_primary:
+              only_one_primary: "can only be true for one community per account"
+
+  # Time and date formats
+  time:
+    formats:
+      default: "%Y-%m-%d %H:%M:%S"
+      short: "%d %b %H:%M"
+      long: "%B %d, %Y %H:%M"
+      
+  date:
+    formats:
+      default: "%Y-%m-%d"
+      short: "%b %d"
+      long: "%B %d, %Y"
+
+  # General terms
+  general:
+    yes: "Yes"
+    no: "No"
+    save: "Save"
+    cancel: "Cancel"
+    delete: "Delete"
+    edit: "Edit"
+    create: "Create"
+    update: "Update"
+    submit: "Submit"
+    loading: "Loading..."
+    confirm: "Are you sure?"
