@@ -160,8 +160,6 @@ namespace :i18n do
     puts "\n=== Statistics Complete ==="
   end
 
-  private
-
   def extract_keys(hash, prefix = '')
     keys = []
     hash.each do |key, value|

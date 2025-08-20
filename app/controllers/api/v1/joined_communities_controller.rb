@@ -70,8 +70,8 @@ module Api
           joined_community = @account.joined_communities.find_by(patchwork_community_id: @community.id)
           joined_community.update!(is_primary: true)
         end
-        
-        render_success(data, 'api.joined_communities.messages.primary_set_successfully')
+
+        render_success({}, 'api.joined_communities.messages.primary_set_successfully')
       rescue ActiveRecord::RecordInvalid => e
         render_validation_failed([e.message])
       end

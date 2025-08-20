@@ -50,21 +50,6 @@ ja:
 
     joined_communities:
       errors:
-        channel_not_found: "チャンネルが見つかりません。"
-        already_favorited: "自分のチャンネルをお気に入りに追加することはできません。"
-        no_access_set_primary: "プライマリに設定する権限がありません。"
-        no_favorited_channels: "お気に入りのチャンネルがありません。"
-        community_not_found: "コミュニティが見つかりません。"
-        minimum_channels_required: "プライマリに設定するには最低5つのチャンネルに参加する必要があります。"
-        favorited_channel_not_found: "お気に入りのチャンネルが見つかりません。"
-        
-      messages:
-        favorited_successfully: "チャンネルが正常にお気に入りに追加されました。"
-        unfavorited_successfully: "お気に入りのチャンネルが正常に削除されました。"
-        primary_set_successfully: "チャンネルが正常にプライマリに設定されました。"
-
-    joined_communities:
-      errors:
         channel_not_found: "チャンネルが見つかりません"
         already_favorited: "自分のチャンネルはお気に入りに登録できません"
         no_access_set_primary: "プライマリに設定する権限がありません"
@@ -136,16 +121,6 @@ ja:
             locale:
               invalid: "はサポートされていない言語です"
               inclusion: "サポートされている言語のいずれかである必要があります: %{values}"
-
-        joined_community:
-          attributes:
-            community:
-              blank: "コミュニティを選択してください。"
-            account:
-              blank: "アカウントが必要です。"
-              taken: "は既にこのコミュニティに参加しています。"
-            is_primary:
-              only_one_primary: "はアカウントごとに1つのコミュニティでのみ真になることができます。"
 
         joined_community:
           attributes:
