@@ -48,6 +48,18 @@ de:
         account_suspended: "Konto wurde gesperrt."
         email_not_verified: "E-Mail-Adresse nicht verifiziert."
 
+    setting:
+      errors:
+        not_found: "Einstellungen nicht gefunden."
+        authentication_failed: "Authentifizierung fehlgeschlagen."
+        invalid_app_name: "%{app_name} : Ungültiger App-Name angegeben."
+        validation_failed: "Validierung der Einstellungen fehlgeschlagen."
+        delete_failed: "Löschen der Einstellungen fehlgeschlagen."
+        
+      messages:
+        saved: "Einstellungen wurden erfolgreich gespeichert."
+        deleted: "Einstellungen erfolgreich gelöscht."
+
     api_key:
       errors:
         invalid_status: "Ungültiger API-Schlüssel-Status."
@@ -176,6 +188,17 @@ de:
               inclusion: "Kanaltyp muss entweder Kanal oder Hub sein."
             account_id:
               taken: "Konto ist bereits auf der Warteliste registriert."
+
+        setting:
+          attributes:
+            account:
+              blank: "Konto muss vorhanden sein."
+            app_name:
+              blank: "App-Name darf nicht leer sein."
+              inclusion: "App-Name muss einer der unterstützten Werte sein: %{values}."
+            settings:
+              blank: "Einstellungen dürfen nicht leer sein."
+              invalid: "Einstellungsformat ist ungültig."
 
   # Time and date formats
   time:

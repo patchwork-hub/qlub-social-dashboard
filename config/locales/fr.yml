@@ -48,6 +48,18 @@ fr:
         account_suspended: "Le compte a été suspendu."
         email_not_verified: "Adresse e-mail non vérifiée."
 
+    setting:
+      errors:
+        not_found: "Paramètres introuvables."
+        authentication_failed: "Échec de l'authentification."
+        invalid_app_name: "%{app_name} : Nom d'application invalide fourni."
+        validation_failed: "La validation des paramètres a échoué."
+        delete_failed: "Échec de la suppression des paramètres."
+        
+      messages:
+        saved: "Les paramètres ont été sauvegardés avec succès."
+        deleted: "Paramètres supprimés avec succès."
+
     api_key:
       errors:
         invalid_status: "Statut de clé API invalide."
@@ -177,6 +189,17 @@ fr:
               inclusion: "Le type de canal doit être soit canal soit hub."
             account_id:
               taken: "Le compte est déjà enregistré sur la liste d'attente."
+
+        setting:
+          attributes:
+            account:
+              blank: "Le compte doit être présent."
+            app_name:
+              blank: "Le nom de l'application ne peut pas être vide."
+              inclusion: "Le nom de l'application doit être l'une des valeurs supportées : %{values}."
+            settings:
+              blank: "Les paramètres ne peuvent pas être vides."
+              invalid: "Le format des paramètres est invalide."
 
   # Time and date formats
   time:
