@@ -48,6 +48,18 @@ cy:
         account_suspended: "Mae'r cyfrif wedi'i atal."
         email_not_verified: "Nid yw'r cyfeiriad e-bost wedi'i ddilysu."
 
+    api_key:
+      errors:
+        invalid_status: "Statws allwedd API annilys."
+        key_not_found: "Ni ddaethpwyd o hyd i'r allwedd API."
+        already_deactivated: "Mae'r allwedd API eisoes wedi'i hanactifadu."
+        already_activated: "Mae'r allwedd API eisoes wedi'i actifadu."
+        
+      messages:
+        rotated_successfully: "Cylchdrowyd yr allwedd API yn llwyddiannus."
+        activated_successfully: "Actifadwyd yr allwedd API yn llwyddiannus."
+        deactivated_successfully: "Anactifadwyd yr allwedd API yn llwyddiannus."
+
     joined_communities:
       errors:
         channel_not_found: "Ni ddaethpwyd o hyd i'r sianel."
@@ -110,11 +122,16 @@ cy:
               
         api_key:
           attributes:
-            name:
-              blank: "Ni all enw'r allwedd API fod yn wag."
-              too_long: "Ni all enw'r allwedd API fod yn hirach na %{count} nod."
-            scopes:
-              blank: "Rhaid dewis o leiaf un cwmpas."
+            key:
+              blank: "Ni all yr allwedd API fod yn wag."
+              invalid: "Mae fformat yr allwedd API yn annilys."
+            secret:
+              blank: "Ni all cyfrinach yr API fod yn wag."
+              invalid: "Mae fformat cyfrinach yr API yn annilys."
+            status:
+              blank: "Ni all y statws fod yn wag."
+              invalid: "Rhaid i'r statws fod yn Actif neu'n Anactif."
+              inclusion: "Rhaid i'r statws fod yn Actif neu'n Anactif."
 
         user:
           attributes:

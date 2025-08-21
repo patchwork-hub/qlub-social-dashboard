@@ -48,6 +48,18 @@ ja:
         account_suspended: "アカウントが停止されています。"
         email_not_verified: "メールアドレスが確認されていません。"
 
+    api_key:
+      errors:
+        invalid_status: "無効なAPIキーステータスです。"
+        key_not_found: "APIキーが見つかりません。"
+        already_deactivated: "APIキーは既に無効化されています。"
+        already_activated: "APIキーは既に有効化されています。"
+        
+      messages:
+        rotated_successfully: "APIキーが正常にローテーションされました。"
+        activated_successfully: "APIキーが正常に有効化されました。"
+        deactivated_successfully: "APIキーが正常に無効化されました。"
+
     joined_communities:
       errors:
         channel_not_found: "チャンネルが見つかりません"
@@ -110,11 +122,16 @@ ja:
               
         api_key:
           attributes:
-            name:
-              blank: "APIキー名を入力してください"
-              too_long: "APIキー名は%{count}文字以内で入力してください"
-            scopes:
-              blank: "少なくとも1つのスコープを選択してください"
+            key:
+              blank: "APIキーを入力してください。"
+              invalid: "APIキーの形式が無効です。"
+            secret:
+              blank: "APIシークレットを入力してください。"
+              invalid: "APIシークレットの形式が無効です。"
+            status:
+              blank: "ステータスを入力してください。"
+              invalid: "ステータスは有効化または無効化である必要があります。"
+              inclusion: "ステータスは有効化または無効化である必要があります。"
 
         user:
           attributes:

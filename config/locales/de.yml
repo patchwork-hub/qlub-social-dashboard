@@ -48,6 +48,18 @@ de:
         account_suspended: "Konto wurde gesperrt."
         email_not_verified: "E-Mail-Adresse nicht verifiziert."
 
+    api_key:
+      errors:
+        invalid_status: "Ungültiger API-Schlüssel-Status."
+        key_not_found: "API-Schlüssel nicht gefunden."
+        already_deactivated: "API-Schlüssel ist bereits deaktiviert."
+        already_activated: "API-Schlüssel ist bereits aktiviert."
+        
+      messages:
+        rotated_successfully: "API-Schlüssel erfolgreich rotiert."
+        activated_successfully: "API-Schlüssel erfolgreich aktiviert."
+        deactivated_successfully: "API-Schlüssel erfolgreich deaktiviert."
+
     joined_communities:
       errors:
         channel_not_found: "Kanal nicht gefunden."
@@ -109,11 +121,16 @@ de:
               
         api_key:
           attributes:
-            name:
-              blank: "API-Schlüssel-Name darf nicht leer sein"
-              too_long: "API-Schlüssel-Name darf nicht länger als %{count} Zeichen sein"
-            scopes:
-              blank: "Mindestens ein Bereich muss ausgewählt werden."
+            key:
+              blank: "API-Schlüssel darf nicht leer sein."
+              invalid: "API-Schlüssel-Format ist ungültig."
+            secret:
+              blank: "API-Geheimnis darf nicht leer sein."
+              invalid: "API-Geheimnis-Format ist ungültig."
+            status:
+              blank: "Status darf nicht leer sein."
+              invalid: "Status muss entweder Aktiviert oder Deaktiviert sein."
+              inclusion: "Status muss entweder Aktiviert oder Deaktiviert sein."
 
         user:
           attributes:
