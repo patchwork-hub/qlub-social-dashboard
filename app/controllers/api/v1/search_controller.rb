@@ -2,7 +2,7 @@ module Api
   module V1
     class SearchController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:search]
+      before_action :authenticate_user_from_header, only: [:search]
 
       def search
         query = build_query(params[:q])
@@ -54,10 +54,6 @@ module Api
                       .where("lower(name) LIKE :q OR lower(slug) LIKE :q", q: query)
 
         Api::V1::ChannelSerializer.new(newsmast_communities).serializable_hash
-      end
-
-      def check_authorization_header
-        authenticate_user_from_header if request.headers['Authorization'].present?
       end
 
     end
