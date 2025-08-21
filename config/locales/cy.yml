@@ -48,6 +48,18 @@ cy:
         account_suspended: "Mae'r cyfrif wedi'i atal."
         email_not_verified: "Nid yw'r cyfeiriad e-bost wedi'i ddilysu."
 
+    setting:
+      errors:
+        not_found: "Ni ddaethpwyd o hyd i osodiadau."
+        authentication_failed: "Methodd y dilysu."
+        invalid_app_name: "%{app_name} : Darparwyd enw ap annilys."
+        validation_failed: "Methodd dilysu'r gosodiadau."
+        delete_failed: "Methodd dileu'r gosodiadau."
+        
+      messages:
+        saved: "Mae'r gosodiadau wedi'u cadw'n llwyddiannus."
+        deleted: "Dilëwyd y gosodiadau'n llwyddiannus."
+
     api_key:
       errors:
         invalid_status: "Statws allwedd API annilys."
@@ -177,6 +189,17 @@ cy:
               inclusion: "Rhaid i fath sianel fod yn sianel neu hyb."
             account_id:
               taken: "Mae'r cyfrif eisoes wedi'i gofrestru ar y rhestr aros."
+
+        setting:
+          attributes:
+            account:
+              blank: "Rhaid i'r cyfrif fod yn bresennol."
+            app_name:
+              blank: "Ni all enw'r ap fod yn wag."
+              inclusion: "Rhaid i enw'r ap fod yn un o'r gwerthoedd cefnogedig: %{values}."
+            settings:
+              blank: "Ni all y gosodiadau fod yn wag."
+              invalid: "Mae fformat y gosodiadau'n annilys."
 
   # Time and date formats
   time:

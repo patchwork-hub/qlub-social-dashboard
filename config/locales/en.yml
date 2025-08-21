@@ -48,6 +48,18 @@ en:
         account_suspended: "Account has been suspended"
         email_not_verified: "Email address not verified"
 
+    setting:
+      errors:
+        not_found: "Settings not found."
+        authentication_failed: "Authentication failed."
+        invalid_app_name: "%{app_name} : Invalid app name provided"
+        validation_failed: "Settings validation failed."
+        delete_failed: "Failed to delete settings."
+        
+      messages:
+        saved: "Settings have been saved successfully."
+        deleted: "Settings deleted successfully."
+
     api_key:
       errors:
         invalid_status: "Invalid API key status"
@@ -145,6 +157,17 @@ en:
               blank: "Status cannot be blank"
               invalid: "Status must be either Activated or Deactivated"
               inclusion: "Status must be either Activated or Deactivated"
+
+        setting:
+          attributes:
+            account:
+              blank: "Account must be present"
+            app_name:
+              blank: "App name cannot be blank"
+              inclusion: "App name must be one of the supported values: %{values}"
+            settings:
+              blank: "Settings cannot be blank"
+              invalid: "Settings format is invalid"
 
         user:
           attributes:

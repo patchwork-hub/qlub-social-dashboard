@@ -48,6 +48,18 @@ ja:
         account_suspended: "アカウントが停止されています。"
         email_not_verified: "メールアドレスが確認されていません。"
 
+    setting:
+      errors:
+        not_found: "設定が見つかりません。"
+        authentication_failed: "認証に失敗しました。"
+        invalid_app_name: "%{app_name} : 無効なアプリ名が提供されました。"
+        validation_failed: "設定の検証に失敗しました。"
+        delete_failed: "設定の削除に失敗しました。"
+        
+      messages:
+        saved: "設定が正常に保存されました。"
+        deleted: "設定が正常に削除されました。"
+
     api_key:
       errors:
         invalid_status: "無効なAPIキーステータスです。"
@@ -177,6 +189,17 @@ ja:
               inclusion: "チャンネルタイプはチャンネルまたはハブのいずれかである必要があります"
             account_id:
               taken: "アカウントは既にウェイトリストに登録されています"
+
+        setting:
+          attributes:
+            account:
+              blank: "アカウントが必要です"
+            app_name:
+              blank: "アプリ名は空にできません"
+              inclusion: "アプリ名はサポートされている値のいずれかである必要があります: %{values}"
+            settings:
+              blank: "設定は空にできません"
+              invalid: "設定の形式が無効です"
 
   # Time and date formats
   time:

@@ -48,6 +48,18 @@ ru:
         account_suspended: "Аккаунт заблокирован"
         email_not_verified: "Email адрес не подтверждён"
 
+    setting:
+      errors:
+        not_found: "Настройки не найдены."
+        authentication_failed: "Ошибка аутентификации."
+        invalid_app_name: "%{app_name} : Предоставлено неверное имя приложения."
+        validation_failed: "Ошибка валидации настроек."
+        delete_failed: "Не удалось удалить настройки."
+        
+      messages:
+        saved: "Настройки успешно сохранены."
+        deleted: "Настройки успешно удалены."
+
     api_key:
       errors:
         invalid_status: "Неверный статус API ключа"
@@ -177,6 +189,17 @@ ru:
               inclusion: "Тип канала должен быть каналом или хабом."
             account_id:
               taken: "Аккаунт уже зарегистрирован в списке ожидания."
+
+        setting:
+          attributes:
+            account:
+              blank: "Аккаунт должен быть указан."
+            app_name:
+              blank: "Имя приложения не может быть пустым."
+              inclusion: "Имя приложения должно быть одним из поддерживаемых значений: %{values}."
+            settings:
+              blank: "Настройки не могут быть пустыми."
+              invalid: "Неверный формат настроек."
 
   # Time and date formats
   time:

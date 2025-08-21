@@ -48,6 +48,18 @@ pt_BR:
         account_suspended: "A conta foi suspensa."
         email_not_verified: "Endereço de e-mail não verificado."
 
+    setting:
+      errors:
+        not_found: "Configurações não encontradas."
+        authentication_failed: "Falha na autenticação."
+        invalid_app_name: "%{app_name} : Nome do aplicativo inválido fornecido."
+        validation_failed: "Falha na validação das configurações."
+        delete_failed: "Falha ao excluir as configurações."
+        
+      messages:
+        saved: "As configurações foram salvas com sucesso."
+        deleted: "Configurações excluídas com sucesso."
+
     api_key:
       errors:
         invalid_status: "Status da chave API inválido."
@@ -177,6 +189,17 @@ pt_BR:
               inclusion: "Tipo de canal deve ser canal ou hub."
             account_id:
               taken: "Conta já está registrada na lista de espera."
+
+        setting:
+          attributes:
+            account:
+              blank: "A conta deve estar presente."
+            app_name:
+              blank: "O nome do aplicativo não pode estar em branco."
+              inclusion: "O nome do aplicativo deve ser um dos valores suportados: %{values}."
+            settings:
+              blank: "As configurações não podem estar em branco."
+              invalid: "O formato das configurações é inválido."
 
   # Time and date formats
   time:

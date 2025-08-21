@@ -48,6 +48,18 @@ it:
         account_suspended: "L'account è stato sospeso."
         email_not_verified: "Indirizzo email non verificato."
 
+    setting:
+      errors:
+        not_found: "Impostazioni non trovate."
+        authentication_failed: "Autenticazione fallita."
+        invalid_app_name: "%{app_name} : Nome app non valido fornito."
+        validation_failed: "Validazione delle impostazioni fallita."
+        delete_failed: "Eliminazione delle impostazioni fallita."
+        
+      messages:
+        saved: "Le impostazioni sono state salvate con successo."
+        deleted: "Impostazioni eliminate con successo."
+
     api_key:
       errors:
         invalid_status: "Stato della chiave API non valido."
@@ -177,6 +189,17 @@ it:
               inclusion: "Il tipo di canale deve essere canale o hub."
             account_id:
               taken: "L'account è già registrato nella lista d'attesa."
+
+        setting:
+          attributes:
+            account:
+              blank: "L'account deve essere presente."
+            app_name:
+              blank: "Il nome dell'app non può essere vuoto."
+              inclusion: "Il nome dell'app deve essere uno dei valori supportati: %{values}."
+            settings:
+              blank: "Le impostazioni non possono essere vuote."
+              invalid: "Il formato delle impostazioni non è valido."
 
   # Time and date formats
   time:
