@@ -60,6 +60,19 @@ ja:
         activated_successfully: "APIキーが正常に有効化されました。"
         deactivated_successfully: "APIキーが正常に無効化されました。"
 
+    wait_list:
+      errors:
+        email_required: "メールアドレスが必要です。"
+        invitation_code_required: "招待コードが必要です。"
+        invalid_code: "無効な招待コードです。"
+        validation_failed: "バリデーションに失敗しました！"
+        account_already_registered: "アカウントは既にウェイトリストに登録されています。"
+        
+      messages:
+        created: "ウェイトリストに正常に追加されました。"
+        invitation_sent: "招待コードをメールアドレスに送信しました。"
+        code_valid: "招待コードは有効です。"
+
     joined_communities:
       errors:
         channel_not_found: "チャンネルが見つかりません"
@@ -149,6 +162,22 @@ ja:
             is_primary:
               only_one_primary: "アカウントごとに1つのコミュニティのみプライマリに設定できます"
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "招待コードは空にできません"
+              taken: "招待コードは既に使用されています"
+            email:
+              blank: "メールアドレスは空にできません"
+              invalid: "メールアドレスの形式が無効です"
+            description:
+              too_long: "説明は%{count}文字以内にしてください"
+            channel_type:
+              blank: "チャンネルタイプは空にできません"
+              inclusion: "チャンネルタイプはチャンネルまたはハブのいずれかである必要があります"
+            account_id:
+              taken: "アカウントは既にウェイトリストに登録されています"
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ ja:
     submit: "送信"
     loading: "読み込み中..."
     confirm: "本当によろしいですか？"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "招待コードのお知らせ"
+        greeting: "%{email}様"
+        body: "リクエストされた招待コードは以下の通りです："
+        note: "このメールに覚えがない場合は、無視してください。"

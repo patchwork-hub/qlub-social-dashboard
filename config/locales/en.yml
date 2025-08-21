@@ -60,6 +60,19 @@ en:
         activated_successfully: "API key activated successfully"
         deactivated_successfully: "API key deactivated successfully"
 
+    wait_list:
+      errors:
+        email_required: "Email is required."
+        invitation_code_required: "Invitation code is required."
+        invalid_code: "Invalid invitation code."
+        validation_failed: "Validation failed!"
+        account_already_registered: "Account is already registered on wait list."
+        
+      messages:
+        created: "Successfully added to wait list."
+        invitation_sent: "Invitation code sent to your email."
+        code_valid: "Invitation code is valid."
+
     joined_communities:
       errors:
         channel_not_found: "Channel not found"
@@ -149,6 +162,22 @@ en:
             is_primary:
               only_one_primary: "can only be true for one community per account"
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Invitation code cannot be blank"
+              taken: "Invitation code has already been taken"
+            email:
+              blank: "Email cannot be blank"
+              invalid: "Email format is invalid"
+            description:
+              too_long: "Description cannot be longer than %{count} characters"
+            channel_type:
+              blank: "Channel type cannot be blank"
+              inclusion: "Channel type must be either channel or hub"
+            account_id:
+              taken: "Account is already registered on wait list"
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ en:
     submit: "Submit"
     loading: "Loading..."
     confirm: "Are you sure?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Your Requested Invitation Code"
+        greeting: "Dear %{email},"
+        body: "Your requested invitation code is as below:"
+        note: "If you didn't request this, please ignore this email."

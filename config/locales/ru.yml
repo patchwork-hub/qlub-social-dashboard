@@ -60,6 +60,19 @@ ru:
         activated_successfully: "API ключ успешно активирован"
         deactivated_successfully: "API ключ успешно деактивирован"
 
+    wait_list:
+      errors:
+        email_required: "Требуется электронная почта."
+        invitation_code_required: "Требуется код приглашения."
+        invalid_code: "Недействительный код приглашения."
+        validation_failed: "Проверка не удалась!"
+        account_already_registered: "Аккаунт уже зарегистрирован в списке ожидания."
+        
+      messages:
+        created: "Успешно добавлен в список ожидания."
+        invitation_sent: "Код приглашения отправлен на вашу электронную почту."
+        code_valid: "Код приглашения действителен."
+
     joined_communities:
       errors:
         channel_not_found: "Канал не найден"
@@ -149,6 +162,22 @@ ru:
             is_primary:
               only_one_primary: "может быть true только для одного сообщества на аккаунт"
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Код приглашения не может быть пустым."
+              taken: "Код приглашения уже занят."
+            email:
+              blank: "Электронная почта не может быть пустой."
+              invalid: "Недействительный формат электронной почты."
+            description:
+              too_long: "Описание не может быть длиннее %{count} символов."
+            channel_type:
+              blank: "Тип канала не может быть пустым."
+              inclusion: "Тип канала должен быть каналом или хабом."
+            account_id:
+              taken: "Аккаунт уже зарегистрирован в списке ожидания."
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ ru:
     submit: "Отправить"
     loading: "Загрузка..."
     confirm: "Вы уверены?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Ваш Запрошенный Код Приглашения"
+        greeting: "Уважаемый %{email},"
+        body: "Ваш запрошенный код приглашения приведен ниже:"
+        note: "Если вы не запрашивали это, проигнорируйте это письмо."
