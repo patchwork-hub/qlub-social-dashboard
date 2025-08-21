@@ -48,6 +48,18 @@ en:
         account_suspended: "Account has been suspended"
         email_not_verified: "Email address not verified"
 
+    api_key:
+      errors:
+        invalid_status: "Invalid API key status"
+        key_not_found: "API key not found"
+        already_deactivated: "API key is already deactivated"
+        already_activated: "API key is already activated"
+        
+      messages:
+        rotated_successfully: "API key rotated successfully"
+        activated_successfully: "API key activated successfully"
+        deactivated_successfully: "API key deactivated successfully"
+
     joined_communities:
       errors:
         channel_not_found: "Channel not found"
@@ -110,11 +122,16 @@ en:
               
         api_key:
           attributes:
-            name:
-              blank: "API key name cannot be blank"
-              too_long: "API key name cannot be longer than %{count} characters"
-            scopes:
-              blank: "At least one scope must be selected"
+            key:
+              blank: "API key cannot be blank"
+              invalid: "API key format is invalid"
+            secret:
+              blank: "API secret cannot be blank"
+              invalid: "API secret format is invalid"
+            status:
+              blank: "Status cannot be blank"
+              invalid: "Status must be either Activated or Deactivated"
+              inclusion: "Status must be either Activated or Deactivated"
 
         user:
           attributes:

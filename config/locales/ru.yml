@@ -48,6 +48,18 @@ ru:
         account_suspended: "Аккаунт заблокирован"
         email_not_verified: "Email адрес не подтверждён"
 
+    api_key:
+      errors:
+        invalid_status: "Неверный статус API ключа"
+        key_not_found: "API ключ не найден"
+        already_deactivated: "API ключ уже деактивирован"
+        already_activated: "API ключ уже активирован"
+        
+      messages:
+        rotated_successfully: "API ключ успешно ротирован"
+        activated_successfully: "API ключ успешно активирован"
+        deactivated_successfully: "API ключ успешно деактивирован"
+
     joined_communities:
       errors:
         channel_not_found: "Канал не найден"
@@ -110,11 +122,16 @@ ru:
               
         api_key:
           attributes:
-            name:
-              blank: "Название API ключа не может быть пустым"
-              too_long: "Название API ключа не может быть длиннее %{count} символов"
-            scopes:
-              blank: "Должна быть выбрана хотя бы одна область действия"
+            key:
+              blank: "API ключ не может быть пустым"
+              invalid: "Неверный формат API ключа"
+            secret:
+              blank: "API секрет не может быть пустым"
+              invalid: "Неверный формат API секрета"
+            status:
+              blank: "Статус не может быть пустым"
+              invalid: "Статус должен быть Активирован или Деактивирован"
+              inclusion: "Статус должен быть Активирован или Деактивирован"
 
         user:
           attributes:

@@ -48,6 +48,18 @@ it:
         account_suspended: "L'account è stato sospeso."
         email_not_verified: "Indirizzo email non verificato."
 
+    api_key:
+      errors:
+        invalid_status: "Stato della chiave API non valido."
+        key_not_found: "Chiave API non trovata."
+        already_deactivated: "La chiave API è già disattivata."
+        already_activated: "La chiave API è già attivata."
+        
+      messages:
+        rotated_successfully: "Chiave API ruotata con successo."
+        activated_successfully: "Chiave API attivata con successo."
+        deactivated_successfully: "Chiave API disattivata con successo."
+
     joined_communities:
       errors:
         channel_not_found: "Canale non trovato."
@@ -110,11 +122,16 @@ it:
               
         api_key:
           attributes:
-            name:
-              blank: "Il nome della chiave API non può essere vuoto."
-              too_long: "Il nome della chiave API non può superare i %{count} caratteri."
-            scopes:
-              blank: "Deve essere selezionato almeno un ambito."
+            key:
+              blank: "La chiave API non può essere vuota."
+              invalid: "Il formato della chiave API non è valido."
+            secret:
+              blank: "Il segreto API non può essere vuoto."
+              invalid: "Il formato del segreto API non è valido."
+            status:
+              blank: "Lo stato non può essere vuoto."
+              invalid: "Lo stato deve essere Attivato o Disattivato."
+              inclusion: "Lo stato deve essere Attivato o Disattivato."
 
         user:
           attributes:

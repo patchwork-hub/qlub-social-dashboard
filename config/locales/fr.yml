@@ -48,6 +48,18 @@ fr:
         account_suspended: "Le compte a été suspendu."
         email_not_verified: "Adresse e-mail non vérifiée."
 
+    api_key:
+      errors:
+        invalid_status: "Statut de clé API invalide."
+        key_not_found: "Clé API introuvable."
+        already_deactivated: "La clé API est déjà désactivée."
+        already_activated: "La clé API est déjà activée."
+        
+      messages:
+        rotated_successfully: "Clé API pivotée avec succès."
+        activated_successfully: "Clé API activée avec succès."
+        deactivated_successfully: "Clé API désactivée avec succès."
+
     joined_communities:
       errors:
         channel_not_found: "Canal introuvable."
@@ -110,11 +122,16 @@ fr:
               
         api_key:
           attributes:
-            name:
-              blank: "Le nom de la clé API ne peut pas être vide."
-              too_long: "Le nom de la clé API ne peut pas dépasser %{count} caractères."
-            scopes:
-              blank: "Au moins une portée doit être sélectionnée."
+            key:
+              blank: "La clé API ne peut pas être vide."
+              invalid: "Le format de la clé API est invalide."
+            secret:
+              blank: "Le secret API ne peut pas être vide."
+              invalid: "Le format du secret API est invalide."
+            status:
+              blank: "Le statut ne peut pas être vide."
+              invalid: "Le statut doit être soit Activé soit Désactivé."
+              inclusion: "Le statut doit être soit Activé soit Désactivé."
 
         user:
           attributes:

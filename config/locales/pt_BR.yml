@@ -48,6 +48,18 @@ pt_BR:
         account_suspended: "A conta foi suspensa."
         email_not_verified: "Endereço de e-mail não verificado."
 
+    api_key:
+      errors:
+        invalid_status: "Status da chave API inválido."
+        key_not_found: "Chave API não encontrada."
+        already_deactivated: "A chave API já está desativada."
+        already_activated: "A chave API já está ativada."
+        
+      messages:
+        rotated_successfully: "Chave API rotacionada com sucesso."
+        activated_successfully: "Chave API ativada com sucesso."
+        deactivated_successfully: "Chave API desativada com sucesso."
+
     joined_communities:
       errors:
         channel_not_found: "Canal não encontrado."
@@ -110,11 +122,16 @@ pt_BR:
               
         api_key:
           attributes:
-            name:
-              blank: "O nome da chave da API não pode estar vazio."
-              too_long: "O nome da chave da API não pode ter mais que %{count} caracteres."
-            scopes:
-              blank: "Pelo menos um escopo deve ser selecionado."
+            key:
+              blank: "A chave API não pode estar vazia."
+              invalid: "O formato da chave API é inválido."
+            secret:
+              blank: "O segredo da API não pode estar vazio."
+              invalid: "O formato do segredo da API é inválido."
+            status:
+              blank: "O status não pode estar vazio."
+              invalid: "O status deve ser Ativado ou Desativado."
+              inclusion: "O status deve ser Ativado ou Desativado."
 
         user:
           attributes:
