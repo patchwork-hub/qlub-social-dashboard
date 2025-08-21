@@ -60,6 +60,19 @@ cy:
         activated_successfully: "Actifadwyd yr allwedd API yn llwyddiannus."
         deactivated_successfully: "Anactifadwyd yr allwedd API yn llwyddiannus."
 
+    wait_list:
+      errors:
+        email_required: "Mae angen e-bost."
+        invitation_code_required: "Mae angen cod gwahoddiad."
+        invalid_code: "Cod gwahoddiad annilys."
+        validation_failed: "Methodd dilysu!"
+        account_already_registered: "Mae'r cyfrif eisoes wedi'i gofrestru ar y rhestr aros."
+        
+      messages:
+        created: "Ychwanegwyd yn llwyddiannus i'r rhestr aros."
+        invitation_sent: "Anfonwyd cod gwahoddiad i'ch e-bost."
+        code_valid: "Mae'r cod gwahoddiad yn ddilys."
+
     joined_communities:
       errors:
         channel_not_found: "Ni ddaethpwyd o hyd i'r sianel."
@@ -149,6 +162,22 @@ cy:
             is_primary:
               only_one_primary: "dim ond yn gallu bod yn wir ar gyfer un gymuned fesul cyfrif."
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Ni all cod gwahoddiad fod yn wag."
+              taken: "Mae cod gwahoddiad eisoes wedi'i gymryd."
+            email:
+              blank: "Ni all e-bost fod yn wag."
+              invalid: "Mae fformat e-bost yn annilys."
+            description:
+              too_long: "Ni all disgrifiad fod yn hirach na %{count} nod."
+            channel_type:
+              blank: "Ni all math sianel fod yn wag."
+              inclusion: "Rhaid i fath sianel fod yn sianel neu hyb."
+            account_id:
+              taken: "Mae'r cyfrif eisoes wedi'i gofrestru ar y rhestr aros."
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ cy:
     submit: "Cyflwyno"
     loading: "Yn llwytho..."
     confirm: "Ydych chi'n siŵr?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Eich Cod Gwahoddiad a Ofynnwyd"
+        greeting: "Annwyl %{email},"
+        body: "Mae eich cod gwahoddiad a ofynnwyd isod:"
+        note: "Os na wnaethoch chi ofyn am hyn, anwybyddwch yr e-bost hwn."

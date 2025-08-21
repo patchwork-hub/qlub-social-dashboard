@@ -60,6 +60,19 @@ de:
         activated_successfully: "API-Schlüssel erfolgreich aktiviert."
         deactivated_successfully: "API-Schlüssel erfolgreich deaktiviert."
 
+    wait_list:
+      errors:
+        email_required: "E-Mail ist erforderlich."
+        invitation_code_required: "Einladungscode ist erforderlich."
+        invalid_code: "Ungültiger Einladungscode."
+        validation_failed: "Validierung fehlgeschlagen!"
+        account_already_registered: "Konto ist bereits auf der Warteliste registriert."
+        
+      messages:
+        created: "Erfolgreich zur Warteliste hinzugefügt."
+        invitation_sent: "Einladungscode an Ihre E-Mail gesendet."
+        code_valid: "Einladungscode ist gültig."
+
     joined_communities:
       errors:
         channel_not_found: "Kanal nicht gefunden."
@@ -148,6 +161,22 @@ de:
             is_primary:
               only_one_primary: "kann nur für eine Community pro Konto wahr sein."
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Einladungscode darf nicht leer sein."
+              taken: "Einladungscode wurde bereits vergeben."
+            email:
+              blank: "E-Mail darf nicht leer sein."
+              invalid: "E-Mail-Format ist ungültig."
+            description:
+              too_long: "Beschreibung darf nicht länger als %{count} Zeichen sein."
+            channel_type:
+              blank: "Kanaltyp darf nicht leer sein."
+              inclusion: "Kanaltyp muss entweder Kanal oder Hub sein."
+            account_id:
+              taken: "Konto ist bereits auf der Warteliste registriert."
+
   # Time and date formats
   time:
     formats:
@@ -174,3 +203,12 @@ de:
     submit: "Absenden"
     loading: "Wird geladen..."
     confirm: "Sind Sie sicher?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Ihr angeforderter Einladungscode"
+        greeting: "Liebe/r %{email},"
+        body: "Ihr angeforderter Einladungscode ist unten aufgeführt:"
+        note: "Wenn Sie dies nicht angefordert haben, ignorieren Sie diese E-Mail bitte."

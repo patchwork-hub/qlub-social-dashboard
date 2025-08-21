@@ -60,6 +60,19 @@ fr:
         activated_successfully: "Clé API activée avec succès."
         deactivated_successfully: "Clé API désactivée avec succès."
 
+    wait_list:
+      errors:
+        email_required: "L'e-mail est requis."
+        invitation_code_required: "Le code d'invitation est requis."
+        invalid_code: "Code d'invitation invalide."
+        validation_failed: "La validation a échoué."
+        account_already_registered: "Le compte est déjà enregistré sur la liste d'attente."
+        
+      messages:
+        created: "Ajouté avec succès à la liste d'attente."
+        invitation_sent: "Code d'invitation envoyé à votre e-mail."
+        code_valid: "Le code d'invitation est valide."
+
     joined_communities:
       errors:
         channel_not_found: "Canal introuvable."
@@ -149,6 +162,22 @@ fr:
             is_primary:
               only_one_primary: "ne peut être vrai que pour une seule communauté par compte."
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Le code d'invitation ne peut pas être vide."
+              taken: "Le code d'invitation a déjà été pris."
+            email:
+              blank: "L'e-mail ne peut pas être vide."
+              invalid: "Le format de l'e-mail est invalide."
+            description:
+              too_long: "La description ne peut pas dépasser %{count} caractères."
+            channel_type:
+              blank: "Le type de canal ne peut pas être vide."
+              inclusion: "Le type de canal doit être soit canal soit hub."
+            account_id:
+              taken: "Le compte est déjà enregistré sur la liste d'attente."
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ fr:
     submit: "Soumettre"
     loading: "Chargement..."
     confirm: "Êtes-vous sûr ?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Votre Code d'Invitation Demandé"
+        greeting: "Cher %{email},"
+        body: "Votre code d'invitation demandé est ci-dessous :"
+        note: "Si vous n'avez pas demandé ceci, veuillez ignorer cet e-mail."

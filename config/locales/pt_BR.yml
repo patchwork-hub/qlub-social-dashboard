@@ -60,6 +60,19 @@ pt_BR:
         activated_successfully: "Chave API ativada com sucesso."
         deactivated_successfully: "Chave API desativada com sucesso."
 
+    wait_list:
+      errors:
+        email_required: "E-mail é obrigatório."
+        invitation_code_required: "Código de convite é obrigatório."
+        invalid_code: "Código de convite inválido."
+        validation_failed: "Validação falhou!"
+        account_already_registered: "Conta já está registrada na lista de espera."
+        
+      messages:
+        created: "Adicionado com sucesso à lista de espera."
+        invitation_sent: "Código de convite enviado para seu e-mail."
+        code_valid: "Código de convite é válido."
+
     joined_communities:
       errors:
         channel_not_found: "Canal não encontrado."
@@ -149,6 +162,22 @@ pt_BR:
             is_primary:
               only_one_primary: "só pode ser verdadeiro para uma comunidade por conta."
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Código de convite não pode estar em branco."
+              taken: "Código de convite já foi usado."
+            email:
+              blank: "E-mail não pode estar em branco."
+              invalid: "Formato do e-mail é inválido."
+            description:
+              too_long: "Descrição não pode ter mais de %{count} caracteres."
+            channel_type:
+              blank: "Tipo de canal não pode estar em branco."
+              inclusion: "Tipo de canal deve ser canal ou hub."
+            account_id:
+              taken: "Conta já está registrada na lista de espera."
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ pt_BR:
     submit: "Enviar"
     loading: "Carregando..."
     confirm: "Tem certeza?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Seu Código de Convite Solicitado"
+        greeting: "Caro %{email},"
+        body: "Seu código de convite solicitado está abaixo:"
+        note: "Se você não solicitou isto, por favor ignore este e-mail."

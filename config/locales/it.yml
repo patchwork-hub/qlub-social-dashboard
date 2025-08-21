@@ -60,6 +60,19 @@ it:
         activated_successfully: "Chiave API attivata con successo."
         deactivated_successfully: "Chiave API disattivata con successo."
 
+    wait_list:
+      errors:
+        email_required: "L'email è richiesta."
+        invitation_code_required: "Il codice di invito è richiesto."
+        invalid_code: "Codice di invito non valido."
+        validation_failed: "Validazione fallita!"
+        account_already_registered: "L'account è già registrato nella lista d'attesa."
+        
+      messages:
+        created: "Aggiunto con successo alla lista d'attesa."
+        invitation_sent: "Codice di invito inviato alla tua email."
+        code_valid: "Il codice di invito è valido."
+
     joined_communities:
       errors:
         channel_not_found: "Canale non trovato."
@@ -149,6 +162,22 @@ it:
             is_primary:
               only_one_primary: "può essere vero solo per una comunità per account."
 
+        wait_list:
+          attributes:
+            invitation_code:
+              blank: "Il codice di invito non può essere vuoto."
+              taken: "Il codice di invito è già stato preso."
+            email:
+              blank: "L'email non può essere vuota."
+              invalid: "Il formato dell'email non è valido."
+            description:
+              too_long: "La descrizione non può essere più lunga di %{count} caratteri."
+            channel_type:
+              blank: "Il tipo di canale non può essere vuoto."
+              inclusion: "Il tipo di canale deve essere canale o hub."
+            account_id:
+              taken: "L'account è già registrato nella lista d'attesa."
+
   # Time and date formats
   time:
     formats:
@@ -175,3 +204,12 @@ it:
     submit: "Invia"
     loading: "Caricamento..."
     confirm: "Sei sicuro?"
+
+  # Mailer translations
+  mailers:
+    wait_list:
+      send_invitation_code:
+        subject: "Il Tuo Codice di Invito Richiesto"
+        greeting: "Caro %{email},"
+        body: "Il tuo codice di invito richiesto è qui sotto:"
+        note: "Se non hai richiesto questo, per favore ignora questa email."

@@ -69,7 +69,7 @@ module ApiResponseHelper
     end
 
     error_data = {
-      errors: translated_message,
+      error: translated_message,
       **additional_data
     }
     
