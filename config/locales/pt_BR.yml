@@ -60,6 +60,15 @@ pt_BR:
         saved: "As configurações foram salvas com sucesso."
         deleted: "Configurações excluídas com sucesso."
 
+    domain:
+      errors:
+        missing_parameters: "Domínio e endereço IP são obrigatórios."
+        verification_failed: "Verificação do domínio falhou devido a um erro."
+        
+      messages:
+        dns_verified: "DNS configurado corretamente."
+        dns_instructions: "Registro A não encontrado. Aponte seu registro A para %{ip}."
+
     api_key:
       errors:
         invalid_status: "Status da chave API inválido."

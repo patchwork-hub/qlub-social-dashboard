@@ -60,6 +60,15 @@ de:
         saved: "Einstellungen wurden erfolgreich gespeichert."
         deleted: "Einstellungen erfolgreich gelöscht."
 
+    domain:
+      errors:
+        missing_parameters: "Domain und IP-Adresse sind erforderlich."
+        verification_failed: "Domain-Verifizierung fehlgeschlagen aufgrund eines Fehlers."
+        
+      messages:
+        dns_verified: "DNS korrekt konfiguriert."
+        dns_instructions: "A-Record nicht gefunden. Bitte richten Sie Ihren A-Record auf %{ip} aus."
+
     api_key:
       errors:
         invalid_status: "Ungültiger API-Schlüssel-Status."

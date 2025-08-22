@@ -60,6 +60,15 @@ it:
         saved: "Le impostazioni sono state salvate con successo."
         deleted: "Impostazioni eliminate con successo."
 
+    domain:
+      errors:
+        missing_parameters: "Dominio e indirizzo IP sono richiesti."
+        verification_failed: "Verifica del dominio fallita a causa di un errore."
+        
+      messages:
+        dns_verified: "DNS configurato correttamente."
+        dns_instructions: "Record A non trovato. Punta il tuo record A verso %{ip}."
+
     api_key:
       errors:
         invalid_status: "Stato della chiave API non valido."

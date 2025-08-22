@@ -164,6 +164,46 @@ module ApiResponseHelper
     render_errors('api.account.errors.account_suspended', :forbidden)
   end
 
+  # Domain-specific responses
+  # Use this when you want to pass a message key for translation
+  def render_domain_message_key(message_key = 'api.domain.messages.dns_verified', additional_data = {}, status = :ok)
+    begin
+      translated_message = I18n.t(message_key, raise: true)
+    rescue I18n::MissingTranslationData
+      # Fallback to English if translation is missing
+      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
+    end
+
+    domain_data = build_domain_data(translated_message, additional_data)
+    render json: domain_data, status: status
+  end
+
+  # Helper to build domain response data
+  def build_domain_data(message, additional_data)
+    case additional_data
+    when String
+      {
+        message: message,
+        verified: additional_data == 'true' || additional_data == true
+      }
+    when Array, Hash
+      {
+        message: message,
+        data: additional_data
+      }
+    when TrueClass, FalseClass
+      {
+        message: message,
+        verified: additional_data
+      }
+    else
+      {
+        message: message,
+        **additional_data
+      }
+    end
+  end
+
   # Locale information for API clients
   def render_locale_info
     render json: {

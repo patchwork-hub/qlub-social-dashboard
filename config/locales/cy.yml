@@ -60,6 +60,15 @@ cy:
         saved: "Mae'r gosodiadau wedi'u cadw'n llwyddiannus."
         deleted: "Dilëwyd y gosodiadau'n llwyddiannus."
 
+    domain:
+      errors:
+        missing_parameters: "Mae angen parth a chyfeiriad IP."
+        verification_failed: "Methodd gwirio'r parth oherwydd gwall."
+        
+      messages:
+        dns_verified: "DNS wedi'i ffurfweddu'n gywir."
+        dns_instructions: "Ni ddaethpwyd o hyd i gofnod A. Pwyntiwch eich cofnod A at %{ip}."
+
     api_key:
       errors:
         invalid_status: "Statws allwedd API annilys."
