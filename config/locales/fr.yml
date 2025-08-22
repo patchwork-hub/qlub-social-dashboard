@@ -60,6 +60,15 @@ fr:
         saved: "Les paramètres ont été sauvegardés avec succès."
         deleted: "Paramètres supprimés avec succès."
 
+    domain:
+      errors:
+        missing_parameters: "Le domaine et l'adresse IP sont requis."
+        verification_failed: "La vérification du domaine a échoué en raison d'une erreur."
+        
+      messages:
+        dns_verified: "DNS configuré correctement."
+        dns_instructions: "Enregistrement A introuvable. Veuillez pointer votre enregistrement A vers %{ip}."
+
     api_key:
       errors:
         invalid_status: "Statut de clé API invalide."

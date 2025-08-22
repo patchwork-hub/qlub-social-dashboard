@@ -60,6 +60,15 @@ ja:
         saved: "設定が正常に保存されました。"
         deleted: "設定が正常に削除されました。"
 
+    domain:
+      errors:
+        missing_parameters: "ドメインとIPアドレスが必要です。"
+        verification_failed: "エラーによりドメイン検証に失敗しました。"
+        
+      messages:
+        dns_verified: "DNSが正しく設定されています。"
+        dns_instructions: "Aレコードが見つかりません。Aレコードを %{ip} に向けてください。"
+
     api_key:
       errors:
         invalid_status: "無効なAPIキーステータスです。"

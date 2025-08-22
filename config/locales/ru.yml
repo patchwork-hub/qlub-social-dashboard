@@ -60,6 +60,15 @@ ru:
         saved: "Настройки успешно сохранены."
         deleted: "Настройки успешно удалены."
 
+    domain:
+      errors:
+        missing_parameters: "Домен и IP-адрес обязательны."
+        verification_failed: "Проверка домена не удалась из-за ошибки."
+        
+      messages:
+        dns_verified: "DNS настроен правильно."
+        dns_instructions: "A-запись не найдена. Направьте вашу A-запись на %{ip}."
+
     api_key:
       errors:
         invalid_status: "Неверный статус API ключа"

@@ -59,6 +59,15 @@ en:
       messages:
         saved: "Settings have been saved successfully."
         deleted: "Settings deleted successfully."
+    
+    domain:
+      errors:
+        missing_parameters: "Domain and IP address are required."
+        verification_failed: "Domain verification failed due to an error."
+
+      messages:
+        dns_verified: "DNS is correctly configured."
+        dns_instructions: "A record not found. Please point your A record to %{ip}."
 
     api_key:
       errors:
