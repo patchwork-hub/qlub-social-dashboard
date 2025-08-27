@@ -29,8 +29,9 @@ module Api::V1
       end
     end
 
-    def fetch_oauth_token(username, domain)
-      admin = Account.find_by(username: username, domain: domain)
+    def fetch_oauth_token(username, user_domain)
+      user_domain = nil if user_domain == 'channel.org'
+      admin = Account.find_by(username: username, domain: user_domain)
       return nil unless admin&.user
 
       GenerateAdminAccessTokenService.new(admin.user.id).call
