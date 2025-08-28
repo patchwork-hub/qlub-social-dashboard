@@ -37,6 +37,7 @@ it:
         invalid_visibility: "Impostazione di visibilità non valida."
         missing_additional_information: "Informazioni aggiuntive mancanti."
         duplicate_link_url: "URL di collegamento duplicato per questa comunità non è consentito."
+        search_params_required: "Sono richiesti i parametri di query, URL e token."
         
       messages:
         created: "Comunità creata con successo."

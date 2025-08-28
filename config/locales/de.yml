@@ -37,6 +37,7 @@ de:
         invalid_visibility: "Ungültige Sichtbarkeitseinstellung."
         missing_additional_information: "Zusätzliche Informationen fehlen."
         duplicate_link_url: "Doppelte Link-URL für diese Community ist nicht erlaubt."
+        search_params_required: "Abfrage-, URL- und Token-Parameter sind erforderlich."
         
       messages:
         created: "Community erfolgreich erstellt."

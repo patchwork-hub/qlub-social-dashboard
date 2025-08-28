@@ -37,6 +37,7 @@ ru:
         invalid_visibility: "Неверная настройка видимости."
         missing_additional_information: "Отсутствует дополнительная информация."
         duplicate_link_url: "Дубликат URL ссылки для этого сообщества не разрешён."
+        search_params_required: "Необходимы параметры запроса, URL и токен."
         
       messages:
         created: "Сообщество успешно создано."

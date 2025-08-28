@@ -37,6 +37,7 @@ en:
         invalid_visibility: "Invalid visibility setting."
         missing_additional_information: "Missing additional information."
         duplicate_link_url: "Duplicate link URL for this community is not allowed."
+        search_params_required: "Query, URL, and token parameters are required."
         
       messages:
         created: "Community created successfully."

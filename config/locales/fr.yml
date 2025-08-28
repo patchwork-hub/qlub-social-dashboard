@@ -37,6 +37,7 @@ fr:
         invalid_visibility: "Paramètre de visibilité invalide."
         missing_additional_information: "Informations supplémentaires manquantes."
         duplicate_link_url: "L'URL de lien en double pour cette communauté n'est pas autorisée."
+        search_params_required: "Les paramètres de requête, d'URL et de jeton sont requis."
         
       messages:
         created: "Communauté créée avec succès."

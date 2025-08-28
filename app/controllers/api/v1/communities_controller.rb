@@ -2,7 +2,7 @@ module Api
   module V1
     class CommunitiesController < ApiController
       include ApiResponseHelper
-      include BlueskyAccountBridgeHleper
+      include BlueskyAccountBridgeHelper
       
       skip_before_action :verify_key!
       before_action :check_authorization_header
@@ -70,7 +70,7 @@ module Api
         token = bearer_token
 
         if query.blank? || url.blank? || token.blank?
-          render json: { error: 'query, url and token parameters are required' }, status: :bad_request
+          render_error('api.community.errors.search_params_required', :bad_request)
           return
         end
 
@@ -139,7 +139,7 @@ module Api
         if ip_address
           render json: { ip_address: ip_address.ip, id: ip_address.id }, status: :ok
         else
-          render json: { error: "No valid IP available" }, status: :not_found
+          render_not_found
         end
       end
 

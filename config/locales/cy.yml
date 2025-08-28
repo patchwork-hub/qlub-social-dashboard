@@ -37,6 +37,7 @@ cy:
         invalid_visibility: "Gosodiad gwelededd annilys."
         missing_additional_information: "Mae gwybodaeth ychwanegol ar goll."
         duplicate_link_url: "Nid yw URL cyswllt dyblyg ar gyfer y gymuned hon yn cael ei ganiatáu."
+        search_params_required: "Mae angen paramedrau ymholiad, URL a thocyn."
         
       messages:
         created: "Crëwyd y gymuned yn llwyddiannus."

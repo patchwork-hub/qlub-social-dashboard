@@ -37,6 +37,7 @@ pt_BR:
         invalid_visibility: "Configuração de visibilidade inválida."
         missing_additional_information: "Informações adicionais em falta."
         duplicate_link_url: "URL de link duplicado para esta comunidade não é permitido."
+        search_params_required: "Parâmetros de consulta, URL e token são necessários."
         
       messages:
         created: "Comunidade criada com sucesso."

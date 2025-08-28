@@ -37,6 +37,7 @@ ja:
         invalid_visibility: "無効な可視性設定です。"
         missing_additional_information: "追加情報が不足しています。"
         duplicate_link_url: "このコミュニティでは重複したリンクURLは許可されていません。"
+        search_params_required: "クエリ、URL、およびトークンのパラメータが必要です。"
         
       messages:
         created: "コミュニティが正常に作成されました。"
