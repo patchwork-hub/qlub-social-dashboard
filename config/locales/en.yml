@@ -52,7 +52,7 @@ en:
       errors:
         not_found: "Settings not found."
         authentication_failed: "Authentication failed."
-        invalid_app_name: "%{app_name} : Invalid app name provided"
+        invalid_app_name: "%{attribute} : Invalid app name provided"
         validation_failed: "Settings validation failed."
         delete_failed: "Failed to delete settings."
         
@@ -110,11 +110,11 @@ en:
         primary_set_successfully: "Channel has been set as primary successfully"
         
     validation:
-      required: "is required"
-      too_long: "is too long (maximum %{count} characters)"
-      too_short: "is too short (minimum %{count} characters)"
-      invalid_format: "has invalid format"
-      not_unique: "has already been taken"
+      required: "%{attribute} is required"
+      too_long: "%{attribute} is too long (maximum %{count} characters)"
+      too_short: "%{attribute} is too short (minimum %{count} characters)"
+      invalid_format: "%{attribute} has invalid format"
+      not_unique: "%{attribute} has already been taken"
 
   # Model validation messages
   activerecord:

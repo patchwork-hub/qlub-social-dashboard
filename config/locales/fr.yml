@@ -52,7 +52,7 @@ fr:
       errors:
         not_found: "Paramètres introuvables."
         authentication_failed: "Échec de l'authentification."
-        invalid_app_name: "%{app_name} : Nom d'application invalide fourni."
+        invalid_app_name: "%{attribute} : Nom d'application invalide fourni."
         validation_failed: "La validation des paramètres a échoué."
         delete_failed: "Échec de la suppression des paramètres."
         
@@ -108,13 +108,13 @@ fr:
         favorited_successfully: "Le canal a été mis en favori avec succès."
         unfavorited_successfully: "Canal favori supprimé avec succès."
         primary_set_successfully: "Le canal a été défini comme principal avec succès."
-        
+
     validation:
-      required: "est requis"
-      too_long: "est trop long (maximum %{count} caractères)"
-      too_short: "est trop court (minimum %{count} caractères)"
-      invalid_format: "a un format invalide"
-      not_unique: "a déjà été pris"
+        required: "%{attribute} est requis"
+        too_long: "%{attribute} est trop long (maximum %{count} caractères)"
+        too_short: "%{attribute} est trop court (minimum %{count} caractères)"
+        invalid_format: "%{attribute} a un format invalide"
+        not_unique: "%{attribute} a déjà été pris"
 
   # Model validation messages
   activerecord:

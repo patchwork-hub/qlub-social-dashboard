@@ -52,7 +52,7 @@ pt_BR:
       errors:
         not_found: "Configurações não encontradas."
         authentication_failed: "Falha na autenticação."
-        invalid_app_name: "%{app_name} : Nome do aplicativo inválido fornecido."
+        invalid_app_name: "%{attribute} : Nome do aplicativo inválido fornecido."
         validation_failed: "Falha na validação das configurações."
         delete_failed: "Falha ao excluir as configurações."
         
@@ -110,11 +110,11 @@ pt_BR:
         primary_set_successfully: "Canal foi definido como principal com sucesso."
         
     validation:
-      required: "é obrigatório"
-      too_long: "é muito longo (máximo de %{count} caracteres)"
-      too_short: "é muito curto (mínimo de %{count} caracteres)"
-      invalid_format: "tem formato inválido"
-      not_unique: "já foi utilizado"
+      required: "%{attribute} é obrigatório"
+      too_long: "%{attribute} é muito longo (máximo de %{count} caracteres)"
+      too_short: "%{attribute} é muito curto (mínimo de %{count} caracteres)"
+      invalid_format: "%{attribute} tem formato inválido"
+      not_unique: "%{attribute} já foi utilizado"
 
   # Model validation messages
   activerecord:

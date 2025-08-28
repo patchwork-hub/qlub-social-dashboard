@@ -52,7 +52,7 @@ cy:
       errors:
         not_found: "Ni ddaethpwyd o hyd i osodiadau."
         authentication_failed: "Methodd y dilysu."
-        invalid_app_name: "%{app_name} : Darparwyd enw ap annilys."
+        invalid_app_name: "%{attribute} : Darparwyd enw ap annilys."
         validation_failed: "Methodd dilysu'r gosodiadau."
         delete_failed: "Methodd dileu'r gosodiadau."
         
@@ -110,11 +110,11 @@ cy:
         primary_set_successfully: "Mae'r sianel wedi'i gosod fel prif sianel yn llwyddiannus."
         
     validation:
-      required: "yn ofynnol"
-      too_long: "yn rhy hir (uchafswm %{count} nod)"
-      too_short: "yn rhy fyr (lleiafswm %{count} nod)"
-      invalid_format: "â fformat annilys"
-      not_unique: "eisoes wedi'i gymryd"
+      required: "Mae %{attribute} yn ofynnol"
+      too_long: "Mae %{attribute} yn rhy hir (uchafswm %{count} nod)"
+      too_short: "Mae %{attribute} yn rhy fyr (lleiafswm %{count} nod)"
+      invalid_format: "Mae gan %{attribute} fformat annilys"
+      not_unique: "Mae %{attribute} eisoes wedi'i gymryd"
 
   # Model validation messages
   activerecord:

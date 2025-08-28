@@ -62,8 +62,9 @@ module Api
         elsif Setting.app_names.key?(app_name_param)
           @app_name = app_name_param
         else
-          render_errors('api.setting.errors.invalid_app_name', { app_name: app_name_param }, :bad_request, { 
-            valid_options: Setting.app_names.keys 
+          render_errors('api.setting.errors.invalid_app_name', :bad_request, {
+            valid_options: Setting.app_names.keys,
+            attribute: app_name_param
           })
         end
       end

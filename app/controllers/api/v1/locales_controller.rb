@@ -1,6 +1,6 @@
 module Api
   module V1
-    class LocaleController < ApiController
+    class LocalesController < ApiController
       skip_before_action :verify_key!
       before_action :check_authorization_header
 

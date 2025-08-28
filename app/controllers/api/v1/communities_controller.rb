@@ -16,7 +16,7 @@ module Api
 
       def create
         if CommunityAdmin.exists?(account_id: current_user.account_id)
-          render json: { error: "You can only create one channel." }, status: :forbidden and return
+          render_forbidden('api.community.errors.only_one_channel') and return
         end
 
         community = CommunityPostService.new.call(
@@ -25,9 +25,9 @@ module Api
         )
 
         if community.errors.any?
-          render json: { errors: community.errors.full_messages }, status: :unprocessable_entity
+          render_validation_errors(community.errors)
         else
-          render json: { community: community }, status: :created
+          render_created({ community: community }, 'api.community.messages.created')
         end
       end
 
@@ -44,9 +44,9 @@ module Api
         )
 
         if @community.errors.any?
-          render json: { errors: @community.errors.full_messages }, status: :unprocessable_entity
+          render_validation_errors(@community.errors)
         else
-          render json: { community: @community }, status: :ok
+          render_updated({ community: @community }, 'api.community.messages.updated')
         end
       end
 

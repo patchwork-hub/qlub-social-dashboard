@@ -52,7 +52,7 @@ ru:
       errors:
         not_found: "Настройки не найдены."
         authentication_failed: "Ошибка аутентификации."
-        invalid_app_name: "%{app_name} : Предоставлено неверное имя приложения."
+        invalid_app_name: "%{attribute} : Предоставлено неверное имя приложения."
         validation_failed: "Ошибка валидации настроек."
         delete_failed: "Не удалось удалить настройки."
         
@@ -110,11 +110,11 @@ ru:
         primary_set_successfully: "Канал успешно установлен как основной"
         
     validation:
-      required: "обязательно для заполнения"
-      too_long: "слишком длинное (максимум %{count} символов)"
-      too_short: "слишком короткое (минимум %{count} символов)"
-      invalid_format: "имеет неверный формат"
-      not_unique: "уже занято"
+      required: "%{attribute} обязательно для заполнения"
+      too_long: "%{attribute} слишком длинное (максимум %{count} символов)"
+      too_short: "%{attribute} слишком короткое (минимум %{count} символов)"
+      invalid_format: "%{attribute} имеет неверный формат"
+      not_unique: "%{attribute} уже занято" 
 
   # Model validation messages
   activerecord:

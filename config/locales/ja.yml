@@ -52,7 +52,7 @@ ja:
       errors:
         not_found: "設定が見つかりません。"
         authentication_failed: "認証に失敗しました。"
-        invalid_app_name: "%{app_name} : 無効なアプリ名が提供されました。"
+        invalid_app_name: "%{attribute} : 無効なアプリ名が提供されました。"
         validation_failed: "設定の検証に失敗しました。"
         delete_failed: "設定の削除に失敗しました。"
         
@@ -110,11 +110,11 @@ ja:
         primary_set_successfully: "チャンネルが正常にプライマリに設定されました"
         
     validation:
-      required: "は必須です"
-      too_long: "が長すぎます（最大%{count}文字）"
-      too_short: "が短すぎます（最小%{count}文字）"
-      invalid_format: "の形式が無効です"
-      not_unique: "は既に使用されています"
+      required: "%{attribute}は必須です"
+      too_long: "%{attribute}が長すぎます（最大%{count}文字）"
+      too_short: "%{attribute}が短すぎます（最小%{count}文字）"
+      invalid_format: "%{attribute}の形式が無効です"
+      not_unique: "%{attribute}は既に使用されています"
 
   # Model validation messages
   activerecord:

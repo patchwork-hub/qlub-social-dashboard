@@ -52,7 +52,7 @@ it:
       errors:
         not_found: "Impostazioni non trovate."
         authentication_failed: "Autenticazione fallita."
-        invalid_app_name: "%{app_name} : Nome app non valido fornito."
+        invalid_app_name: "%{attribute} : Nome app non valido fornito."
         validation_failed: "Validazione delle impostazioni fallita."
         delete_failed: "Eliminazione delle impostazioni fallita."
         
@@ -108,13 +108,13 @@ it:
         favorited_successfully: "Il canale è stato aggiunto ai preferiti con successo."
         unfavorited_successfully: "Canale preferito eliminato con successo."
         primary_set_successfully: "Il canale è stato impostato come principale con successo."
-        
+
     validation:
-      required: "è richiesto"
-      too_long: "è troppo lungo (massimo %{count} caratteri)"
-      too_short: "è troppo corto (minimo %{count} caratteri)"
-      invalid_format: "ha un formato non valido"
-      not_unique: "è già stato preso"
+        required: "%{attribute} è richiesto"
+        too_long: "%{attribute} è troppo lungo (massimo %{count} caratteri)"
+        too_short: "%{attribute} è troppo corto (minimo %{count} caratteri)"
+        invalid_format: "%{attribute} ha un formato non valido"
+        not_unique: "%{attribute} è già stato preso"
 
   # Model validation messages
   activerecord:
