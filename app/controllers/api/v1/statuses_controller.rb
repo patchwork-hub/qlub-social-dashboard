@@ -24,9 +24,10 @@ module Api::V1
     def whitelist_domains
       allowed_domains = ["mo-me.social"]
 
-      unless allowed_domains.include?(request.host)
-        render_error("Request domain not allowed", :forbidden)
-      end
+      Rails.logger.info("#{'>'*10}Request host: #{request.host} #{'<'*10}")
+      # unless allowed_domains.include?(request.host)
+      #   render_error("Request domain not allowed", :forbidden)
+      # end
     end
 
     def fetch_oauth_token(username, user_domain)
