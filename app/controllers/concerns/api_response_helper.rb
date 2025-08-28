@@ -85,18 +85,17 @@ module ApiResponseHelper
     render_error(message_key, :not_found)
   end
 
-  def render_validation_errors(errors, message_key = 'api.errors.validation_failed')
-    translated_message = get_translated_message(message_key)
-
-    error_data = {
-      errors: translated_message,
-      details: format_validation_details(errors)
-    }
-    
-    render json: error_data, status: :unprocessable_entity
+  # Rate limit exceeded error
+  def render_rate_limit_exceeded(message_key = 'api.errors.rate_limit_exceeded')
+    render_errors(message_key, :too_many_requests)
   end
 
-  # Enhanced validation error method with clean details format
+  # Internal server error with generic message (avoid exposing internal details)
+  def render_internal_error(message_key = 'api.errors.internal_server_error')
+    render_errors(message_key, :internal_server_error)
+  end
+
+  # Validation errors with detailed messages
   def render_validation_failed(errors, message_key = 'api.errors.validation_failed')
     translated_message = get_translated_message(message_key)
 
@@ -107,49 +106,6 @@ module ApiResponseHelper
     }
     
     render json: error_data, status: :unprocessable_entity
-  end
-
-  def render_rate_limit_exceeded(message_key = 'api.errors.rate_limit_exceeded')
-    render_errors(message_key, :too_many_requests)
-  end
-
-  # Internal server error with generic message (avoid exposing internal details)
-  def render_internal_error(message_key = 'api.errors.internal_server_error')
-    render_errors(message_key, :internal_server_error)
-  end
-
-  # Community-specific error responses
-  def render_community_not_found
-    render_errors('api.community.errors.not_found', :not_found)
-  end
-
-  def render_community_access_denied
-    render_errors('api.community.errors.access_denied', :forbidden)
-  end
-
-  def render_community_name_taken
-    render_errors('api.community.errors.name_taken', :unprocessable_entity)
-  end
-
-  def render_community_slug_taken
-    render_errors('api.community.errors.slug_taken', :unprocessable_entity)
-  end
-
-  def render_only_one_channel_allowed
-    render_errors('api.community.errors.only_one_channel', :unprocessable_entity)
-  end
-
-  # Account-specific error responses
-  def render_invalid_credentials
-    render_errors('api.account.errors.invalid_credentials', :unauthorized)
-  end
-
-  def render_account_not_found
-    render_errors('api.account.errors.account_not_found', :not_found)
-  end
-
-  def render_account_suspended
-    render_errors('api.account.errors.account_suspended', :forbidden)
   end
 
   # Domain-specific responses
@@ -199,34 +155,6 @@ module ApiResponseHelper
   end
 
   private
-
-  def format_validation_errors(errors)
-    # Convert ActiveModel::Errors to a more structured format
-    case errors
-    when ActiveModel::Errors
-      errors.details.transform_values do |error_details|
-        error_details.map do |detail|
-          {
-            error: detail[:error],
-            message: errors.full_message(detail[:attribute] || :base, detail[:message] || detail[:error])
-          }
-        end
-      end
-    when Array
-      # Handle array of error messages
-      errors.map { |error| { message: error } }
-    when Hash
-      # Handle hash of field-specific errors
-      errors.transform_values { |error| { message: error } }
-    else
-      # Handle string or other formats
-      [{ message: errors.to_s }]
-    end
-  end
-
-  def format_validation_details(errors)
-    format_validation_errors(errors)
-  end
 
   # Extract clean error messages for the new validation format
   def extract_error_messages(errors)

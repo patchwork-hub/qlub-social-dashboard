@@ -35,11 +35,14 @@ pt:
         name_taken: "O nome da comunidade já foi utilizado."
         slug_taken: "O identificador da comunidade já foi utilizado."
         invalid_visibility: "Configuração de visibilidade inválida."
+        missing_additional_information: "Informações adicionais em falta."
+        duplicate_link_url: "URL de ligação duplicado para esta comunidade não é permitido."
         
       messages:
         created: "Comunidade criada com sucesso."
         updated: "Comunidade actualizada com sucesso."
         visibility_updated: "Visibilidade da comunidade actualizada."
+        additional_information_updated: "Informações adicionais actualizadas com sucesso."
         
     account:
       errors:
@@ -108,6 +111,21 @@ pt:
         favorited_successfully: "Canal foi adicionado aos favoritos com sucesso."
         unfavorited_successfully: "Canal favorito removido com sucesso."
         primary_set_successfully: "Canal foi definido como principal com sucesso."
+        
+    community_hashtags:
+      errors:
+        invalid_hashtag: "Formato de hashtag inválido."
+        duplicate_hashtag: "Entrada duplicada: A hashtag já existe."
+        parameter_missing: "Parâmetro obrigatório está em falta."
+        cannot_contain_spaces: "Hashtag não pode conter espaços."
+        hashtag_not_found: "Hashtag não encontrada."
+        community_required: "ID da comunidade Patchwork é obrigatório."
+        community_not_found: "Comunidade Patchwork não encontrada."
+        
+      messages:
+        created: "Hashtag guardada com sucesso!"
+        updated: "Hashtag atualizada com sucesso!"
+        deleted: "Hashtag removida com sucesso!"
 
     validation:
       required: "%{attribute} é obrigatório"
@@ -131,12 +149,15 @@ pt:
               too_short: "O identificador da comunidade deve ter pelo menos %{count} caracteres."
               too_long: "O identificador da comunidade não pode ter mais que %{count} caracteres."
               invalid: "O formato do identificador da comunidade é inválido."
+              invalid_domain: "deve ser um formato de domínio válido (ex. exemplo.com), não pode ter pontos consecutivos ou terminar com um ponto."
               taken: "O identificador da comunidade já foi utilizado."
               immutable: "O identificador da comunidade não pode ser alterado após a criação."
             description:
               too_long: "A descrição não pode ter mais que %{count} caracteres."
             about:
               too_long: "A secção 'Acerca' não pode ter mais que %{count} caracteres."
+            base:
+              duplicate_link_urls: "As ligações contêm URLs duplicados: %{urls}."
               
         account:
           attributes:
@@ -182,6 +203,14 @@ pt:
               taken: "já participou nesta comunidade."
             is_primary:
               only_one_primary: "só pode ser verdadeiro para uma comunidade por conta."
+              
+        community_hashtag:
+          attributes:
+            hashtag:
+              blank: "A hashtag não pode estar em branco."
+              taken: "já foi adicionada a esta comunidade."
+            community:
+              blank: "A comunidade deve ser seleccionada."
 
         wait_list:
           attributes:

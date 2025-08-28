@@ -79,7 +79,7 @@ module Api
             message: I18n.t('api.messages.updated')
           })
         else
-          render_validation_errors(current_user.errors)
+          render_validation_failed(current_user.errors)
         end
       end
 

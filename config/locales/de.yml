@@ -35,11 +35,14 @@ de:
         name_taken: "Community-Name ist bereits vergeben."
         slug_taken: "Community-Bezeichner ist bereits vergeben."
         invalid_visibility: "Ungültige Sichtbarkeitseinstellung."
+        missing_additional_information: "Zusätzliche Informationen fehlen."
+        duplicate_link_url: "Doppelte Link-URL für diese Community ist nicht erlaubt."
         
       messages:
         created: "Community erfolgreich erstellt."
         updated: "Community erfolgreich aktualisiert."
         visibility_updated: "Community-Sichtbarkeit aktualisiert."
+        additional_information_updated: "Zusätzliche Informationen erfolgreich aktualisiert."
         
     account:
       errors:
@@ -108,6 +111,21 @@ de:
         favorited_successfully: "Kanal wurde erfolgreich favorisiert."
         unfavorited_successfully: "Favorisierter Kanal wurde erfolgreich gelöscht."
         primary_set_successfully: "Kanal wurde erfolgreich als primär gesetzt."
+        
+    community_hashtags:
+      errors:
+        invalid_hashtag: "Ungültiges Hashtag-Format."
+        duplicate_hashtag: "Doppelter Eintrag: Hashtag existiert bereits."
+        parameter_missing: "Erforderlicher Parameter fehlt."
+        cannot_contain_spaces: "Hashtag darf keine Leerzeichen enthalten."
+        hashtag_not_found: "Hashtag nicht gefunden."
+        community_required: "Patchwork Community-ID ist erforderlich."
+        community_not_found: "Patchwork Community nicht gefunden."
+        
+      messages:
+        created: "Hashtag erfolgreich gespeichert!"
+        updated: "Hashtag erfolgreich aktualisiert!"
+        deleted: "Hashtag erfolgreich entfernt!"
 
     validation:
       required: "%{attribute} ist erforderlich"
@@ -123,20 +141,23 @@ de:
         community:
           attributes:
             name:
-              blank: "Community-Name darf nicht leer sein"
-              too_long: "Community-Name darf nicht länger als %{count} Zeichen sein"
-              taken: "Community-Name ist bereits vergeben"
+              blank: "Community-Name darf nicht leer sein."
+              too_long: "Community-Name darf nicht länger als %{count} Zeichen sein."
+              taken: "Community-Name ist bereits vergeben."
             slug:
-              blank: "Community-Bezeichner darf nicht leer sein"
-              too_short: "Community-Bezeichner muss mindestens %{count} Zeichen haben"
-              too_long: "Community-Bezeichner darf nicht länger als %{count} Zeichen sein"
-              invalid: "Community-Bezeichner hat ein ungültiges Format"
-              taken: "Community-Bezeichner ist bereits vergeben"
-              immutable: "Community-Bezeichner kann nach der Erstellung nicht geändert werden"
+              blank: "Community-Bezeichner darf nicht leer sein."
+              too_short: "Community-Bezeichner muss mindestens %{count} Zeichen haben."
+              too_long: "Community-Bezeichner darf nicht länger als %{count} Zeichen sein."
+              invalid: "Community-Bezeichner hat ein ungültiges Format."
+              invalid_domain: "muss ein gültiges Domänenformat sein (z.B. beispiel.com), darf keine aufeinanderfolgenden Punkte haben oder mit einem Punkt enden."
+              taken: "Community-Bezeichner ist bereits vergeben."
+              immutable: "Community-Bezeichner kann nach der Erstellung nicht geändert werden."
             description:
               too_long: "Beschreibung darf nicht länger als %{count} Zeichen sein."
             about:
               too_long: "Über-Bereich darf nicht länger als %{count} Zeichen sein."
+            base:
+              duplicate_link_urls: "Links enthalten doppelte URLs: %{urls}."
               
         account:
           attributes:
@@ -182,6 +203,14 @@ de:
               taken: "ist dieser Community bereits beigetreten."
             is_primary:
               only_one_primary: "kann nur für eine Community pro Konto wahr sein."
+              
+        community_hashtag:
+          attributes:
+            hashtag:
+              blank: "Hashtag darf nicht leer sein."
+              taken: "wurde bereits zu dieser Community hinzugefügt."
+            community:
+              blank: "Community muss ausgewählt werden."
 
         wait_list:
           attributes:

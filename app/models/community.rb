@@ -288,7 +288,9 @@ class Community < ApplicationRecord
     duplicate_urls = urls.select { |url| urls.count(url) > 1 }.uniq
 
     if duplicate_urls.any?
-      errors.add(:base, "Links contains duplicate URLs: #{duplicate_urls.join(', ')}")
+      errors.add(:base, I18n.t('activerecord.errors.models.community.attributes.base.duplicate_link_urls', 
+                              urls: duplicate_urls.join(', '), 
+                              default: "Links contains duplicate URLs: #{duplicate_urls.join(', ')}"))
     end
   end
 end
