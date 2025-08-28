@@ -28,18 +28,22 @@ ja:
 
     community:
       errors:
-        only_one_channel: "チャンネルは1つまでしか作成できません"
-        not_found: "コミュニティが見つかりません"
-        access_denied: "このコミュニティへのアクセスが拒否されました"
-        invalid_slug: "無効なコミュニティ識別子です"
-        name_taken: "コミュニティ名は既に使用されています"
-        slug_taken: "コミュニティ識別子は既に使用されています"
-        invalid_visibility: "無効な可視性設定です"
+        only_one_channel: "チャンネルは1つまでしか作成できません。"
+        not_found: "コミュニティが見つかりません。"
+        access_denied: "このコミュニティへのアクセスが拒否されました。"
+        invalid_slug: "無効なコミュニティ識別子です。"
+        name_taken: "コミュニティ名は既に使用されています。"
+        slug_taken: "コミュニティ識別子は既に使用されています。"
+        invalid_visibility: "無効な可視性設定です。"
+        missing_additional_information: "追加情報が不足しています。"
+        duplicate_link_url: "このコミュニティでは重複したリンクURLは許可されていません。"
+        search_params_required: "クエリ、URL、およびトークンのパラメータが必要です。"
         
       messages:
-        created: "コミュニティが正常に作成されました"
-        updated: "コミュニティが正常に更新されました"
-        visibility_updated: "コミュニティの可視性が更新されました"
+        created: "コミュニティが正常に作成されました。"
+        updated: "コミュニティが正常に更新されました。"
+        visibility_updated: "コミュニティの可視性が更新されました。"
+        additional_information_updated: "追加情報が正常に更新されました。"
         
     account:
       errors:
@@ -52,7 +56,7 @@ ja:
       errors:
         not_found: "設定が見つかりません。"
         authentication_failed: "認証に失敗しました。"
-        invalid_app_name: "%{app_name} : 無効なアプリ名が提供されました。"
+        invalid_app_name: "%{attribute} : 無効なアプリ名が提供されました。"
         validation_failed: "設定の検証に失敗しました。"
         delete_failed: "設定の削除に失敗しました。"
         
@@ -109,12 +113,27 @@ ja:
         unfavorited_successfully: "お気に入りチャンネルが正常に削除されました"
         primary_set_successfully: "チャンネルが正常にプライマリに設定されました"
         
+    community_hashtags:
+      errors:
+        invalid_hashtag: "ハッシュタグの形式が無効です"
+        duplicate_hashtag: "重複エントリ：ハッシュタグは既に存在します"
+        parameter_missing: "必須パラメータがありません"
+        cannot_contain_spaces: "ハッシュタグにスペースを含めることはできません"
+        hashtag_not_found: "ハッシュタグが見つかりません"
+        community_required: "Patchworkコミュニティのidが必要です"
+        community_not_found: "Patchworkコミュニティが見つかりません"
+        
+      messages:
+        created: "ハッシュタグが正常に保存されました！"
+        updated: "ハッシュタグが正常に更新されました！"
+        deleted: "ハッシュタグが正常に削除されました！"
+        
     validation:
-      required: "は必須です"
-      too_long: "が長すぎます（最大%{count}文字）"
-      too_short: "が短すぎます（最小%{count}文字）"
-      invalid_format: "の形式が無効です"
-      not_unique: "は既に使用されています"
+      required: "%{attribute}は必須です"
+      too_long: "%{attribute}が長すぎます（最大%{count}文字）"
+      too_short: "%{attribute}が短すぎます（最小%{count}文字）"
+      invalid_format: "%{attribute}の形式が無効です"
+      not_unique: "%{attribute}は既に使用されています"
 
   # Model validation messages
   activerecord:
@@ -123,20 +142,23 @@ ja:
         community:
           attributes:
             name:
-              blank: "コミュニティ名を入力してください"
-              too_long: "コミュニティ名は%{count}文字以内で入力してください"
-              taken: "コミュニティ名は既に使用されています"
+              blank: "コミュニティ名を入力してください。"
+              too_long: "コミュニティ名は%{count}文字以内で入力してください。"
+              taken: "コミュニティ名は既に使用されています。"
             slug:
-              blank: "コミュニティ識別子を入力してください"
-              too_short: "コミュニティ識別子は最低%{count}文字必要です"
-              too_long: "コミュニティ識別子は%{count}文字以内で入力してください"
-              invalid: "コミュニティ識別子の形式が無効です"
-              taken: "コミュニティ識別子は既に使用されています"
-              immutable: "コミュニティ識別子は作成後に変更できません"
+              blank: "コミュニティ識別子を入力してください。"
+              too_short: "コミュニティ識別子は最低%{count}文字必要です。"
+              too_long: "コミュニティ識別子は%{count}文字以内で入力してください。"
+              invalid: "コミュニティ識別子の形式が無効です。"
+              invalid_domain: "有効なドメイン形式である必要があります（例：example.com）。連続するピリオドやピリオドで終わることはできません。"
+              taken: "コミュニティ識別子は既に使用されています。"
+              immutable: "コミュニティ識別子は作成後に変更できません。"
             description:
-              too_long: "説明は%{count}文字以内で入力してください"
+              too_long: "説明は%{count}文字以内で入力してください。"
             about:
-              too_long: "概要は%{count}文字以内で入力してください"
+              too_long: "概要は%{count}文字以内で入力してください。"
+            base:
+              duplicate_link_urls: "リンクに重複したURLが含まれています：%{urls}。"
               
         account:
           attributes:
@@ -182,6 +204,14 @@ ja:
               taken: "は既にこのコミュニティに参加しています"
             is_primary:
               only_one_primary: "アカウントごとに1つのコミュニティのみプライマリに設定できます"
+              
+        community_hashtag:
+          attributes:
+            hashtag:
+              blank: "ハッシュタグは空にできません"
+              taken: "は既にこのコミュニティに追加されています"
+            community:
+              blank: "コミュニティを選択してください"
 
         wait_list:
           attributes:

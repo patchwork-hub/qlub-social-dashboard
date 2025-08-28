@@ -23,7 +23,8 @@ class CommunityHashtag < ApplicationRecord
 
   belongs_to :community, class_name: 'Community', foreign_key: 'patchwork_community_id', optional: true
 
-  validates :hashtag, uniqueness: { scope: :patchwork_community_id }
+  validates :hashtag, presence: true, uniqueness: { scope: :patchwork_community_id }
+  validates :community, presence: true
 
   def self.ransackable_attributes(auth_object = nil)
     ["created_at", "hashtag", "id", "id_value", "name", "patchwork_community_id", "updated_at"]

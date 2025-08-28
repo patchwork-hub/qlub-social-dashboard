@@ -10,13 +10,9 @@ module ApiResponseHelper
   # ==================
 
   # Success responses with I18n messages
-  def render_success(data = {}, message_key = 'api.messages.success', status = :ok)
-    begin
-      translated_message = I18n.t(message_key, raise: true)
-    rescue I18n::MissingTranslationData
-      # Fallback to English if translation is missing
-      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
-    end
+  def render_success(data = {}, message_key = 'api.messages.success', status = :ok, additional_params = {})
+    # Use the reusable translation method
+    translated_message = get_translated_message(message_key, additional_params)
 
     response_data = {
       message: translated_message,
@@ -43,13 +39,13 @@ module ApiResponseHelper
   # ==================
 
   # Error responses with I18n messages and Plural format
-  def render_errors(message_key, status = :unprocessable_entity, additional_data = {})
-    begin
-      translated_message = I18n.t(message_key, raise: true)
-    rescue I18n::MissingTranslationData
-      # Fallback to English if translation is missing
-      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
-    end
+  def render_errors(message_key = 'api.errors.unprocessable_entity', status = :unprocessable_entity, additional_data = {})
+    # Extract attribute for I18n translation if present
+    attribute = additional_data.delete(:attribute) || additional_data.delete('attribute')
+    
+    # Build translation options
+    translation_options = attribute ? { attribute: attribute } : {}
+    translated_message = get_translated_message(message_key, translation_options)
 
     error_data = {
       errors: translated_message,
@@ -60,13 +56,13 @@ module ApiResponseHelper
   end
 
   # Error responses with I18n messages and single error format
-  def render_error(message_key, status = :unprocessable_entity, additional_data = {})
-    begin
-      translated_message = I18n.t(message_key, raise: true)
-    rescue I18n::MissingTranslationData
-      # Fallback to English if translation is missing
-      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
-    end
+  def render_error(message_key = 'api.errors.unprocessable_entity', status = :unprocessable_entity, additional_data = {})
+    # Extract attribute for I18n translation if present
+    attribute = additional_data.delete(:attribute) || additional_data.delete('attribute')
+    
+    # Build translation options
+    translation_options = attribute ? { attribute: attribute } : {}
+    translated_message = get_translated_message(message_key, translation_options)
 
     error_data = {
       error: translated_message,
@@ -89,28 +85,19 @@ module ApiResponseHelper
     render_error(message_key, :not_found)
   end
 
-  def render_validation_errors(errors, message_key = 'api.errors.validation_failed')
-    begin
-      translated_message = I18n.t(message_key, raise: true)
-    rescue I18n::MissingTranslationData
-      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
-    end
-
-    error_data = {
-      errors: translated_message,
-      details: format_validation_details(errors)
-    }
-    
-    render json: error_data, status: :unprocessable_entity
+  # Rate limit exceeded error
+  def render_rate_limit_exceeded(message_key = 'api.errors.rate_limit_exceeded')
+    render_errors(message_key, :too_many_requests)
   end
 
-  # Enhanced validation error method with clean details format
+  # Internal server error with generic message (avoid exposing internal details)
+  def render_internal_error(message_key = 'api.errors.internal_server_error')
+    render_errors(message_key, :internal_server_error)
+  end
+
+  # Validation errors with detailed messages
   def render_validation_failed(errors, message_key = 'api.errors.validation_failed')
-    begin
-      translated_message = I18n.t(message_key, raise: true)
-    rescue I18n::MissingTranslationData
-      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
-    end
+    translated_message = get_translated_message(message_key)
 
     # Clean format with just error message and details array
     error_data = {
@@ -121,58 +108,12 @@ module ApiResponseHelper
     render json: error_data, status: :unprocessable_entity
   end
 
-  def render_rate_limit_exceeded(message_key = 'api.errors.rate_limit_exceeded')
-    render_errors(message_key, :too_many_requests)
-  end
-
-  # Internal server error with generic message (avoid exposing internal details)
-  def render_internal_error(message_key = 'api.errors.internal_server_error')
-    render_errors(message_key, :internal_server_error)
-  end
-
-  # Community-specific error responses
-  def render_community_not_found
-    render_errors('api.community.errors.not_found', :not_found)
-  end
-
-  def render_community_access_denied
-    render_errors('api.community.errors.access_denied', :forbidden)
-  end
-
-  def render_community_name_taken
-    render_errors('api.community.errors.name_taken', :unprocessable_entity)
-  end
-
-  def render_community_slug_taken
-    render_errors('api.community.errors.slug_taken', :unprocessable_entity)
-  end
-
-  def render_only_one_channel_allowed
-    render_errors('api.community.errors.only_one_channel', :unprocessable_entity)
-  end
-
-  # Account-specific error responses
-  def render_invalid_credentials
-    render_errors('api.account.errors.invalid_credentials', :unauthorized)
-  end
-
-  def render_account_not_found
-    render_errors('api.account.errors.account_not_found', :not_found)
-  end
-
-  def render_account_suspended
-    render_errors('api.account.errors.account_suspended', :forbidden)
-  end
-
   # Domain-specific responses
   # Use this when you want to pass a message key for translation
   def render_domain_message_key(message_key = 'api.domain.messages.dns_verified', additional_data = {}, status = :ok)
-    begin
-      translated_message = I18n.t(message_key, raise: true)
-    rescue I18n::MissingTranslationData
-      # Fallback to English if translation is missing
-      translated_message = I18n.t(message_key, locale: :en, default: message_key.to_s.humanize)
-    end
+    # Build translation options
+    translation_options = additional_data.slice(:attribute)
+    translated_message = get_translated_message(message_key, translation_options)
 
     domain_data = build_domain_data(translated_message, additional_data)
     render json: domain_data, status: status
@@ -215,34 +156,6 @@ module ApiResponseHelper
 
   private
 
-  def format_validation_errors(errors)
-    # Convert ActiveModel::Errors to a more structured format
-    case errors
-    when ActiveModel::Errors
-      errors.details.transform_values do |error_details|
-        error_details.map do |detail|
-          {
-            error: detail[:error],
-            message: errors.full_message(detail[:attribute] || :base, detail[:message] || detail[:error])
-          }
-        end
-      end
-    when Array
-      # Handle array of error messages
-      errors.map { |error| { message: error } }
-    when Hash
-      # Handle hash of field-specific errors
-      errors.transform_values { |error| { message: error } }
-    else
-      # Handle string or other formats
-      [{ message: errors.to_s }]
-    end
-  end
-
-  def format_validation_details(errors)
-    format_validation_errors(errors)
-  end
-
   # Extract clean error messages for the new validation format
   def extract_error_messages(errors)
     case errors
@@ -274,5 +187,16 @@ module ApiResponseHelper
     end
   rescue I18n::MissingTranslationData
     I18n.available_locales.map { |locale| { code: locale, is_default: locale == I18n.default_locale } }
+  end
+
+  # Reusable method for getting translated messages with fallback support
+  def get_translated_message(message_key, options = {})
+    begin
+      # Try to get translation with the provided options
+      I18n.t(message_key, **options, raise: true)
+    rescue I18n::MissingTranslationData
+      # Fallback to English if translation is missing
+      I18n.t(message_key, **options, locale: :en, default: message_key.to_s.humanize)
+    end
   end
 end

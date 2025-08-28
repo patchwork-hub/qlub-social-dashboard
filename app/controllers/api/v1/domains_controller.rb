@@ -17,7 +17,11 @@ module Api
         if verified
           render_domain_message_key('api.domain.messages.dns_verified', verified)
         else
-          render_domain_message_key('api.domain.messages.dns_instructions', verified, { ip: expected_ip })
+          render_domain_message_key('api.domain.messages.dns_instructions',
+            { verified: verified,
+              attribute: expected_ip 
+            }
+          )
         end
       rescue StandardError => e
         Rails.logger.error "DNS verification failed: #{e.message}"
