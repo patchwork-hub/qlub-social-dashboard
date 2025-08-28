@@ -1,7 +1,5 @@
 module Api::V1
   class StatusesController < ApiController
-    before_action :whitelist_domains
-
     def boost_post
       @api_base_url = ENV.fetch('MASTODON_INSTANCE_URL')
 
@@ -20,15 +18,6 @@ module Api::V1
     end
 
     private
-
-    def whitelist_domains
-      allowed_domains = ["mo-me.social"]
-
-      Rails.logger.info("#{'>'*10}Request host: #{request.host} #{'<'*10}")
-      # unless allowed_domains.include?(request.host)
-      #   render_error("Request domain not allowed", :forbidden)
-      # end
-    end
 
     def fetch_oauth_token(username, user_domain)
       user_domain = nil if user_domain == 'channel.org'
