@@ -25,7 +25,8 @@ module Api::V1
       return nil unless admin&.user
 
       GenerateAdminAccessTokenService.new(admin.user.id).call
-    rescue
+    rescue => e
+      Rails.logger.error "Error fetching OAuth token: #{e.message}"
       nil
     end
 
