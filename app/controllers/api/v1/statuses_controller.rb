@@ -25,7 +25,7 @@ module Api::V1
       return nil unless admin&.user
 
       GenerateAdminAccessTokenService.new(admin.user.id).call
-    rescue => e
+    rescue
       nil
     end
 

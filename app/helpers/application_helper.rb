@@ -1,5 +1,5 @@
 module ApplicationHelper
-  include BlueskyAccountBridgeHleper
+  include BlueskyAccountBridgeHelper
   include CommunityHelper
   include AppVersionHelper
 
