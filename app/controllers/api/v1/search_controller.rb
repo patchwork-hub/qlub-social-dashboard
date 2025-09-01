@@ -2,7 +2,7 @@ module Api
   module V1
     class SearchController < ApiController
       skip_before_action :verify_key!
-      before_action :authenticate_user_from_header, only: [:search]
+      before_action :authenticate_client_credentials, only: [:search]
 
       def search
         query = build_query(params[:q])
