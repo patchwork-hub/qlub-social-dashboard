@@ -2,7 +2,7 @@ module Api
   module V1
 		class AppVersionsController < ApiController
 			skip_before_action :verify_key!
-			before_action :check_authorization_header, only: [:check_version]
+			before_action :authenticate_client_credentials, only: [:check_version]
 			before_action :set_app_version, only: %i[check_version]
 
 			def check_version
@@ -39,7 +39,7 @@ module Api
 			def fetch_version_history
 				@app_version.app_version_histories
 				.where(os_type: app_version_params[:os_type])
-				.order(created_at: :desc)
+				.order(released_date: :desc)
 				.first
 			end
 		end
