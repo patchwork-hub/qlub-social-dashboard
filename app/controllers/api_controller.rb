@@ -84,7 +84,7 @@ class ApiController < ApplicationController
     client_secret = request.headers['client-secret']
 
     # Custom authentication logic for client credentials for old mobile apps
-    return true unless client_id && client_secret
+    return true unless client_id || client_secret
 
     client = Doorkeeper::Application.find_by(uid: client_id, secret: client_secret)
     

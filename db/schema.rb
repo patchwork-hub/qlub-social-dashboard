@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_04_100021) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_02_101613) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -824,6 +824,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_100021) do
     t.boolean "deprecated", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "released_date", default: -> { "CURRENT_TIMESTAMP" }
     t.index ["app_version_id"], name: "index_patchwork_app_version_histories_on_app_version_id"
   end
 
@@ -1432,7 +1433,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_04_100021) do
     t.float "max_score"
     t.datetime "max_score_at", precision: nil
     t.string "display_name"
-    t.boolean "is_banned", default: false
     t.index "lower((name)::text) text_pattern_ops", name: "index_tags_on_name_lower_btree", unique: true
   end
 
