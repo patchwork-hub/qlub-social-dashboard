@@ -14,6 +14,8 @@ namespace :api, defaults: { format: :json } do
           { display: true, app_name: 'patchwork' }
         when 'newsmast'
           { display: true, app_name: 'newsmast' }
+        when 'channel'
+          { display: true, app_name: 'channel' }
         when 'mo-me'
           { display: true, app_name: 'mo-me' }
         else
@@ -123,7 +125,7 @@ namespace :api, defaults: { format: :json } do
         get 'translations/:namespace', to: 'locales#translations', as: :translations
       end
     end
-    
+
     resources :statuses, only: [] do
       collection do
         post :boost_post
