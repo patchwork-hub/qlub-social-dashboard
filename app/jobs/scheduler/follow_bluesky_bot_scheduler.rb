@@ -11,7 +11,7 @@ module Scheduler
       if is_channel_dashboard?
         ChannelBlueskyBridgeService.new.process_communities
       else
-        # NYL bro
+        NonChannelBlueskyBridgeService.new.process_users
       end
 
     end
