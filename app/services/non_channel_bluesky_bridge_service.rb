@@ -18,25 +18,25 @@ class NonChannelBlueskyBridgeService
   def process_user(user)
 
     account = user&.account
-    next if account.nil?
+    return if account.nil?
 
     token = fetch_oauth_token(user)
-    next if token.nil?
+    return if token.nil?
 
     target_account_id = Rails.cache.fetch('bluesky_bridge_bot_account_id', expires_in: 24.hours) do
       search_target_account_id(token)
     end
     target_account = Account.find_by(id: target_account_id)
-    next if target_account.nil?
+    return if target_account.nil?
 
     account_relationship_array = handle_relationship(account, target_account.id)
-    next unless account_relationship_array.present? && account_relationship_array&.last
+    return unless account_relationship_array.present? && account_relationship_array&.last
 
     if account_relationship_array&.last['requested']
       UnfollowService.new.call(account, target_account)
     end
-    
-    next unless bluesky_bridge_enabled?(account)
+
+    return unless bluesky_bridge_enabled?(account)
 
     if account_relationship_array&.last['following'] == true && account_relationship_array&.last['requested'] == false
       process_did_value(user, token, account)
@@ -97,7 +97,7 @@ class NonChannelBlueskyBridgeService
     when 'production'
       hosted_zones.hosted_zones.find { |zone| zone.name ==  ENV['LOCAL_DOMAIN'] }
     else
-      hosted_zones.hosted_zones.find { |zone| zone.name == 'localhost:3000.' }
+      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
     end
 
     if channel_zone

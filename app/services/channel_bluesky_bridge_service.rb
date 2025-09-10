@@ -98,18 +98,18 @@ class ChannelBlueskyBridgeService
     env = ENV.fetch('RAILS_ENV', nil)
     channel_zone = case env
     when 'staging'
-      hosted_zones.hosted_zones.find { |zone| zone.name == 'staging.patchwork.online.' }
+      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
     when 'production'
-      hosted_zones.hosted_zones.find { |zone| zone.name == 'channel.org.' }
+      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
     else
-      hosted_zones.hosted_zones.find { |zone| zone.name == 'localhost.3000.' }
+      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
     end
 
     if channel_zone
       name = if community&.is_custom_domain?
               "_atproto.#{community.slug}"
             else
-              "_atproto.#{community&.slug}.channel.org"
+              "_atproto.#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
             end
 
       # Determine the correct domain based on environment and custom domain
@@ -167,11 +167,11 @@ class ChannelBlueskyBridgeService
     else
       case env
       when 'staging'
-        "#{community&.slug}.staging.patchwork.online"
+        "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
       when 'production'
-        "#{community&.slug}.channel.org"
+        "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
       else
-        "#{community&.slug}.channel.org"
+        "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
       end
     end
   end
