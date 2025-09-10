@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_account
 
+  helper_method :is_channel_dashboard?
+
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   require 'httparty'
@@ -80,5 +82,23 @@ class ApplicationController < ActionController::Base
     return @current_account if defined?(@current_account)
 
     @current_account = current_user&.account
+  end
+
+  def is_channel_dashboard?
+    if Rails.env.development?
+      return true
+    end
+
+    mastodon_url = ENV['MASTODON_INSTANCE_URL']
+    return false if mastodon_url.nil?
+
+    case mastodon_url
+    when /channel/
+      true
+    when /staging\.patchwork\.online/
+      true
+    else
+      false
+    end
   end
 end
