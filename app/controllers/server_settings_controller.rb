@@ -1,7 +1,8 @@
 class ServerSettingsController < ApplicationController
+  include ApplicationHelper
+
   before_action :authorize_master_admin!
   before_action :set_keyword_filter_group, only: [:index]
-
   def index
     @server_settings = prepare_server_setting
   end
