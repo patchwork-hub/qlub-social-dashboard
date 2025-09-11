@@ -20,7 +20,7 @@ module ApplicationHelper
         { path: '/installation', id: 'installation-link', header: 'Installation', icon: 'screwdriver-wrench.svg', text: 'Installation', active_if: 'installation' }
       ]
 
-      if ENV['MASTODON_INSTANCE_URL']&.include?('channel')
+      if is_channel_dashboard?
         links += [
           { path: communities_path(channel_type: 'channel'), id: 'communities-link', header: 'Communities', icon: 'speech.svg', text: 'Communities', active_if: channel_active },
           { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channels', icon: 'channel-feed.svg', text: 'Channels', active_if: channel_feed_active },
@@ -31,7 +31,7 @@ module ApplicationHelper
       end
       links << { path: master_admins_path, id: 'master_admins-link', header: 'Master admin', icon: 'administrator.svg', text: 'Master admins', active_if: 'master_admins' }
 
-      if ENV['MASTODON_INSTANCE_URL']&.include?('channel')
+      if is_channel_dashboard?
         links << { path: community_filter_keywords_path(community_id: nil), id: 'global_filters-link', header: 'Global filters', icon: 'globe-white.svg', text: 'Global filters', active_if: 'global_filters' }
       end
       links += [
@@ -40,12 +40,12 @@ module ApplicationHelper
         { path: api_keys_path, id: 'resources-link', header: 'API Key', icon: 'key.svg', text: 'API Key', active_if: 'api_keys' }
       ]
 
-      if ENV['MASTODON_INSTANCE_URL']&.include?('channel')
+      if is_channel_dashboard?
         links << { path: wait_lists_path, id: 'invitation-codes-link', header: 'Invitation codes', icon: 'invitation_code.svg', text: 'Invitation codes', active_if: 'wait_lists' }
       end
       links << { path: app_versions_path(app_name: AppVersion.app_names['patchwork']), id: 'app-versions-link', header: 'App versions', icon: 'sliders.svg', text: 'App versions', active_if: 'app_versions' }
 
-      unless ENV['MASTODON_INSTANCE_URL']&.include?('channel')
+      unless is_channel_dashboard?
         links += [
           { path: "#{ENV['MASTODON_INSTANCE_URL']}/admin/dashboard", id: 'administration-link', header: 'Administration', icon: 'administrator.svg', text: 'Administration', target: '_blank' },
           { path: "#{ENV['MASTODON_INSTANCE_URL']}/admin/reports", id: 'moderation-link', header: 'Moderation', icon: 'users.svg', text: 'Moderation', target: '_blank' }
