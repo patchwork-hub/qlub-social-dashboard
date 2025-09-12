@@ -130,7 +130,7 @@ module ApplicationHelper
 
   def is_channel_dashboard?
     if Rails.env.development?
-      return false
+      return true
     end
 
     mastodon_url = ENV['MASTODON_INSTANCE_URL']
