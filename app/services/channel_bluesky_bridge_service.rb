@@ -94,16 +94,7 @@ class ChannelBlueskyBridgeService
   def create_dns_record(did_value, community)
     route53 = Aws::Route53::Client.new
     hosted_zones = route53.list_hosted_zones
-
-    env = ENV.fetch('RAILS_ENV', nil)
-    channel_zone = case env
-    when 'staging'
-      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
-    when 'production'
-      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
-    else
-      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
-    end
+    channel_zone = hosted_zones.hosted_zones.find { |zone| zone.name == "#{ENV['LOCAL_DOMAIN']}." }
 
     if channel_zone
       name = if community&.is_custom_domain?
@@ -113,7 +104,7 @@ class ChannelBlueskyBridgeService
             end
 
       # Determine the correct domain based on environment and custom domain
-      domain_name = determine_domain_name(community, env)
+      domain_name = determine_domain_name(community)
       name = "_atproto.#{domain_name}"
 
       route53.change_resource_record_sets({
@@ -140,8 +131,7 @@ class ChannelBlueskyBridgeService
   end
 
   def create_direct_message(token, community)
-    env = ENV.fetch('RAILS_ENV', nil)
-    domain_name = determine_domain_name(community, env)
+    domain_name = determine_domain_name(community)
 
     status_params = {
       "in_reply_to_id": nil,
@@ -161,18 +151,11 @@ class ChannelBlueskyBridgeService
     AccountRelationshipsService.new.call(account, target_account_id)
   end
 
-  def determine_domain_name(community, env)
+  def determine_domain_name(community)
     if community&.is_custom_domain?
       community&.slug
     else
-      case env
-      when 'staging'
-        "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
-      when 'production'
-        "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
-      else
-        "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
-      end
+      "#{community&.slug}.#{ENV['LOCAL_DOMAIN']}"
     end
   end
 end
