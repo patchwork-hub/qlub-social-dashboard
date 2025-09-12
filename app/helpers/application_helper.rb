@@ -137,7 +137,7 @@ module ApplicationHelper
     return false if mastodon_url.nil?
 
     case mastodon_url
-    when /channel/
+    when %r{^(https://)?channel\.org(?=/|$)}
       true
     when /staging\.patchwork\.online/
       true
