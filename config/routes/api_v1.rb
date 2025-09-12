@@ -85,6 +85,8 @@ namespace :api, defaults: { format: :json } do
       member do
         patch :manage_additional_information
         put :manage_additional_information
+        delete :remove_avatar
+        delete :remove_banner
       end
       resources :community_filter_keywords, only: %i[index create update destroy]
       resources :community_hashtags, only: %i[index create update destroy]
