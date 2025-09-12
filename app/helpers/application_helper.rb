@@ -29,6 +29,11 @@ module ApplicationHelper
           { path: collections_path, id: 'collections-link', header: 'Collections', icon: 'collection.svg', text: 'Collections', active_if: 'collections' }
         ]
       end
+      
+      if is_qlub_dashboard?
+        links << { path: communities_path(channel_type: 'channel_feed'), id: 'communities-link', header: 'Channels', icon: 'channel-feed.svg', text: 'Channels', active_if: channel_feed_active}
+      end
+
       links << { path: master_admins_path, id: 'master_admins-link', header: 'Master admin', icon: 'administrator.svg', text: 'Master admins', active_if: 'master_admins' }
 
       if is_channel_dashboard?
@@ -140,6 +145,18 @@ module ApplicationHelper
     when %r{^(https://)?channel\.org(?=/|$)}
       true
     when /staging\.patchwork\.online/
+      true
+    else
+      false
+    end
+  end
+
+  def is_qlub_dashboard?
+    mastodon_url = ENV['MASTODON_INSTANCE_URL']
+    return false if mastodon_url.nil?
+
+    case mastodon_url
+    when %r{^(https://)?(qlub\.channel\.org|qlub\.social)(?=/|$)}
       true
     else
       false
