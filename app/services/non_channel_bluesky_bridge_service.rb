@@ -90,15 +90,7 @@ class NonChannelBlueskyBridgeService
     route53 = Aws::Route53::Client.new
     hosted_zones = route53.list_hosted_zones
 
-    env = ENV.fetch('RAILS_ENV', nil)
-    channel_zone = case env
-    when 'staging'
-      hosted_zones.hosted_zones.find { |zone| zone.name ==  ENV['LOCAL_DOMAIN'] }
-    when 'production'
-      hosted_zones.hosted_zones.find { |zone| zone.name ==  ENV['LOCAL_DOMAIN'] }
-    else
-      hosted_zones.hosted_zones.find { |zone| zone.name == ENV['LOCAL_DOMAIN'] }
-    end
+    channel_zone = hosted_zones.hosted_zones.find { |zone| zone.name == "#{ENV['LOCAL_DOMAIN']}." }
 
     if channel_zone
       name = "_atproto.#{account&.username}.#{ENV['LOCAL_DOMAIN']}"
