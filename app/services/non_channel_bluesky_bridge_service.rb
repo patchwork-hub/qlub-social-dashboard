@@ -1,4 +1,8 @@
 class NonChannelBlueskyBridgeService
+  # Configure AWS
+  require_relative 'aws_service'
+  AwsService.configure_aws
+
   include ApplicationHelper
 
   def initialize
