@@ -1,7 +1,6 @@
 class NonChannelBlueskyBridgeService
-  # Configure AWS
+  # Require AWS service for Route53 client
   require_relative 'aws_service'
-  AwsService.configure_aws
 
   include ApplicationHelper
 
@@ -91,7 +90,7 @@ class NonChannelBlueskyBridgeService
   end
 
   def create_dns_record(did_value, account)
-    route53 = Aws::Route53::Client.new
+    route53 = AwsService.route53_client
     hosted_zones = route53.list_hosted_zones
 
     channel_zone = hosted_zones.hosted_zones.find { |zone| zone.name == "#{ENV['LOCAL_DOMAIN']}." }
