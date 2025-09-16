@@ -128,6 +128,12 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
+    resources :server_settings, only: [:index] do
+      collection do
+        get :menu_visibility
+      end
+    end
+
     resources :statuses, only: [] do
       collection do
         post :boost_post
@@ -135,5 +141,6 @@ namespace :api, defaults: { format: :json } do
     end
 
     post 'users/bluesky_bridge', to: 'users#update_bluesky_bridge_setting'
+    get 'server_settings/menu_visibility', to: 'server_settings#menu_visibility'
   end
 end
