@@ -108,8 +108,7 @@ Rails.application.configure do
     s3_protocol: :https
   }
 
-  # Configure AWS
-  require_relative '../../app/services/aws_service'
-  AwsService.configure_aws
+  # AWS Service is no longer globally configured
+  # Individual services use their own credentials
 
 end
