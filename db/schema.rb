@@ -912,7 +912,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
     t.datetime "updated_at", null: false
     t.string "filter_type", default: "filter_out", null: false
     t.index ["keyword", "is_filter_hashtag", "patchwork_community_id"], name: "index_on_keyword_is_filter_hashtag_and_patchwork_community_id", unique: true
-    t.index ["keyword", "is_filter_hashtag"], name: "idx_on_keyword_is_filter_hashtag_de4b77f0f4", unique: true
     t.index ["patchwork_community_id"], name: "idx_on_patchwork_community_id_eadde3c87b"
   end
 
@@ -997,10 +996,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
 
   create_table "patchwork_community_types", force: :cascade do |t|
     t.string "name", null: false
+    t.string "slug", null: false
     t.integer "sorting_index", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "slug"
+    t.index ["slug"], name: "index_patchwork_community_types_on_slug", unique: true
   end
 
   create_table "patchwork_content_types", force: :cascade do |t|
@@ -1026,9 +1026,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
     t.bigint "account_id", null: false
     t.string "notification_token"
     t.string "platform_type"
-    t.boolean "mute", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "mute", default: false, null: false
     t.index ["account_id"], name: "index_patchwork_notification_tokens_on_account_id"
   end
 
