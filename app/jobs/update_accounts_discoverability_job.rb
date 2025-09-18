@@ -4,5 +4,6 @@ class UpdateAccountsDiscoverabilityJob < ApplicationJob
 
   def perform(value)
     Account.update_all_discoverability(value)
+    User.update_all_discoverability(value)
   end
 end
