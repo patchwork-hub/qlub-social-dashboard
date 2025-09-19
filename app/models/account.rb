@@ -151,8 +151,8 @@ class Account < ApplicationRecord
 
   def self.update_all_discoverability(value = false)
     update_all(
-      discoverable: value,
-      indexable: value
+      discoverable: !value,
+      indexable: !value
     )
   end
 end
