@@ -108,7 +108,4 @@ Rails.application.configure do
     s3_protocol: :https
   }
 
-  # AWS Service is no longer globally configured
-  # Individual services use their own credentials
-
 end
