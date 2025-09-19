@@ -74,8 +74,4 @@ Rails.application.configure do
     storage: :filesystem
   }
 
-  # Configure AWS
-  # require_relative '../../app/services/aws_service'
-  # AwsService.configure_aws
-
 end
