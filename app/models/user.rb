@@ -108,10 +108,10 @@ class User < ApplicationRecord
   end
 
   def self.update_all_discoverability(value = false)
-    find_each do |user|
+    find_each(batch_size: 1000) do |user|
       settings_hash = user.settings.present? ? JSON.parse(user.settings) : {}
       settings_hash["noindex"] = value
-      user.update!(settings: settings_hash.to_json)
+      user.update_column(:settings, settings_hash.to_json)
     end
   end
 end
