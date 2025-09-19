@@ -1,49 +1,53 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:672691776916:task-definition/patchwork-dashboard-staging:192",
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
     "containerDefinitions": [
         {
-            "name": "patchwork-dashboard-staging",
-            "image": "672691776916.dkr.ecr.eu-west-2.amazonaws.com/patchwork-dashboard:staging",
             "cpu": 0,
-            "portMappings": [
-                {
-                    "name": "patchwork-dashboard-staging-3000-tcp",
-                    "containerPort": 3000,
-                    "hostPort": 3000,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
-                }
-            ],
-            "essential": true,
             "environment": [],
             "environmentFiles": [
                 {
-                    "value": "arn:aws:s3:::patchwork-private-env/staging-dashboard.env",
-                    "type": "s3"
+                    "type": "s3",
+                    "value": "arn:aws:s3:::patchwork-private-env/qlub-dashboard.env"
                 }
             ],
-            "mountPoints": [],
-            "volumesFrom": [],
+            "essential": true,
+            "image": "672691776916.dkr.ecr.eu-west-2.amazonaws.com/qlub-social:dashboard",
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/ecs/patchwork-dashboard-staging",
+                    "awslogs-group": "/ecs/qlub-dashboard",
                     "awslogs-create-group": "true",
                     "awslogs-region": "eu-west-2",
                     "awslogs-stream-prefix": "ecs"
-                },
-                "secretOptions": []
+                }
             },
-            "systemControls": []
+            "mountPoints": [],
+            "name": "qlub-dashboard",
+            "portMappings": [
+                {
+                    "appProtocol": "http",
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "name": "qlub-dashboard-3000-tcp",
+                    "protocol": "tcp"
+                }
+            ],
+            "systemControls": [],
+            "volumesFrom": []
         }
     ],
-    "family": "patchwork-dashboard-staging",
-    "taskRoleArn": "arn:aws:iam::672691776916:role/patchwork-ecs-task-role",
+    "cpu": "512",
+    "enableFaultInjection": false,
     "executionRoleArn": "arn:aws:iam::672691776916:role/patchwork-ecs-task-execution-role",
+    "family": "qlub-dashboard",
+    "memory": "1024",
     "networkMode": "awsvpc",
-    "revision": 192,
-    "volumes": [],
-    "status": "ACTIVE",
+    "placementConstraints": [],
+    "registeredAt": "2025-09-11T09:26:16.072Z",
+    "registeredBy": "arn:aws:iam::672691776916:user/ahn",
     "requiresAttributes": [
         {
             "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
@@ -76,22 +80,17 @@
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
         }
     ],
-    "placementConstraints": [],
-    "compatibilities": [
-        "EC2",
-        "FARGATE"
-    ],
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "cpu": "512",
-    "memory": "1024",
+    "revision": 1,
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2025-01-11T08:38:55.933Z",
-    "registeredBy": "arn:aws:iam::672691776916:user/ahn",
-    "enableFaultInjection": false,
+    "status": "ACTIVE",
+    "taskDefinitionArn": "arn:aws:ecs:eu-west-2:672691776916:task-definition/qlub-dashboard:1",
+    "taskRoleArn": "arn:aws:iam::672691776916:role/patchwork-ecs-task-role",
+    "volumes": [],
     "tags": []
 }

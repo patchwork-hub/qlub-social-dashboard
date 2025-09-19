@@ -1,15 +1,14 @@
-run-name: Deploy to Staging Patchwork Dashboard by @${{ github.actor }}
+run-name: Deploy to Qlub Social Dashboard by @${{ github.actor }}
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - staging
+      - staging-deployment
 
 env:
   DEFINITION:
-    .aws/channel-staging-dashboard.json
-
+    .task/qlub-dashboard.json
 permissions:
   contents: read
 
@@ -57,13 +56,13 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.REPOSITORY }}
-          IMAGE_TAG: ${{ vars.IMAGE_STAGING_TAG }}
+          IMAGE_TAG: ${{ vars.IMAGE_TAG }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       
   Deploy:
-    name: Deploy to Staging
+    name: Deploy to Qlub Social Dashboard
     needs: Build
     runs-on: ubuntu-latest
     steps:
@@ -101,17 +100,14 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ env.DEFINITION }}
-          container-name: ${{ secrets.DASHBOARD_STAGING_CONTAINER_NAME }}
+          container-name: ${{ secrets.DASHBOARD_CONTAINER_NAME }}
           # image: ${{ steps.build-image.outputs.image }}
-          image:  ${{ secrets.DASHBOARD_STAGING_IMAGE }}
+          image:  ${{ secrets.IMAGE_TAG }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ secrets.DASHBOARD_STAGING_SERVICE_NAME }}
-          cluster: ${{ secrets.CLUSTER_STAGING }}
+          service: ${{ secrets.DASHBOARD_SERVICE_NAME }}
+          cluster: ${{ secrets.CLUSTER_NAME }}
           wait-for-service-stability: false
-
-
-      
