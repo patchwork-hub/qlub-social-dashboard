@@ -1,6 +1,6 @@
-# Patchwork Dashboard - Docker Installation Guide
+# Patchwork Dashboard (MVP) - Docker Installation Guide
 
-This guide provides step-by-step instructions for installing Patchwork Dashboard using Docker containers.
+This guide provides step-by-step instructions for installing Patchwork Dashboard (MVP) using Docker containers.
 
 ## Prerequisites
 

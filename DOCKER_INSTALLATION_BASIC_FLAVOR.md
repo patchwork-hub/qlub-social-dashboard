@@ -1,6 +1,6 @@
-# Patchwork Dashboard - Docker Installation Guide
+# Patchwork Dashboard (Basic) - Docker Installation Guide
 
-This guide provides step-by-step instructions for installing Patchwork Dashboard using Docker containers.
+This guide provides step-by-step instructions for installing Patchwork Dashboard (Basic) using Docker containers.
 
 ## Prerequisites
 
