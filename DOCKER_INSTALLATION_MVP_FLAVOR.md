@@ -188,7 +188,6 @@ docker-compose -f docker-compose.mvp.yml exec app bundle exec rails runner "puts
 ## Support
 
 For additional help:
-- Check the [Patchwork Hub](https://hub.patchwork.online/)
 - Review container logs for specific error messages
 - Contact support at support@newsmastfoundation.org
 
