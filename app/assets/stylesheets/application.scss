@@ -115,14 +115,14 @@ aside {
     padding: 1rem;
 
     #logo {
-      width: 180px;
+      width: 100px;
       transition: width 0.3s;
     }
   }
 
   &:hover {
     #logo {
-      width: 180px;
+      width: 100px;
     }
   }
 }
@@ -562,7 +562,7 @@ ul.pagination {
 }
 
 .large-logo {
-  width: 270px;
+  width: 260px;
   height: auto;
 }
 
