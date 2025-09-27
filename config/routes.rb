@@ -67,6 +67,7 @@ Rails.application.routes.draw do
   resources :server_settings do
     collection do
       get :group_data
+      post :branding
     end
   end
 
