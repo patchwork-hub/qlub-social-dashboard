@@ -3,7 +3,7 @@
 = simple_form_for :site_settings, url: branding_server_settings_path, html: { multipart: true } do |f|
   .row
     .col-md-6
-      = f.input :brand_color, label: "Brand colour", required: false, input_html: { value: @brand_color.value, class: "form-control" }
+      = f.input :brand_color, label: "Brand colour", required: false, input_html: { value: @brand_color.parsed_value, class: "form-control" }
   - @site_uploads.each do |site_upload|
     - if site_upload.var == 'favicon'
       .row
