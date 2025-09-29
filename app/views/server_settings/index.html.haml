@@ -32,6 +32,9 @@
                   - when 'Content Moderation'
                     %p.text-muted.small.mt-2 Control what content enters your server from the wider network by setting up keyword filters.
             .col-md-7
+              - if setting[:name] == 'Server Settings'
+                = render 'form_logo_and_brand_color'
+
               - setting[:settings].each_with_index do |option, option_index|
                 - is_collapse = ['Content filters', 'Spam filters'].include?(option[:name])
                 - collapse_id = "collapse_#{option[:id]}"

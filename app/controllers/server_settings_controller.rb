@@ -2,9 +2,9 @@ class ServerSettingsController < ApplicationController
   include ApplicationHelper
 
   before_action :authorize_master_admin!
-  before_action :set_keyword_filter_group, only: [:index]
+  before_action :initialize_server_settings, only: [:index, :branding]
+
   def index
-    @server_settings = prepare_server_setting
   end
 
   def update
@@ -23,7 +23,42 @@ class ServerSettingsController < ApplicationController
     render json: @existing_data
   end
 
+  def branding
+    @brand_color.value = site_settings_params[:brand_color]
+
+    %w[favicon app_icon thumbnail].each do |var|
+      next unless site_settings_params[var].present?
+      upload = @site_uploads.find { |s| s.var == var }
+      upload.file = site_settings_params[var]
+    end
+
+    errors = []
+    errors += @brand_color.errors.full_messages unless @brand_color.valid?
+    @site_uploads.each { |upload| errors += upload.errors.full_messages unless upload.valid? }
+
+    if errors.any?
+      flash.now[:error] = errors.join("<br>")
+      render :index, status: :unprocessable_entity
+    else
+      ActiveRecord::Base.transaction do
+        @brand_color.save!
+        @site_uploads.each(&:save!)
+      end
+      redirect_to server_settings_path, notice: "Server settings updated successfully."
+    end
+  end
+
   private
+
+  def initialize_server_settings
+    set_keyword_filter_group
+    @server_settings = prepare_server_setting
+
+    @site_uploads = %w[favicon app_icon thumbnail].map do |var|
+      SiteUpload.find_or_create_by!(var: var)
+    end
+    @brand_color = SiteSetting.find_or_create_by!(var: "brand_color")
+  end
 
   def set_keyword_filter_group
     @keyword_filter_group = KeywordFilterGroup.new
@@ -75,5 +110,9 @@ class ServerSettingsController < ApplicationController
 
   def authorize_master_admin!
     authorize :master_admin, :index?
+  end
+
+  def site_settings_params
+    params.require(:site_settings).permit(:brand_color,:favicon,:app_icon,:thumbnail)
   end
 end
