@@ -19,7 +19,8 @@ namespace :db do
       "Local Features" => [],
       "User Management" => [],
       "Plug-ins" => [],
-      "Bluesky Bridge" => []
+      "Bluesky Bridge" => [],
+      "Server Settings" => []
     }
 
     # Create parent settings and set positions
@@ -30,7 +31,7 @@ namespace :db do
         puts "Skipping existing parent setting: #{parent_name}"
         next
       end
-      
+
       parent_setting = ServerSetting.create!(name: parent_name, value: nil)
 
       # Sample data for child settings with parent associations
@@ -64,6 +65,9 @@ namespace :db do
         ],
         "Bluesky Bridge" => [
           { name: "Enable bluesky bridge", value: false }
+        ],
+        "Server Settings" => [
+
         ]
       }
 
@@ -74,7 +78,7 @@ namespace :db do
           puts "Skipping existing child setting: #{child[:name]}"
           next
         end
-        
+
         ServerSetting.create!(name: child[:name], value: child[:value], position: child_index + 1, parent_id: parent_setting.id)
       end
     end
