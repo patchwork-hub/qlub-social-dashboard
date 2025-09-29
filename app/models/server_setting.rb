@@ -24,6 +24,8 @@ class ServerSetting < ApplicationRecord
 
   after_update :update_accounts_discoverable, if: -> { saved_change_to_value? && search_opt_out_filter? }
 
+  after_update :update_bluesky_bridge_enabled, if: -> { saved_change_to_value? && bluesky_bridge_enabled? }
+
   after_commit :sync_setting
 
   def parent
@@ -52,7 +54,16 @@ class ServerSetting < ApplicationRecord
     name == "Search opt-out"
   end
 
+  def bluesky_bridge_enabled?
+    name == "Enable bluesky bridge"
+  end
+
   def update_accounts_discoverable
     UpdateAccountsDiscoverabilityJob.perform_later(value)
+  end
+
+  def update_bluesky_bridge_enabled
+    return unless value
+    BlueskyBridgeEnabledJob.perform_later(value)
   end
 end

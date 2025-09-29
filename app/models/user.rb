@@ -114,4 +114,14 @@ class User < ApplicationRecord
       user.update_column(:settings, settings_hash.to_json)
     end
   end
+
+  def self.update_all_bluesky_bridge_enabled(value = false)
+    sanitized_value = !!value
+    
+    if sanitized_value
+      where(did_value: nil).update_all(bluesky_bridge_enabled: true)
+    else
+      update_all(bluesky_bridge_enabled: sanitized_value)
+    end
+  end
 end
