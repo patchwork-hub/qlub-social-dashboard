@@ -28,6 +28,10 @@ if ServerSetting.count == 0
     {
       name: 'Bluesky Bridge',
       options: ['Enable bluesky bridge']
+    },
+    {
+      name: 'Server Settings',
+      options: []
     }
   ]
 

@@ -32,6 +32,14 @@ class NonChannelBlueskyBridgeService
     target_account = Account.find_by(id: target_account_id)
     return if target_account.nil?
 
+    # Check if user is blocked by the bridge bot
+    blocked =  UserBlockedByBridgeBotService.new(user, token, target_account_id).call
+
+    # If user is blocked, unblock the bluesky bridge bot account
+    if blocked
+      UnblockAccountService.new(token, target_account_id).call
+    end
+
     account_relationship_array = handle_relationship(account, target_account.id)
     return unless account_relationship_array.present? && account_relationship_array&.last
 
