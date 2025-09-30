@@ -17,48 +17,10 @@
 #
 
 class SiteUpload < ApplicationRecord
-  IMAGE_MIME_TYPES = ['image/webp', 'image/png', 'image/gif', 'image/jpeg', 'image/jpg'].freeze
+  IMAGE_MIME_TYPES = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg'].freeze
   LIMIT = 2.megabytes
 
-  FAVICON_SIZES = [16, 32, 48].freeze
-  APPLE_ICON_SIZES   = [57, 60, 72, 76, 114, 120, 144, 152, 167, 180, 1024].freeze
-  ANDROID_ICON_SIZES = [36, 48, 72, 96, 144, 192, 256, 384, 512].freeze
-
-  APP_ICON_SIZES = (APPLE_ICON_SIZES + ANDROID_ICON_SIZES).uniq.freeze
-
-  STYLES = {
-    app_icon:
-      APP_ICON_SIZES.to_h do |size|
-        [:"#{size}", { format: 'png', geometry: "#{size}x#{size}#", file_geometry_parser: FastGeometryParser }]
-      end.freeze,
-
-    favicon:
-      FAVICON_SIZES.to_h do |size|
-        [:"#{size}", { format: 'png', geometry: "#{size}x#{size}#", file_geometry_parser: FastGeometryParser }]
-      end.freeze,
-
-    thumbnail: {
-      '@1x': {
-        format: 'png',
-        geometry: '1200x630#',
-        file_geometry_parser: FastGeometryParser,
-        blurhash: {
-          x_comp: 4,
-          y_comp: 4,
-        }.freeze,
-      },
-
-      '@2x': {
-        format: 'png',
-        geometry: '2400x1260#',
-        file_geometry_parser: FastGeometryParser,
-      }.freeze,
-    }.freeze,
-
-    mascot: {}.freeze,
-  }.freeze
-
-  has_attached_file :file, styles: ->(file) { STYLES[file.instance.var.to_sym] }
+  has_attached_file :file
 
   # Paperclip validation
   validates_attachment_content_type :file, content_type: %r{\Aimage/.*\z}
@@ -82,7 +44,7 @@ class SiteUpload < ApplicationRecord
     content_type = content_type.to_s.downcase
 
     unless IMAGE_MIME_TYPES.include?(content_type)
-      errors.add(attribute_name, "must be a WEBP, PNG, GIF, or JPG image")
+      errors.add(attribute_name, "must be a SVG, PNG or JPG image")
     end
   end
 
@@ -97,9 +59,8 @@ class SiteUpload < ApplicationRecord
 
   def attribute_name
     case var
-    when "favicon"   then :favicon
-    when "app_icon"  then :app_icon
-    when "thumbnail" then :thumbnail
+    when "mail_header_logo" then :mail_header_logo
+    when "mail_footer_logo" then :mail_footer_logo
     else :file
     end
   end
