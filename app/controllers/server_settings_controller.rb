@@ -26,7 +26,7 @@ class ServerSettingsController < ApplicationController
   def branding
     @brand_color.value = site_settings_params[:brand_color]
 
-    %w[favicon app_icon thumbnail].each do |var|
+    %w[mail_header_logo mail_footer_logo].each do |var|
       if site_settings_params.key?(var) && site_settings_params[var].present?
         upload = @site_uploads.find { |s| s.var == var }
         upload.file = site_settings_params[var]
@@ -57,7 +57,7 @@ class ServerSettingsController < ApplicationController
     set_keyword_filter_group
     @server_settings = prepare_server_setting
 
-    @site_uploads = %w[favicon app_icon thumbnail].map do |var|
+    @site_uploads = %w[mail_header_logo mail_footer_logo].map do |var|
       SiteUpload.find_or_initialize_by(var: var)
     end
     @brand_color = SiteSetting.find_or_initialize_by(var: "brand_color")
@@ -116,6 +116,6 @@ class ServerSettingsController < ApplicationController
   end
 
   def site_settings_params
-    params.require(:site_settings).permit(:brand_color,:favicon,:app_icon,:thumbnail)
+    params.require(:site_settings).permit(:brand_color,:mail_header_logo,:mail_footer_logo)
   end
 end

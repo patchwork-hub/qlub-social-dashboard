@@ -129,6 +129,8 @@
                             = render 'shared/tooltip_custom', tooltip_text: 'Foster a closer, more transparent connection with users on your server by sending regular, custom newsletters.', tooltip_position: 'top'
                           - when 'Analytics'
                             = render 'shared/tooltip_custom', tooltip_text: 'Understand your channel and optimise your server with non-intrusive analytics.', tooltip_position: 'top'
+                          - when 'Enable bluesky bridge'
+                            = render 'shared/tooltip_custom', tooltip_text: 'Set up Bluesky Bridge accounts for all local users.', tooltip_position: 'top'
                         - if option[:name].casecmp?('Long posts and markdown')
                           %br
                           %span.small{ style: 'color: grey;' }
