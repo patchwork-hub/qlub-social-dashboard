@@ -5,6 +5,7 @@
     .row
       .col-md-6
         = f.input :brand_color, label: "Brand colour", required: false, input_html: { value: @brand_color.parsed_value, class: "form-control" }
+        %p.mt-2.text-muted.small Set the brand color in hex (e.g., #D24A34)
     - @site_uploads.each do |site_upload|
       - if site_upload.var == 'favicon'
         .row
