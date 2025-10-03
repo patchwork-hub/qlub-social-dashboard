@@ -47,7 +47,7 @@ class ServerSettingsController < ApplicationController
           upload.save! if upload.file.present? && upload.changed?
         end
       end
-      redirect_to server_settings_path, notice: "Server settings updated successfully."
+      redirect_to server_settings_path, notice: "Email Branding updated successfully."
     end
   end
 
@@ -78,7 +78,7 @@ class ServerSettingsController < ApplicationController
     @parent_settings = @parent_settings.where("lower(name) LIKE ?", "%#{@q.downcase}%") if @q.present?
 
     desired_order = ['Local Features', 'User Management', 'Content filters', 'Spam filters', 'Federation', 'Plug-ins', 'Bluesky Bridge']
-    desired_child_name = ['Spam filters', 'Content filters', 'Bluesky', 'Search opt-out', 'Long posts and markdown', 'e-Newsletters', 'Enable bluesky bridge']
+    desired_child_name = ['Spam filters', 'Content filters', 'Bluesky', 'Search opt-out', 'Long posts', 'e-Newsletters', 'Enable bluesky bridge']
 
     @data = @parent_settings.map do |parent_setting|
       child_setting_query = is_channel_dashboard? ? parent_setting.children.sort_by(&:position) : parent_setting.children.where(name: desired_child_name).sort_by(&:position)
