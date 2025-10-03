@@ -15,7 +15,7 @@ if ServerSetting.count == 0
     },
     {
       name: 'Local Features',
-      options: ['Custom theme', 'Search opt-out', 'Local only posts', 'Long posts and markdown', 'Local quote posts']
+      options: ['Custom theme', 'Search opt-out', 'Local only posts', 'Long posts', 'Local quote posts']
     },
     {
       name: 'User Management',
@@ -30,7 +30,7 @@ if ServerSetting.count == 0
       options: ['Enable bluesky bridge']
     },
     {
-      name: 'Server Settings',
+      name: 'Email Branding',
       options: []
     }
   ]
