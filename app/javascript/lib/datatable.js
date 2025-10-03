@@ -207,7 +207,7 @@ jQuery(function() {
   function showModalIfNeeded(checkbox) {
     const settingName = checkbox.getAttribute('data-setting-name').toLowerCase();
 
-    if (settingName === 'long posts and markdown' && checkbox.checked) {
+    if (settingName === 'long posts' && checkbox.checked) {
       const optionalValue = checkbox.getAttribute('data-optional-value');
       const maxCharsInput = document.getElementById('max_chars_value');
       maxCharsInput.value = optionalValue || '';
@@ -232,7 +232,7 @@ jQuery(function() {
       const newValue = maxCharsInput ? maxCharsInput.value || '500' : '';
 
       const settingElement = Array.from(document.querySelectorAll('.setting-input'))
-        .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts and markdown');
+        .find(el => el.getAttribute('data-setting-name').toLowerCase() === 'long posts');
 
       if (settingElement) {
         const settingId = settingElement.getAttribute('data-setting-id');
