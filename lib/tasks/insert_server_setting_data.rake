@@ -20,7 +20,7 @@ namespace :db do
       "User Management" => [],
       "Plug-ins" => [],
       "Bluesky Bridge" => [],
-      "Server Settings" => []
+      "Email Branding" => []
     }
 
     # Create parent settings and set positions
@@ -52,7 +52,7 @@ namespace :db do
           { name: "Custom theme", value: false },
           { name: "Search opt-out", value: false },
           { name: "Local only posts", value: false },
-          { name: "Long posts and markdown", value: false },
+          { name: "Long posts", value: false },
           { name: "Local quote posts", value: false },
         ],
         "User Management" => [
@@ -66,7 +66,7 @@ namespace :db do
         "Bluesky Bridge" => [
           { name: "Enable bluesky bridge", value: false }
         ],
-        "Server Settings" => [
+        "Email Branding" => [
 
         ]
       }

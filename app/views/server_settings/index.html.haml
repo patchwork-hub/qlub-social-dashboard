@@ -33,7 +33,7 @@
                   - when 'Content Moderation'
                     %p.text-muted.small.mt-2 Control what content enters your server from the wider network by setting up keyword filters.
             .col-md-7
-              - if setting[:name] == 'Server Settings'
+              - if setting[:name] == 'Email Branding'
                 = render 'form_logo_and_brand_color'
 
               - setting[:settings].each_with_index do |option, option_index|
@@ -120,7 +120,7 @@
                             = render 'shared/tooltip_custom', tooltip_text: 'Make all text within the server, including user’s posts and bios, visible to search. Users are able to opt-out if they choose.', tooltip_position: 'top'
                           - when 'Local only posts'
                             = render 'shared/tooltip_custom', tooltip_text: 'Allow users to publish posts just to your server, fostering a greater sense of channel.', tooltip_position: 'top'
-                          - when 'Long posts and markdown'
+                          - when 'Long posts'
                             = render 'shared/tooltip_custom', tooltip_text: 'Set character limits for posts and enable text formatting, including bold, italics & more.', tooltip_position: 'top'
                           - when 'Local quote posts'
                             = render 'shared/tooltip_custom', tooltip_text: 'Allow users to publish posts just to your server, fostering a greater sense of channel.', tooltip_position: 'top'
@@ -132,12 +132,12 @@
                             = render 'shared/tooltip_custom', tooltip_text: 'Understand your channel and optimise your server with non-intrusive analytics.', tooltip_position: 'top'
                           - when 'Enable bluesky bridge'
                             = render 'shared/tooltip_custom', tooltip_text: 'Set up Bluesky Bridge accounts for all local users.', tooltip_position: 'top'
-                        - if option[:name].casecmp?('Long posts and markdown')
+                        - if option[:name].casecmp?('Long posts')
                           %br
                           %span.small{ style: 'color: grey;' }
                             Maximum Characters:
                             = option[:optional_value].presence || "Not Set"
-                            %a{ href: '#', title: 'Long posts and Markdown', 'data-toggle': 'modal', 'data-setting-id': option[:id], 'data-optional-value': option[:optional_value], 'data-target': '#maxCharsModal', onclick: "handleEditClick(this)" }
+                            %a{ href: '#', title: 'Long posts', 'data-toggle': 'modal', 'data-setting-id': option[:id], 'data-optional-value': option[:optional_value], 'data-target': '#maxCharsModal', onclick: "handleEditClick(this)" }
                               = image_tag("icons/edit-btn.svg", class: "mb-1", width: "13", height: "13")
                     %div
                       - case option[:name]
