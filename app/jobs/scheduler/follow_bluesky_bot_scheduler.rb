@@ -6,7 +6,7 @@ module Scheduler
     sidekiq_options retry: 0, lock: :until_executed, lock_ttl: 15.minutes.to_i, queue: :scheduler
 
     def perform
-      return unless ServerSetting.find_by(name: 'Enable bluesky bridge')&.value
+      return unless ServerSetting.find_by(name: 'Automatic Bluesky bridging for new users')&.value
 
       if is_channel_dashboard?
         ChannelBlueskyBridgeService.new.process_communities

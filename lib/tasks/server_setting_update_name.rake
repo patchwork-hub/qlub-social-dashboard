@@ -5,7 +5,9 @@ namespace :server_setting do
 
     updates = {
       "Long posts and markdown" => "Long posts",
-      "Server Settings"         => "Email Branding"
+      "Server Settings"         => "Email Branding",
+      "Search opt-out"          => "Automatic Search Opt-in",
+      "Enable bluesky bridge"   => "Automatic Bluesky bridging for new users"
     }
 
     updates.each do |old_name, new_name|
