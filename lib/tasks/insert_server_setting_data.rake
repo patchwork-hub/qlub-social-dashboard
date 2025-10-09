@@ -50,7 +50,7 @@ namespace :db do
         ],
         "Local Features" => [
           { name: "Custom theme", value: false },
-          { name: "Search opt-out", value: false },
+          { name: "Automatic Search Opt-in", value: false },
           { name: "Local only posts", value: false },
           { name: "Long posts", value: false },
           { name: "Local quote posts", value: false },
@@ -64,7 +64,7 @@ namespace :db do
 
         ],
         "Bluesky Bridge" => [
-          { name: "Enable bluesky bridge", value: false }
+          { name: "Automatic Bluesky bridging for new users", value: false }
         ],
         "Email Branding" => [
 

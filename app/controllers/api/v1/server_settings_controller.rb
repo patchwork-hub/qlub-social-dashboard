@@ -30,7 +30,7 @@ module Api
         # Use a more efficient query with includes to avoid N+1 queries
         ServerSetting.includes(:parent)
                      .joins(:parent)
-                     .where(name: 'Enable bluesky bridge', parent: { name: 'Bluesky Bridge' })
+                     .where(name: 'Automatic Bluesky bridging for new users', parent: { name: 'Bluesky Bridge' })
                      .first
       rescue StandardError => e
         Rails.logger.error "Error fetching Bluesky setting: #{e.message}"
