@@ -51,11 +51,11 @@ class ServerSetting < ApplicationRecord
   end
 
   def search_opt_out_filter?
-    name == "Search opt-out"
+    name == "Automatic Search Opt-in"
   end
 
   def bluesky_bridge_enabled?
-    name == "Enable bluesky bridge"
+    name == "Automatic Bluesky bridging for new users"
   end
 
   def update_accounts_discoverable
