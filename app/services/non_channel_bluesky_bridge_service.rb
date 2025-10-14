@@ -4,6 +4,8 @@ class NonChannelBlueskyBridgeService
 
   include ApplicationHelper
 
+  SKIP_DOMAINS = %w[channel.org mo-me.social].freeze
+
   def initialize
   end
 
@@ -59,6 +61,10 @@ class NonChannelBlueskyBridgeService
   end
 
   def bluesky_bridge_enabled?(account)
+    # Only proceed if the account is at least 2 weeks old (unless domain is skipped)
+    unless SKIP_DOMAINS.include?(ENV['LOCAL_DOMAIN'])
+      return false unless account.created_at > 2.weeks.ago
+    end
     account&.username.present? && account&.display_name.present? && 
     account&.avatar.present? && account&.header.present?
   end
