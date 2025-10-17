@@ -37,7 +37,6 @@
                 = render 'form_logo_and_brand_color'
 
               - setting[:settings].each_with_index do |option, option_index|
-                - next if option[:name].in?(%w[Bluesky Threads]) && is_channel_dashboard?
                 - is_collapse = ['Content filters', 'Spam filters'].include?(option[:name])
                 - collapse_id = "collapse_#{option[:id]}"
                 - if is_collapse
