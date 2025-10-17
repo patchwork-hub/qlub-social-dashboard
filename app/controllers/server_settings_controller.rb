@@ -73,15 +73,20 @@ class ServerSettingsController < ApplicationController
   end
 
   def prepare_server_setting
-    @parent_settings = is_channel_dashboard? ? ServerSetting.where(parent_id: nil).includes(:children).order(:id) : ServerSetting.where(parent_id: nil).order(:id)
+    @parent_settings = ServerSetting.where(parent_id: nil).order(:id)
 
     @parent_settings = @parent_settings.where("lower(name) LIKE ?", "%#{@q.downcase}%") if @q.present?
 
     desired_order = ['Local Features', 'User Management', 'Content filters', 'Spam filters', 'Federation', 'Plug-ins', 'Bluesky Bridge']
-    desired_child_name = ['Spam filters', 'Content filters', 'Bluesky', 'Automatic Search Opt-in', 'Long posts', 'e-Newsletters', 'Automatic Bluesky bridging for new users']
+    base_features = [
+      'Automatic Search Opt-in', 'Long posts', 'e-Newsletters',
+      'Automatic Bluesky bridging for new users', 'Spam filters', 'Content filters'
+    ]
+    dashboard_extras = ['Custom theme', 'Guest accounts', 'Analytics', 'Live blocklist', 'Sign up challenge']
+    desired_child_name = is_channel_dashboard? ? base_features + dashboard_extras : base_features
 
     @data = @parent_settings.map do |parent_setting|
-      child_setting_query = is_channel_dashboard? ? parent_setting.children.sort_by(&:position) : parent_setting.children.where(name: desired_child_name).sort_by(&:position)
+      child_setting_query = parent_setting.children.where(name: desired_child_name).sort_by(&:position)
       {
         name: parent_setting.name,
         settings: child_setting_query.map do |child_setting|
