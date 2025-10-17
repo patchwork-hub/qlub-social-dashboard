@@ -79,7 +79,7 @@ class ServerSettingsController < ApplicationController
 
     desired_order = ['Local Features', 'User Management', 'Content filters', 'Spam filters', 'Federation', 'Plug-ins', 'Bluesky Bridge']
     base_features = [
-      'Automatic Search Opt-in', 'Long posts', 'e-Newsletters',
+      'Automatic Search Opt-in', 'Long posts',
       'Automatic Bluesky bridging for new users', 'Spam filters', 'Content filters'
     ]
     dashboard_extras = ['Custom theme', 'Guest accounts', 'Analytics', 'Live blocklist', 'Sign up challenge']
