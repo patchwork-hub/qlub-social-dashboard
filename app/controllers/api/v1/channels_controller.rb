@@ -9,6 +9,7 @@ module Api
 
       DEFAULT_MO_ME_CHANNELS = [
         { slug: 'mediarevolution', channel_type: Community.channel_types[:channel] },
+        { slug: 'newsclubnetwork', channel_type: Community.channel_types[:channel_feed] },
         { slug: 'activism-civil-rights', channel_type: Community.channel_types[:newsmast] },
         { slug: 'climate-change', channel_type: Community.channel_types[:newsmast]},
         { slug: 'politics', channel_type: Community.channel_types[:newsmast]},
