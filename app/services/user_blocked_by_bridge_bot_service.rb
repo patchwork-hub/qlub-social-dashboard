@@ -1,5 +1,5 @@
 class UserBlockedByBridgeBotService
-  def initialize(user, token)
+  def initialize(user, token, target_account_id)
     @user = user
     @token = token
     @target_account_id = target_account_id

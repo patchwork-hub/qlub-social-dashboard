@@ -3,9 +3,8 @@ module BlueskyAccountBridgeHelper
   def check_account_info(community)
     error_messages = []
     error_message = nil
-    skip_domains = ['channel.org', 'mo-me.social']
     account = community&.community_admins&.first&.account
-    
+
     if account&.username.blank?
       error_messages << "username"
     end
@@ -26,12 +25,6 @@ module BlueskyAccountBridgeHelper
       error_message = "Your account is missing #{error_messages.join(', ')}."
     end
 
-    if !skip_domains.include?(ENV['LOCAL_DOMAIN']) && account&.created_at && account.created_at > 2.weeks.ago
-      return "Your account must be older than 2 weeks." if error_message.nil?
-      error_message = error_message.sub(/\.$/, '')
-      error_message += " and must be older than 2 weeks."
-    end
-    
     error_message
   end
 
