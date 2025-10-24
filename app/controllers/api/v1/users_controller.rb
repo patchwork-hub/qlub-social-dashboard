@@ -18,8 +18,9 @@ module Api
         end
 
         # Check if user meets the requirements for Bluesky Bridge
-        unless meets_bluesky_bridge_requirements?
-          return render_errors('api.account.errors.unable_to_bridge', :unprocessable_entity)
+        error_message = meets_bluesky_bridge_requirements
+        if error_message.present?
+          return render_errors(error_message, :unprocessable_entity)
         end
 
         if current_user.update(bluesky_bridge_enabled: desired_value)
@@ -41,9 +42,19 @@ module Api
         ActiveModel::Type::Boolean.new.cast(value)
       end
 
-      def meets_bluesky_bridge_requirements?
-        @account&.username.present? && @account&.display_name.present? && 
-        @account&.avatar.present? && @account&.header.present?
+      def meets_bluesky_bridge_requirements
+        missing_fields = []
+        missing_fields << 'Username' unless @account&.username.present?
+        missing_fields << 'Display name' unless @account&.display_name.present?
+        missing_fields << 'Avatar' unless @account&.avatar.present?
+        missing_fields << 'Header' unless @account&.header.present?
+
+        return nil if missing_fields.empty?
+        if missing_fields.size == 1
+          "User does not meet Bluesky Bridge requirements. #{missing_fields.first} is required."
+        else
+          "User does not meet Bluesky Bridge requirements. #{missing_fields.join(', ')} are required."
+        end
       end
 
       def set_authenticated_account
@@ -52,9 +63,9 @@ module Api
         else
           @account = current_account
         end
-        
+
         return render_unauthorized unless @account
-        
+
         @account
       end
 
