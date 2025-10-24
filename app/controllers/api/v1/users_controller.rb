@@ -42,7 +42,7 @@ module Api
         ActiveModel::Type::Boolean.new.cast(value)
       end
 
-      def meets_bluesky_bridge_requirements?
+      def meets_bluesky_bridge_requirements
         missing_fields = []
         missing_fields << 'Username' unless @account&.username.present?
         missing_fields << 'Display name' unless @account&.display_name.present?
