@@ -8,22 +8,22 @@ Patchwork is a plugin dashboard designed to enhance your Mastodon server with ad
 
 ## Features
 
-### Opt users in to search 
+#### Opt users in to search 
 
 By default, Mastodon users have to opt-in to allowing their profile and public posts to be indexed during searches. Patchwork enables the admin to choose whether all new users are opted-in to Search when they join. Users can always opt out if they choose.
-### Custom post length
+#### Custom post length
 
 Choose the maximum number of characters you want a post to be.
-### Auto-Bluesky bridge
+#### Auto-Bluesky bridge
 
 Automatically bridge new users to Bluesky via Bridgy Fed. Users can always opt out if they choose. Please note, bridging takes place two weeks after the account has been created.
-### Spam block
+#### Spam block
 
 Block spam posts arriving on your server from the federated network. Filters identify keywords or phrases associated with spam in a post. Create your own list for customised filters.
-### Content filters
+#### Content filters
 
 Block harmful content arriving on your server from the federated network. Filters identify keywords or phrases in lists of words for specific harms eg. NSFW, Hate speech etc. Each list can be toggled on or off. Create your own list for customised filters.
-### Customise email branding
+#### Customise email branding
 
 Replace the Mastodon logo in automatic emails with your own. This feature allows you to add your own header image, footer image and accent colour.
 
