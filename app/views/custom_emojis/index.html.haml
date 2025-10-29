@@ -1,0 +1,82 @@
+- content_for :title do
+  = 'Collections'
+
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          Your custom emojis
+          %br
+          -# %small.text-muted.pt-2 Collections organise channels on your server by grouping several together related to similar topics or themes.
+        .card-tools
+          %button.btn.btn-sm.btn-danger.ml-3{ onclick: "window.location='#{new_custom_emoji_path}'" }
+            Create a Custom emoji
+            = image_tag("icons/circle-plus.svg", class: "ml-2", width: "16", height: "16")
+      .card-body
+        .row.mb-3
+          .col-md-1
+            = form_with url: custom_emojis_path, method: :get, local: true, class: "form-inline" do |f|
+              = f.select :filter, options_for_select([['All', ''], ['Local', 'local'], ['Remote', 'remote']], params[:filter]), {}, { class: "form-control form-control-sm", onchange: "this.form.submit();" }
+              = f.hidden_field :page, value: 1
+          .col-md-4
+            = form_with url: custom_emojis_path, method: :get, local: true, class: "form-inline" do |f|
+              = f.text_field :search, 
+                            value: params[:search],
+                            class: "form-control form-control-sm", 
+                            placeholder: "Search shortcode or domain",
+                            style: "width: 200px;"
+              = f.hidden_field :filter, value: params[:filter]
+              = f.hidden_field :page, value: 1
+              %button.btn.btn-sm.btn-default{type: "submit"}
+                %i.fas.fa-search
+        %table.table.no-side-borders.top-bottom-border{data: {url: collections_url, type: 'collection'}}
+          %thead
+            %tr
+              %th Emoji
+              %th Shortcode
+              %th Category
+              %th Status
+              %th Actions
+          %tbody
+            - if @records.size == 0
+              %tr
+                %td.text-center.info-box-content{colspan: "100%"}
+                  %p.text-muted.small You haven’t added any custom emojis yet.
+                  %a.text-danger.small{ href: new_custom_emoji_path } Click here to create one
+            - @records.each do |custom_emoji|
+              %tr
+                %td= custom_emoji_tag(custom_emoji)
+                %td= custom_emoji.shortcode
+                %td
+                  - if custom_emoji.local?
+                    = custom_emoji.category&.name || 'Uncategorized'
+                  - else
+                    = '-'
+                %td
+                  .status-info
+                    - if custom_emoji.local?
+                      %span.badge.badge-primary.mr-1 Local
+                      - if custom_emoji.visible_in_picker?
+                        %span.badge.badge-success.mr-1 Listed
+                      - else
+                        %span.badge.badge-secondary.mr-1 Unlisted
+                      - if custom_emoji.disabled?
+                        %span.badge.badge-danger Disabled
+                      - else
+                        %span.badge.badge-success Enabled
+                    - else
+                      %span.badge.badge-info.mr-1= custom_emoji.domain
+                      - if custom_emoji.disabled?
+                        %span.badge.badge-danger Disabled
+                      - else
+                        %span.badge.badge-success Enabled
+                %td
+                  %a{ href: edit_custom_emoji_path(custom_emoji), title: 'Edit' }
+                    = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
+                  = link_to custom_emoji_path(custom_emoji), method: :delete, data: { confirm: "Are you sure you want to delete this emoji?" } do
+                    = image_tag("icons/trash-can.svg", title: "Delete", class: "ml-2", width: "16", height: "16")
+        .row.mt-2
+          .col
+            .pagination.pagination-sm.m-0.float-right
+              = paginate @records, theme: 'bootstrap4'

@@ -1,0 +1,75 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title
+          = "#{action_name.capitalize} custom emoji"
+
+      .card-body.w-250
+        = simple_form_for @custom_emoji, url: custom_emojis_path, local: true do |f|
+          .row
+            .col-md-6
+              = f.input :shortcode, label: "Shortcode *", input_html: { class: "form-control" }
+              %p.mt-2.text-muted.small At least 2 characters, only alphanumeric characters and underscores
+
+          - if @custom_emoji.local?
+            .row
+              .col-md-6
+                = f.input :category_id, 
+                          label: "Category", 
+                          collection: CustomEmojiCategory.alphabetic.pluck(:name, :id),
+                          prompt: "Select existing category",
+                          input_html: { class: "form-control", id: "category_select", onchange: "toggleCategoryInputs()" }
+                %p.mt-2.text-muted.small Or create a new category below
+            .row
+              .col-md-6
+                = f.input :category_name, 
+                          label: "New Category Name", 
+                          input_html: { class: "form-control", id: "category_name", placeholder: "Enter new category name", oninput: "toggleCategoryInputs()" }
+                %p.mt-2.text-muted.small Leave blank if selecting existing category above
+
+          .row
+            .col-md-6
+              %label{ for: "customFileEmoji", class: "form-label" } Emoji Image *
+              .row.emoji-image-upload-container.gap-1
+                .emoji-upload-container
+                  .rounded.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
+                    - emoji_image_url = @custom_emoji.image.present? && @custom_emoji.image.respond_to?(:url) ? @custom_emoji.image.url : ''
+                    - margin_left = emoji_image_url.present? ? '0' : '16px'
+
+                    %img{ id: "currentEmoji", src: emoji_image_url, style: "display: #{emoji_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: #{margin_left};" }
+                    - if emoji_image_url.blank?
+                      %i.fa-solid.fa-image
+                    = f.input :image, as: :file, label: false, input_html: { id: "customFileEmoji", class: "form-control-file upload-input", style: "display: none;", accept: CustomEmoji::IMAGE_MIME_TYPES.join(','), 'data-preview-id': "currentEmoji" }
+
+                .emoji-image-upload
+                  %button.btn.btn-primary.mt-2{ onclick: "event.preventDefault(); document.getElementById('customFileEmoji').click();" } Upload emoji
+                  %p.mt-4.text-muted.small PNG, GIF, WebP (max: 256 KB)
+
+          .row.mt-2
+            .col-md-6.d-flex.justify-content-center
+              = link_to 'Cancel', custom_emojis_path, class: 'btn btn-secondary mx-2 btn-custom'
+              = f.submit 'Upload', class: 'btn btn-danger mx-2 btn-custom'
+    .row.d-flex.justify-content-between.mt-4
+      .col-auto
+        %a.btn.btn-outline-secondary{ href: custom_emojis_path } Back
+
+:javascript
+  function toggleCategoryInputs() {
+    const categorySelect = document.getElementById('category_select');
+    const categoryName = document.getElementById('category_name');
+    
+    if (categorySelect.value && categorySelect.value !== '') {
+      // Existing category selected - disable new category input
+      categoryName.disabled = true;
+      categoryName.value = '';
+    } else if (categoryName.value && categoryName.value.trim() !== '') {
+      // User typing new category - disable select dropdown
+      categorySelect.disabled = true;
+      categorySelect.selectedIndex = 0;
+    } else {
+      // Both empty - enable both
+      categorySelect.disabled = false;
+      categoryName.disabled = false;
+    }
+  }
