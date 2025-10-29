@@ -4,14 +4,10 @@
 #
 # Table name: custom_emoji_categories
 #
-#  id         :bigint           not null, primary key
+#  id         :bigint(8)        not null, primary key
 #  name       :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_custom_emoji_categories_on_name  (name) UNIQUE
 #
 
 class CustomEmojiCategory < ApplicationRecord
