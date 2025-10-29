@@ -148,15 +148,27 @@ module ApplicationHelper
   end
 
   def custom_emoji_tag(custom_emoji)
+    urls = emoji_asset_urls(custom_emoji)
+
+    image_tag(urls[:static], :class => 'emojione custom-emoji', :alt => ":#{custom_emoji.shortcode}", 'data-original' => full_asset_url(urls[:original]), 'data-static' => full_asset_url(urls[:static]))
+  end
+
+  def emoji_asset_urls(custom_emoji)
     static_url = custom_emoji.image.url(:static)
     original_url = custom_emoji.image.url
 
-    # If the emoji is remote, insert 'cache/' before 'custom_emojis/' in the S3 URL path
-    if !custom_emoji.local?
-      static_url = static_url.sub('/custom_emojis/', '/cache/custom_emojis/') if static_url
-      original_url = original_url.sub('/custom_emojis/', '/cache/custom_emojis/') if original_url
+    unless custom_emoji.local?
+      static_url = insert_cache_segment(static_url)
+      original_url = insert_cache_segment(original_url)
     end
 
-    image_tag(static_url, :class => 'emojione custom-emoji', :alt => ":#{custom_emoji.shortcode}", 'data-original' => full_asset_url(original_url), 'data-static' => full_asset_url(static_url))
+    { static: static_url, original: original_url }
   end
+
+  def insert_cache_segment(url)
+    return url if url.blank?
+    url.sub('/custom_emojis/', '/cache/custom_emojis/')
+  end
+
+  private :insert_cache_segment
 end
