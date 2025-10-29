@@ -97,5 +97,7 @@ Rails.application.routes.draw do
   resources :wait_lists
 
   resources :app_versions
+
+  resources :custom_emojis
   patch "history/:id/deprecate", to: 'app_versions#deprecate'
 end
