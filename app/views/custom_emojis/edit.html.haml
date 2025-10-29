@@ -12,6 +12,22 @@
                         label: "Shortcode",
                         input_html: { class: "form-control", disabled: true }
 
+          - if @custom_emoji.local?
+            .row
+              .col-md-6
+                = f.input :category_id,
+                          label: "Category",
+                          collection: CustomEmojiCategory.alphabetic.pluck(:name, :id),
+                          include_blank: "Select existing category",
+                          input_html: { class: "form-control", id: "category_select", onchange: "toggleCategoryInputs()" }
+                %p.mt-2.text-muted.small Or create a new category below
+            .row
+              .col-md-6
+                = f.input :category_name,
+                          label: "New Category Name",
+                          input_html: { class: "form-control", id: "category_name", placeholder: "Enter new category name", oninput: "toggleCategoryInputs()" }
+                %p.mt-2.text-muted.small Leave blank if selecting existing category above
+
           .row
             .col-md-6
               %label{ for: "previewEmoji", class: "form-label" } Emoji Image
@@ -54,3 +70,25 @@
             .col-md-6.d-flex.justify-content-center
               = link_to 'Cancel', custom_emojis_path, class: 'btn btn-secondary mx-2 btn-custom'
               = f.submit 'Save', class: 'btn btn-danger mx-2 btn-custom'
+
+:javascript
+  function toggleCategoryInputs() {
+    const categorySelect = document.getElementById('category_select');
+    const categoryName = document.getElementById('category_name');
+
+    if (!categorySelect || !categoryName) return;
+
+    if (categorySelect.value && categorySelect.value !== '') {
+      // Existing category selected - disable new category input
+      categoryName.disabled = true;
+      categoryName.value = '';
+    } else if (categoryName.value && categoryName.value.trim() !== '') {
+      // User typing new category - disable select dropdown
+      categorySelect.disabled = true;
+      categorySelect.selectedIndex = 0;
+    } else {
+      // Both empty - enable both
+      categorySelect.disabled = false;
+      categoryName.disabled = false;
+    }
+  }
