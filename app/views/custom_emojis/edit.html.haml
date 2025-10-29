@@ -34,7 +34,7 @@
               .row.emoji-image-upload-container.gap-1
                 .emoji-upload-container
                   .rounded.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
-                    - emoji_image_url = @custom_emoji.image.present? && @custom_emoji.image.respond_to?(:url) ? @custom_emoji.image.url : ''
+                    - emoji_image_url = @custom_emoji.image.present? && @custom_emoji.image.respond_to?(:url) ? emoji_asset_urls(@custom_emoji)[:static] : ''
                     - margin_left = emoji_image_url.present? ? '0' : '16px'
 
                     %img{ id: "previewEmoji", src: emoji_image_url, style: "display: #{emoji_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: #{margin_left};" }
