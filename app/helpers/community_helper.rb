@@ -41,7 +41,7 @@ module CommunityHelper
     end
   end
 
-  def edit_community_path(channel_type_param, community)
+  def modify_community_path(channel_type_param, community)
     if channel_type_param == 'channel'
       step0_communities_path(id: community.id, channel_type: channel_type_param)
     else
