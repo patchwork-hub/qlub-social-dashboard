@@ -65,6 +65,8 @@
                           %a{ href: '#', style: 'color: red;', title: 'Add custom filter', 'data-filter-type': 'content', 'data-id': option[:id], 'data-toggle': 'modal', 'data-target': '#keyFilterModal', 'data-label': 'Custom filter name' }
                             Add custom filter
                     %div
+                      %a{ href: download_csv_by_server_setting_keyword_filter_groups_path(format: :csv, server_setting_id: option[:id]), title: 'Download CSV', 'data-turbo': false, style: 'color: red;' }
+                        %i.fa-solid.fa-download.mr-1
                       %a{ href: "##{collapse_id}", role: "button", class: "collapse-toggle arrow-toggle", 'data-toggle': "collapse", 'aria-expanded': "false", 'aria-controls': collapse_id }
                         %i.fa-solid.fa-caret-down.icon-arrow-down
                         %i.fa-solid.fa-caret-up.icon-arrow-up
@@ -86,6 +88,8 @@
                               %span.ml-2
                                 = sub_option[:name]
                             %div
+                              %a{ href: download_csv_keyword_filter_group_path(sub_option[:id], format: :csv), title: 'Download CSV', 'data-turbo': false, style: 'color: red;' }
+                                %i.fa-solid.fa-download.ml-2
                               %a{ href: keyword_filter_group_path(sub_option[:id]), title: 'Edit' }
                                 = image_tag("icons/edit-btn.svg", class: "ml-2", width: "16", height: "16")
                               - if sub_option[:is_custom]

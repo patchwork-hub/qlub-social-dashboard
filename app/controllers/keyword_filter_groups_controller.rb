@@ -1,5 +1,5 @@
 class KeywordFilterGroupsController < ApplicationController
-  before_action :set_keyword_filter_group, only: [:show, :edit, :update, :destroy, :update_is_active]
+  before_action :set_keyword_filter_group, only: [:show, :edit, :update, :destroy, :update_is_active, :download_csv]
 
   def index
     @keyword_filter_groups = KeywordFilterGroup.all
@@ -56,6 +56,49 @@ class KeywordFilterGroupsController < ApplicationController
     else
       render json: { success: false, error: @keyword_filter_group.errors.full_messages.join(', ') }, status: :unprocessable_entity
     end
+  end
+
+  def download_csv
+    require 'csv'
+    filters = @keyword_filter_group.keyword_filters
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << ["Name", "Server Setting", "Is Active", "Keyword", "Filter Type"]
+      filters.each do |kf|
+        csv << [
+          @keyword_filter_group.name,
+          @keyword_filter_group.server_setting&.name,
+          @keyword_filter_group.is_active ? 'True' : 'False',
+          kf.keyword,
+          kf.filter_type
+        ]
+      end
+    end
+    send_data csv_data, filename: "#{@keyword_filter_group.server_setting&.name&.parameterize}-#{@keyword_filter_group.name&.parameterize}.csv"
+  end
+
+  def download_csv_by_server_setting
+    require 'csv'
+    server_setting_id = params[:server_setting_id]
+    server_setting = ServerSetting.find_by_id(server_setting_id)
+    keyword_filters = KeywordFilter.joins(:keyword_filter_group)
+                                   .where(keyword_filter_groups: { server_setting_id: server_setting_id })
+
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << ["Group Name", "Server Setting", "Group Active", "Keyword", "Filter Type", "Custom Group"]
+      keyword_filters.find_each do |kf|
+        group = kf.keyword_filter_group
+        csv << [
+          group&.name,
+          group&.server_setting&.name,
+          group&.is_active ? 'True' : 'False',
+          kf.keyword,
+          kf.filter_type,
+          group&.is_custom ? 'True' : 'False'
+        ]
+      end
+    end
+
+    send_data csv_data, filename: "#{server_setting&.name&.parameterize}.csv"
   end
 
   private

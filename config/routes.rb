@@ -78,6 +78,10 @@ Rails.application.routes.draw do
   resources :keyword_filter_groups do
     member do
       patch :update_is_active
+      get :download_csv
+    end
+    collection do
+      get :download_csv_by_server_setting
     end
     resources :keyword_filters
   end
