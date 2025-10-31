@@ -6,11 +6,13 @@
     .card
       .card-header
         %h3.card-title= @keyword_filter_group.name
-        - if @keyword_filter_group.is_custom?
-          .card-tools
-            .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Actions"}
+        .card-tools
+          .input-group.input-group-sm{"data-toggle" => "tooltip", "data-placement" => "top", "title"=>"Actions"}
+            - if @keyword_filter_group.is_custom?
               = link_to new_keyword_filter_group_keyword_filter_path(@keyword_filter_group), class: 'form-control float-right mr-2', title: 'Add new keyword' do
                 %i.fa-solid.fa-circle-plus
+            = link_to download_csv_keyword_filter_group_path(@keyword_filter_group, format: :csv), class: 'form-control float-right', title: 'Download CSV', 'data-turbo' => false do
+              %i.fa-solid.fa-download
 
       .card-body
         %table#datatable.table.table-striped.table-bordered{data: {url: keyword_filter_group_url(@keyword_filter_group), type: 'keyword_filter_group_list', 'is-custom': @keyword_filter_group.is_custom?.to_s}}
