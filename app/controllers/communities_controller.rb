@@ -45,7 +45,7 @@ class CommunitiesController < BaseController
       end
     end
 
-    redirect_to edit_community_path('channel', community)
+    redirect_to modify_community_path('channel', community)
   end
 
   def destroy

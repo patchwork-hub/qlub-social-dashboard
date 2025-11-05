@@ -4,11 +4,15 @@
 #
 # Table name: settings
 #
-#  id         :bigint(8)        not null, primary key
-#  var        :string           not null
+#  id         :bigint           not null, primary key
 #  value      :text
+#  var        :string           not null
 #  created_at :datetime
 #  updated_at :datetime
+#
+# Indexes
+#
+#  index_settings_on_var  (var) UNIQUE
 #
 
 require "yaml"
