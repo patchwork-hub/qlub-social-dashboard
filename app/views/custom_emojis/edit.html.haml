@@ -1,0 +1,94 @@
+.row
+  .col-12
+    .card
+      .card-header
+        %h3.card-title Edit custom emoji
+
+      .card-body.w-250
+        = simple_form_for @custom_emoji, url: custom_emoji_path(@custom_emoji), method: :patch, local: true do |f|
+          .row
+            .col-md-6
+              = f.input :shortcode,
+                        label: "Shortcode",
+                        input_html: { class: "form-control", disabled: true }
+
+          - if @custom_emoji.local?
+            .row
+              .col-md-6
+                = f.input :category_id,
+                          label: "Category",
+                          collection: CustomEmojiCategory.alphabetic.pluck(:name, :id),
+                          include_blank: "Select existing category",
+                          input_html: { class: "form-control", id: "category_select", onchange: "toggleCategoryInputs()" }
+                %p.mt-2.text-muted.small Or create a new category below
+            .row
+              .col-md-6
+                = f.input :category_name,
+                          label: "New Category Name",
+                          input_html: { class: "form-control", id: "category_name", placeholder: "Enter new category name", oninput: "toggleCategoryInputs()" }
+                %p.mt-2.text-muted.small Leave blank if selecting existing category above
+
+          .row
+            .col-md-6
+              %label{ for: "previewEmoji", class: "form-label" } Emoji Image
+              .row.emoji-image-upload-container.gap-1
+                .emoji-upload-container
+                  .rounded.border.d-inline-flex.align-items-center.justify-content-center{ style: "width: 90px; height: 90px; border: dotted; overflow: hidden;" }
+                    - emoji_image_url = @custom_emoji.image.present? && @custom_emoji.image.respond_to?(:url) ? emoji_asset_urls(@custom_emoji)[:static] : ''
+                    - margin_left = emoji_image_url.present? ? '0' : '16px'
+
+                    %img{ id: "previewEmoji", src: emoji_image_url, style: "display: #{emoji_image_url.present? ? 'block' : 'none'}; width: 100%; height: 100%; object-fit: cover; margin-left: #{margin_left};" }
+                    - if emoji_image_url.blank?
+                      %i.fa-solid.fa-image
+
+          .row
+            .col-md-6
+              = f.input :disabled,
+                        as: :radio_buttons,
+                        collection: [["Enabled", false], ["Disabled", true]],
+                        label_method: :first,
+                        value_method: :last,
+                        item_wrapper_class: 'form-check form-check-inline',
+                        input_html: { class: 'form-check-input' },
+                        label_html: { class: 'form-check-label' },
+                        label: "Status"
+
+          - if @custom_emoji.local?
+            .row
+              .col-md-6
+                = f.input :visible_in_picker,
+                          as: :radio_buttons,
+                          collection: [["Listed", true], ["Unlisted", false]],
+                          label_method: :first,
+                          value_method: :last,
+                          item_wrapper_class: 'form-check form-check-inline',
+                          input_html: { class: 'form-check-input' },
+                          label_html: { class: 'form-check-label' },
+                          label: "Listing"
+
+          .row.mt-2
+            .col-md-6.d-flex.justify-content-center
+              = link_to 'Cancel', custom_emojis_path, class: 'btn btn-secondary mx-2 btn-custom'
+              = f.submit 'Save', class: 'btn btn-danger mx-2 btn-custom'
+
+:javascript
+  function toggleCategoryInputs() {
+    const categorySelect = document.getElementById('category_select');
+    const categoryName = document.getElementById('category_name');
+
+    if (!categorySelect || !categoryName) return;
+
+    if (categorySelect.value && categorySelect.value !== '') {
+      // Existing category selected - disable new category input
+      categoryName.disabled = true;
+      categoryName.value = '';
+    } else if (categoryName.value && categoryName.value.trim() !== '') {
+      // User typing new category - disable select dropdown
+      categorySelect.disabled = true;
+      categorySelect.selectedIndex = 0;
+    } else {
+      // Both empty - enable both
+      categorySelect.disabled = false;
+      categoryName.disabled = false;
+    }
+  }

@@ -44,6 +44,7 @@ module ApplicationHelper
       end
       links += [
         # { path: accounts_path, id: 'accounts-link', header: 'Users', icon: 'users.svg', text: 'Users', active_if: 'accounts' },
+        { path: custom_emojis_path, id: 'custom-emojis-link', header: 'Custom emojis', icon: 'custom-emojis.svg', text: 'Custom emojis', active_if: 'custom_emojis' },
         { path: resources_path, id: 'resources-link', header: 'Resources', icon: 'folder.svg', text: 'Resources', active_if: 'resources' },
         { path: api_keys_path, id: 'resources-link', header: 'API Key', icon: 'key.svg', text: 'API Key', active_if: 'api_keys' }
       ]
@@ -165,4 +166,29 @@ module ApplicationHelper
       false
     end
   end
+
+  def custom_emoji_tag(custom_emoji)
+    urls = emoji_asset_urls(custom_emoji)
+
+    image_tag(urls[:static], :class => 'emojione custom-emoji', :alt => ":#{custom_emoji.shortcode}", 'data-original' => full_asset_url(urls[:original]), 'data-static' => full_asset_url(urls[:static]))
+  end
+
+  def emoji_asset_urls(custom_emoji)
+    static_url = custom_emoji.image.url(:static)
+    original_url = custom_emoji.image.url
+
+    unless custom_emoji.local?
+      static_url = insert_cache_segment(static_url)
+      original_url = insert_cache_segment(original_url)
+    end
+
+    { static: static_url, original: original_url }
+  end
+
+  def insert_cache_segment(url)
+    return url if url.blank?
+    url.sub('/custom_emojis/', '/cache/custom_emojis/')
+  end
+
+  private :insert_cache_segment
 end
