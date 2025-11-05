@@ -77,12 +77,12 @@ class ServerSettingsController < ApplicationController
 
     @parent_settings = @parent_settings.where("lower(name) LIKE ?", "%#{@q.downcase}%") if @q.present?
 
-    desired_order = ['Local Features', 'User Management', 'Content filters', 'Spam filters', 'Federation', 'Plug-ins', 'Bluesky Bridge']
+    desired_order = ['Local Features', 'User Management', 'Content filters', 'Spam filters', 'Federation', 'Plug-ins', 'Bluesky Bridge', 'No-Boost Channels']
     base_features = [
       'Automatic Search Opt-in', 'Long posts',
       'Automatic Bluesky bridging for new users', 'Spam filters', 'Content filters'
     ]
-    dashboard_extras = ['Custom theme', 'Guest accounts', 'Analytics', 'Live blocklist', 'Sign up challenge']
+    dashboard_extras = ['Custom theme', 'Guest accounts', 'Analytics', 'Live blocklist', 'Sign up challenge', 'No-Boost']
     desired_child_name = is_channel_dashboard? ? base_features + dashboard_extras : base_features
 
     @data = @parent_settings.map do |parent_setting|
