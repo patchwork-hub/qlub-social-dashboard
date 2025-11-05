@@ -165,6 +165,8 @@ module ApplicationHelper
     else
       false
     end
+  end
+
   def custom_emoji_tag(custom_emoji)
     urls = emoji_asset_urls(custom_emoji)
 
