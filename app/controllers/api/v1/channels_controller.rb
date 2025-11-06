@@ -4,7 +4,7 @@ module Api
   module V1
     class ChannelsController < ApiController
       skip_before_action :verify_key!
-      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel, :mo_me_channels, :patchwork_demo_channels]
+      before_action :check_authorization_header, only: [:channel_detail, :channel_feeds, :newsmast_channels, :my_channel, :mo_me_channels, :patchwork_demo_channels, :toot_channels]
       before_action :set_channel, only: [:channel_detail, :channel_feeds]
 
       DEFAULT_MO_ME_CHANNELS = [
@@ -25,6 +25,11 @@ module Api
         { slug: 'fedibookclub', channel_type: Community.channel_types[:channel_feed]},
         { slug: 'NoticiasBrasil', channel_type: Community.channel_types[:channel_feed]},
         { slug: 'RenewedResistance', channel_type: Community.channel_types[:channel]}
+      ].freeze
+
+      DEFAULT_TOOT_CHANNELS = [
+        { slug: 'walesnews', channel_type: Community.channel_types[:channel_feed] },
+        { slug: 'newyddion', channel_type: Community.channel_types[:channel_feed] }
       ].freeze
 
 
@@ -105,6 +110,10 @@ module Api
 
       def patchwork_demo_channels
         render_custom_channels(DEFAULT_PATCHWORK_DEMO_CHANNELS)
+      end
+
+      def toot_channels
+        render_custom_channels(DEFAULT_TOOT_CHANNELS)
       end
 
       private

@@ -40,6 +40,7 @@ namespace :api, defaults: { format: :json } do
         get :bridge_information
         get :mo_me_channels
         get :patchwork_demo_channels
+        get :toot_channels
       end
     end
 
