@@ -41,6 +41,10 @@ namespace :api, defaults: { format: :json } do
         get :mo_me_channels
         get :patchwork_demo_channels
         get :toot_channels
+        get :starter_packs_channels
+      end
+      member do
+        get :starter_packs_detail
       end
     end
 
