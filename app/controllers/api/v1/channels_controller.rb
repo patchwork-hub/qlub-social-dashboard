@@ -116,6 +116,30 @@ module Api
         render_custom_channels(DEFAULT_TOOT_CHANNELS)
       end
 
+      def starter_packs_channels
+        starter_packs_channels = load_json_data('starter_pack_list.json')
+
+        render json: { data: starter_packs_channels }
+      end
+
+      def starter_packs_detail
+        channel_id = params[:id]
+        starter_packs_channels = load_json_data('starter_pack_list.json')
+        channel = starter_packs_channels.find { |ch| ch["id"] == channel_id }
+
+        unless channel
+          render json: { error: "Channel not found" }, status: :not_found and return
+        end
+
+        followers_file = "starter_pack_#{channel_id}.json"
+        followers = load_json_data(followers_file)
+
+        render json: {
+          channel: channel,
+          followers: followers
+        }
+      end
+
       private
 
       def set_channel
@@ -167,6 +191,19 @@ module Api
         render json: Api::V1::ChannelSerializer.new(sorted_communities, { params: { current_account: account } }).serializable_hash.to_json
       end
 
+      def load_json_data(filename)
+        file_path = Rails.root.join('config', 'data', filename)
+        return [] unless File.exist?(file_path)
+
+        # Derive cache key from filename (remove extension)
+        cache_key = File.basename(filename, '.json')
+        modified_at = File.mtime(file_path).to_i
+        full_cache_key = "#{cache_key}_#{modified_at}"
+
+        Rails.cache.fetch(full_cache_key, expires_in: 1.hour) do
+          JSON.parse(File.read(file_path))
+        end
+      end
     end
   end
 end
