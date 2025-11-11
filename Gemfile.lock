@@ -290,6 +290,8 @@ GEM
     raabro (1.4.0)
     racc (1.8.1)
     rack (2.2.13)
+    rack-attack (6.8.0)
+      rack (>= 1.0, < 4)
     rack-cors (2.0.2)
       rack (>= 2.0.0)
     rack-mini-profiler (3.3.1)
@@ -436,6 +438,7 @@ PLATFORMS
   x86_64-darwin-22
   x86_64-darwin-23
   x86_64-darwin-23
+  x86_64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
@@ -473,6 +476,7 @@ DEPENDENCIES
   pg (~> 1.1)
   puma (~> 5.0)
   pundit (~> 2.4)
+  rack-attack
   rack-cors
   rack-mini-profiler
   rails (~> 7.1.0, >= 7.0.4.2)
