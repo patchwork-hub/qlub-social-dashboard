@@ -17,7 +17,9 @@ namespace :api, defaults: { format: :json } do
         when 'channel'
           { display: true, app_name: 'channel' }
         when 'mo-me'
-          { display: false, app_name: 'mo-me' }
+          { display: true, app_name: 'mo-me' }
+        when 'bristol-cable'
+          { display: false, app_name: 'bristol-cable' }
         else
           { display: true, app_name: app_name }
         end
@@ -40,6 +42,11 @@ namespace :api, defaults: { format: :json } do
         get :bridge_information
         get :mo_me_channels
         get :patchwork_demo_channels
+        get :toot_channels
+        get :starter_packs_channels
+      end
+      member do
+        get :starter_packs_detail
       end
     end
 
@@ -137,6 +144,12 @@ namespace :api, defaults: { format: :json } do
     resources :statuses, only: [] do
       collection do
         post :boost_post
+      end
+    end
+
+    resources :categories, only: [] do
+      collection do
+        get :bristol_latest_print
       end
     end
 
