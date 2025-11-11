@@ -147,6 +147,12 @@ namespace :api, defaults: { format: :json } do
       end
     end
 
+    resources :categories, only: [] do
+      collection do
+        get :bristol_latest_print
+      end
+    end
+
     post 'users/bluesky_bridge', to: 'users#update_bluesky_bridge_setting'
     get 'users/bluesky_bridge', to: 'users#index'
     get 'server_settings/menu_visibility', to: 'server_settings#menu_visibility'
