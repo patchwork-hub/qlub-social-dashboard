@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_12_092101) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -883,6 +883,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
     t.datetime "deleted_at"
     t.integer "post_visibility", default: 2, null: false
     t.string "about"
+    t.boolean "no_boost_channel", default: false
     t.index ["ip_address_id"], name: "index_patchwork_communities_on_ip_address_id"
     t.index ["name"], name: "index_patchwork_communities_on_name", unique: true
     t.index ["patchwork_collection_id"], name: "index_patchwork_communities_on_patchwork_collection_id"
@@ -915,6 +916,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
     t.datetime "updated_at", null: false
     t.string "filter_type", default: "filter_out", null: false
     t.index ["keyword", "is_filter_hashtag", "patchwork_community_id"], name: "index_on_keyword_is_filter_hashtag_and_patchwork_community_id", unique: true
+    t.index ["keyword", "is_filter_hashtag"], name: "idx_on_keyword_is_filter_hashtag_de4b77f0f4", unique: true
     t.index ["patchwork_community_id"], name: "idx_on_patchwork_community_id_eadde3c87b"
   end
 
@@ -999,11 +1001,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_000001) do
 
   create_table "patchwork_community_types", force: :cascade do |t|
     t.string "name", null: false
-    t.string "slug", null: false
     t.integer "sorting_index", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_patchwork_community_types_on_slug", unique: true
+    t.string "slug"
   end
 
   create_table "patchwork_content_types", force: :cascade do |t|
