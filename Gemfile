@@ -77,6 +77,7 @@ gem 'jsonapi-serializer', '~> 2.2'
 gem 'doorkeeper'
 
 gem 'rack-cors'
+gem 'rack-attack'
 gem 'aws-sdk-route53'
 
 gem 'resolv'
